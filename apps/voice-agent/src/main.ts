@@ -2,11 +2,15 @@ import { fileURLToPath } from "node:url"
 import {
   cli,
   defineAgent,
-  inference,
+  type JobContext,
+  type JobProcess,
   ServerOptions,
   voice,
 } from "@livekit/agents"
-import { audioEnhancement, EnhancerModel } from "@livekit/plugins-ai-coustics"
+import { STT } from "@livekit/agents-plugin-assemblyai"
+import { LLM } from "@livekit/agents-plugin-cerebras"
+import { TTS } from "@livekit/agents-plugin-fishaudio"
+import * as silero from "@livekit/agents-plugin-silero"
 
 import { FlowAgent } from "@/flow/agent"
 import { buildFlowGraph } from "@/flow/builder"
@@ -16,7 +20,10 @@ import { env } from "@/lib/env"
 import { buildCallTranscript } from "@/lib/transcript"
 
 export default defineAgent({
-  entry: async (ctx) => {
+  prewarm: async (proc: JobProcess) => {
+    proc.userData.vad = await silero.VAD.load()
+  },
+  entry: async (ctx: JobContext) => {
     await ctx.connect()
 
     const metadata = parseDispatchMetadata(ctx.job.metadata)
@@ -33,12 +40,23 @@ export default defineAgent({
     const variables = createVariables(participant.attributes)
 
     const session = new voice.AgentSession({
-      stt: new inference.STT(config.stt),
-      llm: new inference.LLM(config.llm),
-      tts: new inference.TTS(config.tts),
+      vad: ctx.proc.userData.vad as silero.VAD,
+      stt: new STT({
+        apiKey: env.ASSEMBLYAI_API_KEY,
+        speechModel: "universal-3-5-pro",
+      }),
+      llm: new LLM({
+        model: "gemma-4-31b",
+        apiKey: env.CEREBRAS_API_KEY,
+      }),
+      tts: new TTS({
+        apiKey: env.FISHAUDIO_API_KEY,
+        model: "s2.1-pro",
+        voiceId: env.FISHAUDIO_VOICE_ID,
+      }),
       turnHandling: {
-        turnDetection: new inference.TurnDetector(),
-        interruption: { mode: "adaptive" },
+        turnDetection: "stt",
+        interruption: { mode: "vad" },
       },
     })
 
@@ -56,9 +74,6 @@ export default defineAgent({
     await session.start({
       agent: new FlowAgent(flowGraph, variables),
       room: ctx.room,
-      inputOptions: {
-        noiseCancellation: audioEnhancement({ model: EnhancerModel.QuailVfS }),
-      },
       record: false,
     })
   },

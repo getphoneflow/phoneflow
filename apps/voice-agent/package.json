@@ -11,8 +11,11 @@
     "format": "biome check --write --linter-enabled=false ."
   },
   "dependencies": {
-    "@livekit/agents": "^1.6.4",
-    "@livekit/plugins-ai-coustics": "^0.3.0",
+    "@livekit/agents": "^1.7.0",
+    "@livekit/agents-plugin-assemblyai": "^1.7.0",
+    "@livekit/agents-plugin-cerebras": "^1.7.0",
+    "@livekit/agents-plugin-fishaudio": "^1.7.0",
+    "@livekit/agents-plugin-silero": "^1.7.0",
     "@workspace/shared": "workspace:*",
     "dotenv": "catalog:",
     "livekit-server-sdk": "catalog:",

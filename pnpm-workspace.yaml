@@ -6,6 +6,7 @@ allowBuilds:
   '@livekit/local-inference': true
   esbuild: true
   msgpackr-extract: true
+  onnxruntime-node: true
   sharp: true
 
 catalog:

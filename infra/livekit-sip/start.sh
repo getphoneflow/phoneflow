@@ -9,9 +9,4 @@ if [ -f .env ]; then
   set +a
 fi
 
-: "${LIVEKIT_API_KEY:?Set LIVEKIT_API_KEY}"
-: "${LIVEKIT_API_SECRET:?Set LIVEKIT_API_SECRET}"
-: "${LIVEKIT_URL:?Set LIVEKIT_URL}"
-: "${REDIS_ADDRESS:?Set REDIS_ADDRESS}"
-
 /usr/local/bin/docker-compose up -d

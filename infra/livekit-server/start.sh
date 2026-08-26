@@ -2,18 +2,6 @@
 set -e
 cd "$(dirname "$0")"
 
-if [ -f .env ]; then
-  set -a
-  # shellcheck disable=SC1091
-  . ./.env
-  set +a
-fi
-
-: "${LIVEKIT_DOMAIN:?Set LIVEKIT_DOMAIN}"
-: "${TURN_DOMAIN:?Set TURN_DOMAIN}"
-: "${LIVEKIT_API_KEY:?Set LIVEKIT_API_KEY}"
-: "${LIVEKIT_API_SECRET:?Set LIVEKIT_API_SECRET}"
-
 mkdir -p caddy_data
 mkdir -p /usr/local/bin
 
@@ -30,7 +18,7 @@ fi
 systemctl enable docker
 
 docker run --rm \
-  -e LIVEKIT_DOMAIN -e TURN_DOMAIN -e LIVEKIT_API_KEY -e LIVEKIT_API_SECRET \
+  --env-file .env \
   -v "$PWD":/work -w /work \
   alpine:3.20 \
   sh -c 'apk add -q gettext && envsubst < livekit.yaml > livekit.yaml.tmp && mv livekit.yaml.tmp livekit.yaml && envsubst < caddy.yaml > caddy.yaml.tmp && mv caddy.yaml.tmp caddy.yaml'

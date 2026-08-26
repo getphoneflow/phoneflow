@@ -4,8 +4,7 @@
   "scripts": {
     "typecheck": "pnpm -r typecheck",
     "lint": "biome lint .",
-    "format": "biome check --write --linter-enabled=false .",
-    "agent:deploy": "lk agent deploy --skip-sdk-check --config apps/voice-agent/livekit.toml --secrets-file apps/voice-agent/.env"
+    "format": "biome check --write --linter-enabled=false ."
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

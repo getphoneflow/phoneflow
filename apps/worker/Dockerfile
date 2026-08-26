@@ -1,4 +1,4 @@
-FROM node:23-alpine AS base
+FROM node:24-alpine AS base
 WORKDIR /app
 
 RUN corepack enable
@@ -27,7 +27,7 @@ COPY packages/shared ./packages/shared
 
 RUN pnpm --filter worker build
 
-FROM node:23-alpine
+FROM node:24-alpine
 WORKDIR /app
 
 COPY --from=production-deps /app ./

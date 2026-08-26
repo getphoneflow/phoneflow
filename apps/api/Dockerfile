@@ -1,7 +1,7 @@
-FROM node:23-alpine AS base
+FROM node:24-alpine AS base
 WORKDIR /app
+
 RUN corepack enable
-ENV PNPM_CONFIG_DANGEROUSLY_ALLOW_ALL_BUILDS=true
 
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/package.json
@@ -24,7 +24,7 @@ COPY packages/shared ./packages/shared
 
 RUN pnpm --filter api build
 
-FROM node:23-alpine
+FROM node:24-alpine
 WORKDIR /app
 
 COPY --from=prod-deps /app ./

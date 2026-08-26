@@ -1,4 +1,4 @@
-FROM node:23-slim AS base
+FROM node:24-slim AS base
 WORKDIR /app
 RUN corepack enable
 
@@ -17,7 +17,7 @@ COPY packages/shared ./packages/shared
 
 RUN pnpm --filter voice-agent build
 
-FROM node:23-slim
+FROM node:24-slim
 WORKDIR /app
 
 COPY --from=deps /app ./

@@ -1,12 +1,21 @@
 #!/bin/sh
 set -e
 
-HOST="${1:?Usage: $0 user@host}"
-IMAGE=voice-agent:latest
-REMOTE_DIR=/opt/voice-agent
+HOST="${1:-}"
+if [ -z "$HOST" ]; then
+  printf "SSH target (user@host): "
+  read HOST
+fi
 
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname "$0")" && pwd)"
 ROOT="$(CDPATH= cd -- "$SCRIPT_DIR/../.." && pwd)"
+REMOTE_DIR=/opt/voice-agent
+IMAGE=voice-agent:latest
+
+if [ ! -f "$SCRIPT_DIR/.env" ]; then
+  echo "Missing $SCRIPT_DIR/.env" >&2
+  exit 1
+fi
 
 echo "Building $IMAGE (linux/amd64)..."
 docker build --platform linux/amd64 \

@@ -2,31 +2,15 @@
 
 Phone-call bridge for inbound/outbound telephony. Follows [LiveKit SIP self-hosting](https://docs.livekit.io/transport/self-hosting/sip-server/).
 
-Must use the **same Redis** and API key/secret as [`../livekit-server`](../livekit-server).
+Must use the **same Redis** and API key/secret as [`../livekit-server`](../livekit-server). Deploy livekit-server first (it installs Docker).
+
+**VM** - Needs a public IP. Host networking is required so SIP/RTP ports bind on the host.
 
 ## Deploy
 
-1. **VM** - Needs a public IP. Host networking is required so SIP/RTP ports bind on the host.
-
-2. **Configure and copy**
-
 ```bash
 cp .env.example .env
-scp -r infra/livekit-sip root@YOUR_VM_IP:/opt/livekit-sip
-ssh root@YOUR_VM_IP
-cd /opt/livekit-sip
-./start.sh
-```
-
-`start.sh` loads `.env` and runs `docker-compose up -d`.
-
-3. **Firewall**
-
-```bash
-sudo ufw allow 5060/tcp
-sudo ufw allow 5060/udp
-sudo ufw allow 10000:20000/udp
-sudo ufw enable
+./deploy.sh
 ```
 
 SIP URI is `<public-ip>:5060`.

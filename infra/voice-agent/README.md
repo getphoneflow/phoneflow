@@ -6,5 +6,5 @@ LiveKit voice agent that joins rooms and runs the call flow.
 
 ```bash
 cp .env.example .env
-./deploy.sh root@YOUR_VM_IP
+./deploy.sh
 ```

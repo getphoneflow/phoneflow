@@ -1,4 +1,10 @@
-import { Agent, tool } from "@livekit/agents"
+import {
+  Agent,
+  ChatContext,
+  type ModelSettings,
+  type ToolContext,
+  tool,
+} from "@livekit/agents"
 import { z } from "zod"
 
 import type { ExtractVariable } from "@workspace/shared/api/agent-config/types"
@@ -162,5 +168,19 @@ export class FlowAgent extends Agent {
     if (startNode.startSpeaker === "agent") {
       await this.enterNode(startNode)
     }
+  }
+
+  override llmNode(
+    chatCtx: ChatContext,
+    toolCtx: ToolContext,
+    modelSettings: ModelSettings
+  ) {
+    const cleaned = new ChatContext(
+      chatCtx.items.filter(
+        (item) => !("name" in item && item.name.startsWith("notify_condition_"))
+      )
+    )
+
+    return super.llmNode(cleaned, toolCtx, modelSettings)
   }
 }

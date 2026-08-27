@@ -3,7 +3,11 @@ import { z } from "zod"
 
 import type { ExtractVariable } from "@workspace/shared/api/agent-config/types"
 import { evaluateExpression } from "@/flow/expression"
-import { PLATFORM_INSTRUCTIONS, TRANSITION_INSTRUCTIONS } from "@/flow/prompts"
+import {
+  EXTRACT_INSTRUCTIONS,
+  PLATFORM_INSTRUCTIONS,
+  TRANSITION_INSTRUCTIONS,
+} from "@/flow/prompts"
 import type { FlowConversationNode, FlowGraph, FlowNode } from "@/flow/types"
 import type { Variables } from "@/flow/variables"
 import { endCall } from "@/lib/end-call"
@@ -21,6 +25,10 @@ function buildNodeInstructions(
 
   if (node.instructions.type === "prompt") {
     parts.push(variables.replace(node.instructions.text))
+  }
+
+  if (node.extractVariables) {
+    parts.push(EXTRACT_INSTRUCTIONS)
   }
 
   if (node.outgoingEdges.some((edge) => edge.condition.type === "prompt")) {
@@ -96,7 +104,7 @@ export class FlowAgent extends Agent {
     return tool({
       name: "extract_variables",
       description:
-        "Call when the user provides the requested values. Only include the fields you are confident about.",
+        "Call this tool when the user provides some of the requested values",
       parameters: z.object(shape),
       execute: async (args) => {
         for (const [key, value] of Object.entries(args)) {

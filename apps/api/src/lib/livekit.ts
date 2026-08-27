@@ -47,11 +47,6 @@ export function getRecordingKey(callId: string) {
   return `recordings/${callId}.mp4`
 }
 
-export function getRecordingUrl(callId: string) {
-  if (!s3Configured()) return null
-  return `/api/calls/${callId}/recording`
-}
-
 export async function getRecording(callId: string) {
   const { Body } = await getObject(getRecordingKey(callId))
   if (!Body) throw new Error("Recording not found")

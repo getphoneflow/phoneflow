@@ -25,7 +25,6 @@ import { requireAuthToken } from "@/lib/auth/token"
 import { computeCallCosts } from "@/lib/call-cost"
 import {
   getRecording,
-  getRecordingUrl,
   placeOutboundCall,
   startCallRecording,
   stopCallRecording,
@@ -349,12 +348,7 @@ callRoutes.get("/download", requireOrganization, async (c) => {
       },
     })
 
-    return c.json(
-      calls.map((call) => ({
-        ...call,
-        recordingUrl: getRecordingUrl(call.id),
-      })) satisfies CallDownloadResponse
-    )
+    return c.json(calls satisfies CallDownloadResponse)
   } catch {
     return c.json({ error: "Failed to download calls" }, 500)
   }
@@ -416,10 +410,7 @@ callRoutes.get("/:callId", requireOrganization, async (c) => {
       return c.json({ error: "Call not found" }, 404)
     }
 
-    return c.json({
-      ...call,
-      recordingUrl: getRecordingUrl(call.id),
-    } satisfies CallDetailResponse)
+    return c.json(call satisfies CallDetailResponse)
   } catch {
     return c.json({ error: "Failed to fetch call" }, 500)
   }

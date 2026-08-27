@@ -14,6 +14,7 @@ import {
   SheetTitle,
 } from "@workspace/ui/components/sheet"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { CallRecordingPlayer } from "@/components/calls/call-recording-player"
 import { api } from "@/lib/api"
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
@@ -65,14 +66,9 @@ export function CallDetailSheet({
               ? ` - ${secondsFormatter.format(call.durationMs / 1000)}s`
               : null}
           </SheetDescription>
-          {data?.recordingUrl ? (
-            <audio
-              className="w-full mt-2 max-h-12"
-              controls
-              preload="metadata"
-              src={data.recordingUrl}
-            />
-          ) : null}
+          <div className="mt-2">
+            <CallRecordingPlayer callId={call.id} />
+          </div>
         </SheetHeader>
 
         {isLoading ? (

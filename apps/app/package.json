@@ -16,6 +16,7 @@
     "@tanstack/react-query": "^5.101.4",
     "@tanstack/react-router": "^1.170.29",
     "@tanstack/react-table": "^8.21.3",
+    "@wavesurfer/react": "^1.0.12",
     "@workspace/shared": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@xyflow/react": "^12.11.3",
@@ -25,6 +26,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-hook-form": "^7.85.0",
+    "wavesurfer.js": "^7.12.11",
     "zod": "catalog:",
     "zustand": "^5.0.15"
   },

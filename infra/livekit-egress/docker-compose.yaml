@@ -13,4 +13,5 @@ services:
         ws_url: '${LIVEKIT_URL}'
         redis:
           address: '${REDIS_ADDRESS}'
+        enable_room_composite_sdk_source: true
         log_level: info

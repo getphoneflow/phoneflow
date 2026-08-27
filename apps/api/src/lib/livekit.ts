@@ -1,4 +1,5 @@
 import {
+  AudioMixing,
   EncodedFileOutput,
   EncodedFileType,
   S3Upload,
@@ -81,7 +82,7 @@ export async function startCallRecording(roomName: string, callId: string) {
         },
       }),
     },
-    { audioOnly: true }
+    { audioOnly: true, audioMixing: AudioMixing.DUAL_CHANNEL_AGENT }
   )
 }
 

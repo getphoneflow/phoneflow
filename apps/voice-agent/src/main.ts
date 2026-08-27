@@ -21,7 +21,9 @@ import { buildCallTranscript } from "@/lib/transcript"
 
 export default defineAgent({
   prewarm: async (proc: JobProcess) => {
-    proc.userData.vad = await silero.VAD.load()
+    proc.userData.vad = await silero.VAD.load({
+      activationThreshold: 0.3,
+    })
   },
   entry: async (ctx: JobContext) => {
     await ctx.connect()
@@ -43,20 +45,37 @@ export default defineAgent({
       vad: ctx.proc.userData.vad as silero.VAD,
       stt: new STT({
         apiKey: env.ASSEMBLYAI_API_KEY,
+        baseUrl: env.ASSEMBLYAI_BASE_URL,
         speechModel: "universal-3-5-pro",
+        mode: "balanced",
+        vadThreshold: 0.3,
+        minTurnSilence: 100,
+        maxTurnSilence: 1000,
+        agentContextCarryover: true,
+        voiceFocus: "near-field",
       }),
       llm: new LLM({
         model: "gemma-4-31b",
         apiKey: env.CEREBRAS_API_KEY,
+        temperature: 0.01,
       }),
       tts: new TTS({
         apiKey: env.FISHAUDIO_API_KEY,
         model: "s2.1-pro",
         voiceId: env.FISHAUDIO_VOICE_ID,
+        latencyMode: "balanced",
       }),
       turnHandling: {
         turnDetection: "stt",
-        interruption: { mode: "vad" },
+        endpointing: { minDelay: 0 },
+        preemptiveGeneration: { enabled: true, preemptiveTts: true },
+        interruption: {
+          mode: "vad",
+          minDuration: 500,
+          minWords: 1,
+          resumeFalseInterruption: true,
+          falseInterruptionTimeout: 2000,
+        },
       },
     })
 

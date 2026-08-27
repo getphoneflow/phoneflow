@@ -8,6 +8,7 @@ export const env = {
   LIVEKIT_URL: process.env.LIVEKIT_URL ?? "",
   LIVEKIT_AGENT_NAME: process.env.LIVEKIT_AGENT_NAME ?? "voice-agent",
   ASSEMBLYAI_API_KEY: process.env.ASSEMBLYAI_API_KEY ?? "",
+  ASSEMBLYAI_BASE_URL: process.env.ASSEMBLYAI_BASE_URL ?? "",
   CEREBRAS_API_KEY:
     process.env.CEREBRAS_API_KEY ?? process.env.CEREBRA_API_KEY ?? "",
   FISHAUDIO_API_KEY:

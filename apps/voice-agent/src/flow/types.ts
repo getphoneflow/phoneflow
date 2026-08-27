@@ -24,7 +24,6 @@ export type FlowNode = FlowConversationNode | FlowEndNode
 
 export interface FlowEdge {
   condition: FlowEdgeCondition
-  transitionToolName: string
   targetNode: FlowNode
 }
 

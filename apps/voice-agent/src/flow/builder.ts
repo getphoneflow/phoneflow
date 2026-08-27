@@ -6,14 +6,6 @@ import type {
   FlowNode,
 } from "@/flow/types"
 
-function buildTransitionToolName(name: string) {
-  return name
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "_")
-    .replace(/[^a-z_]/g, "")
-}
-
 export function buildFlowGraph(config: AgentConfig) {
   const nodesById = new Map<string, FlowNode>()
   let startNode: FlowConversationNode | undefined
@@ -55,12 +47,10 @@ export function buildFlowGraph(config: AgentConfig) {
 
   for (const edge of config.edges) {
     const targetNode = nodesById.get(edge.target)!
-    const transitionToolName = buildTransitionToolName(targetNode.name)
 
     const flowEdge: FlowEdge = {
       targetNode,
       condition: edge.data.condition,
-      transitionToolName,
     }
 
     const sourceNode = nodesById.get(edge.source)!

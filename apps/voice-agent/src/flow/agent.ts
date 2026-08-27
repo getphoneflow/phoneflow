@@ -3,7 +3,7 @@ import { z } from "zod"
 
 import type { ExtractVariable } from "@workspace/shared/api/agent-config/types"
 import { evaluateExpression } from "@/flow/expression"
-import { FLOW_INSTRUCTIONS } from "@/flow/prompts"
+import { PLATFORM_INSTRUCTIONS, TRANSITION_INSTRUCTIONS } from "@/flow/prompts"
 import type { FlowConversationNode, FlowGraph, FlowNode } from "@/flow/types"
 import type { Variables } from "@/flow/variables"
 import { endCall } from "@/lib/end-call"
@@ -13,19 +13,21 @@ function buildNodeInstructions(
   node: FlowConversationNode,
   variables: Variables
 ) {
-  let nodeInstructions = ""
+  const parts = [PLATFORM_INSTRUCTIONS]
 
   if (graph.globalPrompt) {
-    nodeInstructions += variables.replace(graph.globalPrompt) + "\n\n"
+    parts.push(variables.replace(graph.globalPrompt))
   }
-
-  nodeInstructions += FLOW_INSTRUCTIONS
 
   if (node.instructions.type === "prompt") {
-    nodeInstructions += "\n\n" + variables.replace(node.instructions.text)
+    parts.push(variables.replace(node.instructions.text))
   }
 
-  return nodeInstructions
+  if (node.outgoingEdges.some((edge) => edge.condition.type === "prompt")) {
+    parts.push(TRANSITION_INSTRUCTIONS)
+  }
+
+  return parts.join("\n\n")
 }
 
 export class FlowAgent extends Agent {
@@ -43,16 +45,19 @@ export class FlowAgent extends Agent {
 
   private buildNodeTools(node: FlowConversationNode) {
     const tools = []
+    let conditionIndex = 0
 
     for (const edge of node.outgoingEdges) {
       if (edge.condition.type !== "prompt") {
         continue
       }
 
+      conditionIndex++
+
       tools.push(
         tool({
-          name: edge.transitionToolName,
-          description: `Transition to "${edge.targetNode.name}" when: ${this.variables.replace(edge.condition.prompt)}`,
+          name: `notify_condition_${conditionIndex}_met`,
+          description: `Call this tool when the following condition is met: ${this.variables.replace(edge.condition.prompt)}`,
           execute: async () => {
             await this.transitionTo(edge.targetNode)
           },

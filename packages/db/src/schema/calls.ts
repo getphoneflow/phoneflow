@@ -51,7 +51,6 @@ export const callsTable = pgTable(
     platformCost: numeric("platform_cost", { precision: 12, scale: 6 }),
     totalCost: numeric("total_cost", { precision: 12, scale: 6 }),
     livekitRoomName: text("livekit_room_name").notNull(),
-    recordingUrl: text("recording_url"),
     transcript: json().$type<CallTranscript | null>(),
     variables: json().$type<CallVariableValues | null>(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })

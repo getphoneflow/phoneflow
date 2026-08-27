@@ -24,6 +24,7 @@ import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { computeCallCosts } from "@/lib/call-cost"
 import {
+  getRecording,
   getRecordingUrl,
   placeOutboundCall,
   startCallRecording,
@@ -308,7 +309,6 @@ callRoutes.post(
           totalCost: costs.total.toFixed(6),
           transcript: payload.transcript,
           variables: payload.variables ?? null,
-          recordingUrl: getRecordingUrl(call.id),
           updatedAt: new Date(),
         })
         .where(eq(callsTable.id, payload.callId))
@@ -349,9 +349,42 @@ callRoutes.get("/download", requireOrganization, async (c) => {
       },
     })
 
-    return c.json(calls satisfies CallDownloadResponse)
+    return c.json(
+      calls.map((call) => ({
+        ...call,
+        recordingUrl: getRecordingUrl(call.id),
+      })) satisfies CallDownloadResponse
+    )
   } catch {
     return c.json({ error: "Failed to download calls" }, 500)
+  }
+})
+
+callRoutes.get("/:callId/recording", requireOrganization, async (c) => {
+  const organizationId = c.get("organizationId")
+  const callId = c.req.param("callId")
+
+  try {
+    const call = await db.query.callsTable.findFirst({
+      where: {
+        id: callId,
+        organizationId,
+      },
+      columns: {
+        id: true,
+      },
+    })
+
+    if (!call) {
+      return c.json({ error: "Call not found" }, 404)
+    }
+
+    const recording = await getRecording(call.id)
+
+    c.header("Content-Type", "audio/mp4")
+    return c.body(recording)
+  } catch {
+    return c.json({ error: "Failed to fetch recording" }, 500)
   }
 })
 
@@ -383,7 +416,10 @@ callRoutes.get("/:callId", requireOrganization, async (c) => {
       return c.json({ error: "Call not found" }, 404)
     }
 
-    return c.json(call satisfies CallDetailResponse)
+    return c.json({
+      ...call,
+      recordingUrl: getRecordingUrl(call.id),
+    } satisfies CallDetailResponse)
   } catch {
     return c.json({ error: "Failed to fetch call" }, 500)
   }
@@ -399,7 +435,6 @@ callRoutes.get("/", requireOrganization, async (c) => {
       },
       columns: {
         transcript: false,
-        recordingUrl: false,
       },
       with: {
         agent: {

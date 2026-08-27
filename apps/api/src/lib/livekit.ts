@@ -14,6 +14,7 @@ import {
 
 import type { CallVariableValues } from "@workspace/shared/api/calls/types"
 import { env } from "@/lib/env"
+import { getObject, s3Configured } from "@/lib/s3"
 
 const ROOM_PREFIX = "call-"
 
@@ -41,24 +42,23 @@ function createEgressClient() {
   )
 }
 
-function egressConfigured() {
-  return Boolean(
-    env.S3_ACCESS_KEY &&
-      env.S3_SECRET_KEY &&
-      env.S3_BUCKET &&
-      env.S3_REGION &&
-      env.S3_ENDPOINT &&
-      env.S3_PUBLIC_URL
-  )
+export function getRecordingKey(callId: string) {
+  return `recordings/${callId}.mp4`
 }
 
 export function getRecordingUrl(callId: string) {
-  if (!egressConfigured()) return null
-  return `${env.S3_PUBLIC_URL}/recordings/${callId}.mp4`
+  if (!s3Configured()) return null
+  return `/api/calls/${callId}/recording`
+}
+
+export async function getRecording(callId: string) {
+  const { Body } = await getObject(getRecordingKey(callId))
+  if (!Body) throw new Error("Recording not found")
+  return Body.transformToWebStream()
 }
 
 export async function startCallRecording(roomName: string, callId: string) {
-  if (!egressConfigured()) return
+  if (!s3Configured()) return
 
   const egress = createEgressClient()
   await egress.startRoomCompositeEgress(
@@ -66,7 +66,7 @@ export async function startCallRecording(roomName: string, callId: string) {
     {
       file: new EncodedFileOutput({
         fileType: EncodedFileType.MP4,
-        filepath: `recordings/${callId}.mp4`,
+        filepath: getRecordingKey(callId),
         disableManifest: true,
         output: {
           case: "s3",
@@ -86,7 +86,7 @@ export async function startCallRecording(roomName: string, callId: string) {
 }
 
 export async function stopCallRecording(roomName: string) {
-  if (!egressConfigured()) return
+  if (!s3Configured()) return
 
   const egress = createEgressClient()
   const active = await egress.listEgress({ roomName, active: true })

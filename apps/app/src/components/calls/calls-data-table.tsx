@@ -57,6 +57,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
+import {
+  formatCallCost,
+  getCallCostBreakdown,
+  parseCallCost,
+} from "@/components/calls/call-cost-breakdown"
 import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
 import { SortableHeader } from "@/components/sortable-header"
 
@@ -69,17 +74,6 @@ const secondsFormatter = new Intl.NumberFormat("en", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 })
-
-const usdFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 4,
-})
-
-function parseCost(value: string | null) {
-  return value === null ? null : Number(value)
-}
 
 function exactFilterFn(
   row: { getValue: (columnId: string) => unknown },
@@ -112,30 +106,22 @@ const statusFilterOptions = [
 ]
 
 function CostCell({ call }: { call: CallListResponse[number] }) {
-  const totalCost = parseCost(call.totalCost)
+  const totalCost = parseCallCost(call.totalCost)
 
   if (totalCost === null) {
     return null
   }
 
-  const breakdown = [
-    { label: "STT", model: call.sttModel, cost: parseCost(call.sttCost)! },
-    { label: "LLM", model: call.llmModel, cost: parseCost(call.llmCost)! },
-    { label: "TTS", model: call.ttsModel, cost: parseCost(call.ttsCost)! },
-    { label: "Telephony", model: null, cost: parseCost(call.telephonyCost)! },
-    { label: "Platform", model: null, cost: parseCost(call.platformCost)! },
-  ].filter((item) => item.cost > 0)
-
   return (
     <HoverCard>
       <HoverCardTrigger className="inline-flex items-center gap-1">
-        {usdFormatter.format(totalCost)}
+        {formatCallCost(totalCost)}
         <CircleHelpIcon className="size-3.5 text-muted-foreground" />
       </HoverCardTrigger>
       <HoverCardContent className="flex flex-col gap-2">
-        {breakdown.map((item) => (
+        {getCallCostBreakdown(call).map((item) => (
           <div
-            key={item.label}
+            key={item.key}
             className="flex items-center justify-between gap-3"
           >
             <div>
@@ -146,7 +132,7 @@ function CostCell({ call }: { call: CallListResponse[number] }) {
                 </div>
               ) : null}
             </div>
-            <span className="text-xs">{usdFormatter.format(item.cost)}</span>
+            <span className="text-xs">{formatCallCost(item.cost)}</span>
           </div>
         ))}
       </HoverCardContent>
@@ -171,7 +157,7 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
   },
   {
     id: "cost",
-    accessorFn: (row) => parseCost(row.totalCost),
+    accessorFn: (row) => parseCallCost(row.totalCost),
     header: ({ column }) => <SortableHeader column={column} title="Cost" />,
     cell: ({ row }) => <CostCell call={row.original} />,
   },

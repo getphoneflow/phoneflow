@@ -26,6 +26,7 @@ catalog:
   lucide-react: 1.31.0
   react: 19.2.8
   react-dom: 19.2.8
+  recharts: 3.8.0
   tsx: 4.23.12
   typescript: 7.0.2
   vite: 8.2.1

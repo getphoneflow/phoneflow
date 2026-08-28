@@ -20,6 +20,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@workspace/ui/components/tabs"
+import { CallCostBreakdown } from "@/components/calls/call-cost-breakdown"
 import { CallRecordingPlayer } from "@/components/calls/call-recording-player"
 import { api } from "@/lib/api"
 
@@ -84,6 +85,7 @@ export function CallDetailSheet({
             <TabsList className="w-full">
               <TabsTrigger value="transcript">Transcript</TabsTrigger>
               <TabsTrigger value="data">Data</TabsTrigger>
+              <TabsTrigger value="cost">Cost</TabsTrigger>
             </TabsList>
           </div>
           <TabsContent value="transcript" className="flex min-h-0 flex-col">
@@ -125,6 +127,12 @@ export function CallDetailSheet({
                 ))}
               </div>
             )}
+          </TabsContent>
+          <TabsContent
+            value="cost"
+            className="flex min-h-0 flex-col overflow-y-auto"
+          >
+            <CallCostBreakdown call={call} />
           </TabsContent>
         </Tabs>
       </SheetContent>

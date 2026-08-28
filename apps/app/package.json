@@ -26,6 +26,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-hook-form": "^7.85.0",
+    "recharts": "catalog:",
     "wavesurfer.js": "^7.12.11",
     "zod": "catalog:",
     "zustand": "^5.0.15"

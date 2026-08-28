@@ -29,6 +29,7 @@
     "react": "catalog:",
     "react-day-picker": "^10.0.1",
     "react-dom": "catalog:",
+    "recharts": "catalog:",
     "shadcn": "^4.18.0",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.6.0",

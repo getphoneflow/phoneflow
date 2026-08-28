@@ -1,5 +1,6 @@
 import type { ReceivedMessage } from "@livekit/components-react"
 import { useQuery } from "@tanstack/react-query"
+import { Link } from "@tanstack/react-router"
 
 import type {
   CallDetailResponse,
@@ -9,7 +10,6 @@ import { AgentChatTranscript } from "@workspace/ui/components/agents-ui/agent-ch
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from "@workspace/ui/components/sheet"
@@ -62,19 +62,35 @@ export function CallDetailSheet({
       }) as ReceivedMessage
   )
 
-  const variables = Object.entries(data?.variables ?? {})
+  const variables = Object.entries(call.variables ?? {})
+  const channelLabel = call.channel === "phone_call" ? "Phone call" : "Web call"
+  const versionLabel = call.agentVersion
+    ? `V${call.agentVersion.number}`
+    : "Latest"
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="gap-0">
         <SheetHeader>
-          <SheetTitle>{call.agent?.name}</SheetTitle>
-          <SheetDescription>
-            {dateFormatter.format(new Date(call.startedAt))}
-            {call.durationMs !== null
-              ? ` - ${secondsFormatter.format(call.durationMs / 1000)}s`
-              : null}
-          </SheetDescription>
+          <SheetTitle className="pr-8">
+            {dateFormatter.format(new Date(call.startedAt))} {channelLabel}
+          </SheetTitle>
+          <div className="flex items-center gap-1 text-sm">
+            <span className="text-muted-foreground">Agent: </span>
+            <Link
+              to="/agents/$agentId"
+              params={{ agentId: call.agentId }}
+              className="font-medium hover:underline"
+            >
+              {call.agent?.name}
+            </Link>
+            <span className="text-muted-foreground">· {versionLabel}</span>
+          </div>
+          {call.durationMs && (
+            <p className="text-sm text-muted-foreground">
+              Duration: {secondsFormatter.format(call.durationMs / 1000)}s
+            </p>
+          )}
           <div className="mt-2">
             <CallRecordingPlayer callId={call.id} />
           </div>
@@ -104,15 +120,9 @@ export function CallDetailSheet({
             )}
           </TabsContent>
           <TabsContent value="data" className="flex min-h-0 flex-col">
-            {isLoading ? (
+            {variables.length === 0 ? (
               <div className="flex flex-1 items-center justify-center">
-                <Spinner />
-              </div>
-            ) : variables.length === 0 ? (
-              <div className="flex flex-1 items-center justify-center">
-                <p className="text-sm text-muted-foreground">
-                  No variables
-                </p>
+                <p className="text-sm text-muted-foreground">No variables</p>
               </div>
             ) : (
               <div className="p-4">

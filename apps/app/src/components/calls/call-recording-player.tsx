@@ -12,7 +12,7 @@ const PLAYBACK_RATES = [0.5, 1, 1.5, 2]
 const FETCH_PARAMS = { credentials: "include" } as const
 const SPLIT_CHANNELS = [
   { waveColor: "#7dd3fc", progressColor: "#38bdf8" },
-  { waveColor: "#fde68a", progressColor: "#facd02" },
+  { waveColor: "#b796fa", progressColor: "#8b5cf6" },
 ]
 
 function formatTick(seconds: number) {

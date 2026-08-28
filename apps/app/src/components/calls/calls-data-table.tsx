@@ -253,6 +253,12 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
         : "Latest",
   },
   {
+    id: "variables",
+    header: "Variables",
+    enableSorting: false,
+    cell: ({ row }) => Object.keys(row.original.variables ?? {}).length,
+  },
+  {
     accessorKey: "status",
     filterFn: exactFilterFn,
     header: "Status",

@@ -73,6 +73,7 @@ export type CallListResponse = {
   telephonyCost: string | null
   platformCost: string | null
   totalCost: string | null
+  variables: CallVariableValues | null
   createdAt: Date
   updatedAt: Date
   agent: { name: string } | null

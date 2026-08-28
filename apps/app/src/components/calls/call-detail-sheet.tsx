@@ -14,6 +14,12 @@ import {
   SheetTitle,
 } from "@workspace/ui/components/sheet"
 import { Spinner } from "@workspace/ui/components/spinner"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs"
 import { CallRecordingPlayer } from "@/components/calls/call-recording-player"
 import { api } from "@/lib/api"
 
@@ -55,6 +61,8 @@ export function CallDetailSheet({
       }) as ReceivedMessage
   )
 
+  const variables = Object.entries(data?.variables ?? {})
+
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="gap-0">
@@ -71,19 +79,54 @@ export function CallDetailSheet({
           </div>
         </SheetHeader>
 
-        {isLoading ? (
-          <div className="flex flex-1 items-center justify-center">
-            <Spinner />
+        <Tabs defaultValue="transcript" className="min-h-0 flex-1">
+          <div className="px-4">
+            <TabsList className="w-full">
+              <TabsTrigger value="transcript">Transcript</TabsTrigger>
+              <TabsTrigger value="data">Data</TabsTrigger>
+            </TabsList>
           </div>
-        ) : messages.length === 0 ? (
-          <div className="flex flex-1 items-center justify-center">
-            <p className="text-sm text-muted-foreground">
-              No transcript available
-            </p>
-          </div>
-        ) : (
-          <AgentChatTranscript messages={messages} initial={false} />
-        )}
+          <TabsContent value="transcript" className="flex min-h-0 flex-col">
+            {isLoading ? (
+              <div className="flex flex-1 items-center justify-center">
+                <Spinner />
+              </div>
+            ) : messages.length === 0 ? (
+              <div className="flex flex-1 items-center justify-center">
+                <p className="text-sm text-muted-foreground">
+                  No transcript available
+                </p>
+              </div>
+            ) : (
+              <AgentChatTranscript messages={messages} initial={false} />
+            )}
+          </TabsContent>
+          <TabsContent value="data" className="flex min-h-0 flex-col">
+            {isLoading ? (
+              <div className="flex flex-1 items-center justify-center">
+                <Spinner />
+              </div>
+            ) : variables.length === 0 ? (
+              <div className="flex flex-1 items-center justify-center">
+                <p className="text-sm text-muted-foreground">
+                  No variables
+                </p>
+              </div>
+            ) : (
+              <div className="p-4">
+                <div className="mb-4 font-medium">Dynamic variables</div>
+                {variables.map(([key, value]) => (
+                  <div key={key} className="flex justify-between gap-4 pb-2">
+                    <span className="text-sm text-muted-foreground">{key}</span>
+                    <span className="text-right text-sm break-all">
+                      {value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
       </SheetContent>
     </Sheet>
   )

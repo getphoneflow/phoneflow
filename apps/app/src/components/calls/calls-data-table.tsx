@@ -1,14 +1,20 @@
 import { Link } from "@tanstack/react-router"
 import {
-  type ColumnDef,
   type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  createColumnHelper,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFn_includesString,
+  rowPaginationFeature,
+  rowSortingFeature,
   type SortingState,
-  useReactTable,
+  sortFn_alphanumeric,
+  sortFn_text,
+  tableFeatures,
+  useTable,
 } from "@tanstack/react-table"
 import {
   ArrowDownRight,
@@ -64,6 +70,18 @@ import {
 } from "@/components/calls/call-cost-breakdown"
 import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
 import { SortableHeader } from "@/components/sortable-header"
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+})
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
@@ -140,29 +158,29 @@ function CostCell({ call }: { call: CallListResponse[number] }) {
   )
 }
 
-const columns: ColumnDef<CallListResponse[number]>[] = [
-  {
-    accessorKey: "startedAt",
+type Call = CallListResponse[number]
+
+const columnHelper = createColumnHelper<typeof features, Call>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor("startedAt", {
     header: ({ column }) => <SortableHeader column={column} title="Started" />,
     cell: ({ row }) => dateFormatter.format(new Date(row.original.startedAt)),
-  },
-  {
+  }),
+  columnHelper.accessor((row) => row.durationMs, {
     id: "duration",
-    accessorFn: (row) => row.durationMs,
     header: ({ column }) => <SortableHeader column={column} title="Duration" />,
     cell: ({ row }) =>
       row.original.durationMs === null
         ? null
         : `${secondsFormatter.format(row.original.durationMs / 1000)}s`,
-  },
-  {
+  }),
+  columnHelper.accessor((row) => parseCallCost(row.totalCost), {
     id: "cost",
-    accessorFn: (row) => parseCallCost(row.totalCost),
     header: ({ column }) => <SortableHeader column={column} title="Cost" />,
     cell: ({ row }) => <CostCell call={row.original} />,
-  },
-  {
-    accessorKey: "channel",
+  }),
+  columnHelper.accessor("channel", {
     filterFn: exactFilterFn,
     header: "Channel",
     cell: ({ row }) => {
@@ -182,9 +200,8 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
         </Tooltip>
       )
     },
-  },
-  {
-    accessorKey: "direction",
+  }),
+  columnHelper.accessor("direction", {
     filterFn: exactFilterFn,
     header: "Direction",
     cell: ({ row }) => {
@@ -204,20 +221,19 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
         </Tooltip>
       )
     },
-  },
-  {
+  }),
+  columnHelper.display({
     id: "from",
     header: "From",
     cell: ({ row }) => row.original.fromNumber,
-  },
-  {
+  }),
+  columnHelper.display({
     id: "to",
     header: "To",
     cell: ({ row }) => row.original.toNumber,
-  },
-  {
+  }),
+  columnHelper.accessor((row) => row.agent?.name ?? "", {
     id: "agent",
-    accessorFn: (row) => row.agent?.name ?? "",
     header: ({ column }) => <SortableHeader column={column} title="Agent" />,
     cell: ({ row }) =>
       row.original.agent ? (
@@ -229,23 +245,22 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
           {row.original.agent.name}
         </Link>
       ) : null,
-  },
-  {
+  }),
+  columnHelper.display({
     id: "version",
     header: "Version",
     cell: ({ row }) =>
       row.original.agentVersion
         ? `V${row.original.agentVersion.number}`
         : "Latest",
-  },
-  {
+  }),
+  columnHelper.display({
     id: "variables",
     header: "Variables",
     enableSorting: false,
     cell: ({ row }) => Object.keys(row.original.variables ?? {}).length,
-  },
-  {
-    accessorKey: "status",
+  }),
+  columnHelper.accessor("status", {
     filterFn: exactFilterFn,
     header: "Status",
     cell: ({ row }) =>
@@ -254,25 +269,20 @@ const columns: ColumnDef<CallListResponse[number]>[] = [
       ) : (
         <Badge variant="secondary">Completed</Badge>
       ),
-  },
-]
+  }),
+])
 
 export function CallsDataTable({ data }: { data: CallListResponse }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
-  const [selectedCall, setSelectedCall] = useState<
-    CallListResponse[number] | null
-  >(null)
+  const [selectedCall, setSelectedCall] = useState<Call | null>(null)
 
-  const table = useReactTable({
+  const table = useTable({
+    features,
     data,
     columns,
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
       sorting,
@@ -384,12 +394,9 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -405,10 +412,7 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <table.FlexRender cell={cell} />
                     </TableCell>
                   ))}
                 </TableRow>
@@ -429,7 +433,7 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-4">
           <Select
-            value={`${table.getState().pagination.pageSize}`}
+            value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => table.setPageSize(Number(value))}
           >
             <SelectTrigger className="w-20">
@@ -447,7 +451,7 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            Page {table.state.pagination.pageIndex + 1} of{" "}
             {table.getPageCount() || 1}
           </span>
           <Button

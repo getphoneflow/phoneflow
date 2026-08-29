@@ -1,14 +1,20 @@
 import { Link } from "@tanstack/react-router"
 import {
-  type ColumnDef,
   type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  createColumnHelper,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFn_includesString,
+  rowPaginationFeature,
+  rowSortingFeature,
   type SortingState,
-  useReactTable,
+  sortFn_alphanumeric,
+  sortFn_text,
+  tableFeatures,
+  useTable,
 } from "@tanstack/react-table"
 import {
   ChevronLeft,
@@ -45,18 +51,33 @@ import { PhoneNumberRowActions } from "@/components/phone-numbers/phone-number-r
 import { PhoneNumberSheet } from "@/components/phone-numbers/phone-number-sheet"
 import { SortableHeader } from "@/components/sortable-header"
 
+const features = tableFeatures({
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+})
+
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
   timeStyle: "short",
 })
 
-const columns: ColumnDef<PhoneNumberListResponse[number]>[] = [
-  {
-    accessorKey: "number",
+type PhoneNumber = PhoneNumberListResponse[number]
+
+const columnHelper = createColumnHelper<typeof features, PhoneNumber>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor("number", {
     header: "Number",
     cell: ({ row }) => row.original.number,
-  },
-  {
+  }),
+  columnHelper.display({
     id: "agent",
     header: "Agent",
     cell: ({ row }) =>
@@ -69,8 +90,8 @@ const columns: ColumnDef<PhoneNumberListResponse[number]>[] = [
           {row.original.agent.name}
         </Link>
       ) : null,
-  },
-  {
+  }),
+  columnHelper.display({
     id: "version",
     header: "Version",
     cell: ({ row }) => {
@@ -84,18 +105,17 @@ const columns: ColumnDef<PhoneNumberListResponse[number]>[] = [
 
       return `V${row.original.agentVersion.number}`
     },
-  },
-  {
-    accessorKey: "updatedAt",
+  }),
+  columnHelper.accessor("updatedAt", {
     header: ({ column }) => <SortableHeader column={column} title="Updated" />,
     cell: ({ row }) => dateFormatter.format(new Date(row.original.updatedAt)),
-  },
-  {
+  }),
+  columnHelper.display({
     id: "actions",
     header: "",
     cell: ({ row }) => <PhoneNumberRowActions phoneNumber={row.original} />,
-  },
-]
+  }),
+])
 
 export function PhoneNumbersDataTable({
   data,
@@ -104,20 +124,15 @@ export function PhoneNumbersDataTable({
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
-  const [selected, setSelected] = useState<
-    PhoneNumberListResponse[number] | null
-  >(null)
+  const [selected, setSelected] = useState<PhoneNumber | null>(null)
 
-  const table = useReactTable({
+  const table = useTable({
+    features,
     data,
     columns,
     getRowId: (row) => row.id,
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
       sorting,
@@ -150,12 +165,9 @@ export function PhoneNumbersDataTable({
                       header.column.id === "actions" ? "w-0" : undefined
                     }
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -181,10 +193,7 @@ export function PhoneNumbersDataTable({
                           : undefined
                       }
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <table.FlexRender cell={cell} />
                     </TableCell>
                   ))}
                 </TableRow>
@@ -205,7 +214,7 @@ export function PhoneNumbersDataTable({
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-4">
           <Select
-            value={`${table.getState().pagination.pageSize}`}
+            value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => table.setPageSize(Number(value))}
           >
             <SelectTrigger className="w-20">
@@ -223,7 +232,7 @@ export function PhoneNumbersDataTable({
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            Page {table.state.pagination.pageIndex + 1} of{" "}
             {table.getPageCount() || 1}
           </span>
           <Button

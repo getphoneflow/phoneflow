@@ -1,14 +1,20 @@
 import { Link } from "@tanstack/react-router"
 import {
-  type ColumnDef,
   type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  createColumnHelper,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFn_includesString,
+  rowPaginationFeature,
+  rowSortingFeature,
   type SortingState,
-  useReactTable,
+  sortFn_alphanumeric,
+  sortFn_text,
+  tableFeatures,
+  useTable,
 } from "@tanstack/react-table"
 import {
   ChevronLeft,
@@ -48,6 +54,18 @@ import {
 } from "@workspace/ui/components/table"
 import { SortableHeader } from "@/components/sortable-header"
 
+const features = tableFeatures({
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+})
+
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
   timeStyle: "short",
@@ -58,30 +76,30 @@ const statusLabel: Record<BatchCallStatus, string> = {
   triggered: "Triggered",
 }
 
-const columns: ColumnDef<BatchCallListItem>[] = [
-  {
-    accessorKey: "name",
+const columnHelper = createColumnHelper<typeof features, BatchCallListItem>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor("name", {
     header: "Name",
     cell: ({ row }) => row.original.name,
-  },
-  {
-    accessorKey: "status",
+  }),
+  columnHelper.accessor("status", {
     header: "Status",
     cell: ({ row }) => (
       <Badge variant="secondary">{statusLabel[row.original.status]}</Badge>
     ),
-  },
-  {
+  }),
+  columnHelper.display({
     id: "recipients",
     header: "Recipients",
     cell: ({ row }) => row.original.totalCount,
-  },
-  {
+  }),
+  columnHelper.display({
     id: "from",
     header: "From",
     cell: ({ row }) => row.original.phoneNumber?.number,
-  },
-  {
+  }),
+  columnHelper.display({
     id: "agent",
     header: "Agent",
     cell: ({ row }) =>
@@ -94,40 +112,36 @@ const columns: ColumnDef<BatchCallListItem>[] = [
           {row.original.agent.name}
         </Link>
       ) : null,
-  },
-  {
+  }),
+  columnHelper.display({
     id: "version",
     header: "Version",
     cell: ({ row }) =>
       row.original.agentVersion
         ? `V${row.original.agentVersion.number}`
         : "Latest (draft)",
-  },
-  {
+  }),
+  columnHelper.accessor((row) => row.scheduledAt ?? row.createdAt, {
     id: "when",
-    accessorFn: (row) => row.scheduledAt ?? row.createdAt,
     header: ({ column }) => <SortableHeader column={column} title="When" />,
     cell: ({ row }) =>
       dateFormatter.format(
         new Date(row.original.scheduledAt ?? row.original.createdAt)
       ),
-  },
-]
+  }),
+])
 
 export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
 
-  const table = useReactTable({
+  const table = useTable({
+    features,
     data,
     columns,
     getRowId: (row) => row.id,
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
       sorting,
@@ -155,12 +169,9 @@ export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -172,10 +183,7 @@ export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <table.FlexRender cell={cell} />
                     </TableCell>
                   ))}
                 </TableRow>
@@ -196,7 +204,7 @@ export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-4">
           <Select
-            value={`${table.getState().pagination.pageSize}`}
+            value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => table.setPageSize(Number(value))}
           >
             <SelectTrigger className="w-20">
@@ -214,7 +222,7 @@ export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            Page {table.state.pagination.pageIndex + 1} of{" "}
             {table.getPageCount() || 1}
           </span>
           <Button

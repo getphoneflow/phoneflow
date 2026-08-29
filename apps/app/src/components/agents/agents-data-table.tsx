@@ -1,14 +1,20 @@
 import { useNavigate } from "@tanstack/react-router"
 import {
-  type ColumnDef,
   type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  createColumnHelper,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFn_includesString,
+  rowPaginationFeature,
+  rowSortingFeature,
   type SortingState,
-  useReactTable,
+  sortFn_alphanumeric,
+  sortFn_text,
+  tableFeatures,
+  useTable,
 } from "@tanstack/react-table"
 import {
   ChevronLeft,
@@ -47,50 +53,59 @@ import {
 import { AgentRowActions } from "@/components/agents/agent-row-actions"
 import { SortableHeader } from "@/components/sortable-header"
 
+const features = tableFeatures({
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+})
+
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
   timeStyle: "short",
 })
 
-const columns: ColumnDef<AgentsListItem>[] = [
-  {
-    accessorKey: "name",
+const columnHelper = createColumnHelper<typeof features, AgentsListItem>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor("name", {
     header: ({ column }) => <SortableHeader column={column} title="Name" />,
     cell: ({ row }) => row.original.name,
-  },
-  {
+  }),
+  columnHelper.display({
     id: "phoneNumbers",
     header: "Phone number",
     cell: ({ row }) =>
       row.original.phoneNumbers.map((p) => p.number).join(", "),
-  },
-  {
-    accessorKey: "updatedAt",
+  }),
+  columnHelper.accessor("updatedAt", {
     header: ({ column }) => <SortableHeader column={column} title="Updated" />,
     cell: ({ row }) => dateFormatter.format(new Date(row.original.updatedAt)),
-  },
-  {
+  }),
+  columnHelper.display({
     id: "actions",
     header: "",
     cell: ({ row }) => <AgentRowActions agent={row.original} />,
-  },
-]
+  }),
+])
 
 export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
   const navigate = useNavigate()
 
-  const table = useReactTable({
+  const table = useTable({
+    features,
     data,
     columns,
     getRowId: (row) => row.id,
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
       sorting,
@@ -123,12 +138,9 @@ export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
                       header.column.id === "actions" ? "w-0" : undefined
                     }
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -159,10 +171,7 @@ export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
                           : undefined
                       }
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <table.FlexRender cell={cell} />
                     </TableCell>
                   ))}
                 </TableRow>
@@ -183,7 +192,7 @@ export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-4">
           <Select
-            value={`${table.getState().pagination.pageSize}`}
+            value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => table.setPageSize(Number(value))}
           >
             <SelectTrigger className="w-20">
@@ -201,7 +210,7 @@ export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            Page {table.state.pagination.pageIndex + 1} of{" "}
             {table.getPageCount() || 1}
           </span>
           <Button

@@ -1,11 +1,15 @@
 import {
-  type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  columnVisibilityFeature,
+  createColumnHelper,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  rowPaginationFeature,
+  rowSortingFeature,
   type SortingState,
-  useReactTable,
+  sortFn_alphanumeric,
+  sortFn_text,
+  tableFeatures,
+  useTable,
 } from "@tanstack/react-table"
 import {
   ChevronLeft,
@@ -36,6 +40,15 @@ import { InvitationRoleSelect } from "@/components/settings/members/select-role"
 import { SortableHeader } from "@/components/sortable-header"
 import type { OrganizationInvitation } from "@/lib/auth/organization"
 
+const features = tableFeatures({
+  columnVisibilityFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+})
+
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
 })
@@ -52,39 +65,39 @@ export function InvitationsTable({ data }: InvitationsTableProps) {
     [data]
   )
 
-  const columns: ColumnDef<OrganizationInvitation>[] = [
-    {
-      accessorKey: "email",
+  const columnHelper = createColumnHelper<
+    typeof features,
+    OrganizationInvitation
+  >()
+
+  const columns = columnHelper.columns([
+    columnHelper.accessor("email", {
       header: ({ column }) => <SortableHeader column={column} title="Email" />,
       cell: ({ row }) => row.original.email,
-    },
-    {
-      accessorKey: "role",
+    }),
+    columnHelper.accessor("role", {
       header: "Role",
       cell: ({ row }) => <InvitationRoleSelect invitation={row.original} />,
-    },
-    {
-      accessorKey: "createdAt",
+    }),
+    columnHelper.accessor("createdAt", {
       header: ({ column }) => (
         <SortableHeader column={column} title="Invited on" />
       ),
       cell: ({ row }) => dateFormatter.format(new Date(row.original.createdAt)),
-    },
-    {
+    }),
+    columnHelper.display({
       id: "actions",
       header: "",
       cell: ({ row }) => <InvitationRowActions invitation={row.original} />,
-    },
-  ]
+    }),
+  ])
 
-  const table = useReactTable({
+  const table = useTable({
+    features,
     data: pendingInvitations,
     columns,
     getRowId: (row) => row.id,
     onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     state: {
       sorting,
     },
@@ -104,12 +117,9 @@ export function InvitationsTable({ data }: InvitationsTableProps) {
                       header.column.id === "actions" ? "w-0" : undefined
                     }
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -126,10 +136,7 @@ export function InvitationsTable({ data }: InvitationsTableProps) {
                         cell.column.id === "actions" ? "w-0" : undefined
                       }
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <table.FlexRender cell={cell} />
                     </TableCell>
                   ))}
                 </TableRow>
@@ -150,7 +157,7 @@ export function InvitationsTable({ data }: InvitationsTableProps) {
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-4">
           <Select
-            value={`${table.getState().pagination.pageSize}`}
+            value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => table.setPageSize(Number(value))}
           >
             <SelectTrigger className="w-20">
@@ -168,7 +175,7 @@ export function InvitationsTable({ data }: InvitationsTableProps) {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            Page {table.state.pagination.pageIndex + 1} of{" "}
             {table.getPageCount() || 1}
           </span>
           <Button

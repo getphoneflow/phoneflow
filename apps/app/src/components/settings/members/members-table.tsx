@@ -1,14 +1,20 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import {
-  type ColumnDef,
   type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  createColumnHelper,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFn_includesString,
+  rowPaginationFeature,
+  rowSortingFeature,
   type SortingState,
-  useReactTable,
+  sortFn_alphanumeric,
+  sortFn_text,
+  tableFeatures,
+  useTable,
 } from "@tanstack/react-table"
 import {
   ChevronLeft,
@@ -51,6 +57,18 @@ import {
 } from "@/lib/auth/organization"
 import { useCheckPermission } from "@/lib/auth/permissions"
 
+const features = tableFeatures({
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+})
+
 const dateFormatter = new Intl.DateTimeFormat("en", {
   dateStyle: "medium",
 })
@@ -72,48 +90,43 @@ export function MembersTable({ data }: MembersTableProps) {
   const [inviteOpen, setInviteOpen] = useState(false)
   const canInvite = useCheckPermission({ invitation: ["create"] })
 
-  const columns: ColumnDef<OrganizationMember>[] = [
-    {
-      accessorFn: (row) => row.user.name,
+  const columnHelper = createColumnHelper<typeof features, OrganizationMember>()
+
+  const columns = columnHelper.columns([
+    columnHelper.accessor((row) => row.user.name, {
       id: "name",
       header: ({ column }) => <SortableHeader column={column} title="Name" />,
       cell: ({ row }) => <MemberName member={row.original} />,
-    },
-    {
-      accessorFn: (row) => row.user.email,
+    }),
+    columnHelper.accessor((row) => row.user.email, {
       id: "email",
       header: "Email",
       cell: ({ row }) => row.original.user.email,
-    },
-    {
-      accessorKey: "role",
+    }),
+    columnHelper.accessor("role", {
       header: "Role",
       cell: ({ row }) => <MemberRoleSelect member={row.original} />,
-    },
-    {
-      accessorKey: "createdAt",
+    }),
+    columnHelper.accessor("createdAt", {
       header: ({ column }) => (
         <SortableHeader column={column} title="Member since" />
       ),
       cell: ({ row }) => dateFormatter.format(new Date(row.original.createdAt)),
-    },
-    {
+    }),
+    columnHelper.display({
       id: "actions",
       header: "",
       cell: ({ row }) => <MemberRowActions member={row.original} />,
-    },
-  ]
+    }),
+  ])
 
-  const table = useReactTable({
+  const table = useTable({
+    features,
     data,
     columns,
     getRowId: (row) => row.id,
     onColumnFiltersChange: setColumnFilters,
     onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     state: {
       columnFilters,
       sorting,
@@ -152,12 +165,9 @@ export function MembersTable({ data }: MembersTableProps) {
                       header.column.id === "actions" ? "w-0" : undefined
                     }
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -174,10 +184,7 @@ export function MembersTable({ data }: MembersTableProps) {
                         cell.column.id === "actions" ? "w-0" : undefined
                       }
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      <table.FlexRender cell={cell} />
                     </TableCell>
                   ))}
                 </TableRow>
@@ -198,7 +205,7 @@ export function MembersTable({ data }: MembersTableProps) {
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-4">
           <Select
-            value={`${table.getState().pagination.pageSize}`}
+            value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => table.setPageSize(Number(value))}
           >
             <SelectTrigger className="w-20">
@@ -216,7 +223,7 @@ export function MembersTable({ data }: MembersTableProps) {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            Page {table.state.pagination.pageIndex + 1} of{" "}
             {table.getPageCount() || 1}
           </span>
           <Button

@@ -1,11 +1,15 @@
-import type { Column } from "@tanstack/react-table"
 import { ArrowDown, ArrowUp, ChevronsUpDown } from "lucide-react"
 
-export function SortableHeader<TData>({
+type SortableColumn = {
+  getIsSorted: () => false | "asc" | "desc"
+  toggleSorting: (desc?: boolean) => void
+}
+
+export function SortableHeader({
   column,
   title,
 }: {
-  column: Column<TData>
+  column: SortableColumn
   title: string
 }) {
   const sorted = column.getIsSorted()

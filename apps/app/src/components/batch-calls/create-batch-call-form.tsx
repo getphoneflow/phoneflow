@@ -56,6 +56,10 @@ import {
   timeZones,
   zonedDateTimeToIso,
 } from "@/components/batch-calls/schedule-timezone"
+import {
+  AGENT_VERSION_DRAFT_LABEL,
+  formatAgentVersionLabel,
+} from "@/components/helpers"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 
@@ -351,20 +355,22 @@ export function CreateBatchCallForm() {
                       <SelectValue>
                         {!selectedAgentId
                           ? "Select agent first"
-                          : field.value
-                            ? `V${
-                                agentVersions.find(
-                                  (version) => version.id === field.value
-                                )?.number ?? ""
-                              }`
-                            : "Latest (draft)"}
+                          : formatAgentVersionLabel(
+                              field.value
+                                ? agentVersions.find(
+                                    (version) => version.id === field.value
+                                  )
+                                : null
+                            )}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="draft">Latest (draft)</SelectItem>
+                      <SelectItem value="draft">
+                        {AGENT_VERSION_DRAFT_LABEL}
+                      </SelectItem>
                       {agentVersions.map((version) => (
                         <SelectItem key={version.id} value={version.id}>
-                          V{version.number}
+                          {formatAgentVersionLabel(version)}
                         </SelectItem>
                       ))}
                     </SelectContent>

@@ -27,6 +27,10 @@ import {
 } from "@workspace/ui/components/select"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import {
+  AGENT_VERSION_DRAFT_LABEL,
+  formatAgentVersionLabel,
+} from "@/components/helpers"
 import { api } from "@/lib/api"
 
 type DownloadAgentDialogProps = {
@@ -124,20 +128,22 @@ export function DownloadAgentDialog({
                 className="w-full text-foreground"
               >
                 <SelectValue>
-                  {selectedVersionId
-                    ? `V${
-                        agentVersions.find(
+                  {formatAgentVersionLabel(
+                    selectedVersionId
+                      ? agentVersions.find(
                           (version) => version.id === selectedVersionId
-                        )?.number ?? ""
-                      }`
-                    : "Latest (draft)"}
+                        )
+                      : null
+                  )}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="draft">Latest (draft)</SelectItem>
+                <SelectItem value="draft">
+                  {AGENT_VERSION_DRAFT_LABEL}
+                </SelectItem>
                 {agentVersions.map((version) => (
                   <SelectItem key={version.id} value={version.id}>
-                    V{version.number}
+                    {formatAgentVersionLabel(version)}
                   </SelectItem>
                 ))}
               </SelectContent>

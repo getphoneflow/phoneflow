@@ -15,6 +15,7 @@ import {
 } from "@workspace/ui/components/dropdown-menu"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { formatAgentVersionLabel } from "@/components/helpers"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 import { useAgentStore } from "@/stores/agent"
@@ -100,7 +101,6 @@ export function AgentVersionSelector() {
 
         {agent.versions.map((version) => {
           const isSelected = activeVersionNumber === version.number
-          const name = version.name?.trim()
 
           return (
             <DropdownMenuItem
@@ -113,8 +113,7 @@ export function AgentVersionSelector() {
             >
               <div className="min-w-0 flex-1">
                 <div className="truncate">
-                  V{version.number}
-                  {name ? ` - ${name}` : null}
+                  {formatAgentVersionLabel(version)}
                 </div>
                 <div className="truncate text-xs text-muted-foreground">
                   Published{" "}

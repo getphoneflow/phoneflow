@@ -52,6 +52,7 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
+import { formatAgentVersionLabel } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
 
 const features = tableFeatures({
@@ -107,10 +108,7 @@ const columns = columnHelper.columns([
   columnHelper.display({
     id: "version",
     header: "Version",
-    cell: ({ row }) =>
-      row.original.agentVersion
-        ? `V${row.original.agentVersion.number}`
-        : "Latest (draft)",
+    cell: ({ row }) => formatAgentVersionLabel(row.original.agentVersion),
   }),
   columnHelper.accessor((row) => row.scheduledAt ?? row.createdAt, {
     id: "when",

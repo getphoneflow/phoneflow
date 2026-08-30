@@ -47,6 +47,7 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
+import { formatAgentVersionLabel } from "@/components/helpers"
 import { PhoneNumberRowActions } from "@/components/phone-numbers/phone-number-row-actions"
 import { PhoneNumberSheet } from "@/components/phone-numbers/phone-number-sheet"
 import { SortableHeader } from "@/components/sortable-header"
@@ -99,11 +100,7 @@ const columns = columnHelper.columns([
         return null
       }
 
-      if (!row.original.agentVersion) {
-        return "Latest (draft)"
-      }
-
-      return `V${row.original.agentVersion.number}`
+      return formatAgentVersionLabel(row.original.agentVersion)
     },
   }),
   columnHelper.accessor("updatedAt", {

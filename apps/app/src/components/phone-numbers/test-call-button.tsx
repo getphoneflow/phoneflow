@@ -41,6 +41,10 @@ import {
 } from "@workspace/ui/components/sheet"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import {
+  AGENT_VERSION_DRAFT_LABEL,
+  formatAgentVersionLabel,
+} from "@/components/helpers"
 import { VariableValuesFields } from "@/components/variable-values-fields"
 import { useVariableValues } from "@/hooks/use-variable-values"
 import { api } from "@/lib/api"
@@ -288,20 +292,22 @@ export function TestCallButton() {
                         <SelectValue>
                           {!selectedAgentId
                             ? "No version"
-                            : field.value
-                              ? `V${
-                                  agentVersions.find(
-                                    (version) => version.id === field.value
-                                  )?.number ?? ""
-                                }`
-                              : "Latest (draft)"}
+                            : formatAgentVersionLabel(
+                                field.value
+                                  ? agentVersions.find(
+                                      (version) => version.id === field.value
+                                    )
+                                  : null
+                              )}
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="draft">Latest (draft)</SelectItem>
+                        <SelectItem value="draft">
+                          {AGENT_VERSION_DRAFT_LABEL}
+                        </SelectItem>
                         {agentVersions.map((version) => (
                           <SelectItem key={version.id} value={version.id}>
-                            V{version.number}
+                            {formatAgentVersionLabel(version)}
                           </SelectItem>
                         ))}
                       </SelectContent>

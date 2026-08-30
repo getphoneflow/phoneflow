@@ -1,10 +1,11 @@
-import { eq } from "drizzle-orm"
+import { and, count, eq } from "drizzle-orm"
 import { Hono } from "hono"
 
 import { db } from "@workspace/db/client"
 import { callsTable } from "@workspace/db/schema/calls"
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 import {
+  callListQuerySchema,
   completeCallRequestSchema,
   startInboundCallRequestSchema,
   startOutboundCallRequestSchema,
@@ -416,39 +417,74 @@ callRoutes.get("/:callId", requireOrganization, async (c) => {
   }
 })
 
-callRoutes.get("/", requireOrganization, async (c) => {
-  const organizationId = c.get("organizationId")
+callRoutes.get(
+  "/",
+  requireOrganization,
+  validator("query", callListQuerySchema),
+  async (c) => {
+    const organizationId = c.get("organizationId")
+    const query = c.req.valid("query")
 
-  try {
-    const calls = await db.query.callsTable.findMany({
-      where: {
-        organizationId,
-      },
-      columns: {
-        transcript: false,
-      },
-      with: {
-        agent: {
-          columns: {
-            name: true,
+    try {
+      const conditions = [eq(callsTable.organizationId, organizationId)]
+
+      if (query.channel) {
+        conditions.push(eq(callsTable.channel, query.channel))
+      }
+
+      if (query.direction) {
+        conditions.push(eq(callsTable.direction, query.direction))
+      }
+
+      if (query.status) {
+        conditions.push(eq(callsTable.status, query.status))
+      }
+
+      const [{ total }] = await db
+        .select({ total: count() })
+        .from(callsTable)
+        .where(and(...conditions))
+
+      const items = await db.query.callsTable.findMany({
+        where: {
+          organizationId,
+          ...(query.channel ? { channel: query.channel } : {}),
+          ...(query.direction ? { direction: query.direction } : {}),
+          ...(query.status ? { status: query.status } : {}),
+        },
+        columns: {
+          transcript: false,
+        },
+        with: {
+          agent: {
+            columns: {
+              name: true,
+            },
+          },
+          agentVersion: {
+            columns: {
+              number: true,
+            },
           },
         },
-        agentVersion: {
-          columns: {
-            number: true,
-          },
+        orderBy: {
+          startedAt: "desc",
         },
-      },
-      orderBy: {
-        startedAt: "desc",
-      },
-    })
+        limit: query.pageSize,
+        offset: (query.page - 1) * query.pageSize,
+      })
 
-    return c.json(calls satisfies CallListResponse)
-  } catch {
-    return c.json({ error: "Failed to load calls" }, 500)
+      return c.json({
+        items,
+        total,
+        page: query.page,
+        pageSize: query.pageSize,
+      } satisfies CallListResponse)
+    } catch {
+      return c.json({ error: "Failed to load calls" }, 500)
+    }
   }
-})
+)
 
 callRoutes.post(
   "/outbound",

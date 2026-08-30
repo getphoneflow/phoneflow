@@ -4,7 +4,7 @@ import { Link } from "@tanstack/react-router"
 
 import type {
   CallDetailResponse,
-  CallListResponse,
+  CallListItem,
 } from "@workspace/shared/api/calls/types"
 import { AgentChatTranscript } from "@workspace/ui/components/agents-ui/agent-chat-transcript"
 import {
@@ -35,7 +35,7 @@ const secondsFormatter = new Intl.NumberFormat("en", {
 })
 
 type CallDetailSheetProps = {
-  call: CallListResponse[number]
+  call: CallListItem
   open: boolean
   onOpenChange: (open: boolean) => void
 }

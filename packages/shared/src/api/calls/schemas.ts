@@ -59,3 +59,17 @@ export const triggerOutboundCallRequestSchema = z
     variables: z.record(z.string(), z.string()).optional(),
   })
   .strict()
+
+export const callListQuerySchema = z
+  .object({
+    page: z.coerce.number().int().min(1).default(1),
+    pageSize: z.coerce
+      .number()
+      .int()
+      .refine((value) => [10, 20, 30, 40, 50].includes(value))
+      .default(10),
+    channel: z.enum(["phone_call", "web_call"]).optional(),
+    direction: z.enum(["inbound", "outbound"]).optional(),
+    status: z.enum(["in_progress", "completed"]).optional(),
+  })
+  .strict()

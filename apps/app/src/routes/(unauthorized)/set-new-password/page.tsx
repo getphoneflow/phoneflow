@@ -35,7 +35,7 @@ export const Route = createFileRoute("/(unauthorized)/set-new-password/")({
 function Page() {
   const navigate = useNavigate()
   const location = useLocation()
-  const token = new URLSearchParams(location.search).get("token")
+  const token = new URLSearchParams(location.searchStr).get("token")
 
   const setNewPasswordFormSchema = z
     .object({

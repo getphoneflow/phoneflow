@@ -2,6 +2,7 @@ import type { z } from "zod"
 
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 import type {
+  callListQuerySchema,
   callTranscriptSchema,
   completeCallRequestSchema,
   startInboundCallRequestSchema,
@@ -50,7 +51,9 @@ export type CompleteCallResponse = {
   durationMs: number
 }
 
-export type CallListResponse = {
+export type CallListQuery = z.infer<typeof callListQuerySchema>
+
+export type CallListItem = {
   id: string
   organizationId: string
   agentId: string
@@ -78,7 +81,14 @@ export type CallListResponse = {
   updatedAt: Date
   agent: { name: string } | null
   agentVersion: { number: number } | null
-}[]
+}
+
+export type CallListResponse = {
+  items: CallListItem[]
+  total: number
+  page: number
+  pageSize: number
+}
 
 export type CallDetailResponse = {
   id: string

@@ -8,7 +8,7 @@ function zodIssuesToMessage(error: Pick<ZodError, "issues">) {
 }
 
 export function validator<TSchema extends ZodType>(
-  target: "json" | "param",
+  target: "json" | "param" | "query",
   schema: TSchema
 ) {
   return zValidator(target, schema, (result, c) => {

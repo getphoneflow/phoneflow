@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Label, Pie, PieChart, Sector } from "recharts"
 import type { PieSectorShapeProps } from "recharts/types/polar/Pie"
 
-import type { CallListResponse } from "@workspace/shared/api/calls/types"
+import type { CallListItem } from "@workspace/shared/api/calls/types"
 
 const usdFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -12,7 +12,7 @@ const usdFormatter = new Intl.NumberFormat("en-US", {
 })
 
 type CallCostFields = Pick<
-  CallListResponse[number],
+  CallListItem,
   | "sttModel"
   | "llmModel"
   | "ttsModel"

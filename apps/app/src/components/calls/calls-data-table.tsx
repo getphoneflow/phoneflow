@@ -1,13 +1,8 @@
 import { Link } from "@tanstack/react-router"
 import {
-  type ColumnFiltersState,
-  columnFilteringFeature,
   columnVisibilityFeature,
   createColumnHelper,
-  createFilteredRowModel,
-  createPaginatedRowModel,
   createSortedRowModel,
-  filterFn_includesString,
   rowPaginationFeature,
   rowSortingFeature,
   type SortingState,
@@ -26,11 +21,15 @@ import {
   CircleHelpIcon,
   Globe,
   Phone,
-  Search,
 } from "lucide-react"
 import { useState } from "react"
 
-import type { CallListResponse } from "@workspace/shared/api/calls/types"
+import type {
+  CallChannel,
+  CallDirection,
+  CallListItem,
+  CallStatus,
+} from "@workspace/shared/api/calls/types"
 import { Badge } from "@workspace/ui/components/badge"
 import { Button } from "@workspace/ui/components/button"
 import {
@@ -38,11 +37,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@workspace/ui/components/hover-card"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@workspace/ui/components/input-group"
 import {
   Select,
   SelectContent,
@@ -72,14 +66,10 @@ import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
 import { SortableHeader } from "@/components/sortable-header"
 
 const features = tableFeatures({
-  columnFilteringFeature,
   columnVisibilityFeature,
   rowSortingFeature,
   rowPaginationFeature,
-  filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
-  paginatedRowModel: createPaginatedRowModel(),
-  filterFns: { includesString: filterFn_includesString },
   sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
 })
 
@@ -92,18 +82,6 @@ const secondsFormatter = new Intl.NumberFormat("en", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 })
-
-function exactFilterFn(
-  row: { getValue: (columnId: string) => unknown },
-  columnId: string,
-  filterValue: string
-) {
-  if (!filterValue || filterValue === "all") {
-    return true
-  }
-
-  return row.getValue(columnId) === filterValue
-}
 
 const channelFilterOptions = [
   { value: "all", label: "All channels" },
@@ -123,7 +101,7 @@ const statusFilterOptions = [
   { value: "in_progress", label: "In progress" },
 ]
 
-function CostCell({ call }: { call: CallListResponse[number] }) {
+function CostCell({ call }: { call: CallListItem }) {
   const totalCost = parseCallCost(call.totalCost)
 
   if (totalCost === null) {
@@ -158,9 +136,7 @@ function CostCell({ call }: { call: CallListResponse[number] }) {
   )
 }
 
-type Call = CallListResponse[number]
-
-const columnHelper = createColumnHelper<typeof features, Call>()
+const columnHelper = createColumnHelper<typeof features, CallListItem>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor("startedAt", {
@@ -181,7 +157,6 @@ const columns = columnHelper.columns([
     cell: ({ row }) => <CostCell call={row.original} />,
   }),
   columnHelper.accessor("channel", {
-    filterFn: exactFilterFn,
     header: "Channel",
     cell: ({ row }) => {
       const isPhone = row.original.channel === "phone_call"
@@ -202,7 +177,6 @@ const columns = columnHelper.columns([
     },
   }),
   columnHelper.accessor("direction", {
-    filterFn: exactFilterFn,
     header: "Direction",
     cell: ({ row }) => {
       const isInbound = row.original.direction === "inbound"
@@ -261,7 +235,6 @@ const columns = columnHelper.columns([
     cell: ({ row }) => Object.keys(row.original.variables ?? {}).length,
   }),
   columnHelper.accessor("status", {
-    filterFn: exactFilterFn,
     header: "Status",
     cell: ({ row }) =>
       row.original.status === "in_progress" ? (
@@ -272,120 +245,137 @@ const columns = columnHelper.columns([
   }),
 ])
 
-export function CallsDataTable({ data }: { data: CallListResponse }) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+type CallsDataTableProps = {
+  items: CallListItem[]
+  total: number
+  page: number
+  pageSize: number
+  filters: {
+    channel?: CallChannel
+    direction?: CallDirection
+    status?: CallStatus
+  }
+  onFiltersChange: (filters: {
+    channel?: CallChannel
+    direction?: CallDirection
+    status?: CallStatus
+  }) => void
+  onPageChange: (page: number) => void
+  onPageSizeChange: (pageSize: number) => void
+}
+
+export function CallsDataTable({
+  items,
+  total,
+  page,
+  pageSize,
+  filters,
+  onFiltersChange,
+  onPageChange,
+  onPageSizeChange,
+}: CallsDataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
-  const [selectedCall, setSelectedCall] = useState<Call | null>(null)
+  const [selectedCall, setSelectedCall] = useState<CallListItem | null>(null)
 
   const table = useTable({
     features,
-    data,
+    data: items,
     columns,
-    onColumnFiltersChange: setColumnFilters,
+    manualPagination: true,
+    rowCount: total,
+    autoResetPageIndex: false,
     onSortingChange: setSorting,
     state: {
-      columnFilters,
       sorting,
+      pagination: {
+        pageIndex: page - 1,
+        pageSize,
+      },
     },
   })
 
-  const channelFilter = table.getColumn("channel")?.getFilterValue() ?? "all"
-  const directionFilter =
-    table.getColumn("direction")?.getFilterValue() ?? "all"
-  const statusFilter = table.getColumn("status")?.getFilterValue() ?? "all"
+  const channelFilter = filters.channel ?? "all"
+  const directionFilter = filters.direction ?? "all"
+  const statusFilter = filters.status ?? "all"
 
   return (
     <div>
-      <div className="mb-5 flex items-center justify-between gap-3">
-        <InputGroup className="max-w-xs">
-          <InputGroupInput
-            value={(table.getColumn("agent")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("agent")?.setFilterValue(event.target.value)
-            }
-            placeholder="Search calls..."
-          />
-          <InputGroupAddon>
-            <Search />
-          </InputGroupAddon>
-        </InputGroup>
-        <div className="flex items-center gap-2">
-          <Select
-            value={channelFilter}
-            onValueChange={(value) =>
-              table
-                .getColumn("channel")
-                ?.setFilterValue(value === "all" ? undefined : value)
-            }
-          >
-            <SelectTrigger className="w-32">
-              <SelectValue>
-                {
-                  channelFilterOptions.find(
-                    (option) => option.value === channelFilter
-                  )?.label
-                }
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {channelFilterOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select
-            value={directionFilter}
-            onValueChange={(value) =>
-              table
-                .getColumn("direction")
-                ?.setFilterValue(value === "all" ? undefined : value)
-            }
-          >
-            <SelectTrigger className="w-32">
-              <SelectValue>
-                {
-                  directionFilterOptions.find(
-                    (option) => option.value === directionFilter
-                  )?.label
-                }
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {directionFilterOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select
-            value={statusFilter}
-            onValueChange={(value) =>
-              table
-                .getColumn("status")
-                ?.setFilterValue(value === "all" ? undefined : value)
-            }
-          >
-            <SelectTrigger className="w-32">
-              <SelectValue>
-                {
-                  statusFilterOptions.find(
-                    (option) => option.value === statusFilter
-                  )?.label
-                }
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {statusFilterOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="mb-5 flex items-center justify-end gap-2">
+        <Select
+          value={channelFilter}
+          onValueChange={(value) =>
+            onFiltersChange({
+              channel: value === "all" ? undefined : (value as CallChannel),
+            })
+          }
+        >
+          <SelectTrigger className="w-32">
+            <SelectValue>
+              {
+                channelFilterOptions.find(
+                  (option) => option.value === channelFilter
+                )?.label
+              }
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {channelFilterOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select
+          value={directionFilter}
+          onValueChange={(value) =>
+            onFiltersChange({
+              direction: value === "all" ? undefined : (value as CallDirection),
+            })
+          }
+        >
+          <SelectTrigger className="w-32">
+            <SelectValue>
+              {
+                directionFilterOptions.find(
+                  (option) => option.value === directionFilter
+                )?.label
+              }
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {directionFilterOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select
+          value={statusFilter}
+          onValueChange={(value) =>
+            onFiltersChange({
+              status: value === "all" ? undefined : (value as CallStatus),
+            })
+          }
+        >
+          <SelectTrigger className="w-32">
+            <SelectValue>
+              {
+                statusFilterOptions.find(
+                  (option) => option.value === statusFilter
+                )?.label
+              }
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {statusFilterOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
@@ -433,16 +423,16 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-4">
           <Select
-            value={`${table.state.pagination.pageSize}`}
-            onValueChange={(value) => table.setPageSize(Number(value))}
+            value={`${pageSize}`}
+            onValueChange={(value) => onPageSizeChange(Number(value))}
           >
             <SelectTrigger className="w-20">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {pageSize}
+              {[10, 20, 30, 40, 50].map((size) => (
+                <SelectItem key={size} value={`${size}`}>
+                  {size}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -451,13 +441,12 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.state.pagination.pageIndex + 1} of{" "}
-            {table.getPageCount() || 1}
+            Page {page} of {table.getPageCount() || 1}
           </span>
           <Button
             variant="outline"
             size="icon"
-            onClick={() => table.setPageIndex(0)}
+            onClick={() => onPageChange(1)}
             disabled={!table.getCanPreviousPage()}
           >
             <ChevronsLeft />
@@ -465,7 +454,7 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => table.previousPage()}
+            onClick={() => onPageChange(page - 1)}
             disabled={!table.getCanPreviousPage()}
           >
             <ChevronLeft />
@@ -473,7 +462,7 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => table.nextPage()}
+            onClick={() => onPageChange(page + 1)}
             disabled={!table.getCanNextPage()}
           >
             <ChevronRight />
@@ -481,7 +470,7 @@ export function CallsDataTable({ data }: { data: CallListResponse }) {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            onClick={() => onPageChange(table.getPageCount())}
             disabled={!table.getCanNextPage()}
           >
             <ChevronsRight />

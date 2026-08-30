@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router"
+import { useNavigate } from "@tanstack/react-router"
 import {
   type ColumnFiltersState,
   columnFilteringFeature,
@@ -102,16 +102,7 @@ const columns = columnHelper.columns([
   columnHelper.display({
     id: "agent",
     header: "Agent",
-    cell: ({ row }) =>
-      row.original.agent && row.original.agentId ? (
-        <Link
-          to="/agents/$agentId"
-          params={{ agentId: row.original.agentId }}
-          className="hover:underline"
-        >
-          {row.original.agent.name}
-        </Link>
-      ) : null,
+    cell: ({ row }) => row.original.agent?.name ?? null,
   }),
   columnHelper.display({
     id: "version",
@@ -134,6 +125,7 @@ const columns = columnHelper.columns([
 export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
+  const navigate = useNavigate()
 
   const table = useTable({
     features,
@@ -180,9 +172,36 @@ export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
           <TableBody>
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  className="cursor-pointer"
+                  onClick={() =>
+                    navigate({
+                      to: "/calls",
+                      search: { batchId: row.original.id },
+                    })
+                  }
+                >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={
+                        cell.column.id === "agent" && row.original.agentId
+                          ? "hover:underline"
+                          : undefined
+                      }
+                      onClick={
+                        cell.column.id === "agent" && row.original.agentId
+                          ? (event) => {
+                              event.stopPropagation()
+                              navigate({
+                                to: "/agents/$agentId",
+                                params: { agentId: row.original.agentId! },
+                              })
+                            }
+                          : undefined
+                      }
+                    >
                       <table.FlexRender cell={cell} />
                     </TableCell>
                   ))}

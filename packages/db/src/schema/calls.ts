@@ -11,6 +11,7 @@ import {
 
 import { agentsTable, agentVersionsTable } from "@workspace/db/schema/agents"
 import { organization } from "@workspace/db/schema/auth"
+import { batchCallsTable } from "@workspace/db/schema/batch-calls"
 import type {
   CallTranscript,
   CallVariableValues,
@@ -30,6 +31,9 @@ export const callsTable = pgTable(
       () => agentVersionsTable.id,
       { onDelete: "set null" }
     ),
+    batchCallId: uuid("batch_call_id").references(() => batchCallsTable.id, {
+      onDelete: "set null",
+    }),
     channel: text("channel").notNull().$type<"web_call" | "phone_call">(),
     direction: text("direction").notNull().$type<"inbound" | "outbound">(),
     status: text("status").notNull().$type<"in_progress" | "completed">(),
@@ -88,5 +92,6 @@ export const callsTable = pgTable(
       table.organizationId,
       table.totalCost
     ),
+    index("calls_batch_call_id_idx").on(table.batchCallId),
   ]
 )

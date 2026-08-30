@@ -26,6 +26,7 @@ export const startOutboundCallRequestSchema = z
     toNumber: z.e164(),
     livekitRoomName: z.string().trim().min(1),
     startedAt: z.iso.datetime(),
+    batchCallId: z.uuid().nullable(),
   })
   .strict()
 
@@ -91,6 +92,7 @@ export const callListQuerySchema = z
     durationOp: callNumericFilterOperatorSchema.optional(),
     duration: z.coerce.number().nonnegative().optional(),
     durationMax: z.coerce.number().nonnegative().optional(),
+    batchId: z.uuid().optional(),
     sortBy: callListSortBySchema.default("startedAt"),
     sortDir: z.enum(["asc", "desc"]).default("desc"),
   })

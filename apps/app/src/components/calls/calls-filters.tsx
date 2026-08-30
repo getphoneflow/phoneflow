@@ -3,6 +3,7 @@ import { CalendarIcon } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 
 import type { AgentsListResponse } from "@workspace/shared/api/agents/types"
+import type { BatchCallListResponse } from "@workspace/shared/api/batch-calls/types"
 import type {
   CallChannel,
   CallDirection,
@@ -142,7 +143,70 @@ function FilterMultiSelect({
         </ComboboxChips>
         <ComboboxContent anchor={anchor}>
           <ComboboxInput showTrigger={false} placeholder="Search..." />
-          <ComboboxEmpty>No items found.</ComboboxEmpty>
+          <ComboboxEmpty>No items found</ComboboxEmpty>
+          <ComboboxList>
+            {(item: MultiSelectOption) => (
+              <ComboboxItem key={item.value} value={item}>
+                <span className="flex min-w-0 flex-col">
+                  <span className="truncate">{item.label}</span>
+                  {item.description ? (
+                    <span className="truncate text-xs text-muted-foreground">
+                      {item.description}
+                    </span>
+                  ) : null}
+                </span>
+              </ComboboxItem>
+            )}
+          </ComboboxList>
+        </ComboboxContent>
+      </Combobox>
+    </Field>
+  )
+}
+
+function FilterSingleSelect({
+  label,
+  placeholder,
+  items,
+  selectedValue,
+  onSelectedValueChange,
+}: {
+  label: string
+  placeholder: string
+  items: MultiSelectOption[]
+  selectedValue?: string
+  onSelectedValueChange: (value: string | undefined) => void
+}) {
+  const anchor = useComboboxAnchor()
+  const selectedItem =
+    items.find((item) => item.value === selectedValue) ?? null
+
+  return (
+    <Field className="w-48 gap-1.5">
+      <FieldLabel>{label}</FieldLabel>
+      <Combobox
+        autoHighlight
+        items={items}
+        value={selectedItem}
+        onValueChange={(next) => {
+          onSelectedValueChange(next?.value)
+        }}
+        itemToStringValue={(item) =>
+          item.description ? `${item.label} ${item.description}` : item.label
+        }
+      >
+        <ComboboxChips ref={anchor} className="w-full">
+          {selectedItem ? (
+            <ComboboxChip key={selectedItem.value}>
+              {selectedItem.label}
+            </ComboboxChip>
+          ) : (
+            <span className="text-muted-foreground">{placeholder}</span>
+          )}
+        </ComboboxChips>
+        <ComboboxContent anchor={anchor}>
+          <ComboboxInput showTrigger={false} placeholder="Search..." />
+          <ComboboxEmpty>No batches found</ComboboxEmpty>
           <ComboboxList>
             {(item: MultiSelectOption) => (
               <ComboboxItem key={item.value} value={item}>
@@ -352,6 +416,10 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
     queryKey: ["phone-numbers"],
     queryFn: () => api.get<PhoneNumberListResponse>("/phone-numbers"),
   })
+  const { data: batchCalls = [] } = useQuery({
+    queryKey: ["batch-calls"],
+    queryFn: () => api.get<BatchCallListResponse>("/batch-calls"),
+  })
 
   const agentItems = useMemo<MultiSelectOption[]>(
     () =>
@@ -369,6 +437,17 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
         description: phoneNumber.agent?.name,
       })),
     [phoneNumbers]
+  )
+  const batchCallItems = useMemo<MultiSelectOption[]>(
+    () =>
+      batchCalls.map((batchCall) => ({
+        value: batchCall.id,
+        label: batchCall.name,
+        description: dateFormatter.format(
+          new Date(batchCall.scheduledAt ?? batchCall.createdAt)
+        ),
+      })),
+    [batchCalls]
   )
 
   const channelFilter = filters.channel ?? "all"
@@ -498,6 +577,18 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
           onFiltersChange({
             ...filters,
             toNumbers: toNumbers.length > 0 ? toNumbers : undefined,
+          })
+        }
+      />
+      <FilterSingleSelect
+        label="Batch"
+        placeholder="All batches"
+        items={batchCallItems}
+        selectedValue={filters.batchId}
+        onSelectedValueChange={(batchId) =>
+          onFiltersChange({
+            ...filters,
+            batchId,
           })
         }
       />

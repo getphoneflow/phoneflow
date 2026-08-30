@@ -41,6 +41,7 @@ export async function startCall(
             toNumber: metadata.toNumber,
             livekitRoomName,
             startedAt,
+            batchCallId: metadata.batchCallId ?? null,
           },
         }
       )

@@ -96,6 +96,10 @@ function buildCallsListPath(search: CallListQuery) {
     params.set("durationMax", String(search.durationMax))
   }
 
+  if (search.batchId) {
+    params.set("batchId", search.batchId)
+  }
+
   return `/calls?${params.toString()}`
 }
 

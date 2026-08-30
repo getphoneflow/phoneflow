@@ -246,6 +246,7 @@ callRoutes.post(
           ttsModel: resolved.config.tts.model,
           livekitRoomName: payload.livekitRoomName,
           startedAt: new Date(payload.startedAt),
+          batchCallId: payload.batchCallId,
         })
         .returning({ id: callsTable.id })
 
@@ -526,6 +527,10 @@ callRoutes.get(
         where.toNumber = { in: toNumbers }
       }
 
+      if (query.batchId) {
+        where.batchCallId = query.batchId
+      }
+
       if (query.cost !== undefined) {
         const cost = query.cost.toFixed(6)
 
@@ -679,6 +684,7 @@ callRoutes.post(
         sipUsername: phoneNumber.sipUsername,
         sipPassword: phoneNumber.sipPassword,
         variables: payload.variables ?? {},
+        batchCallId: null,
       })
 
       return c.json({ ok: true } satisfies TriggerOutboundCallResponse)

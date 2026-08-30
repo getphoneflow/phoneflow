@@ -113,6 +113,10 @@ export const relations = defineRelations(
         from: r.callsTable.agentVersionId,
         to: r.agentVersionsTable.id,
       }),
+      batchCall: r.one.batchCallsTable({
+        from: r.callsTable.batchCallId,
+        to: r.batchCallsTable.id,
+      }),
     },
     phoneNumbersTable: {
       organization: r.one.organization({

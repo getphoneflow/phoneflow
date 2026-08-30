@@ -232,6 +232,7 @@ batchCallRoutes.post(
             sipUsername: phoneNumber.sipUsername,
             sipPassword: phoneNumber.sipPassword,
             variables: recipient.variables ?? {},
+            batchCallId: id,
           })
         } catch {
           // Continue if one recipient fails

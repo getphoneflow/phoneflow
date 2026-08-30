@@ -27,6 +27,7 @@ export type CallDispatchMetadata = {
   agentVersionId?: string | null
   toNumber?: string
   fromNumber?: string
+  batchCallId?: string | null
 }
 
 export type CallTranscript = z.infer<typeof callTranscriptSchema>

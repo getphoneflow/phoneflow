@@ -1,3 +1,4 @@
+import type { Attachment } from "nodemailer/lib/mailer"
 import type { ReactNode } from "react"
 import { render, toPlainText } from "react-email"
 
@@ -7,7 +8,8 @@ export default async function sendEmail(
   from: string,
   to: string,
   subject: string,
-  email: ReactNode
+  email: ReactNode,
+  attachments?: Attachment[]
 ) {
   const html = await render(email)
   const text = toPlainText(html)
@@ -18,6 +20,7 @@ export default async function sendEmail(
     subject,
     html,
     text,
+    attachments,
   }
 
   await transport.sendMail(options)

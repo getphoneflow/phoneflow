@@ -22,9 +22,11 @@ import type {
   CallDownloadResponse,
   CallListResponse,
   CompleteCallResponse,
+  RequestCallDownloadResponse,
   StartCallResponse,
   TriggerOutboundCallResponse,
 } from "@workspace/shared/api/calls/types"
+import { auth } from "@/lib/auth/config"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
@@ -35,6 +37,7 @@ import {
   startCallRecording,
   stopCallRecording,
 } from "@/lib/livekit"
+import { emailsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
 
 export const callRoutes = new Hono()
@@ -329,8 +332,43 @@ callRoutes.post(
   }
 )
 
-callRoutes.get("/download", requireOrganization, async (c) => {
+callRoutes.post("/download", requireOrganization, async (c) => {
   const organizationId = c.get("organizationId")
+
+  try {
+    const session = await auth.api.getSession({ headers: c.req.raw.headers })
+
+    if (!session?.user.email) {
+      return c.json({ error: "User email not found" }, 400)
+    }
+
+    const organization = await db.query.organization.findFirst({
+      where: {
+        id: organizationId,
+      },
+      columns: {
+        name: true,
+      },
+    })
+
+    if (!organization) {
+      return c.json({ error: "Organization not found" }, 404)
+    }
+
+    await emailsQueue.add("send-download-calls", {
+      to: session.user.email,
+      organizationId,
+      organizationName: organization.name,
+    })
+
+    return c.json({ ok: true } satisfies RequestCallDownloadResponse)
+  } catch {
+    return c.json({ error: "Failed to request calls download" }, 500)
+  }
+})
+
+callRoutes.get("/export/:organizationId", requireAuthToken, async (c) => {
+  const organizationId = c.req.param("organizationId")
 
   try {
     const calls = await db.query.callsTable.findMany({
@@ -356,7 +394,7 @@ callRoutes.get("/download", requireOrganization, async (c) => {
 
     return c.json(calls satisfies CallDownloadResponse)
   } catch {
-    return c.json({ error: "Failed to download calls" }, 500)
+    return c.json({ error: "Failed to export calls" }, 500)
   }
 })
 

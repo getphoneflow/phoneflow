@@ -129,6 +129,10 @@ export type CallDetailResponse = {
 
 export type CallDownloadResponse = CallDetailResponse[]
 
+export type RequestCallDownloadResponse = {
+  ok: true
+}
+
 export type TriggerOutboundCallResponse = {
   ok: true
 }

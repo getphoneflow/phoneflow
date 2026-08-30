@@ -15,7 +15,7 @@ import {
 import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { CallsDataTable } from "@/components/calls/calls-data-table"
-import { DownloadCallsButton } from "@/components/calls/download-calls-button"
+import { DownloadCallsDialog } from "@/components/calls/download-calls-dialog"
 import { api } from "@/lib/api"
 
 function buildCallsListPath(search: CallListQuery) {
@@ -129,7 +129,7 @@ function Header() {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="ml-auto flex space-x-3">
-        <DownloadCallsButton />
+        <DownloadCallsDialog />
       </div>
     </header>
   )

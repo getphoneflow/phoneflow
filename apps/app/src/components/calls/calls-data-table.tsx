@@ -2,12 +2,9 @@ import { Link } from "@tanstack/react-router"
 import {
   columnVisibilityFeature,
   createColumnHelper,
-  createSortedRowModel,
   rowPaginationFeature,
   rowSortingFeature,
   type SortingState,
-  sortFn_alphanumeric,
-  sortFn_text,
   tableFeatures,
   useTable,
 } from "@tanstack/react-table"
@@ -25,10 +22,9 @@ import {
 import { useState } from "react"
 
 import type {
-  CallChannel,
-  CallDirection,
   CallListItem,
-  CallStatus,
+  CallListQuery,
+  CallListSortBy,
 } from "@workspace/shared/api/calls/types"
 import { Badge } from "@workspace/ui/components/badge"
 import { Button } from "@workspace/ui/components/button"
@@ -63,14 +59,13 @@ import {
   parseCallCost,
 } from "@/components/calls/call-cost-breakdown"
 import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
+import { CallsFilters } from "@/components/calls/calls-filters"
 import { SortableHeader } from "@/components/sortable-header"
 
 const features = tableFeatures({
   columnVisibilityFeature,
   rowSortingFeature,
   rowPaginationFeature,
-  sortedRowModel: createSortedRowModel(),
-  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
 })
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
@@ -82,24 +77,6 @@ const secondsFormatter = new Intl.NumberFormat("en", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
 })
-
-const channelFilterOptions = [
-  { value: "all", label: "All channels" },
-  { value: "phone_call", label: "Phone" },
-  { value: "web_call", label: "Web" },
-]
-
-const directionFilterOptions = [
-  { value: "all", label: "All directions" },
-  { value: "inbound", label: "Inbound" },
-  { value: "outbound", label: "Outbound" },
-]
-
-const statusFilterOptions = [
-  { value: "all", label: "All statuses" },
-  { value: "completed", label: "Completed" },
-  { value: "in_progress", label: "In progress" },
-]
 
 function CostCell({ call }: { call: CallListItem }) {
   const totalCost = parseCallCost(call.totalCost)
@@ -208,7 +185,7 @@ const columns = columnHelper.columns([
   }),
   columnHelper.accessor((row) => row.agent?.name ?? "", {
     id: "agent",
-    header: ({ column }) => <SortableHeader column={column} title="Agent" />,
+    header: "Agent",
     cell: ({ row }) =>
       row.original.agent ? (
         <Link
@@ -231,7 +208,6 @@ const columns = columnHelper.columns([
   columnHelper.display({
     id: "variables",
     header: "Variables",
-    enableSorting: false,
     cell: ({ row }) => Object.keys(row.original.variables ?? {}).length,
   }),
   columnHelper.accessor("status", {
@@ -250,15 +226,15 @@ type CallsDataTableProps = {
   total: number
   page: number
   pageSize: number
-  filters: {
-    channel?: CallChannel
-    direction?: CallDirection
-    status?: CallStatus
-  }
-  onFiltersChange: (filters: {
-    channel?: CallChannel
-    direction?: CallDirection
-    status?: CallStatus
+  filters: Omit<CallListQuery, "page" | "pageSize" | "sortBy" | "sortDir">
+  sortBy: CallListSortBy
+  sortDir: "asc" | "desc"
+  onFiltersChange: (
+    filters: Omit<CallListQuery, "page" | "pageSize" | "sortBy" | "sortDir">
+  ) => void
+  onSortingChange: (sorting: {
+    sortBy: CallListSortBy
+    sortDir: "asc" | "desc"
   }) => void
   onPageChange: (page: number) => void
   onPageSizeChange: (pageSize: number) => void
@@ -270,21 +246,38 @@ export function CallsDataTable({
   page,
   pageSize,
   filters,
+  sortBy,
+  sortDir,
   onFiltersChange,
+  onSortingChange,
   onPageChange,
   onPageSizeChange,
 }: CallsDataTableProps) {
-  const [sorting, setSorting] = useState<SortingState>([])
   const [selectedCall, setSelectedCall] = useState<CallListItem | null>(null)
+  const sorting: SortingState = [{ id: sortBy, desc: sortDir === "desc" }]
 
   const table = useTable({
     features,
     data: items,
     columns,
     manualPagination: true,
+    manualSorting: true,
     rowCount: total,
     autoResetPageIndex: false,
-    onSortingChange: setSorting,
+    onSortingChange: (updater) => {
+      const next = typeof updater === "function" ? updater(sorting) : updater
+      const first = next[0]
+
+      if (!first) {
+        onSortingChange({ sortBy: "startedAt", sortDir: "desc" })
+        return
+      }
+
+      onSortingChange({
+        sortBy: first.id as CallListSortBy,
+        sortDir: first.desc ? "desc" : "asc",
+      })
+    },
     state: {
       sorting,
       pagination: {
@@ -294,89 +287,9 @@ export function CallsDataTable({
     },
   })
 
-  const channelFilter = filters.channel ?? "all"
-  const directionFilter = filters.direction ?? "all"
-  const statusFilter = filters.status ?? "all"
-
   return (
     <div>
-      <div className="mb-5 flex items-center justify-end gap-2">
-        <Select
-          value={channelFilter}
-          onValueChange={(value) =>
-            onFiltersChange({
-              channel: value === "all" ? undefined : (value as CallChannel),
-            })
-          }
-        >
-          <SelectTrigger className="w-32">
-            <SelectValue>
-              {
-                channelFilterOptions.find(
-                  (option) => option.value === channelFilter
-                )?.label
-              }
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {channelFilterOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select
-          value={directionFilter}
-          onValueChange={(value) =>
-            onFiltersChange({
-              direction: value === "all" ? undefined : (value as CallDirection),
-            })
-          }
-        >
-          <SelectTrigger className="w-32">
-            <SelectValue>
-              {
-                directionFilterOptions.find(
-                  (option) => option.value === directionFilter
-                )?.label
-              }
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {directionFilterOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select
-          value={statusFilter}
-          onValueChange={(value) =>
-            onFiltersChange({
-              status: value === "all" ? undefined : (value as CallStatus),
-            })
-          }
-        >
-          <SelectTrigger className="w-32">
-            <SelectValue>
-              {
-                statusFilterOptions.find(
-                  (option) => option.value === statusFilter
-                )?.label
-              }
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            {statusFilterOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <CallsFilters filters={filters} onFiltersChange={onFiltersChange} />
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>

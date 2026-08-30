@@ -3,6 +3,8 @@ import type { z } from "zod"
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 import type {
   callListQuerySchema,
+  callListSortBySchema,
+  callNumericFilterOperatorSchema,
   callTranscriptSchema,
   completeCallRequestSchema,
   startInboundCallRequestSchema,
@@ -52,6 +54,10 @@ export type CompleteCallResponse = {
 }
 
 export type CallListQuery = z.infer<typeof callListQuerySchema>
+export type CallListSortBy = z.infer<typeof callListSortBySchema>
+export type CallNumericFilterOperator = z.infer<
+  typeof callNumericFilterOperatorSchema
+>
 
 export type CallListItem = {
   id: string

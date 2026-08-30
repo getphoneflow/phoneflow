@@ -1,4 +1,9 @@
-import { and, count, eq } from "drizzle-orm"
+import {
+  type AnyRelationsFilter,
+  count,
+  eq,
+  relationsFilterToSQL,
+} from "drizzle-orm"
 import { Hono } from "hono"
 
 import { db } from "@workspace/db/client"
@@ -430,32 +435,101 @@ callRoutes.get(
     const query = c.req.valid("query")
 
     try {
-      const conditions = [eq(callsTable.organizationId, organizationId)]
+      const where: NonNullable<
+        Parameters<typeof db.query.callsTable.findMany>[0]
+      >["where"] = {
+        organizationId,
+      }
 
       if (query.channel) {
-        conditions.push(eq(callsTable.channel, query.channel))
+        where.channel = query.channel
       }
 
       if (query.direction) {
-        conditions.push(eq(callsTable.direction, query.direction))
+        where.direction = query.direction
       }
 
       if (query.status) {
-        conditions.push(eq(callsTable.status, query.status))
+        where.status = query.status
+      }
+
+      if (query.startedAtFrom) {
+        where.startedAt = {
+          ...where.startedAt,
+          gte: new Date(query.startedAtFrom),
+        }
+      }
+
+      if (query.startedAtTo) {
+        where.startedAt = {
+          ...where.startedAt,
+          lte: new Date(query.startedAtTo),
+        }
+      }
+
+      if (query.agentIds) {
+        const agentIds = Array.isArray(query.agentIds)
+          ? query.agentIds
+          : query.agentIds.split(",")
+        where.agentId = { in: agentIds }
+      }
+
+      if (query.fromNumbers) {
+        const fromNumbers = Array.isArray(query.fromNumbers)
+          ? query.fromNumbers
+          : query.fromNumbers.split(",")
+        where.fromNumber = { in: fromNumbers }
+      }
+
+      if (query.toNumbers) {
+        const toNumbers = Array.isArray(query.toNumbers)
+          ? query.toNumbers
+          : query.toNumbers.split(",")
+        where.toNumber = { in: toNumbers }
+      }
+
+      if (query.cost !== undefined) {
+        const cost = query.cost.toFixed(6)
+
+        if (query.costOp === "between" && query.costMax !== undefined) {
+          where.totalCost = {
+            gte: Math.min(query.cost, query.costMax).toFixed(6),
+            lte: Math.max(query.cost, query.costMax).toFixed(6),
+          }
+        } else if (query.costOp === "lte") {
+          where.totalCost = { lte: cost }
+        } else if (query.costOp === "eq") {
+          where.totalCost = { eq: cost }
+        } else {
+          where.totalCost = { gte: cost }
+        }
+      }
+
+      if (query.duration !== undefined) {
+        const durationMs = Math.round(query.duration * 1000)
+
+        if (query.durationOp === "between" && query.durationMax !== undefined) {
+          const maxDurationMs = Math.round(query.durationMax * 1000)
+          where.durationMs = {
+            gte: Math.min(durationMs, maxDurationMs),
+            lte: Math.max(durationMs, maxDurationMs),
+          }
+        } else if (query.durationOp === "lte") {
+          where.durationMs = { lte: durationMs }
+        } else if (query.durationOp === "eq") {
+          where.durationMs = { eq: durationMs }
+        } else {
+          where.durationMs = { gte: durationMs }
+        }
       }
 
       const [{ total }] = await db
         .select({ total: count() })
         .from(callsTable)
-        .where(and(...conditions))
+        .where(relationsFilterToSQL(callsTable, where as AnyRelationsFilter))
 
       const items = await db.query.callsTable.findMany({
-        where: {
-          organizationId,
-          ...(query.channel ? { channel: query.channel } : {}),
-          ...(query.direction ? { direction: query.direction } : {}),
-          ...(query.status ? { status: query.status } : {}),
-        },
+        where,
         columns: {
           transcript: false,
         },
@@ -471,9 +545,12 @@ callRoutes.get(
             },
           },
         },
-        orderBy: {
-          startedAt: "desc",
-        },
+        orderBy:
+          query.sortBy === "duration"
+            ? { durationMs: query.sortDir }
+            : query.sortBy === "cost"
+              ? { totalCost: query.sortDir }
+              : { startedAt: query.sortDir },
         limit: query.pageSize,
         offset: (query.page - 1) * query.pageSize,
       })

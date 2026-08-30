@@ -22,6 +22,8 @@ function buildCallsListPath(search: CallListQuery) {
   const params = new URLSearchParams()
   params.set("page", String(search.page))
   params.set("pageSize", String(search.pageSize))
+  params.set("sortBy", search.sortBy)
+  params.set("sortDir", search.sortDir)
 
   if (search.channel) {
     params.set("channel", search.channel)
@@ -33,6 +35,65 @@ function buildCallsListPath(search: CallListQuery) {
 
   if (search.status) {
     params.set("status", search.status)
+  }
+
+  if (search.startedAtFrom) {
+    params.set("startedAtFrom", search.startedAtFrom)
+  }
+
+  if (search.startedAtTo) {
+    params.set("startedAtTo", search.startedAtTo)
+  }
+
+  if (search.agentIds) {
+    params.set(
+      "agentIds",
+      Array.isArray(search.agentIds)
+        ? search.agentIds.join(",")
+        : search.agentIds
+    )
+  }
+
+  if (search.fromNumbers) {
+    params.set(
+      "fromNumbers",
+      Array.isArray(search.fromNumbers)
+        ? search.fromNumbers.join(",")
+        : search.fromNumbers
+    )
+  }
+
+  if (search.toNumbers) {
+    params.set(
+      "toNumbers",
+      Array.isArray(search.toNumbers)
+        ? search.toNumbers.join(",")
+        : search.toNumbers
+    )
+  }
+
+  if (search.costOp) {
+    params.set("costOp", search.costOp)
+  }
+
+  if (search.cost !== undefined) {
+    params.set("cost", String(search.cost))
+  }
+
+  if (search.costMax !== undefined) {
+    params.set("costMax", String(search.costMax))
+  }
+
+  if (search.durationOp) {
+    params.set("durationOp", search.durationOp)
+  }
+
+  if (search.duration !== undefined) {
+    params.set("duration", String(search.duration))
+  }
+
+  if (search.durationMax !== undefined) {
+    params.set("durationMax", String(search.durationMax))
   }
 
   return `/calls?${params.toString()}`
@@ -78,6 +139,7 @@ function Page() {
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
   const { data } = useSuspenseQuery(queryOptions(search))
+  const { page, pageSize, sortBy, sortDir, ...filters } = search
 
   return (
     <>
@@ -89,16 +151,23 @@ function Page() {
           total={data.total}
           page={data.page}
           pageSize={data.pageSize}
-          filters={{
-            channel: search.channel,
-            direction: search.direction,
-            status: search.status,
-          }}
-          onFiltersChange={(filters) => {
+          filters={filters}
+          sortBy={sortBy}
+          sortDir={sortDir}
+          onFiltersChange={(nextFilters) => {
             navigate({
               search: {
                 ...search,
-                ...filters,
+                ...nextFilters,
+                page: 1,
+              },
+            })
+          }}
+          onSortingChange={(sorting) => {
+            navigate({
+              search: {
+                ...search,
+                ...sorting,
                 page: 1,
               },
             })

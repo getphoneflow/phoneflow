@@ -60,6 +60,15 @@ export const triggerOutboundCallRequestSchema = z
   })
   .strict()
 
+export const callListSortBySchema = z.enum(["startedAt", "duration", "cost"])
+
+export const callNumericFilterOperatorSchema = z.enum([
+  "eq",
+  "between",
+  "gte",
+  "lte",
+])
+
 export const callListQuerySchema = z
   .object({
     page: z.coerce.number().int().min(1).default(1),
@@ -71,5 +80,18 @@ export const callListQuerySchema = z
     channel: z.enum(["phone_call", "web_call"]).optional(),
     direction: z.enum(["inbound", "outbound"]).optional(),
     status: z.enum(["in_progress", "completed"]).optional(),
+    startedAtFrom: z.iso.datetime().optional(),
+    startedAtTo: z.iso.datetime().optional(),
+    agentIds: z.union([z.string(), z.array(z.string())]).optional(),
+    fromNumbers: z.union([z.string(), z.array(z.string())]).optional(),
+    toNumbers: z.union([z.string(), z.array(z.string())]).optional(),
+    costOp: callNumericFilterOperatorSchema.optional(),
+    cost: z.coerce.number().nonnegative().optional(),
+    costMax: z.coerce.number().nonnegative().optional(),
+    durationOp: callNumericFilterOperatorSchema.optional(),
+    duration: z.coerce.number().nonnegative().optional(),
+    durationMax: z.coerce.number().nonnegative().optional(),
+    sortBy: callListSortBySchema.default("startedAt"),
+    sortDir: z.enum(["asc", "desc"]).default("desc"),
   })
   .strict()

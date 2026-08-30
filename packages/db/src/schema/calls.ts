@@ -65,5 +65,28 @@ export const callsTable = pgTable(
       table.organizationId,
       table.startedAt
     ),
+    index("calls_organization_id_agent_id_started_at_idx").on(
+      table.organizationId,
+      table.agentId,
+      table.startedAt
+    ),
+    index("calls_organization_id_from_number_started_at_idx").on(
+      table.organizationId,
+      table.fromNumber,
+      table.startedAt
+    ),
+    index("calls_organization_id_to_number_started_at_idx").on(
+      table.organizationId,
+      table.toNumber,
+      table.startedAt
+    ),
+    index("calls_organization_id_duration_ms_idx").on(
+      table.organizationId,
+      table.durationMs
+    ),
+    index("calls_organization_id_total_cost_idx").on(
+      table.organizationId,
+      table.totalCost
+    ),
   ]
 )

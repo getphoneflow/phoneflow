@@ -377,7 +377,11 @@ callRoutes.get("/:callId/recording", requireOrganization, async (c) => {
     const recording = await getRecording(call.id)
 
     c.header("Content-Type", "audio/mp4")
-    return c.body(recording)
+    c.header("Cache-Control", "private, max-age=604800, immutable")
+    if (recording.ContentLength != null) {
+      c.header("Content-Length", String(recording.ContentLength))
+    }
+    return c.body(recording.Body.transformToWebStream())
   } catch {
     return c.json({ error: "Failed to fetch recording" }, 500)
   }

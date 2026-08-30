@@ -48,9 +48,9 @@ export function getRecordingKey(callId: string) {
 }
 
 export async function getRecording(callId: string) {
-  const { Body } = await getObject(getRecordingKey(callId))
+  const { Body, ContentLength } = await getObject(getRecordingKey(callId))
   if (!Body) throw new Error("Recording not found")
-  return Body.transformToWebStream()
+  return { Body, ContentLength }
 }
 
 export async function startCallRecording(roomName: string, callId: string) {

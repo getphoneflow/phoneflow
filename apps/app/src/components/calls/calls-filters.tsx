@@ -177,7 +177,6 @@ function FilterSingleSelect({
   selectedValue?: string
   onSelectedValueChange: (value: string | undefined) => void
 }) {
-  const anchor = useComboboxAnchor()
   const selectedItem =
     items.find((item) => item.value === selectedValue) ?? null
 
@@ -195,17 +194,8 @@ function FilterSingleSelect({
           item.description ? `${item.label} ${item.description}` : item.label
         }
       >
-        <ComboboxChips ref={anchor} className="w-full">
-          {selectedItem ? (
-            <ComboboxChip key={selectedItem.value}>
-              {selectedItem.label}
-            </ComboboxChip>
-          ) : (
-            <span className="text-muted-foreground">{placeholder}</span>
-          )}
-        </ComboboxChips>
-        <ComboboxContent anchor={anchor}>
-          <ComboboxInput showTrigger={false} placeholder="Search..." />
+        <ComboboxInput placeholder={placeholder} showClear={!!selectedItem} />
+        <ComboboxContent>
           <ComboboxEmpty>No batches found</ComboboxEmpty>
           <ComboboxList>
             {(item: MultiSelectOption) => (
@@ -434,7 +424,6 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
       phoneNumbers.map((phoneNumber) => ({
         value: phoneNumber.number,
         label: phoneNumber.number,
-        description: phoneNumber.agent?.name,
       })),
     [phoneNumbers]
   )

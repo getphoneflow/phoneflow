@@ -52,7 +52,11 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
-import { formatAgentVersionLabel } from "@/components/helpers"
+import {
+  formatAgentName,
+  formatAgentVersionLabel,
+  formatPhoneNumber,
+} from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
 
 const features = tableFeatures({
@@ -98,12 +102,26 @@ const columns = columnHelper.columns([
   columnHelper.display({
     id: "from",
     header: "From",
-    cell: ({ row }) => row.original.phoneNumber?.number,
+    cell: ({ row }) => (
+      <span
+        className={
+          row.original.phoneNumber ? undefined : "text-muted-foreground"
+        }
+      >
+        {formatPhoneNumber(row.original.phoneNumber)}
+      </span>
+    ),
   }),
   columnHelper.display({
     id: "agent",
     header: "Agent",
-    cell: ({ row }) => row.original.agent?.name ?? null,
+    cell: ({ row }) => (
+      <span
+        className={row.original.agent ? undefined : "text-muted-foreground"}
+      >
+        {formatAgentName(row.original.agent)}
+      </span>
+    ),
   }),
   columnHelper.display({
     id: "version",
@@ -184,17 +202,17 @@ export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
                     <TableCell
                       key={cell.id}
                       className={
-                        cell.column.id === "agent" && row.original.agentId
+                        cell.column.id === "agent" && row.original.agent
                           ? "hover:underline"
                           : undefined
                       }
                       onClick={
-                        cell.column.id === "agent" && row.original.agentId
+                        cell.column.id === "agent" && row.original.agent
                           ? (event) => {
                               event.stopPropagation()
                               navigate({
                                 to: "/agents/$agentId",
-                                params: { agentId: row.original.agentId! },
+                                params: { agentId: row.original.agentId },
                               })
                             }
                           : undefined

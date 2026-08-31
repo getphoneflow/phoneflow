@@ -9,7 +9,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core"
 
-import { agentsTable, agentVersionsTable } from "@workspace/db/schema/agents"
+import { agentVersionsTable } from "@workspace/db/schema/agents"
 import { organization } from "@workspace/db/schema/auth"
 import { batchCallsTable } from "@workspace/db/schema/batch-calls"
 import type {
@@ -24,9 +24,7 @@ export const callsTable = pgTable(
     organizationId: text("organization_id")
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
-    agentId: uuid("agent_id")
-      .notNull()
-      .references(() => agentsTable.id, { onDelete: "cascade" }),
+    agentId: uuid("agent_id").notNull(),
     agentVersionId: uuid("agent_version_id").references(
       () => agentVersionsTable.id,
       { onDelete: "set null" }

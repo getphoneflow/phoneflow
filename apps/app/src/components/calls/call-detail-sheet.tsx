@@ -1,6 +1,5 @@
 import type { ReceivedMessage } from "@livekit/components-react"
 import { useQuery } from "@tanstack/react-query"
-import { Link } from "@tanstack/react-router"
 
 import type {
   CallDetailResponse,
@@ -20,6 +19,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@workspace/ui/components/tabs"
+import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
 import { CallCostBreakdown } from "@/components/calls/call-cost-breakdown"
 import { CallRecordingPlayer } from "@/components/calls/call-recording-player"
 import { api } from "@/lib/api"
@@ -77,13 +77,11 @@ export function CallDetailSheet({
           </SheetTitle>
           <div className="flex items-center gap-1 text-sm">
             <span className="text-muted-foreground">Agent: </span>
-            <Link
-              to="/agents/$agentId"
-              params={{ agentId: call.agentId }}
+            <AgentReferenceLink
+              agentId={call.agentId}
+              agent={call.agent}
               className="font-medium hover:underline"
-            >
-              {call.agent?.name}
-            </Link>
+            />
             <span className="text-muted-foreground">· {versionLabel}</span>
           </div>
           {call.durationMs && (

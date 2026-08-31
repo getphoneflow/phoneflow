@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router"
 import {
   columnVisibilityFeature,
   createColumnHelper,
@@ -53,6 +52,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
+import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
 import {
   formatCallCost,
   getCallCostBreakdown,
@@ -60,6 +60,7 @@ import {
 } from "@/components/calls/call-cost-breakdown"
 import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
 import { CallsFilters } from "@/components/calls/calls-filters"
+import { formatAgentName } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
 
 const features = tableFeatures({
@@ -183,19 +184,15 @@ const columns = columnHelper.columns([
     header: "To",
     cell: ({ row }) => row.original.toNumber,
   }),
-  columnHelper.accessor((row) => row.agent?.name ?? "", {
+  columnHelper.accessor((row) => formatAgentName(row.agent), {
     id: "agent",
     header: "Agent",
-    cell: ({ row }) =>
-      row.original.agent ? (
-        <Link
-          to="/agents/$agentId"
-          params={{ agentId: row.original.agentId }}
-          className="hover:underline"
-        >
-          {row.original.agent.name}
-        </Link>
-      ) : null,
+    cell: ({ row }) => (
+      <AgentReferenceLink
+        agentId={row.original.agentId}
+        agent={row.original.agent}
+      />
+    ),
   }),
   columnHelper.display({
     id: "version",

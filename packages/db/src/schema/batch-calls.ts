@@ -9,9 +9,8 @@ import {
   varchar,
 } from "drizzle-orm/pg-core"
 
-import { agentsTable, agentVersionsTable } from "@workspace/db/schema/agents"
+import { agentVersionsTable } from "@workspace/db/schema/agents"
 import { organization } from "@workspace/db/schema/auth"
-import { phoneNumbersTable } from "@workspace/db/schema/phone-numbers"
 
 export const batchCallsTable = pgTable(
   "batch_calls",
@@ -21,12 +20,8 @@ export const batchCallsTable = pgTable(
       .notNull()
       .references(() => organization.id, { onDelete: "cascade" }),
     name: varchar({ length: 255 }).notNull(),
-    phoneNumberId: uuid("phone_number_id")
-      .notNull()
-      .references(() => phoneNumbersTable.id, { onDelete: "restrict" }),
-    agentId: uuid("agent_id")
-      .notNull()
-      .references(() => agentsTable.id, { onDelete: "restrict" }),
+    phoneNumberId: uuid("phone_number_id").notNull(),
+    agentId: uuid("agent_id").notNull(),
     agentVersionId: uuid("agent_version_id").references(
       () => agentVersionsTable.id,
       { onDelete: "set null" }

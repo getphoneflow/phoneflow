@@ -22,7 +22,6 @@ import { useState } from "react"
 
 import type {
   CallListItem,
-  CallListQuery,
   CallListSortBy,
 } from "@workspace/shared/api/calls/types"
 import { Badge } from "@workspace/ui/components/badge"
@@ -59,7 +58,6 @@ import {
   parseCallCost,
 } from "@/components/calls/call-cost-breakdown"
 import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
-import { CallsFilters } from "@/components/calls/calls-filters"
 import { formatAgentName } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
@@ -219,12 +217,8 @@ type CallsDataTableProps = {
   total: number
   page: number
   pageSize: number
-  filters: Omit<CallListQuery, "page" | "pageSize" | "sortBy" | "sortDir">
   sortBy: CallListSortBy
   sortDir: "asc" | "desc"
-  onFiltersChange: (
-    filters: Omit<CallListQuery, "page" | "pageSize" | "sortBy" | "sortDir">
-  ) => void
   onSortingChange: (sorting: {
     sortBy: CallListSortBy
     sortDir: "asc" | "desc"
@@ -238,10 +232,8 @@ export function CallsDataTable({
   total,
   page,
   pageSize,
-  filters,
   sortBy,
   sortDir,
-  onFiltersChange,
   onSortingChange,
   onPageChange,
   onPageSizeChange,
@@ -282,7 +274,6 @@ export function CallsDataTable({
 
   return (
     <div>
-      <CallsFilters filters={filters} onFiltersChange={onFiltersChange} />
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>

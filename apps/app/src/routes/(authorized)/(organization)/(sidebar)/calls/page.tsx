@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
+import { Suspense } from "react"
 
 import { callListQuerySchema } from "@workspace/shared/api/calls/schemas"
 import type {
@@ -14,7 +15,9 @@ import {
 } from "@workspace/ui/components/breadcrumb"
 import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 import { CallsDataTable } from "@/components/calls/calls-data-table"
+import { CallsFilters } from "@/components/calls/calls-filters"
 import { DownloadCallsDialog } from "@/components/calls/download-calls-dialog"
 import { api } from "@/lib/api"
 
@@ -142,22 +145,14 @@ function Header() {
 function Page() {
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
-  const { data } = useSuspenseQuery(queryOptions(search))
-  const { page, pageSize, sortBy, sortDir, ...filters } = search
 
   return (
     <>
       <title>Calls</title>
       <Header />
       <div className="p-5 pt-0">
-        <CallsDataTable
-          items={data.items}
-          total={data.total}
-          page={data.page}
-          pageSize={data.pageSize}
-          filters={filters}
-          sortBy={sortBy}
-          sortDir={sortDir}
+        <CallsFilters
+          filters={search}
           onFiltersChange={(nextFilters) => {
             navigate({
               search: {
@@ -167,34 +162,55 @@ function Page() {
               },
             })
           }}
-          onSortingChange={(sorting) => {
-            navigate({
-              search: {
-                ...search,
-                ...sorting,
-                page: 1,
-              },
-            })
-          }}
-          onPageChange={(page) => {
-            navigate({
-              search: {
-                ...search,
-                page,
-              },
-            })
-          }}
-          onPageSizeChange={(pageSize) => {
-            navigate({
-              search: {
-                ...search,
-                pageSize,
-                page: 1,
-              },
-            })
-          }}
         />
+        <Suspense fallback={<Skeleton className="h-120 w-full rounded-md" />}>
+          <CallsTable />
+        </Suspense>
       </div>
     </>
+  )
+}
+
+function CallsTable() {
+  const search = Route.useSearch()
+  const navigate = Route.useNavigate()
+  const { data } = useSuspenseQuery(queryOptions(search))
+  const { sortBy, sortDir } = search
+
+  return (
+    <CallsDataTable
+      items={data.items}
+      total={data.total}
+      page={data.page}
+      pageSize={data.pageSize}
+      sortBy={sortBy}
+      sortDir={sortDir}
+      onSortingChange={(sorting) => {
+        navigate({
+          search: {
+            ...search,
+            ...sorting,
+            page: 1,
+          },
+        })
+      }}
+      onPageChange={(page) => {
+        navigate({
+          search: {
+            ...search,
+            page,
+          },
+        })
+      }}
+      onPageSizeChange={(pageSize) => {
+        navigate({
+          search: {
+            ...search,
+            pageSize,
+            page: 1,
+          },
+        })
+      }}
+    />
   )
 }

@@ -12,7 +12,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@workspace/ui/components/sheet"
-import { Spinner } from "@workspace/ui/components/spinner"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 import {
   Tabs,
   TabsContent,
@@ -100,8 +100,8 @@ export function CallDetailSheet({
           </div>
           <TabsContent value="transcript" className="flex min-h-0 flex-col">
             {isLoading ? (
-              <div className="flex flex-1 items-center justify-center">
-                <Spinner />
+              <div className="p-4 h-full w-full">
+                <Skeleton className="h-full w-full" />
               </div>
             ) : messages.length === 0 ? (
               <div className="flex flex-1 items-center justify-center">

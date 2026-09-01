@@ -52,6 +52,7 @@ import {
 } from "@workspace/ui/components/table"
 import { AgentRowActions } from "@/components/agents/agent-row-actions"
 import { SortableHeader } from "@/components/sortable-header"
+import { UserDateTime } from "@/components/user-timezone-provider"
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -63,11 +64,6 @@ const features = tableFeatures({
   paginatedRowModel: createPaginatedRowModel(),
   filterFns: { includesString: filterFn_includesString },
   sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
-})
-
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  dateStyle: "medium",
-  timeStyle: "short",
 })
 
 const columnHelper = createColumnHelper<typeof features, AgentsListItem>()
@@ -85,7 +81,7 @@ const columns = columnHelper.columns([
   }),
   columnHelper.accessor("updatedAt", {
     header: ({ column }) => <SortableHeader column={column} title="Updated" />,
-    cell: ({ row }) => dateFormatter.format(new Date(row.original.updatedAt)),
+    cell: ({ row }) => <UserDateTime value={row.original.updatedAt} />,
   }),
   columnHelper.display({
     id: "actions",

@@ -42,13 +42,9 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select"
 import { cn } from "@workspace/ui/lib/utils"
+import { useUserTimeZone } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
-
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  month: "short",
-  day: "numeric",
-  year: "numeric",
-})
+import { formatDate, zonedDayBounds } from "@/lib/time"
 
 const channelFilterOptions = [
   { value: "all", label: "All channels" },
@@ -398,6 +394,7 @@ function NumericFilter({
 }
 
 export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
+  const timeZone = useUserTimeZone()
   const { data: agents = [] } = useQuery({
     queryKey: ["agents", "list"],
     queryFn: () => api.get<AgentsListResponse>("/agents"),
@@ -432,11 +429,12 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
       batchCalls.map((batchCall) => ({
         value: batchCall.id,
         label: batchCall.name,
-        description: dateFormatter.format(
-          new Date(batchCall.scheduledAt ?? batchCall.createdAt)
+        description: formatDate(
+          batchCall.scheduledAt ?? batchCall.createdAt,
+          timeZone
         ),
       })),
-    [batchCalls]
+    [batchCalls, timeZone]
   )
 
   const channelFilter = filters.channel ?? "all"
@@ -470,11 +468,11 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
             {selectedDateRange?.from ? (
               selectedDateRange.to ? (
                 <>
-                  {dateFormatter.format(selectedDateRange.from)} -{" "}
-                  {dateFormatter.format(selectedDateRange.to)}
+                  {formatDate(selectedDateRange.from, timeZone)} -{" "}
+                  {formatDate(selectedDateRange.to, timeZone)}
                 </>
               ) : (
-                dateFormatter.format(selectedDateRange.from)
+                formatDate(selectedDateRange.from, timeZone)
               )
             ) : (
               <span>All dates</span>
@@ -497,17 +495,15 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
                 }
 
                 const from = new Date(range.from)
-                from.setHours(0, 0, 0, 0)
-
                 const to = range.to ? new Date(range.to) : undefined
-                if (to) {
-                  to.setHours(23, 59, 59, 999)
-                }
+                const bounds = zonedDayBounds(from, timeZone)
 
                 onFiltersChange({
                   ...filters,
-                  startedAtFrom: from.toISOString(),
-                  startedAtTo: to?.toISOString(),
+                  startedAtFrom: bounds.start,
+                  startedAtTo: to
+                    ? zonedDayBounds(to, timeZone).end
+                    : undefined,
                 })
               }}
             />

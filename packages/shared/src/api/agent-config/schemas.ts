@@ -131,6 +131,7 @@ export const agentConfigSchema = z
     llm: llmConfigSchema,
     tts: ttsConfigSchema,
     globalPrompt: z.string(),
+    timezone: z.string().optional(),
     nodes: z.array(flowNodeConfigSchema).min(1),
     edges: z.array(flowEdgeConfigSchema),
   })

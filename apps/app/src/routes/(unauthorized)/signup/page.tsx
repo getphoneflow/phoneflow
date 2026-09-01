@@ -30,6 +30,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { signIn, signUp } from "@/lib/auth/client"
 import { env } from "@/lib/env"
+import { TIME_ZONES } from "@/lib/time"
 
 export const Route = createFileRoute("/(unauthorized)/signup/")({
   component: Page,
@@ -76,10 +77,12 @@ function Page() {
 
   const signUpMutation = useMutation({
     mutationFn: async (values: SignUpFormValues) => {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
       const result = await signUp.email({
         name: values.name,
         email: values.email,
         password: values.password,
+        timezone: TIME_ZONES.includes(timezone) ? timezone : "UTC",
       })
       if (result.error) {
         throw new Error(result.error.message)

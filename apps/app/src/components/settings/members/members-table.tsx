@@ -51,6 +51,7 @@ import { InviteMemberDialog } from "@/components/settings/members/invite-member-
 import { MemberRowActions } from "@/components/settings/members/member-row-actions"
 import { MemberRoleSelect } from "@/components/settings/members/select-role"
 import { SortableHeader } from "@/components/sortable-header"
+import { UserDateTime } from "@/components/user-timezone-provider"
 import {
   activeMemberQueryOptions,
   type OrganizationMember,
@@ -67,10 +68,6 @@ const features = tableFeatures({
   paginatedRowModel: createPaginatedRowModel(),
   filterFns: { includesString: filterFn_includesString },
   sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
-})
-
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  dateStyle: "medium",
 })
 
 function MemberName({ member }: { member: OrganizationMember }) {
@@ -111,7 +108,7 @@ export function MembersTable({ data }: MembersTableProps) {
       header: ({ column }) => (
         <SortableHeader column={column} title="Member since" />
       ),
-      cell: ({ row }) => dateFormatter.format(new Date(row.original.createdAt)),
+      cell: ({ row }) => <UserDateTime value={row.original.createdAt} />,
     }),
     columnHelper.display({
       id: "actions",

@@ -16,14 +16,10 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { formatAgentVersionLabel } from "@/components/helpers"
+import { UserDateTime } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 import { useAgentStore } from "@/stores/agent"
-
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  dateStyle: "medium",
-  timeStyle: "short",
-})
 
 export function AgentVersionSelector() {
   const queryClient = useQueryClient()
@@ -93,7 +89,7 @@ export function AgentVersionSelector() {
           <div className="min-w-0 flex-1">
             <div className="truncate">V{draftVersionNumber} (Draft)</div>
             <div className="truncate text-xs text-muted-foreground">
-              Updated {dateFormatter.format(new Date(agent.updatedAt))}
+              Updated <UserDateTime value={agent.updatedAt} />
             </div>
           </div>
           <CheckIcon className={isDraftSelected ? undefined : "invisible"} />
@@ -116,8 +112,7 @@ export function AgentVersionSelector() {
                   {formatAgentVersionLabel(version)}
                 </div>
                 <div className="truncate text-xs text-muted-foreground">
-                  Published{" "}
-                  {dateFormatter.format(new Date(version.publishedAt))}
+                  Published <UserDateTime value={version.publishedAt} />
                 </div>
               </div>
               <CheckIcon className={isSelected ? undefined : "invisible"} />

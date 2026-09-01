@@ -2,26 +2,7 @@ import type { CallVariableValues } from "@workspace/shared/api/calls/types"
 import { parseJsonObject } from "@/lib/json"
 
 const VARIABLE_PATTERN = /\{\{\s*([a-z0-9_]+)\s*\}\}/g
-
 const SYSTEM_VARIABLES = new Set(["date", "time", "phone_number"])
-
-function formatDate(date: Date) {
-  return date.toLocaleDateString("en-US", {
-    timeZone: "UTC",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  })
-}
-
-function formatTime(date: Date) {
-  return date.toLocaleTimeString("en-US", {
-    timeZone: "UTC",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-  })
-}
 
 function parseCallValues(raw: string | undefined) {
   const values: CallVariableValues = {}
@@ -36,7 +17,10 @@ function parseCallValues(raw: string | undefined) {
   return values
 }
 
-export function createVariables(attributes: CallVariableValues) {
+export function createVariables(
+  attributes: CallVariableValues,
+  timezone: string
+) {
   const values = parseCallValues(attributes.variable_values)
 
   const phoneNumber = attributes["sip.phoneNumber"]
@@ -47,8 +31,18 @@ export function createVariables(attributes: CallVariableValues) {
   return {
     replace(text: string) {
       const now = new Date()
-      values.date = formatDate(now)
-      values.time = formatTime(now)
+      values.date = now.toLocaleDateString("en-US", {
+        timeZone: timezone,
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+      values.time = now.toLocaleTimeString("en-US", {
+        timeZone: timezone,
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      })
 
       return text.replace(VARIABLE_PATTERN, (match, key: string) => {
         const value = values[key]

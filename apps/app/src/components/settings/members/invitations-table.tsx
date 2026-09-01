@@ -38,6 +38,7 @@ import {
 import { InvitationRowActions } from "@/components/settings/members/invitation-row-actions"
 import { InvitationRoleSelect } from "@/components/settings/members/select-role"
 import { SortableHeader } from "@/components/sortable-header"
+import { UserDateTime } from "@/components/user-timezone-provider"
 import type { OrganizationInvitation } from "@/lib/auth/organization"
 
 const features = tableFeatures({
@@ -47,10 +48,6 @@ const features = tableFeatures({
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
-})
-
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  dateStyle: "medium",
 })
 
 type InvitationsTableProps = {
@@ -83,7 +80,7 @@ export function InvitationsTable({ data }: InvitationsTableProps) {
       header: ({ column }) => (
         <SortableHeader column={column} title="Invited on" />
       ),
-      cell: ({ row }) => dateFormatter.format(new Date(row.original.createdAt)),
+      cell: ({ row }) => <UserDateTime value={row.original.createdAt} />,
     }),
     columnHelper.display({
       id: "actions",

@@ -22,12 +22,8 @@ import {
 import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
 import { CallCostBreakdown } from "@/components/calls/call-cost-breakdown"
 import { CallRecordingPlayer } from "@/components/calls/call-recording-player"
+import { UserDateTime } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
-
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  dateStyle: "medium",
-  timeStyle: "short",
-})
 
 const secondsFormatter = new Intl.NumberFormat("en", {
   minimumFractionDigits: 2,
@@ -73,7 +69,7 @@ export function CallDetailSheet({
       <SheetContent className="gap-0">
         <SheetHeader>
           <SheetTitle className="pr-8">
-            {dateFormatter.format(new Date(call.startedAt))} {channelLabel}
+            <UserDateTime value={call.startedAt} /> {channelLabel}
           </SheetTitle>
           <div className="flex items-center gap-1 text-sm">
             <span className="text-muted-foreground">Agent: </span>

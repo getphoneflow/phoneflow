@@ -52,16 +52,13 @@ import {
 } from "@/components/batch-calls/recipients-csv"
 import { RecipientsPreview } from "@/components/batch-calls/recipients-preview"
 import {
-  defaultTimeZone,
-  timeZones,
-  zonedDateTimeToIso,
-} from "@/components/batch-calls/schedule-timezone"
-import {
   AGENT_VERSION_DRAFT_LABEL,
   formatAgentVersionLabel,
 } from "@/components/helpers"
+import { useUserTimeZone } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { TIME_ZONES, zonedDateTimeToIso } from "@/lib/time"
 
 const formSchema = z
   .object({
@@ -87,6 +84,7 @@ export function CreateBatchCallForm() {
   const canCreate = useCheckPermission({ calls: ["create"] })
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const userTimeZone = useUserTimeZone()
 
   const [file, setFile] = useState<File | null>(null)
   const [columns, setColumns] = useState<string[]>([])
@@ -103,12 +101,12 @@ export function CreateBatchCallForm() {
       agentVersionId: null,
       triggerMode: "now",
       scheduleTime: new Date().toTimeString().slice(0, 8),
-      timezone: defaultTimeZone,
+      timezone: userTimeZone,
     },
   })
 
   const selectedAgentId = form.watch("agentId") || undefined
-  const selectedTimezone = form.watch("timezone") || defaultTimeZone
+  const selectedTimezone = form.watch("timezone") || userTimeZone
 
   const { data: phoneNumbers = [] } = useQuery({
     queryKey: ["phone-numbers"],
@@ -480,8 +478,10 @@ export function CreateBatchCallForm() {
                             </FieldLabel>
                             <Select
                               value={timezoneField.value}
-                              onValueChange={timezoneField.onChange}
-                              readOnly={readOnly}
+                              onValueChange={(value) =>
+                                value && timezoneField.onChange(value)
+                              }
+                              disabled={readOnly}
                             >
                               <SelectTrigger
                                 id={timezoneField.name}
@@ -496,7 +496,7 @@ export function CreateBatchCallForm() {
                                 align="start"
                                 className="max-h-72"
                               >
-                                {timeZones.map((timeZone) => (
+                                {TIME_ZONES.map((timeZone) => (
                                   <SelectItem key={timeZone} value={timeZone}>
                                     {timeZone}
                                   </SelectItem>

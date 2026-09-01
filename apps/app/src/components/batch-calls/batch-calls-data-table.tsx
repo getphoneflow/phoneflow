@@ -58,6 +58,7 @@ import {
   formatPhoneNumber,
 } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
+import { UserDateTime } from "@/components/user-timezone-provider"
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -69,11 +70,6 @@ const features = tableFeatures({
   paginatedRowModel: createPaginatedRowModel(),
   filterFns: { includesString: filterFn_includesString },
   sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
-})
-
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  dateStyle: "medium",
-  timeStyle: "short",
 })
 
 const statusLabel: Record<BatchCallStatus, string> = {
@@ -131,10 +127,11 @@ const columns = columnHelper.columns([
   columnHelper.accessor((row) => row.scheduledAt ?? row.createdAt, {
     id: "when",
     header: ({ column }) => <SortableHeader column={column} title="When" />,
-    cell: ({ row }) =>
-      dateFormatter.format(
-        new Date(row.original.scheduledAt ?? row.original.createdAt)
-      ),
+    cell: ({ row }) => (
+      <UserDateTime
+        value={row.original.scheduledAt ?? row.original.createdAt}
+      />
+    ),
   }),
 ])
 

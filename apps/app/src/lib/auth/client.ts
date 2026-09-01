@@ -1,6 +1,7 @@
 import { createAuthClient } from "better-auth/client"
 import {
   emailOTPClient,
+  inferAdditionalFields,
   lastLoginMethodClient,
   organizationClient,
 } from "better-auth/client/plugins"
@@ -19,6 +20,15 @@ export const authClient = createAuthClient({
         owner,
         admin,
         member,
+      },
+    }),
+    inferAdditionalFields({
+      user: {
+        timezone: {
+          type: "string",
+          required: true,
+          input: true,
+        },
       },
     }),
   ],

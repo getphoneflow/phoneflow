@@ -39,7 +39,10 @@ export default defineAgent({
     )
 
     const flowGraph = buildFlowGraph(config)
-    const variables = createVariables(participant.attributes)
+    const variables = createVariables(
+      participant.attributes,
+      config.timezone ?? "UTC"
+    )
 
     const session = new voice.AgentSession({
       vad: ctx.proc.userData.vad as silero.VAD,

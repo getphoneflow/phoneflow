@@ -62,16 +62,12 @@ import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
 import { CallsFilters } from "@/components/calls/calls-filters"
 import { formatAgentName } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
+import { UserDateTime } from "@/components/user-timezone-provider"
 
 const features = tableFeatures({
   columnVisibilityFeature,
   rowSortingFeature,
   rowPaginationFeature,
-})
-
-const dateFormatter = new Intl.DateTimeFormat("en", {
-  dateStyle: "medium",
-  timeStyle: "short",
 })
 
 const secondsFormatter = new Intl.NumberFormat("en", {
@@ -119,7 +115,7 @@ const columnHelper = createColumnHelper<typeof features, CallListItem>()
 const columns = columnHelper.columns([
   columnHelper.accessor("startedAt", {
     header: ({ column }) => <SortableHeader column={column} title="Started" />,
-    cell: ({ row }) => dateFormatter.format(new Date(row.original.startedAt)),
+    cell: ({ row }) => <UserDateTime value={row.original.startedAt} />,
   }),
   columnHelper.accessor((row) => row.durationMs, {
     id: "duration",

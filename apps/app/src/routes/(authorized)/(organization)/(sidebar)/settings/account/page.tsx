@@ -38,7 +38,11 @@ function Page() {
     <>
       <title>Account settings</title>
       <div className="mx-auto max-w-lg space-y-8">
-        <UserInformation name={session.user.name} email={session.user.email} />
+        <UserInformation
+          name={session.user.name}
+          email={session.user.email}
+          timezone={session.user.timezone}
+        />
         <SetNewPassword accounts={accounts} />
         <DeleteAccount email={session.user.email} />
       </div>

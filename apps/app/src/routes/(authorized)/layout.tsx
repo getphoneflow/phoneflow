@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
 
+import { UserTimeZoneProvider } from "@/components/user-timezone-provider"
 import { sessionQueryOptions } from "@/lib/auth/session"
 
 export const Route = createFileRoute("/(authorized)")({
@@ -17,5 +18,13 @@ export const Route = createFileRoute("/(authorized)")({
       })
     }
   },
-  component: Outlet,
+  component: Layout,
 })
+
+function Layout() {
+  return (
+    <UserTimeZoneProvider>
+      <Outlet />
+    </UserTimeZoneProvider>
+  )
+}

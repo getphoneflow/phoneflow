@@ -14,6 +14,13 @@ export const auth = betterAuth({
     schema,
   }),
   user: {
+    additionalFields: {
+      timezone: {
+        type: "string",
+        required: true,
+        input: true,
+      },
+    },
     deleteUser: {
       enabled: true,
     },

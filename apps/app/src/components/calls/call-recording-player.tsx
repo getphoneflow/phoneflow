@@ -9,7 +9,6 @@ import { Skeleton } from "@workspace/ui/components/skeleton"
 import { env } from "@/lib/env"
 
 const PLAYBACK_RATES = [0.5, 1, 1.5, 2]
-const FETCH_PARAMS = { credentials: "include" } as const
 const SPLIT_CHANNELS = [
   { waveColor: "#7dd3fc", progressColor: "#38bdf8" },
   { waveColor: "#b796fa", progressColor: "#8b5cf6" },
@@ -23,12 +22,13 @@ function formatTick(seconds: number) {
 
 export function CallRecordingPlayer({ callId }: { callId: string }) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const fetchParams = useRef({ credentials: "include" as const }).current
   const [playbackRate, setPlaybackRate] = useState(1)
 
   const { wavesurfer, isReady, isPlaying } = useWavesurfer({
     container: containerRef,
     url: `${env.API_URL}/api/calls/${callId}/recording`,
-    fetchParams: FETCH_PARAMS,
+    fetchParams,
     height: 48,
     minPxPerSec: 50,
     cursorWidth: 2,

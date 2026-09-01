@@ -12,6 +12,7 @@ import { LLM } from "@livekit/agents-plugin-cerebras"
 import { TTS } from "@livekit/agents-plugin-fishaudio"
 import * as silero from "@livekit/agents-plugin-silero"
 
+import { BACKGROUND_AUDIO } from "@workspace/shared/constants/background-audio"
 import { FlowAgent } from "@/flow/agent"
 import { buildFlowGraph } from "@/flow/builder"
 import { createVariables } from "@/flow/variables"
@@ -98,6 +99,17 @@ export default defineAgent({
       room: ctx.room,
       record: false,
     })
+
+    if (config.backgroundAudio) {
+      const backgroundAudio = new voice.BackgroundAudioPlayer({
+        ambientSound: {
+          source: BACKGROUND_AUDIO[config.backgroundAudio.sound].source,
+          volume: config.backgroundAudio.volume,
+        },
+      })
+
+      await backgroundAudio.start({ room: ctx.room, agentSession: session })
+    }
   },
 })
 

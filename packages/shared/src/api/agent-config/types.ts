@@ -2,6 +2,7 @@ import type { z } from "zod"
 
 import type {
   agentConfigSchema,
+  backgroundAudioSchema,
   expressionConditionSchema,
   expressionOperatorSchema,
   extractVariableSchema,
@@ -12,6 +13,7 @@ import type {
 } from "./schemas"
 
 export type AgentConfig = z.infer<typeof agentConfigSchema>
+export type BackgroundAudio = z.infer<typeof backgroundAudioSchema>
 export type FlowNodeInstructions = z.infer<typeof flowNodeInstructionsSchema>
 export type ExtractVariable = z.infer<typeof extractVariableSchema>
 export type FlowNodeConfig = z.infer<typeof flowNodeConfigSchema>

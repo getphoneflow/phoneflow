@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+import { BACKGROUND_AUDIO_IDS } from "@workspace/shared/constants/background-audio"
+
 export const sttConfigSchema = z
   .object({
     model: z.string().trim().min(1),
@@ -18,6 +20,13 @@ export const ttsConfigSchema = z
     model: z.string().trim().min(1),
     voice: z.string().trim().min(1).exactOptional(),
     language: z.string().trim().min(1).exactOptional(),
+  })
+  .strict()
+
+export const backgroundAudioSchema = z
+  .object({
+    sound: z.enum(BACKGROUND_AUDIO_IDS),
+    volume: z.number().min(0).max(1),
   })
   .strict()
 
@@ -130,6 +139,7 @@ export const agentConfigSchema = z
     stt: sttConfigSchema,
     llm: llmConfigSchema,
     tts: ttsConfigSchema,
+    backgroundAudio: backgroundAudioSchema.exactOptional(),
     globalPrompt: z.string(),
     timezone: z.string().optional(),
     nodes: z.array(flowNodeConfigSchema).min(1),

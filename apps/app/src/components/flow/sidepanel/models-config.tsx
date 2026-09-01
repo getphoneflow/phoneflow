@@ -8,6 +8,7 @@ import {
 } from "@workspace/shared/models/helpers"
 import type { ModelKind } from "@workspace/shared/models/types"
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
+import { Input } from "@workspace/ui/components/input"
 import {
   Select,
   SelectContent,
@@ -15,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select"
+import { BackgroundAudioPicker } from "@/components/background-audio-picker"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "./base"
 
@@ -109,6 +111,7 @@ export function ModelsConfigPanel() {
   const ttsVoices = getVoices(ttsModelId)
   const ttsVoiceId = pickFirstVoice(ttsModelId, config.tts.voice)
   const ttsVoice = ttsVoices.find((voice) => voice.id === ttsVoiceId)
+  const backgroundAudio = config.backgroundAudio
 
   return (
     <FlowSidePanelBase title="Models">
@@ -187,6 +190,47 @@ export function ModelsConfigPanel() {
             </SelectContent>
           </Select>
         </Field>
+
+        <div className="grid grid-cols-5 items-end gap-4">
+          <Field className="col-span-3">
+            <FieldLabel>Background audio</FieldLabel>
+            <BackgroundAudioPicker
+              value={backgroundAudio?.sound}
+              readOnly={readOnly}
+              onValueChange={(sound) =>
+                setConfig({
+                  ...config,
+                  backgroundAudio: sound
+                    ? { sound, volume: backgroundAudio?.volume ?? 0.8 }
+                    : undefined,
+                })
+              }
+            />
+          </Field>
+
+          {backgroundAudio && (
+            <Field className="col-span-2">
+              <FieldLabel>Volume</FieldLabel>
+              <Input
+                type="number"
+                min={0}
+                max={1}
+                step={0.1}
+                readOnly={readOnly}
+                value={backgroundAudio.volume}
+                onChange={(event) =>
+                  setConfig({
+                    ...config,
+                    backgroundAudio: {
+                      ...backgroundAudio,
+                      volume: Number(event.target.value),
+                    },
+                  })
+                }
+              />
+            </Field>
+          )}
+        </div>
       </FieldGroup>
     </FlowSidePanelBase>
   )

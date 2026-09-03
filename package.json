@@ -1,6 +1,7 @@
 {
   "name": "phoneflow",
   "private": true,
+  "license": "Apache-2.0",
   "scripts": {
     "typecheck": "pnpm -r typecheck",
     "lint": "biome lint .",

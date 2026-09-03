@@ -33,6 +33,7 @@ import { Route as authorizedorganizationsidebarSettingsPageRouteImport } from '.
 import { Route as authorizedorganizationsidebarAgentsAgentIdPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/$agentId/page'
 import { Route as authorizedorganizationsidebarBatchCallsCreatePageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/batch-calls/create/page'
 import { Route as authorizedorganizationsidebarSettingsAccountPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/account/page'
+import { Route as authorizedorganizationsidebarSettingsBillingPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/billing/page'
 import { Route as authorizedorganizationsidebarSettingsMembersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/members/page'
 import { Route as authorizedorganizationsidebarSettingsOrganizationPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/organization/page'
 import { Route as authorizedorganizationsidebarSettingsRolesPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/roles/page'
@@ -173,6 +174,12 @@ const authorizedorganizationsidebarSettingsAccountPageRoute =
     path: '/account/',
     getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
   } as any)
+const authorizedorganizationsidebarSettingsBillingPageRoute =
+  authorizedorganizationsidebarSettingsBillingPageRouteImport.update({
+    id: '/billing/',
+    path: '/billing/',
+    getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
+  } as any)
 const authorizedorganizationsidebarSettingsMembersPageRoute =
   authorizedorganizationsidebarSettingsMembersPageRouteImport.update({
     id: '/members/',
@@ -213,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/agents/$agentId/': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
   '/batch-calls/create/': typeof authorizedorganizationsidebarBatchCallsCreatePageRoute
   '/settings/account/': typeof authorizedorganizationsidebarSettingsAccountPageRoute
+  '/settings/billing/': typeof authorizedorganizationsidebarSettingsBillingPageRoute
   '/settings/members/': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/settings/organization/': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
   '/settings/roles/': typeof authorizedorganizationsidebarSettingsRolesPageRoute
@@ -237,6 +245,7 @@ export interface FileRoutesByTo {
   '/agents/$agentId': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
   '/batch-calls/create': typeof authorizedorganizationsidebarBatchCallsCreatePageRoute
   '/settings/account': typeof authorizedorganizationsidebarSettingsAccountPageRoute
+  '/settings/billing': typeof authorizedorganizationsidebarSettingsBillingPageRoute
   '/settings/members': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/settings/organization': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
   '/settings/roles': typeof authorizedorganizationsidebarSettingsRolesPageRoute
@@ -267,6 +276,7 @@ export interface FileRoutesById {
   '/(authorized)/(organization)/(sidebar)/agents/$agentId/': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
   '/(authorized)/(organization)/(sidebar)/batch-calls/create/': typeof authorizedorganizationsidebarBatchCallsCreatePageRoute
   '/(authorized)/(organization)/(sidebar)/settings/account/': typeof authorizedorganizationsidebarSettingsAccountPageRoute
+  '/(authorized)/(organization)/(sidebar)/settings/billing/': typeof authorizedorganizationsidebarSettingsBillingPageRoute
   '/(authorized)/(organization)/(sidebar)/settings/members/': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/(authorized)/(organization)/(sidebar)/settings/organization/': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
   '/(authorized)/(organization)/(sidebar)/settings/roles/': typeof authorizedorganizationsidebarSettingsRolesPageRoute
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/agents/$agentId/'
     | '/batch-calls/create/'
     | '/settings/account/'
+    | '/settings/billing/'
     | '/settings/members/'
     | '/settings/organization/'
     | '/settings/roles/'
@@ -318,6 +329,7 @@ export interface FileRouteTypes {
     | '/agents/$agentId'
     | '/batch-calls/create'
     | '/settings/account'
+    | '/settings/billing'
     | '/settings/members'
     | '/settings/organization'
     | '/settings/roles'
@@ -347,6 +359,7 @@ export interface FileRouteTypes {
     | '/(authorized)/(organization)/(sidebar)/agents/$agentId/'
     | '/(authorized)/(organization)/(sidebar)/batch-calls/create/'
     | '/(authorized)/(organization)/(sidebar)/settings/account/'
+    | '/(authorized)/(organization)/(sidebar)/settings/billing/'
     | '/(authorized)/(organization)/(sidebar)/settings/members/'
     | '/(authorized)/(organization)/(sidebar)/settings/organization/'
     | '/(authorized)/(organization)/(sidebar)/settings/roles/'
@@ -527,6 +540,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationsidebarSettingsAccountPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
     }
+    '/(authorized)/(organization)/(sidebar)/settings/billing/': {
+      id: '/(authorized)/(organization)/(sidebar)/settings/billing/'
+      path: '/billing'
+      fullPath: '/settings/billing/'
+      preLoaderRoute: typeof authorizedorganizationsidebarSettingsBillingPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
+    }
     '/(authorized)/(organization)/(sidebar)/settings/members/': {
       id: '/(authorized)/(organization)/(sidebar)/settings/members/'
       path: '/members'
@@ -554,6 +574,7 @@ declare module '@tanstack/react-router' {
 interface authorizedorganizationsidebarSettingsLayoutRouteChildren {
   authorizedorganizationsidebarSettingsPageRoute: typeof authorizedorganizationsidebarSettingsPageRoute
   authorizedorganizationsidebarSettingsAccountPageRoute: typeof authorizedorganizationsidebarSettingsAccountPageRoute
+  authorizedorganizationsidebarSettingsBillingPageRoute: typeof authorizedorganizationsidebarSettingsBillingPageRoute
   authorizedorganizationsidebarSettingsMembersPageRoute: typeof authorizedorganizationsidebarSettingsMembersPageRoute
   authorizedorganizationsidebarSettingsOrganizationPageRoute: typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
   authorizedorganizationsidebarSettingsRolesPageRoute: typeof authorizedorganizationsidebarSettingsRolesPageRoute
@@ -565,6 +586,8 @@ const authorizedorganizationsidebarSettingsLayoutRouteChildren: authorizedorgani
       authorizedorganizationsidebarSettingsPageRoute,
     authorizedorganizationsidebarSettingsAccountPageRoute:
       authorizedorganizationsidebarSettingsAccountPageRoute,
+    authorizedorganizationsidebarSettingsBillingPageRoute:
+      authorizedorganizationsidebarSettingsBillingPageRoute,
     authorizedorganizationsidebarSettingsMembersPageRoute:
       authorizedorganizationsidebarSettingsMembersPageRoute,
     authorizedorganizationsidebarSettingsOrganizationPageRoute:

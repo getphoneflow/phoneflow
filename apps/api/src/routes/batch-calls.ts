@@ -18,6 +18,7 @@ import type {
 import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
+import { organizationHasCredits } from "@/lib/credits"
 import { placeOutboundCall } from "@/lib/livekit"
 import { batchCallsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
@@ -109,6 +110,10 @@ batchCallRoutes.post(
         return c.json({ error: "Agent not found" }, 404)
       }
 
+      if (!(await organizationHasCredits(organizationId))) {
+        return c.json({ error: "Insufficient credits" }, 402)
+      }
+
       if (payload.agentVersionId) {
         const version = await db.query.agentVersionsTable.findFirst({
           where: {
@@ -183,6 +188,7 @@ batchCallRoutes.post(
         where: { id },
         columns: {
           id: true,
+          organizationId: true,
           agentId: true,
           agentVersionId: true,
         },
@@ -206,6 +212,10 @@ batchCallRoutes.post(
 
       if (!batchCall) {
         return c.json({ error: "Batch call not found" }, 404)
+      }
+
+      if (!(await organizationHasCredits(batchCall.organizationId))) {
+        return c.json({ error: "Insufficient credits" }, 402)
       }
 
       const phoneNumber = batchCall.phoneNumber

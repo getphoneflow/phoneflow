@@ -17,6 +17,7 @@
     "@tanstack/react-router": "^1.170.29",
     "@tanstack/react-table": "catalog:",
     "@wavesurfer/react": "^1.0.12",
+    "@better-auth/stripe": "catalog:",
     "@workspace/shared": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@xyflow/react": "^12.11.3",

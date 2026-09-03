@@ -14,6 +14,7 @@ import {
   batchCallsTable,
 } from "@workspace/db/schema/batch-calls"
 import { callsTable } from "@workspace/db/schema/calls"
+import { creditPurchasesTable } from "@workspace/db/schema/credits"
 import { phoneNumbersTable } from "@workspace/db/schema/phone-numbers"
 
 export const relations = defineRelations(
@@ -23,6 +24,7 @@ export const relations = defineRelations(
     batchCallsTable,
     batchCallRecipientsTable,
     callsTable,
+    creditPurchasesTable,
     phoneNumbersTable,
     user,
     session,
@@ -186,6 +188,16 @@ export const relations = defineRelations(
       batchCalls: r.many.batchCallsTable({
         from: r.organization.id,
         to: r.batchCallsTable.organizationId,
+      }),
+      creditPurchases: r.many.creditPurchasesTable({
+        from: r.organization.id,
+        to: r.creditPurchasesTable.organizationId,
+      }),
+    },
+    creditPurchasesTable: {
+      organization: r.one.organization({
+        from: r.creditPurchasesTable.organizationId,
+        to: r.organization.id,
       }),
     },
     member: {

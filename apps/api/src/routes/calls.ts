@@ -31,6 +31,7 @@ import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { computeCallCosts } from "@/lib/call-cost"
+import { organizationHasCredits } from "@/lib/credits"
 import {
   getRecording,
   placeOutboundCall,
@@ -112,6 +113,10 @@ callRoutes.post(
         return c.json({ error: "Agent not found" }, 404)
       }
 
+      if (!(await organizationHasCredits(resolved.organizationId))) {
+        return c.json({ error: "Insufficient credits" }, 402)
+      }
+
       const [call] = await db
         .insert(callsTable)
         .values({
@@ -177,6 +182,10 @@ callRoutes.post(
         return c.json({ error: "Phone number not found" }, 404)
       }
 
+      if (!(await organizationHasCredits(phoneNumber.organizationId))) {
+        return c.json({ error: "Insufficient credits" }, 402)
+      }
+
       const [call] = await db
         .insert(callsTable)
         .values({
@@ -227,6 +236,10 @@ callRoutes.post(
 
       if (!resolved) {
         return c.json({ error: "Agent not found" }, 404)
+      }
+
+      if (!(await organizationHasCredits(resolved.organizationId))) {
+        return c.json({ error: "Insufficient credits" }, 402)
       }
 
       const [call] = await db
@@ -657,6 +670,10 @@ callRoutes.post(
 
       if (!agent) {
         return c.json({ error: "Agent not found" }, 404)
+      }
+
+      if (!(await organizationHasCredits(organizationId))) {
+        return c.json({ error: "Insufficient credits" }, 402)
       }
 
       if (payload.agentVersionId) {

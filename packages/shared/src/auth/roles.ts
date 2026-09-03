@@ -11,6 +11,7 @@ export const statement = {
   agent: ["create", "update", "delete"],
   phoneNumber: ["create", "update", "delete"],
   calls: ["create"],
+  billing: ["purchase"],
 }
 
 export const ac = createAccessControl(statement)
@@ -20,6 +21,7 @@ export const owner = ac.newRole({
   agent: ["create", "update", "delete"],
   phoneNumber: ["create", "update", "delete"],
   calls: ["create"],
+  billing: ["purchase"],
 })
 
 export const admin = ac.newRole({
@@ -27,6 +29,7 @@ export const admin = ac.newRole({
   agent: ["create", "update", "delete"],
   phoneNumber: ["create", "update", "delete"],
   calls: ["create"],
+  billing: ["purchase"],
 })
 
 export const member = ac.newRole({
@@ -34,6 +37,7 @@ export const member = ac.newRole({
   agent: [],
   phoneNumber: [],
   calls: [],
+  billing: [],
 })
 
 export const roles = { owner, admin, member }

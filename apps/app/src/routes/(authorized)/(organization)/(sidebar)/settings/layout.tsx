@@ -38,6 +38,10 @@ const settingsNavItems = [
     to: "/settings/organization",
   },
   {
+    title: "Billing",
+    to: "/settings/billing",
+  },
+  {
     title: "Members",
     to: "/settings/members",
   },

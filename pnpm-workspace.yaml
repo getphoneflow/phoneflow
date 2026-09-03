@@ -17,6 +17,7 @@ catalog:
   '@types/node': 26.2.0
   '@types/react': 19.2.18
   '@types/react-dom': 19.2.4
+  '@better-auth/stripe': 1.6.29
   better-auth: 1.6.29
   bullmq: 6.1.0
   dotenv: 17.4.2

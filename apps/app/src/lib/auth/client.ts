@@ -1,3 +1,4 @@
+import { stripeClient } from "@better-auth/stripe/client"
 import { createAuthClient } from "better-auth/client"
 import {
   emailOTPClient,
@@ -22,6 +23,7 @@ export const authClient = createAuthClient({
         member,
       },
     }),
+    stripeClient(),
     inferAdditionalFields({
       user: {
         timezone: {

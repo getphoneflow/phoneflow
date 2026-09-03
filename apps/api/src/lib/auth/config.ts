@@ -1,3 +1,4 @@
+import { stripe } from "@better-auth/stripe"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { emailOTP, lastLoginMethod, organization } from "better-auth/plugins"
@@ -5,8 +6,10 @@ import { emailOTP, lastLoginMethod, organization } from "better-auth/plugins"
 import { db } from "@workspace/db/client"
 import * as schema from "@workspace/db/schema/auth"
 import { ac, admin, member, owner } from "@workspace/shared/auth/roles"
+import { handleStripeEvent } from "@/lib/credits"
 import { env } from "@/lib/env"
 import { emailsQueue } from "@/lib/queues"
+import { stripe as stripeClient } from "@/lib/stripe"
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -81,6 +84,20 @@ export const auth = betterAuth({
           organizationName: data.organization.name,
         })
       },
+    }),
+    stripe({
+      stripeClient,
+      stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
+      createCustomerOnSignUp: true,
+      organization: {
+        enabled: true,
+        getCustomerCreateParams: async (org) => ({
+          metadata: {
+            organizationId: org.id,
+          },
+        }),
+      },
+      onEvent: handleStripeEvent,
     }),
   ],
   rateLimit: {

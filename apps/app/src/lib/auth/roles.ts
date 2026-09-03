@@ -18,11 +18,11 @@ export const roleLabels: Record<RoleKeys, string> = {
 
 export const roleDescriptions: Record<RoleKeys, string> = {
   owner:
-    "Full control over the organization, members, and invitations. Can create, update, and delete agents and phone numbers, update organization settings, and delete the organization.",
+    "Full control over the organization, members, and invitations. Can create, update, and delete agents and phone numbers, buy credits, update organization settings, and delete the organization.",
   admin:
-    "Full access to manage members, invitations, agents, and phone numbers. Can update organization settings, but cannot delete the organization or transfer ownership.",
+    "Full access to manage members, invitations, agents, phone numbers, and billing. Can update organization settings, but cannot delete the organization or transfer ownership.",
   member:
-    "Read-only access to organization data, agents, and phone numbers. Cannot create, update, or delete resources, or manage members and invitations.",
+    "Read-only access to organization data, agents, phone numbers, and billing. Cannot create, update, or delete resources, buy credits, or manage members and invitations.",
 }
 
 export function toAssignableRole(

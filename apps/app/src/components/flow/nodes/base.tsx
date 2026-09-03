@@ -1,4 +1,5 @@
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "cn"
+
 import { FlowNodeActions } from "./actions"
 
 type FlowNodeBaseProps = {

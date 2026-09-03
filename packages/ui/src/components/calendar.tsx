@@ -1,3 +1,4 @@
+import { cn } from "cn"
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -12,7 +13,6 @@ import {
 } from "react-day-picker"
 
 import { Button, buttonVariants } from "@workspace/ui/components/button"
-import { cn } from "@workspace/ui/lib/utils"
 
 function Calendar({
   className,

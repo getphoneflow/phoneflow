@@ -7,6 +7,7 @@ import {
   tableFeatures,
   useTable,
 } from "@tanstack/react-table"
+import { cn } from "cn"
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -51,7 +52,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
-import { cn } from "@workspace/ui/lib/utils"
 import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
 import {
   formatCallCost,

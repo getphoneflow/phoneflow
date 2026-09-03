@@ -1,3 +1,4 @@
+import { cn } from "cn"
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -6,7 +7,6 @@ import {
 import * as React from "react"
 
 import { Button } from "@workspace/ui/components/button"
-import { cn } from "@workspace/ui/lib/utils"
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (

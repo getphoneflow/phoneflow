@@ -1,7 +1,7 @@
+import { cn } from "cn"
 import { XIcon } from "lucide-react"
 
 import { Button } from "@workspace/ui/components/button"
-import { cn } from "@workspace/ui/lib/utils"
 import { useAgentStore } from "@/stores/agent"
 
 type FlowSidePanelBaseProps = {

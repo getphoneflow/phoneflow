@@ -2,6 +2,7 @@ import {
   type AgentState,
   type ReceivedMessage,
 } from "@livekit/components-react"
+import { cn } from "cn"
 import { ArrowDownIcon } from "lucide-react"
 import { AnimatePresence } from "motion/react"
 import { type ComponentProps, useCallback } from "react"
@@ -9,7 +10,6 @@ import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom"
 
 import { AgentChatIndicator } from "@workspace/ui/components/agents-ui/agent-chat-indicator"
 import { Button } from "@workspace/ui/components/button"
-import { cn } from "@workspace/ui/lib/utils"
 
 function messageSpacing(
   index: number,

@@ -1,8 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "cn"
 import { type MotionProps, motion } from "motion/react"
 import { type ComponentProps, type Ref } from "react"
-
-import { cn } from "@workspace/ui/lib/utils"
 
 const motionAnimationProps = {
   variants: {

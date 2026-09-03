@@ -1,4 +1,5 @@
 import { useReactFlow } from "@xyflow/react"
+import { cn } from "cn"
 import { CopyIcon, Trash2Icon } from "lucide-react"
 
 import {
@@ -6,7 +7,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
-import { cn } from "@workspace/ui/lib/utils"
 import {
   FOCUS_ZOOM,
   getNextNodePosition,

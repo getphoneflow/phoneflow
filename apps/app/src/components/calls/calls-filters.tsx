@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
+import { cn } from "cn"
 import { CalendarIcon } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 
@@ -41,7 +42,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select"
-import { cn } from "@workspace/ui/lib/utils"
 import { useUserTimeZone } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
 import { formatDate, zonedDayBounds } from "@/lib/time"

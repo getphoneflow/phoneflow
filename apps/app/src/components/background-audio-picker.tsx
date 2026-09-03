@@ -1,3 +1,4 @@
+import { cn } from "cn"
 import {
   CheckIcon,
   ChevronsUpDownIcon,
@@ -17,7 +18,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@workspace/ui/components/popover"
-import { cn } from "@workspace/ui/lib/utils"
 import { env } from "@/lib/env"
 
 export function BackgroundAudioPicker({

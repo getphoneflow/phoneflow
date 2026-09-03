@@ -5,9 +5,9 @@ import {
   type EdgeProps,
   getSmoothStepPath,
 } from "@xyflow/react"
+import { cn } from "cn"
 
 import type { FlowEdgeConfig } from "@workspace/shared/api/agent-config/types"
-import { cn } from "@workspace/ui/lib/utils"
 import { useAgentStore } from "@/stores/agent"
 import { FlowEdgeActions } from "./actions"
 import { formatConditionLabel } from "./condition-format"

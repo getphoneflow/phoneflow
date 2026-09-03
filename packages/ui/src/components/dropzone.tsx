@@ -1,6 +1,5 @@
+import { cn } from "cn"
 import { useState } from "react"
-
-import { cn } from "@workspace/ui/lib/utils"
 
 type DropzoneProps = {
   accept?: string

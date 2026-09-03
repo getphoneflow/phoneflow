@@ -7,6 +7,8 @@ import type {
   StartInboundCallRequest,
   StartOutboundCallRequest,
   StartWebCallRequest,
+  UnansweredCallRequest,
+  UnansweredCallResponse,
 } from "@workspace/shared/api/calls/types"
 import { api } from "@/lib/api"
 import { endCall } from "@/lib/end-call"
@@ -90,6 +92,40 @@ export async function startCall(
     await endCall()
     throw error
   }
+}
+
+export async function recordUnansweredCall(
+  metadata: CallDispatchMetadata,
+  livekitRoomName: string
+) {
+  const endedAt = new Date().toISOString()
+
+  if (
+    !metadata.agentId ||
+    !metadata.fromNumber ||
+    !metadata.toNumber ||
+    !metadata.triggeredAt
+  ) {
+    throw new Error(
+      "Unanswered calls require agentId, fromNumber, toNumber and triggeredAt in dispatch metadata"
+    )
+  }
+
+  return await api.post<UnansweredCallResponse, UnansweredCallRequest>(
+    "/calls/unanswered",
+    {
+      body: {
+        agentId: metadata.agentId,
+        agentVersionId: metadata.agentVersionId ?? null,
+        fromNumber: metadata.fromNumber,
+        toNumber: metadata.toNumber,
+        livekitRoomName,
+        startedAt: metadata.triggeredAt,
+        endedAt,
+        batchCallId: metadata.batchCallId ?? null,
+      },
+    }
+  )
 }
 
 export function completeCall(

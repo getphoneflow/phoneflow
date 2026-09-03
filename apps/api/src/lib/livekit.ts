@@ -188,6 +188,7 @@ export async function placeOutboundCall(call: OutboundCall) {
       fromNumber: call.fromNumber,
       toNumber: call.toNumber,
       batchCallId: call.batchCallId,
+      triggeredAt: new Date().toISOString(),
     }),
   })
 

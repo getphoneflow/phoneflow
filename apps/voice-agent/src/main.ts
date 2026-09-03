@@ -6,6 +6,7 @@ import {
   type JobProcess,
   ServerOptions,
   voice,
+  waitForParticipantAttribute,
 } from "@livekit/agents"
 import { STT } from "@livekit/agents-plugin-assemblyai"
 import { LLM } from "@livekit/agents-plugin-cerebras"
@@ -16,9 +17,16 @@ import { BACKGROUND_AUDIO } from "@workspace/shared/constants/background-audio"
 import { FlowAgent } from "@/flow/agent"
 import { buildFlowGraph } from "@/flow/builder"
 import { createVariables } from "@/flow/variables"
-import { completeCall, parseDispatchMetadata, startCall } from "@/lib/calls"
+import {
+  completeCall,
+  parseDispatchMetadata,
+  recordUnansweredCall,
+  startCall,
+} from "@/lib/calls"
 import { env } from "@/lib/env"
 import { buildCallTranscript } from "@/lib/transcript"
+
+const ANSWER_TIMEOUT_MS = 45_000
 
 export default defineAgent({
   prewarm: async (proc: JobProcess) => {
@@ -32,6 +40,22 @@ export default defineAgent({
     const metadata = parseDispatchMetadata(ctx.job.metadata)
     const participant = await ctx.waitForParticipant()
     const livekitRoomName = ctx.room.name ?? ""
+
+    if (metadata.direction === "outbound") {
+      try {
+        await waitForParticipantAttribute({
+          room: ctx.room,
+          identity: participant.identity,
+          attribute: "sip.callStatus",
+          value: "active",
+          signal: AbortSignal.timeout(ANSWER_TIMEOUT_MS),
+        })
+      } catch {
+        await ctx.deleteRoom()
+        await recordUnansweredCall(metadata, livekitRoomName)
+        return
+      }
+    }
 
     const { callId, config } = await startCall(
       participant.attributes,

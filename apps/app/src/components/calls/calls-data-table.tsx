@@ -51,6 +51,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
+import { cn } from "@workspace/ui/lib/utils"
 import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
 import {
   formatCallCost,
@@ -78,6 +79,10 @@ function CostCell({ call }: { call: CallListItem }) {
 
   if (totalCost === null) {
     return null
+  }
+
+  if (call.status === "no_answer") {
+    return formatCallCost(totalCost)
   }
 
   return (
@@ -206,6 +211,8 @@ const columns = columnHelper.columns([
     cell: ({ row }) =>
       row.original.status === "in_progress" ? (
         <Badge variant="outline">In progress</Badge>
+      ) : row.original.status === "no_answer" ? (
+        <Badge variant="outline">No answer</Badge>
       ) : (
         <Badge variant="secondary">Completed</Badge>
       ),
@@ -294,8 +301,19 @@ export function CallsDataTable({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="cursor-pointer"
-                  onClick={() => setSelectedCall(row.original)}
+                  className={cn(
+                    row.original.status !== "no_answer" &&
+                      row.original.status !== "in_progress" &&
+                      "cursor-pointer"
+                  )}
+                  onClick={() => {
+                    if (
+                      row.original.status === "no_answer" ||
+                      row.original.status === "in_progress"
+                    )
+                      return
+                    setSelectedCall(row.original)
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

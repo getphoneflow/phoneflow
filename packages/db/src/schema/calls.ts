@@ -34,7 +34,9 @@ export const callsTable = pgTable(
     }),
     channel: text("channel").notNull().$type<"web_call" | "phone_call">(),
     direction: text("direction").notNull().$type<"inbound" | "outbound">(),
-    status: text("status").notNull().$type<"in_progress" | "completed">(),
+    status: text("status")
+      .notNull()
+      .$type<"in_progress" | "completed" | "no_answer">(),
     fromNumber: text("from_number"),
     toNumber: text("to_number"),
     startedAt: timestamp("started_at", {

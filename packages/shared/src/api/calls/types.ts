@@ -11,13 +11,14 @@ import type {
   startOutboundCallRequestSchema,
   startWebCallRequestSchema,
   triggerOutboundCallRequestSchema,
+  unansweredCallRequestSchema,
 } from "./schemas"
 
 export type CallChannel = "web_call" | "phone_call"
 
 export type CallDirection = "inbound" | "outbound"
 
-export type CallStatus = "in_progress" | "completed"
+export type CallStatus = "in_progress" | "completed" | "no_answer"
 
 export type CallVariableValues = Record<string, string>
 
@@ -28,6 +29,7 @@ export type CallDispatchMetadata = {
   toNumber?: string
   fromNumber?: string
   batchCallId?: string | null
+  triggeredAt?: string
 }
 
 export type CallTranscript = z.infer<typeof callTranscriptSchema>
@@ -42,11 +44,16 @@ export type StartOutboundCallRequest = z.infer<
 export type TriggerOutboundCallRequest = z.infer<
   typeof triggerOutboundCallRequestSchema
 >
+export type UnansweredCallRequest = z.infer<typeof unansweredCallRequestSchema>
 export type CompleteCallRequest = z.infer<typeof completeCallRequestSchema>
 
 export type StartCallResponse = {
   callId: string
   config: AgentConfig
+}
+
+export type UnansweredCallResponse = {
+  callId: string
 }
 
 export type CompleteCallResponse = {

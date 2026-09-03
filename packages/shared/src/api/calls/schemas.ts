@@ -30,6 +30,19 @@ export const startOutboundCallRequestSchema = z
   })
   .strict()
 
+export const unansweredCallRequestSchema = z
+  .object({
+    agentId: z.uuid(),
+    agentVersionId: z.uuid().nullable(),
+    fromNumber: z.e164(),
+    toNumber: z.e164(),
+    livekitRoomName: z.string().trim().min(1),
+    startedAt: z.iso.datetime(),
+    endedAt: z.iso.datetime(),
+    batchCallId: z.uuid().nullable(),
+  })
+  .strict()
+
 export const callTranscriptItemSchema = z
   .object({
     id: z.string().min(1),
@@ -80,7 +93,7 @@ export const callListQuerySchema = z
       .default(10),
     channel: z.enum(["phone_call", "web_call"]).optional(),
     direction: z.enum(["inbound", "outbound"]).optional(),
-    status: z.enum(["in_progress", "completed"]).optional(),
+    status: z.enum(["in_progress", "completed", "no_answer"]).optional(),
     startedAtFrom: z.iso.datetime().optional(),
     startedAtTo: z.iso.datetime().optional(),
     agentIds: z.union([z.string(), z.array(z.string())]).optional(),

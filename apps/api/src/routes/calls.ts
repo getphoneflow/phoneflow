@@ -16,6 +16,7 @@ import {
   startOutboundCallRequestSchema,
   startWebCallRequestSchema,
   triggerOutboundCallRequestSchema,
+  unansweredCallRequestSchema,
 } from "@workspace/shared/api/calls/schemas"
 import type {
   CallDetailResponse,
@@ -25,6 +26,7 @@ import type {
   RequestCallDownloadResponse,
   StartCallResponse,
   TriggerOutboundCallResponse,
+  UnansweredCallResponse,
 } from "@workspace/shared/api/calls/types"
 import { auth } from "@/lib/auth/config"
 import { requireOrganization } from "@/lib/auth/organization"
@@ -261,6 +263,59 @@ callRoutes.post(
       )
     } catch {
       return c.json({ error: "Failed to start call" }, 500)
+    }
+  }
+)
+
+callRoutes.post(
+  "/unanswered",
+  requireAuthToken,
+  validator("json", unansweredCallRequestSchema),
+  async (c) => {
+    try {
+      const payload = c.req.valid("json")
+
+      const resolved = await resolveAgentConfig(
+        payload.agentId,
+        payload.agentVersionId
+      )
+
+      if (!resolved) {
+        return c.json({ error: "Agent not found" }, 404)
+      }
+
+      const [call] = await db
+        .insert(callsTable)
+        .values({
+          id: crypto.randomUUID(),
+          organizationId: resolved.organizationId,
+          agentId: payload.agentId,
+          agentVersionId: resolved.agentVersionId,
+          channel: "phone_call",
+          direction: "outbound",
+          status: "no_answer",
+          fromNumber: payload.fromNumber,
+          toNumber: payload.toNumber,
+          sttModel: resolved.config.stt.model,
+          llmModel: resolved.config.llm.model,
+          ttsModel: resolved.config.tts.model,
+          livekitRoomName: payload.livekitRoomName,
+          startedAt: new Date(payload.startedAt),
+          endedAt: new Date(payload.endedAt),
+          durationMs: 0,
+          sttCost: "0",
+          llmCost: "0",
+          ttsCost: "0",
+          telephonyCost: "0",
+          platformCost: "0",
+          totalCost: "0",
+          batchCallId: payload.batchCallId,
+        })
+        .returning({ id: callsTable.id })
+
+      return c.json({ callId: call.id } satisfies UnansweredCallResponse, 201)
+    } catch {
+      return c.json({ error: "Failed to record unanswered call" }, 500)
     }
   }
 )

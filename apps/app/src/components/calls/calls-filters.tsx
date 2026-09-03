@@ -62,6 +62,7 @@ const statusFilterOptions = [
   { value: "all", label: "All statuses" },
   { value: "completed", label: "Completed" },
   { value: "in_progress", label: "In progress" },
+  { value: "no_answer", label: "No answer" },
 ]
 
 const numericOperatorOptions: {

@@ -3,10 +3,12 @@ packages:
   - "packages/*"
 
 allowBuilds:
+  '@google/genai': true
   '@livekit/local-inference': true
   esbuild: true
   msgpackr-extract: true
   onnxruntime-node: true
+  protobufjs: true
   sharp: true
 
 catalog:

@@ -8,9 +8,6 @@ import {
   voice,
   waitForParticipantAttribute,
 } from "@livekit/agents"
-import { STT } from "@livekit/agents-plugin-assemblyai"
-import { LLM } from "@livekit/agents-plugin-cerebras"
-import { TTS } from "@livekit/agents-plugin-fishaudio"
 import * as silero from "@livekit/agents-plugin-silero"
 
 import { BACKGROUND_AUDIO } from "@workspace/shared/constants/background-audio"
@@ -25,14 +22,15 @@ import {
 } from "@/lib/calls"
 import { env } from "@/lib/env"
 import { buildCallTranscript } from "@/lib/transcript"
+import { LLM } from "@/providers/llm"
+import { STT } from "@/providers/stt"
+import { TTS } from "@/providers/tts"
 
 const ANSWER_TIMEOUT_MS = 45_000
 
 export default defineAgent({
   prewarm: async (proc: JobProcess) => {
-    proc.userData.vad = await silero.VAD.load({
-      activationThreshold: 0.3,
-    })
+    proc.userData.vad = await silero.VAD.load()
   },
   entry: async (ctx: JobContext) => {
     await ctx.connect()
@@ -69,40 +67,39 @@ export default defineAgent({
       config.timezone ?? "UTC"
     )
 
+    const turn = config.turnHandling
     const session = new voice.AgentSession({
       vad: ctx.proc.userData.vad as silero.VAD,
-      stt: new STT({
-        apiKey: env.ASSEMBLYAI_API_KEY,
-        baseUrl: env.ASSEMBLYAI_BASE_URL,
-        speechModel: "universal-3-5-pro",
-        mode: "balanced",
-        vadThreshold: 0.3,
-        minTurnSilence: 100,
-        maxTurnSilence: 1000,
-        agentContextCarryover: true,
-        voiceFocus: "near-field",
-      }),
-      llm: new LLM({
-        model: "gemma-4-31b",
-        apiKey: env.CEREBRAS_API_KEY,
-        temperature: 0.01,
-      }),
-      tts: new TTS({
-        apiKey: env.FISHAUDIO_API_KEY,
-        model: "s2.1-pro",
-        voiceId: env.FISHAUDIO_VOICE_ID,
-        latencyMode: "balanced",
-      }),
+      stt: STT(config.stt),
+      llm: LLM(config.llm),
+      tts: TTS(config.tts),
+      keytermsOptions: config.keytermsOptions,
       turnHandling: {
-        turnDetection: "stt",
-        endpointing: { minDelay: 0 },
-        preemptiveGeneration: { enabled: true, preemptiveTts: true },
+        turnDetection: turn?.turnDetection ?? "vad",
+        endpointing: {
+          mode: turn?.endpointing?.mode ?? "fixed",
+          minDelay: turn?.endpointing?.minDelay ?? 500,
+          maxDelay: turn?.endpointing?.maxDelay ?? 3000,
+          alpha: turn?.endpointing?.alpha ?? 0.9,
+        },
+        preemptiveGeneration: {
+          enabled: turn?.preemptiveGeneration?.enabled ?? true,
+          preemptiveTts: turn?.preemptiveGeneration?.preemptiveTts ?? false,
+          maxSpeechDuration:
+            turn?.preemptiveGeneration?.maxSpeechDuration ?? 10_000,
+          maxRetries: turn?.preemptiveGeneration?.maxRetries ?? 3,
+        },
         interruption: {
           mode: "vad",
-          minDuration: 500,
-          minWords: 1,
-          resumeFalseInterruption: true,
-          falseInterruptionTimeout: 2000,
+          enabled: turn?.interruption?.enabled ?? true,
+          discardAudioIfUninterruptible:
+            turn?.interruption?.discardAudioIfUninterruptible ?? true,
+          minDuration: turn?.interruption?.minDuration ?? 500,
+          minWords: turn?.interruption?.minWords ?? 0,
+          falseInterruptionTimeout:
+            turn?.interruption?.falseInterruptionTimeout ?? 2000,
+          resumeFalseInterruption:
+            turn?.interruption?.resumeFalseInterruption ?? true,
         },
       },
     })

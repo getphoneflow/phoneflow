@@ -2,9 +2,7 @@ import {
   formatUsdPerMinute,
   getModelSections,
   getProviderId,
-  getVoices,
   pickFirstModel,
-  pickFirstVoice,
 } from "@workspace/shared/models/helpers"
 import type { ModelKind } from "@workspace/shared/models/types"
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
@@ -107,10 +105,6 @@ export function ModelsConfigPanel() {
   const config = useAgentStore((state) => state.config)
   const setConfig = useAgentStore((state) => state.setConfig)
 
-  const ttsModelId = config.tts.model
-  const ttsVoices = getVoices(ttsModelId)
-  const ttsVoiceId = pickFirstVoice(ttsModelId, config.tts.voice)
-  const ttsVoice = ttsVoices.find((voice) => voice.id === ttsVoiceId)
   const backgroundAudio = config.backgroundAudio
 
   return (
@@ -145,7 +139,7 @@ export function ModelsConfigPanel() {
         <ProviderModelSelect
           kind="tts"
           label="TTS"
-          modelId={ttsModelId}
+          modelId={config.tts.model}
           readOnly={readOnly}
           onModelChange={(model) => {
             setConfig({
@@ -153,7 +147,6 @@ export function ModelsConfigPanel() {
               tts: {
                 ...config.tts,
                 model,
-                voice: pickFirstVoice(model, config.tts.voice),
               },
             })
           }}
@@ -161,34 +154,17 @@ export function ModelsConfigPanel() {
 
         <Field>
           <FieldLabel>Voice</FieldLabel>
-          <Select
-            value={ttsVoiceId ?? ""}
+          <Input
+            value={config.tts.voice}
             readOnly={readOnly}
-            onValueChange={(voice) => {
-              if (!voice) return
+            placeholder="Provider voice ID"
+            onChange={(event) =>
               setConfig({
                 ...config,
-                tts: { ...config.tts, voice },
+                tts: { ...config.tts, voice: event.target.value },
               })
-            }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select voice">
-                {ttsVoice?.name}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {ttsVoices.map((voice) => (
-                <SelectItem key={voice.id} value={voice.id}>
-                  <span className="font-medium">{voice.name}</span>
-                  <span className="text-muted-foreground">
-                    {" "}
-                    - {voice.description}
-                  </span>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            }
+          />
         </Field>
 
         <div className="grid grid-cols-5 items-end gap-4">

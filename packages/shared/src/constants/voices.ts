@@ -52,30 +52,132 @@ const deepgramAura2Voices = [
   },
 ]
 
-const elevenlabsVoices = [
+const fishaudioVoices = [
   {
-    id: "Xb7hH8MSUJpSbSDYk0k2",
-    name: "Alice",
-    languages: ["en-GB"],
-    description: "Clear and engaging, friendly British woman",
-  },
-  {
-    id: "iP95p4xoKVk53GoZ742B",
-    name: "Chris",
+    id: "bf322df2096a46f18c579d0baa36f41d",
+    name: "Adrian",
     languages: ["en-US"],
-    description: "Natural and real American male",
+    description: "Friendly, casual American male",
   },
   {
-    id: "cjVigY5qzO86Huf0OWal",
-    name: "Eric",
-    languages: ["es-MX"],
-    description: "A smooth tenor Mexican male",
-  },
-  {
-    id: "cgSgspJ2msm6clMCkdW9",
-    name: "Jessica",
+    id: "536d3a5e000945adb7038665781a4aca",
+    name: "Ethan",
     languages: ["en-US"],
-    description: "Young and popular, playful American female",
+    description: "A curious explainer.",
+  },
+  {
+    id: "9a9cf47702da476aa4629e2506d4a857",
+    name: "Hannah",
+    languages: ["en-US"],
+    description: "A conversational specialist.",
+  },
+  {
+    id: "79d0bd3e4e5444b18f7b6d89b5927bf1",
+    name: "Jordan",
+    languages: ["en-US"],
+    description: "A motivational speaker.",
+  },
+  {
+    id: "e3cd384158934cc9a01029cd7d278634",
+    name: "Laura",
+    languages: ["en-US"],
+    description: "A confident female narrator.",
+  },
+  {
+    id: "933563129e564b19a115bedd57b7406a",
+    name: "Sarah",
+    languages: ["en-US"],
+    description: "An engaged speaker.",
+  },
+  {
+    id: "b347db033a6549378b48d00acb0d06cd",
+    name: "Selene",
+    languages: ["en-US"],
+    description: "A meditative female voice.",
+  },
+]
+
+const gradiumVoices = [
+  {
+    id: "4SZHfMpw-p46Ywgs",
+    name: "Harper",
+    languages: ["en-US"],
+    description: "Modern, confident and friendly American female",
+  },
+  {
+    id: "6MFfc37kq0sBjBjy",
+    name: "Sterling",
+    languages: ["en-US"],
+    description: "Warm, energetic American male with theatrical flair",
+  },
+  {
+    id: "YhIHaAfQ0cQPDV9R",
+    name: "Solène",
+    languages: ["fr-FR"],
+    description: "Bright, warm and enthusiastic French female",
+  },
+  {
+    id: "biuhvu17TxVKOcyy",
+    name: "Marius",
+    languages: ["fr-FR"],
+    description: "Energetic, confident French male",
+  },
+  {
+    id: "aBNlTApBeOlVKa23",
+    name: "Lorena",
+    languages: ["de-DE"],
+    description: "Warm and lively young German female",
+  },
+  {
+    id: "Kf5m22mROozoMWj3",
+    name: "Mats",
+    languages: ["de-DE"],
+    description: "Sparky, attentive German male",
+  },
+  {
+    id: "iTQW2xFICXk8riV4",
+    name: "Vera",
+    languages: ["es-ES"],
+    description: "Sweet, expressive Castilian Spanish female",
+  },
+  {
+    id: "sVLgzKMqaptUdaY8",
+    name: "Mateo",
+    languages: ["es-ES"],
+    description: "Sparky, attentive Peninsular Spanish male",
+  },
+  {
+    id: "uCqxlQCKi8sPHwG2",
+    name: "Bianca",
+    languages: ["pt-BR"],
+    description: "Bright, welcoming Brazilian female",
+  },
+  {
+    id: "AByHrwi1S-yLzW-s",
+    name: "Mateus",
+    languages: ["pt-BR"],
+    description: "Warm, friendly Brazilian male",
+  },
+]
+
+const rimeVoices = [
+  {
+    id: "astra",
+    name: "Astra",
+    languages: ["en-US"],
+    description: "Chipper, upbeat American female",
+  },
+  {
+    id: "celeste",
+    name: "Celeste",
+    languages: ["en-US"],
+    description: "Chill Gen-Z American female",
+  },
+  {
+    id: "luna",
+    name: "Luna",
+    languages: ["en-US"],
+    description: "Chill but excitable American female",
   },
 ]
 
@@ -106,33 +208,6 @@ const inworldVoices = [
   },
 ]
 
-const rimeArcanaVoices = [
-  {
-    id: "astra",
-    name: "Astra",
-    languages: ["en-US"],
-    description: "Chipper, upbeat American female",
-  },
-  {
-    id: "celeste",
-    name: "Celeste",
-    languages: ["en-US"],
-    description: "Chill Gen-Z American female",
-  },
-  {
-    id: "luna",
-    name: "Luna",
-    languages: ["en-US"],
-    description: "Chill but excitable American female",
-  },
-  {
-    id: "ursa",
-    name: "Ursa",
-    languages: ["en-US"],
-    description: "Young, emo American male",
-  },
-]
-
 const xaiVoices = [
   {
     id: "ara",
@@ -158,38 +233,170 @@ const xaiVoices = [
     languages: ["en-US"],
     description: "Confident, clear",
   },
+  {
+    id: "sal",
+    name: "Sal",
+    languages: ["en-US"],
+    description: "Smooth, balanced",
+  },
+  {
+    id: "carina",
+    name: "Carina",
+    languages: ["en-US"],
+    description: "Soft, empathetic",
+  },
+  {
+    id: "zagan",
+    name: "Zagan",
+    languages: ["en-US"],
+    description: "Powerful, dramatic",
+  },
+  {
+    id: "helix",
+    name: "Helix",
+    languages: ["en-US"],
+    description: "Bold, dynamic",
+  },
+  {
+    id: "orion",
+    name: "Orion",
+    languages: ["en-US"],
+    description: "Rich, cinematic",
+  },
+  {
+    id: "luna",
+    name: "Luna",
+    languages: ["en-US"],
+    description: "Gentle, patient",
+  },
+  {
+    id: "iris",
+    name: "Iris",
+    languages: ["en-US"],
+    description: "Friendly, upbeat",
+  },
+  {
+    id: "altair",
+    name: "Altair",
+    languages: ["en-US"],
+    description: "Elegant, refined",
+  },
+  {
+    id: "zenith",
+    name: "Zenith",
+    languages: ["en-US"],
+    description: "Sharp, focused",
+  },
+  {
+    id: "perseus",
+    name: "Perseus",
+    languages: ["en-US"],
+    description: "Strong, confident",
+  },
+  {
+    id: "helios",
+    name: "Helios",
+    languages: ["en-US"],
+    description: "Upbeat, energetic",
+  },
+  {
+    id: "lux",
+    name: "Lux",
+    languages: ["en-US"],
+    description: "Grounded, calm",
+  },
+  {
+    id: "kepler",
+    name: "Kepler",
+    languages: ["en-US"],
+    description: "Inventive, forward-thinking",
+  },
+  {
+    id: "rigel",
+    name: "Rigel",
+    languages: ["en-US"],
+    description: "Precise, professional",
+  },
+  {
+    id: "cosmo",
+    name: "Cosmo",
+    languages: ["en-US"],
+    description: "Bright, curious",
+  },
+  {
+    id: "celeste",
+    name: "Celeste",
+    languages: ["en-US"],
+    description: "Compassionate, confident",
+  },
+  {
+    id: "ursa",
+    name: "Ursa",
+    languages: ["en-US"],
+    description: "Friendly, warm",
+  },
+  {
+    id: "sirius",
+    name: "Sirius",
+    languages: ["en-US"],
+    description: "Quick-witted, clever",
+  },
+  {
+    id: "lumen",
+    name: "Lumen",
+    languages: ["en-US"],
+    description: "Warm, articulate",
+  },
+  {
+    id: "castor",
+    name: "Castor",
+    languages: ["en-US"],
+    description: "Charismatic, down-to-earth",
+  },
+  {
+    id: "naksh",
+    name: "Naksh",
+    languages: ["en-US"],
+    description: "Warm, thoughtful",
+  },
+  {
+    id: "atlas",
+    name: "Atlas",
+    languages: ["en-US"],
+    description: "Confident, commanding",
+  },
 ]
 
 export const VOICES = {
   cartesia: {
     "sonic-2": cartesiaVoices,
     "sonic-3": cartesiaVoices,
-    "sonic-3-2025-10-27": cartesiaVoices,
-    "sonic-3-2026-01-12": cartesiaVoices,
-    "sonic-3-latest": cartesiaVoices,
     "sonic-3.5": cartesiaVoices,
-    "sonic-3.5-2026-05-04": cartesiaVoices,
+    "sonic-3.6": cartesiaVoices,
     "sonic-latest": cartesiaVoices,
-    "sonic-turbo": cartesiaVoices,
+    "sonic-preview": cartesiaVoices,
   },
   deepgram: {
+    aura: deepgramAura2Voices,
     "aura-2": deepgramAura2Voices,
   },
-  elevenlabs: {
-    eleven_flash_v2: elevenlabsVoices,
-    eleven_flash_v2_5: elevenlabsVoices,
-    eleven_multilingual_v2: elevenlabsVoices,
-    eleven_turbo_v2: elevenlabsVoices,
-    eleven_turbo_v2_5: elevenlabsVoices,
-    eleven_v3: elevenlabsVoices,
+  fishaudio: {
+    "s2-pro": fishaudioVoices,
+    "s2.1-pro": fishaudioVoices,
+    "s2.1-pro-free": fishaudioVoices,
+  },
+  gradium: {
+    default: gradiumVoices,
   },
   inworld: {
+    "inworld-tts-1": inworldVoices,
     "inworld-tts-1.5-max": inworldVoices,
     "inworld-tts-1.5-mini": inworldVoices,
     "inworld-tts-2": inworldVoices,
+    "inworld-tts-2-flash": inworldVoices,
   },
   rime: {
-    arcana: rimeArcanaVoices,
+    coda: rimeVoices,
   },
   xai: {
     "tts-1": xaiVoices,

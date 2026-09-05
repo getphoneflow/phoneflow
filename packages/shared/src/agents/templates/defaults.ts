@@ -3,15 +3,17 @@ import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 export function createDefaultAgentConfig(): AgentConfig {
   return {
     stt: {
-      model: "deepgram/nova-3",
-      language: "multi",
+      model: "soniox/stt-rt-v5",
     },
     llm: {
-      model: "openai/gpt-4.1-mini",
+      model: "cerebras/gemma-4-31b",
     },
     tts: {
-      model: "cartesia/sonic-3",
-      voice: "9626c31c-bec5-4cca-baa8-f8ba9e84c8bc",
+      model: "fishaudio/s2.1-pro",
+      voice: "3b480f554a5b4ab9a6bc62d6ebd7c98a",
+    },
+    turnHandling: {
+      turnDetection: "stt",
     },
     globalPrompt: "You are a helpful assistant",
     nodes: [

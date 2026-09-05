@@ -6,20 +6,118 @@ export const sttConfigSchema = z
   .object({
     model: z.string().trim().min(1),
     language: z.string().trim().min(1).exactOptional(),
+    keyterms: z.array(z.string().trim().min(1)).exactOptional(),
+    // Deepgram, xAI
+    endpointingMs: z.number().int().nonnegative().exactOptional(),
+    vadThreshold: z.number().min(0).max(1).exactOptional(),
+    diarize: z.boolean().exactOptional(),
+    // Deepgram Flux (STTv2)
+    eagerEotThreshold: z.number().min(0.3).max(0.9).exactOptional(),
+    eotThreshold: z.number().min(0.5).max(0.9).exactOptional(),
+    eotTimeoutMs: z.number().int().positive().exactOptional(),
+    mipOptOut: z.boolean().exactOptional(),
+    // AssemblyAI
+    mode: z.enum(["min_latency", "balanced", "max_accuracy"]).exactOptional(),
+    minTurnSilence: z.number().int().nonnegative().exactOptional(),
+    maxTurnSilence: z.number().int().nonnegative().exactOptional(),
+    endOfTurnConfidenceThreshold: z.number().min(0).max(1).exactOptional(),
+    voiceFocus: z.enum(["near-field", "far-field"]).exactOptional(),
+    voiceFocusThreshold: z.number().min(0).max(1).exactOptional(),
+    agentContextCarryover: z.boolean().exactOptional(),
+    // Soniox
+    endpointLatencyAdjustmentLevel: z.number().min(0).max(3).exactOptional(),
+    languageHintsStrict: z.boolean().exactOptional(),
+    // Inworld
+    minEndOfTurnSilenceWhenConfident: z
+      .number()
+      .int()
+      .nonnegative()
+      .exactOptional(),
+    enableVoiceProfile: z.boolean().exactOptional(),
+    voiceProfileTopN: z.number().int().positive().exactOptional(),
+    // xAI
+    smartTurn: z.number().min(0).max(1).exactOptional(),
+    smartTurnTimeout: z.number().int().positive().max(5000).exactOptional(),
   })
   .strict()
 
 export const llmConfigSchema = z
   .object({
     model: z.string().trim().min(1),
+    temperature: z.number().min(0).max(2).exactOptional(),
+    maxTokens: z.number().int().positive().exactOptional(),
+    toolChoice: z.enum(["auto", "none", "required"]).exactOptional(),
+    reasoningEffort: z
+      .enum(["none", "minimal", "low", "medium", "high"])
+      .exactOptional(),
   })
   .strict()
 
 export const ttsConfigSchema = z
   .object({
     model: z.string().trim().min(1),
-    voice: z.string().trim().min(1).exactOptional(),
+    voice: z.string().trim().min(1),
     language: z.string().trim().min(1).exactOptional(),
+    // Deepgram
+    mipOptOut: z.boolean().exactOptional(),
+    // Fish Audio
+    latencyMode: z.enum(["normal", "balanced", "low"]).exactOptional(),
+    speed: z.number().positive().exactOptional(),
+    volume: z.number().exactOptional(),
+    emotion: z.array(z.string().trim().min(1)).exactOptional(),
+  })
+  .strict()
+
+export const turnHandlingConfigSchema = z
+  .object({
+    turnDetection: z.enum(["stt", "vad"]).exactOptional(),
+    endpointing: z
+      .object({
+        mode: z.enum(["fixed", "dynamic"]).exactOptional(),
+        minDelay: z.number().int().nonnegative().exactOptional(),
+        maxDelay: z.number().int().nonnegative().exactOptional(),
+        alpha: z.number().min(0).max(1).exactOptional(),
+      })
+      .strict()
+      .exactOptional(),
+    preemptiveGeneration: z
+      .object({
+        enabled: z.boolean().exactOptional(),
+        preemptiveTts: z.boolean().exactOptional(),
+        maxSpeechDuration: z.number().int().positive().exactOptional(),
+        maxRetries: z.number().int().positive().exactOptional(),
+      })
+      .strict()
+      .exactOptional(),
+    interruption: z
+      .object({
+        enabled: z.boolean().exactOptional(),
+        discardAudioIfUninterruptible: z.boolean().exactOptional(),
+        minDuration: z.number().int().nonnegative().exactOptional(),
+        minWords: z.number().int().nonnegative().exactOptional(),
+        falseInterruptionTimeout: z
+          .number()
+          .int()
+          .nonnegative()
+          .exactOptional(),
+        resumeFalseInterruption: z.boolean().exactOptional(),
+      })
+      .strict()
+      .exactOptional(),
+  })
+  .strict()
+
+export const keytermsOptionsSchema = z
+  .object({
+    keyterms: z.array(z.string().trim().min(1)).exactOptional(),
+    keytermDetection: z
+      .object({
+        enabled: z.boolean().exactOptional(),
+        turnInterval: z.number().int().positive().exactOptional(),
+        maxKeyterms: z.number().int().positive().exactOptional(),
+      })
+      .strict()
+      .exactOptional(),
   })
   .strict()
 
@@ -139,6 +237,8 @@ export const agentConfigSchema = z
     stt: sttConfigSchema,
     llm: llmConfigSchema,
     tts: ttsConfigSchema,
+    turnHandling: turnHandlingConfigSchema.exactOptional(),
+    keytermsOptions: keytermsOptionsSchema.exactOptional(),
     backgroundAudio: backgroundAudioSchema.exactOptional(),
     globalPrompt: z.string(),
     timezone: z.string().optional(),

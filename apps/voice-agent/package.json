@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsx src/main.ts dev",
     "build": "rm -rf dist && rolldown -c",
-    "start": "node dist/main.js start",
+    "start": "node dist/apps/voice-agent/src/main.js start",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint .",
     "format": "biome check --write --linter-enabled=false ."

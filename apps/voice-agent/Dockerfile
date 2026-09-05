@@ -26,4 +26,4 @@ COPY --from=build /app/apps/voice-agent/dist ./apps/voice-agent/dist
 ENV NODE_ENV=production
 ENV LOG_LEVEL=error
 
-CMD ["node", "./apps/voice-agent/dist/main.js", "start"]
+CMD ["node", "./apps/voice-agent/dist/apps/voice-agent/src/main.js", "start"]

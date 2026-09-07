@@ -11,6 +11,17 @@ import { StickToBottom, useStickToBottomContext } from "use-stick-to-bottom"
 import { AgentChatIndicator } from "@workspace/ui/components/agents-ui/agent-chat-indicator"
 import { Button } from "@workspace/ui/components/button"
 
+function messageOrigin(message: ReceivedMessage): "user" | "assistant" {
+  if (
+    message.from?.isLocal ||
+    message.type === "userTranscript" ||
+    message.from?.isAgent === false
+  ) {
+    return "user"
+  }
+  return "assistant"
+}
+
 function messageSpacing(
   index: number,
   origin: "user" | "assistant",
@@ -19,7 +30,7 @@ function messageSpacing(
   const next = messages[index + 1]
   if (!next) return "mb-5"
 
-  const nextOrigin = next.from?.isLocal ? "user" : "assistant"
+  const nextOrigin = messageOrigin(next)
   return nextOrigin === origin ? "mb-2" : "mb-5"
 }
 
@@ -36,7 +47,7 @@ function TranscriptMessages({
     <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto">
       <div ref={contentRef} className="flex flex-col px-4 py-4">
         {messages.map((msg, index) => {
-          const origin = msg.from?.isLocal ? "user" : "assistant"
+          const origin = messageOrigin(msg)
 
           return (
             <div

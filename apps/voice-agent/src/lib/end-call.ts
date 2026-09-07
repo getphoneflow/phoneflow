@@ -12,9 +12,15 @@ export async function endCall() {
 
   const ctx = getJobContext()
   const roomName = ctx.room.name!
-  const [participant] = Array.from(ctx.room.remoteParticipants.values())
+  const [participant, monitor] = Array.from(
+    ctx.room.remoteParticipants.values()
+  )
 
   if (participant) {
     await roomService.removeParticipant(roomName, participant.identity)
+  }
+
+  if (monitor) {
+    await roomService.removeParticipant(roomName, monitor.identity)
   }
 }

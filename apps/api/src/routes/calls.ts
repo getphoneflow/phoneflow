@@ -23,6 +23,8 @@ import type {
   CallDownloadResponse,
   CallListResponse,
   CompleteCallResponse,
+  EndCallResponse,
+  JoinCallResponse,
   RequestCallDownloadResponse,
   StartCallResponse,
   TriggerOutboundCallResponse,
@@ -38,8 +40,10 @@ import {
   organizationHasCredits,
 } from "@/lib/credits"
 import {
+  createAccessToken,
   getRecording,
   placeOutboundCall,
+  removeCallParticipants,
   startCallRecording,
   stopCallRecording,
 } from "@/lib/livekit"
@@ -501,6 +505,80 @@ callRoutes.get("/:callId/recording", requireOrganization, async (c) => {
     return c.body(recording.Body.transformToWebStream())
   } catch {
     return c.json({ error: "Failed to fetch recording" }, 500)
+  }
+})
+
+callRoutes.post("/:callId/join", requireOrganization, async (c) => {
+  const organizationId = c.get("organizationId")
+  const callId = c.req.param("callId")
+
+  try {
+    const call = await db.query.callsTable.findFirst({
+      where: {
+        id: callId,
+        organizationId,
+      },
+      columns: {
+        status: true,
+        livekitRoomName: true,
+      },
+    })
+
+    if (!call) {
+      return c.json({ error: "Call not found" }, 404)
+    }
+
+    if (call.status !== "in_progress") {
+      return c.json({ error: "Call is not in progress" }, 400)
+    }
+
+    const token = await createAccessToken({
+      identity: `monitor-${crypto.randomUUID()}`,
+      name: "Monitor",
+      grant: {
+        room: call.livekitRoomName,
+        roomJoin: true,
+        canSubscribe: true,
+        canPublish: false,
+        canPublishData: false,
+      },
+    })
+
+    return c.json(token satisfies JoinCallResponse, 201)
+  } catch {
+    return c.json({ error: "Failed to join call" }, 500)
+  }
+})
+
+callRoutes.post("/:callId/end", requireOrganization, async (c) => {
+  const organizationId = c.get("organizationId")
+  const callId = c.req.param("callId")
+
+  try {
+    const call = await db.query.callsTable.findFirst({
+      where: {
+        id: callId,
+        organizationId,
+      },
+      columns: {
+        status: true,
+        livekitRoomName: true,
+      },
+    })
+
+    if (!call) {
+      return c.json({ error: "Call not found" }, 404)
+    }
+
+    if (call.status !== "in_progress") {
+      return c.json({ error: "Call is not in progress" }, 400)
+    }
+
+    await removeCallParticipants(call.livekitRoomName)
+
+    return c.json({ ok: true } satisfies EndCallResponse)
+  } catch {
+    return c.json({ error: "Failed to end call" }, 500)
   }
 })
 

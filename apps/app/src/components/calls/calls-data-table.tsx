@@ -59,6 +59,7 @@ import {
   parseCallCost,
 } from "@/components/calls/call-cost-breakdown"
 import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
+import { LiveCallSheet } from "@/components/calls/live-call-sheet"
 import { formatAgentName } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
@@ -246,6 +247,7 @@ export function CallsDataTable({
   onPageSizeChange,
 }: CallsDataTableProps) {
   const [selectedCall, setSelectedCall] = useState<CallListItem | null>(null)
+  const [liveCall, setLiveCall] = useState<CallListItem | null>(null)
   const sorting: SortingState = [{ id: sortBy, desc: sortDir === "desc" }]
 
   const table = useTable({
@@ -302,16 +304,14 @@ export function CallsDataTable({
                 <TableRow
                   key={row.id}
                   className={cn(
-                    row.original.status !== "no_answer" &&
-                      row.original.status !== "in_progress" &&
-                      "cursor-pointer"
+                    row.original.status !== "no_answer" && "cursor-pointer"
                   )}
                   onClick={() => {
-                    if (
-                      row.original.status === "no_answer" ||
-                      row.original.status === "in_progress"
-                    )
+                    if (row.original.status === "no_answer") return
+                    if (row.original.status === "in_progress") {
+                      setLiveCall(row.original)
                       return
+                    }
                     setSelectedCall(row.original)
                   }}
                 >
@@ -399,6 +399,17 @@ export function CallsDataTable({
           onOpenChange={(open) => {
             if (!open) {
               setSelectedCall(null)
+            }
+          }}
+        />
+      )}
+      {liveCall && (
+        <LiveCallSheet
+          call={liveCall}
+          open
+          onOpenChange={(open) => {
+            if (!open) {
+              setLiveCall(null)
             }
           }}
         />

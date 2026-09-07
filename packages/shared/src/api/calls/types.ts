@@ -144,3 +144,12 @@ export type RequestCallDownloadResponse = {
 export type TriggerOutboundCallResponse = {
   ok: true
 }
+
+export type JoinCallResponse = {
+  server_url: string
+  participant_token: string
+}
+
+export type EndCallResponse = {
+  ok: true
+}

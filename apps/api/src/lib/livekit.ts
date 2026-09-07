@@ -2,15 +2,19 @@ import {
   AudioMixing,
   EncodedFileOutput,
   EncodedFileType,
+  ParticipantInfo_Kind,
   S3Upload,
   SIPOutboundConfig,
 } from "@livekit/protocol"
 import {
+  AccessToken,
   AgentDispatchClient,
   EgressClient,
   RoomAgentDispatch,
   RoomConfiguration,
+  RoomServiceClient,
   SipClient,
+  type VideoGrant,
 } from "livekit-server-sdk"
 
 import type { CallVariableValues } from "@workspace/shared/api/calls/types"
@@ -18,6 +22,51 @@ import { env } from "@/lib/env"
 import { getObject, s3Configured } from "@/lib/s3"
 
 const ROOM_PREFIX = "call-"
+
+type CreateAccessTokenOptions = {
+  identity: string
+  name: string
+  metadata?: string
+  attributes?: Record<string, string>
+  ttl?: string
+  grant: VideoGrant
+  roomConfig?: Record<string, unknown>
+}
+
+export async function createAccessToken({
+  identity,
+  name,
+  metadata = "",
+  attributes = {},
+  ttl = "10m",
+  grant,
+  roomConfig,
+}: CreateAccessTokenOptions) {
+  const accessToken = new AccessToken(
+    env.LIVEKIT_API_KEY,
+    env.LIVEKIT_API_SECRET,
+    {
+      identity,
+      name,
+      metadata,
+      attributes,
+      ttl,
+    }
+  )
+
+  accessToken.addGrant(grant)
+
+  if (roomConfig) {
+    accessToken.roomConfig = RoomConfiguration.fromJson(
+      roomConfig as Parameters<typeof RoomConfiguration.fromJson>[0]
+    )
+  }
+
+  return {
+    server_url: env.LIVEKIT_URL,
+    participant_token: await accessToken.toJwt(),
+  }
+}
 
 function createSipClient() {
   return new SipClient(
@@ -41,6 +90,30 @@ function createEgressClient() {
     env.LIVEKIT_API_KEY,
     env.LIVEKIT_API_SECRET
   )
+}
+
+function createRoomServiceClient() {
+  return new RoomServiceClient(
+    env.LIVEKIT_URL,
+    env.LIVEKIT_API_KEY,
+    env.LIVEKIT_API_SECRET
+  )
+}
+
+export async function removeCallParticipants(roomName: string) {
+  const rooms = createRoomServiceClient()
+  const participants = await rooms.listParticipants(roomName)
+  const [participant, monitor] = participants.filter(
+    (remote) => remote.kind !== ParticipantInfo_Kind.AGENT
+  )
+
+  if (participant) {
+    await rooms.removeParticipant(roomName, participant.identity)
+  }
+
+  if (monitor) {
+    await rooms.removeParticipant(roomName, monitor.identity)
+  }
 }
 
 export function getRecordingKey(callId: string) {

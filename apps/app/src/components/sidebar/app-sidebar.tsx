@@ -10,6 +10,7 @@ import {
 import { NavMain } from "@/components/sidebar/nav-main"
 import { NavUser } from "@/components/sidebar/nav-user"
 import { OrganizationSwitcher } from "@/components/sidebar/organization-switcher"
+import { SidebarCredits } from "@/components/sidebar/sidebar-credits"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -21,6 +22,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain />
       </SidebarContent>
       <SidebarFooter>
+        <SidebarCredits />
         <NavUser />
       </SidebarFooter>
       <SidebarRail />

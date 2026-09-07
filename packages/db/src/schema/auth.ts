@@ -1,11 +1,14 @@
 import {
   boolean,
   index,
+  numeric,
   pgTable,
   text,
   timestamp,
   uniqueIndex,
 } from "drizzle-orm/pg-core"
+
+import { INITIAL_ORGANIZATION_CREDIT_AMOUNT } from "@workspace/shared/constants/credits"
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -15,6 +18,7 @@ export const user = pgTable("user", {
   lastLoginMethod: text("last_login_method"),
   timezone: text("timezone").notNull().default("UTC"),
   image: text("image"),
+  stripeCustomerId: text("stripe_customer_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -91,6 +95,10 @@ export const organization = pgTable(
     logo: text("logo"),
     createdAt: timestamp("created_at").notNull(),
     metadata: text("metadata"),
+    stripeCustomerId: text("stripe_customer_id"),
+    creditBalance: numeric("credit_balance", { precision: 12, scale: 6 })
+      .notNull()
+      .default(String(INITIAL_ORGANIZATION_CREDIT_AMOUNT)),
   },
   (table) => [uniqueIndex("organization_slug_uidx").on(table.slug)]
 )

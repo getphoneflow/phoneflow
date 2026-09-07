@@ -21,6 +21,7 @@
     "@workspace/ui": "workspace:*",
     "@xyflow/react": "^12.11.3",
     "better-auth": "catalog:",
+    "@better-auth/stripe": "catalog:",
     "cn": "catalog:",
     "livekit-client": "catalog:",
     "lucide-react": "catalog:",

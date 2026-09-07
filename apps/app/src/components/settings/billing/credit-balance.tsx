@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 
 import { AddCreditsButton } from "@/components/billing/add-credits-button"
+import { AutoReloadButton } from "@/components/billing/auto-reload-button"
 import { billingCreditsQueryOptions, formatCredits } from "@/lib/billing"
 
 export function CreditBalance() {
@@ -21,7 +22,10 @@ export function CreditBalance() {
           ) : null}
         </div>
 
-        <AddCreditsButton />
+        <div className="flex gap-2">
+          <AutoReloadButton />
+          <AddCreditsButton />
+        </div>
       </div>
     </div>
   )

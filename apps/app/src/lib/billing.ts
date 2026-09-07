@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query"
 
 import type {
+  AutoReloadResponse,
   BillingCreditsResponse,
   BillingInvoicesResponse,
 } from "@workspace/shared/api/billing/types"
@@ -17,6 +18,13 @@ export function billingInvoicesQueryOptions() {
   return queryOptions({
     queryKey: ["billing", "invoices"],
     queryFn: () => api.get<BillingInvoicesResponse>("/billing/invoices"),
+  })
+}
+
+export function autoReloadQueryOptions() {
+  return queryOptions({
+    queryKey: ["billing", "auto-reload"],
+    queryFn: () => api.get<AutoReloadResponse>("/billing/auto-reload"),
   })
 }
 

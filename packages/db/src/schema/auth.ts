@@ -8,7 +8,11 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core"
 
-import { INITIAL_ORGANIZATION_CREDIT_AMOUNT } from "@workspace/shared/constants/credits"
+import {
+  DEFAULT_CREDIT_AUTO_RELOAD_AMOUNT,
+  DEFAULT_CREDIT_AUTO_RELOAD_THRESHOLD,
+  INITIAL_ORGANIZATION_CREDIT_AMOUNT,
+} from "@workspace/shared/constants/credits"
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -99,6 +103,22 @@ export const organization = pgTable(
     creditBalance: numeric("credit_balance", { precision: 12, scale: 6 })
       .notNull()
       .default(String(INITIAL_ORGANIZATION_CREDIT_AMOUNT)),
+    autoReloadEnabled: boolean("auto_reload_enabled").notNull().default(false),
+    autoReloadAmount: numeric("auto_reload_amount", {
+      precision: 12,
+      scale: 6,
+    })
+      .notNull()
+      .default(String(DEFAULT_CREDIT_AUTO_RELOAD_AMOUNT)),
+    autoReloadThreshold: numeric("auto_reload_threshold", {
+      precision: 12,
+      scale: 6,
+    })
+      .notNull()
+      .default(String(DEFAULT_CREDIT_AUTO_RELOAD_THRESHOLD)),
+    autoReloadInFlight: boolean("auto_reload_in_flight")
+      .notNull()
+      .default(false),
   },
   (table) => [uniqueIndex("organization_slug_uidx").on(table.slug)]
 )

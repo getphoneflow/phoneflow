@@ -28,6 +28,9 @@ export const creditPurchasesTable = pgTable(
     unique("credit_purchases_stripe_checkout_session_uidx").on(
       table.stripeCheckoutSessionId
     ),
+    unique("credit_purchases_stripe_payment_intent_uidx").on(
+      table.stripePaymentIntentId
+    ),
     index("credit_purchases_organization_id_created_at_idx").on(
       table.organizationId,
       table.createdAt

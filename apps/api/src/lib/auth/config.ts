@@ -85,20 +85,24 @@ export const auth = betterAuth({
         })
       },
     }),
-    stripe({
-      stripeClient,
-      stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
-      createCustomerOnSignUp: true,
-      organization: {
-        enabled: true,
-        getCustomerCreateParams: async (org) => ({
-          metadata: {
-            organizationId: org.id,
-          },
-        }),
-      },
-      onEvent: handleStripeEvent,
-    }),
+    ...(env.IS_CLOUD
+      ? [
+          stripe({
+            stripeClient,
+            stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
+            createCustomerOnSignUp: true,
+            organization: {
+              enabled: true,
+              getCustomerCreateParams: async (org) => ({
+                metadata: {
+                  organizationId: org.id,
+                },
+              }),
+            },
+            onEvent: handleStripeEvent,
+          }),
+        ]
+      : []),
   ],
   rateLimit: {
     window: 60,

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createFileRoute } from "@tanstack/react-router"
+import { createFileRoute, redirect } from "@tanstack/react-router"
 import { Suspense, useEffect } from "react"
 import { z } from "zod"
 
@@ -11,6 +11,7 @@ import { ManageBillingButton } from "@/components/billing/manage-billing-button"
 import { BillingHistory } from "@/components/settings/billing/billing-history"
 import { CreditBalance } from "@/components/settings/billing/credit-balance"
 import { api } from "@/lib/api"
+import { env } from "@/lib/env"
 
 const billingSearchSchema = z.object({
   checkout: z.enum(["success", "canceled"]).optional(),
@@ -21,6 +22,11 @@ export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/settings/billing/"
 )({
   validateSearch: billingSearchSchema,
+  beforeLoad: () => {
+    if (!env.IS_CLOUD) {
+      throw redirect({ to: "/settings/account" })
+    }
+  },
   component: Page,
 })
 

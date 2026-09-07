@@ -44,6 +44,7 @@ import {
 } from "@workspace/ui/components/select"
 import { useUserTimeZone } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
+import { env } from "@/lib/env"
 import { formatDate, zonedDayBounds } from "@/lib/time"
 
 const channelFilterOptions = [
@@ -594,22 +595,24 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
           })
         }
       />
-      <NumericFilter
-        label="Cost"
-        placeholder="Cost"
-        unitBefore="$"
-        operator={filters.costOp}
-        value={filters.cost}
-        valueMax={filters.costMax}
-        onChange={(next) =>
-          onFiltersChange({
-            ...filters,
-            costOp: next.operator,
-            cost: next.value,
-            costMax: next.valueMax,
-          })
-        }
-      />
+      {env.IS_CLOUD ? (
+        <NumericFilter
+          label="Cost"
+          placeholder="Cost"
+          unitBefore="$"
+          operator={filters.costOp}
+          value={filters.cost}
+          valueMax={filters.costMax}
+          onChange={(next) =>
+            onFiltersChange({
+              ...filters,
+              costOp: next.operator,
+              cost: next.value,
+              costMax: next.valueMax,
+            })
+          }
+        />
+      ) : null}
       <Field className="w-40 gap-1.5">
         <FieldLabel>Channel</FieldLabel>
         <Select

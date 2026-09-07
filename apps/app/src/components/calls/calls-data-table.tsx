@@ -63,6 +63,7 @@ import { LiveCallSheet } from "@/components/calls/live-call-sheet"
 import { formatAgentName } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
+import { env } from "@/lib/env"
 
 const features = tableFeatures({
   columnVisibilityFeature,
@@ -274,6 +275,7 @@ export function CallsDataTable({
     },
     state: {
       sorting,
+      columnVisibility: env.IS_CLOUD ? {} : { cost: false },
       pagination: {
         pageIndex: page - 1,
         pageSize,

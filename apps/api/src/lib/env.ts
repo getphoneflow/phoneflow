@@ -5,6 +5,7 @@ export const env = {
   API_URL: process.env.API_URL ?? "http://localhost:3000",
   PORT: Number(process.env.PORT ?? "3000"),
   NODE_ENV: process.env.NODE_ENV ?? "development",
+  IS_CLOUD: process.env.IS_CLOUD === "true",
   BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET ?? "",
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ?? "",
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ?? "",

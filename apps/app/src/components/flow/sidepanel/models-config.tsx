@@ -15,8 +15,21 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select"
 import { BackgroundAudioPicker } from "@/components/background-audio-picker"
+import { env } from "@/lib/env"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "./base"
+
+function ModelPriceLabel({ usdPerMinute }: { usdPerMinute: number }) {
+  if (!env.IS_CLOUD) {
+    return null
+  }
+
+  return (
+    <span className="text-muted-foreground">
+      - {formatUsdPerMinute(usdPerMinute)}
+    </span>
+  )
+}
 
 function ProviderModelSelect({
   kind,
@@ -79,18 +92,14 @@ function ProviderModelSelect({
           <SelectTrigger className="w-full">
             <SelectValue placeholder={`Select ${label} model`}>
               {selectedModel.name}
-              <span className="text-muted-foreground">
-                - {formatUsdPerMinute(selectedModel.usdPerMinute)}
-              </span>
+              <ModelPriceLabel usdPerMinute={selectedModel.usdPerMinute} />
             </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {models.map((model) => (
               <SelectItem key={model.id} value={model.id}>
                 {model.name}
-                <span className="text-muted-foreground">
-                  - {formatUsdPerMinute(model.usdPerMinute)}
-                </span>
+                <ModelPriceLabel usdPerMinute={model.usdPerMinute} />
               </SelectItem>
             ))}
           </SelectContent>

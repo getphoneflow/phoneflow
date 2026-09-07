@@ -39,6 +39,7 @@ import {
   deductOrganizationCredits,
   organizationHasCredits,
 } from "@/lib/credits"
+import { env } from "@/lib/env"
 import {
   createAccessToken,
   getRecording,
@@ -122,7 +123,10 @@ callRoutes.post(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      if (!(await organizationHasCredits(resolved.organizationId))) {
+      if (
+        env.IS_CLOUD &&
+        !(await organizationHasCredits(resolved.organizationId))
+      ) {
         return c.json({ error: "Insufficient credits" }, 402)
       }
 
@@ -191,7 +195,10 @@ callRoutes.post(
         return c.json({ error: "Phone number not found" }, 404)
       }
 
-      if (!(await organizationHasCredits(phoneNumber.organizationId))) {
+      if (
+        env.IS_CLOUD &&
+        !(await organizationHasCredits(phoneNumber.organizationId))
+      ) {
         return c.json({ error: "Insufficient credits" }, 402)
       }
 
@@ -247,7 +254,10 @@ callRoutes.post(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      if (!(await organizationHasCredits(resolved.organizationId))) {
+      if (
+        env.IS_CLOUD &&
+        !(await organizationHasCredits(resolved.organizationId))
+      ) {
         return c.json({ error: "Insufficient credits" }, 402)
       }
 
@@ -323,12 +333,16 @@ callRoutes.post(
           startedAt: new Date(payload.startedAt),
           endedAt: new Date(payload.endedAt),
           durationMs: 0,
-          sttCost: "0",
-          llmCost: "0",
-          ttsCost: "0",
-          telephonyCost: "0",
-          platformCost: "0",
-          totalCost: "0",
+          ...(env.IS_CLOUD
+            ? {
+                sttCost: "0",
+                llmCost: "0",
+                ttsCost: "0",
+                telephonyCost: "0",
+                platformCost: "0",
+                totalCost: "0",
+              }
+            : {}),
           batchCallId: payload.batchCallId,
         })
         .returning({ id: callsTable.id })
@@ -369,13 +383,15 @@ callRoutes.post(
       }
 
       const durationMs = endedAt.getTime() - call.startedAt.getTime()
-      const costs = computeCallCosts({
-        durationMs,
-        channel: call.channel,
-        sttModel: call.sttModel,
-        llmModel: call.llmModel,
-        ttsModel: call.ttsModel,
-      })
+      const costs = env.IS_CLOUD
+        ? computeCallCosts({
+            durationMs,
+            channel: call.channel,
+            sttModel: call.sttModel,
+            llmModel: call.llmModel,
+            ttsModel: call.ttsModel,
+          })
+        : null
 
       await stopCallRecording(call.livekitRoomName)
 
@@ -385,12 +401,16 @@ callRoutes.post(
           status: payload.status,
           endedAt,
           durationMs,
-          sttCost: costs.stt.toFixed(6),
-          llmCost: costs.llm.toFixed(6),
-          ttsCost: costs.tts.toFixed(6),
-          telephonyCost: costs.telephony.toFixed(6),
-          platformCost: costs.platform.toFixed(6),
-          totalCost: costs.total.toFixed(6),
+          ...(costs
+            ? {
+                sttCost: costs.stt.toFixed(6),
+                llmCost: costs.llm.toFixed(6),
+                ttsCost: costs.tts.toFixed(6),
+                telephonyCost: costs.telephony.toFixed(6),
+                platformCost: costs.platform.toFixed(6),
+                totalCost: costs.total.toFixed(6),
+              }
+            : {}),
           transcript: payload.transcript,
           variables: payload.variables ?? null,
           updatedAt: new Date(),
@@ -398,7 +418,9 @@ callRoutes.post(
         .where(eq(callsTable.id, payload.callId))
         .returning()
 
-      await deductOrganizationCredits(call.organizationId, costs.total)
+      if (costs) {
+        await deductOrganizationCredits(call.organizationId, costs.total)
+      }
 
       return c.json({
         id: updated.id,
@@ -810,7 +832,7 @@ callRoutes.post(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      if (!(await organizationHasCredits(organizationId))) {
+      if (env.IS_CLOUD && !(await organizationHasCredits(organizationId))) {
         return c.json({ error: "Insufficient credits" }, 402)
       }
 

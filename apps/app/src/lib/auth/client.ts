@@ -23,7 +23,7 @@ export const authClient = createAuthClient({
         member,
       },
     }),
-    stripeClient(),
+    ...(env.IS_CLOUD ? [stripeClient()] : []),
     inferAdditionalFields({
       user: {
         timezone: {

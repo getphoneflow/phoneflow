@@ -11,6 +11,7 @@ import { NavMain } from "@/components/sidebar/nav-main"
 import { NavUser } from "@/components/sidebar/nav-user"
 import { OrganizationSwitcher } from "@/components/sidebar/organization-switcher"
 import { SidebarCredits } from "@/components/sidebar/sidebar-credits"
+import { env } from "@/lib/env"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -22,7 +23,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarCredits />
+        {env.IS_CLOUD ? <SidebarCredits /> : null}
         <NavUser />
       </SidebarFooter>
       <SidebarRail />

@@ -31,9 +31,11 @@ api.on(["POST", "GET"], "/api/auth/*", (c) => {
 
 api.route("/api/agents", agentRoutes)
 api.route("/api/batch-calls", batchCallRoutes)
-api.route("/api/billing", billingRoutes)
 api.route("/api/calls", callRoutes)
 api.route("/api/phone-numbers", phoneNumberRoutes)
 api.route("/api/token", tokenRoutes)
+if (env.IS_CLOUD) {
+  api.route("/api/billing", billingRoutes)
+}
 
 export default api

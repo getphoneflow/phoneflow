@@ -24,6 +24,7 @@ import { CallCostBreakdown } from "@/components/calls/call-cost-breakdown"
 import { CallRecordingPlayer } from "@/components/calls/call-recording-player"
 import { UserDateTime } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
+import { env } from "@/lib/env"
 
 const secondsFormatter = new Intl.NumberFormat("en", {
   minimumFractionDigits: 2,
@@ -95,7 +96,9 @@ export function CallDetailSheet({
             <TabsList className="w-full">
               <TabsTrigger value="transcript">Transcript</TabsTrigger>
               <TabsTrigger value="data">Data</TabsTrigger>
-              <TabsTrigger value="cost">Cost</TabsTrigger>
+              {env.IS_CLOUD ? (
+                <TabsTrigger value="cost">Cost</TabsTrigger>
+              ) : null}
             </TabsList>
           </div>
           <TabsContent value="transcript" className="flex min-h-0 flex-col">
@@ -132,12 +135,14 @@ export function CallDetailSheet({
               </div>
             )}
           </TabsContent>
-          <TabsContent
-            value="cost"
-            className="flex min-h-0 flex-col overflow-y-auto"
-          >
-            <CallCostBreakdown call={call} />
-          </TabsContent>
+          {env.IS_CLOUD ? (
+            <TabsContent
+              value="cost"
+              className="flex min-h-0 flex-col overflow-y-auto"
+            >
+              <CallCostBreakdown call={call} />
+            </TabsContent>
+          ) : null}
         </Tabs>
       </SheetContent>
     </Sheet>

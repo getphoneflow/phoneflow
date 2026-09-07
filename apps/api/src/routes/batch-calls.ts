@@ -19,6 +19,7 @@ import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { organizationHasCredits } from "@/lib/credits"
+import { env } from "@/lib/env"
 import { placeOutboundCall } from "@/lib/livekit"
 import { batchCallsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
@@ -110,7 +111,7 @@ batchCallRoutes.post(
         return c.json({ error: "Agent not found" }, 404)
       }
 
-      if (!(await organizationHasCredits(organizationId))) {
+      if (env.IS_CLOUD && !(await organizationHasCredits(organizationId))) {
         return c.json({ error: "Insufficient credits" }, 402)
       }
 
@@ -214,7 +215,10 @@ batchCallRoutes.post(
         return c.json({ error: "Batch call not found" }, 404)
       }
 
-      if (!(await organizationHasCredits(batchCall.organizationId))) {
+      if (
+        env.IS_CLOUD &&
+        !(await organizationHasCredits(batchCall.organizationId))
+      ) {
         return c.json({ error: "Insufficient credits" }, 402)
       }
 

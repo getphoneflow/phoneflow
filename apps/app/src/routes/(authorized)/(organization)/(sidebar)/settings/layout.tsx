@@ -21,6 +21,7 @@ import {
   SidebarTrigger,
 } from "@workspace/ui/components/sidebar"
 import { Skeleton } from "@workspace/ui/components/skeleton"
+import { env } from "@/lib/env"
 
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/settings"
@@ -37,10 +38,14 @@ const settingsNavItems = [
     title: "Organization",
     to: "/settings/organization",
   },
-  {
-    title: "Billing",
-    to: "/settings/billing",
-  },
+  ...(env.IS_CLOUD
+    ? [
+        {
+          title: "Billing",
+          to: "/settings/billing",
+        },
+      ]
+    : []),
   {
     title: "Members",
     to: "/settings/members",

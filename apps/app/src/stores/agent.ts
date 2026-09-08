@@ -21,6 +21,7 @@ import {
   type EditorAgentConfig,
   type EditorFlowEdge,
   type EditorFlowNode,
+  type FlowValidationErrors,
   loadEditorAgentConfig,
   validateAgentConfig,
 } from "@/components/flow/agent-config"
@@ -39,6 +40,7 @@ type AgentEditorState = {
   agent: AgentDetailResponse
   config: EditorAgentConfig
   validation: AgentConfigValidation
+  flowErrors: FlowValidationErrors
   savedConfig: AgentConfig
   past: EditorAgentConfig[]
   future: EditorAgentConfig[]
@@ -123,7 +125,7 @@ function commitEditorConfig(
   nextConfig: EditorAgentConfig,
   extra: Partial<AgentEditorState> = {}
 ): Partial<AgentEditorState> {
-  const validation = validateAgentConfig(nextConfig)
+  const { validation, flowErrors } = validateAgentConfig(nextConfig)
 
   if (
     state.validation.success &&
@@ -143,6 +145,7 @@ function commitEditorConfig(
     ...extra,
     config: nextConfig,
     validation,
+    flowErrors,
     past: shouldPush
       ? [...state.past, structuredClone(state.config)].slice(-HISTORY_LIMIT)
       : state.past,
@@ -153,7 +156,10 @@ function commitEditorConfig(
 function restoreEditorConfig(
   state: AgentEditorState,
   historyConfig: EditorAgentConfig
-): Pick<AgentEditorState, "config" | "validation" | "sidePanel"> {
+): Pick<
+  AgentEditorState,
+  "config" | "validation" | "flowErrors" | "sidePanel"
+> {
   let sidePanel = state.sidePanel
 
   if (sidePanel.kind === "node") {
@@ -174,7 +180,7 @@ function restoreEditorConfig(
   return {
     sidePanel,
     config: nextConfig,
-    validation: validateAgentConfig(nextConfig),
+    ...validateAgentConfig(nextConfig),
   }
 }
 
@@ -184,11 +190,13 @@ function resetEditorHistory(config: AgentConfig) {
   const {
     config: clientConfig,
     validation,
+    flowErrors,
     savedConfig,
   } = loadEditorAgentConfig(config)
   return {
     config: clientConfig,
     validation,
+    flowErrors,
     savedConfig,
     past: [] as EditorAgentConfig[],
     future: [] as EditorAgentConfig[],
@@ -199,6 +207,7 @@ function resetEditorHistory(config: AgentConfig) {
 const {
   config: initialConfig,
   validation: initialValidation,
+  flowErrors: initialFlowErrors,
   savedConfig: initialSavedConfig,
 } = loadEditorAgentConfig(createDefaultAgentConfig())
 
@@ -206,6 +215,7 @@ const initialState: AgentEditorState = {
   agent: emptyAgent,
   config: initialConfig,
   validation: initialValidation,
+  flowErrors: initialFlowErrors,
   savedConfig: initialSavedConfig,
   past: [],
   future: [],

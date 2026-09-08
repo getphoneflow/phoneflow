@@ -242,16 +242,6 @@ export const flowEdgeConfigSchema = z.object({
   }),
 })
 
-function flowItemLabel(id: string, name: string) {
-  const trimmed = name.trim()
-  return trimmed || id
-}
-
-function nodeLabel(nodes: z.infer<typeof flowNodeConfigSchema>[], id: string) {
-  const node = nodes.find((entry) => entry.id === id)
-  return node ? flowItemLabel(node.id, node.data.name) : id
-}
-
 export const agentConfigSchema = z
   .object({
     stt: sttConfigSchema,
@@ -267,34 +257,38 @@ export const agentConfigSchema = z
   })
   .superRefine((config, ctx) => {
     const nodeIds = new Set<string>()
-    const startLabels: string[] = []
+    let startCount = 0
 
     config.nodes.forEach((node, index) => {
       if (nodeIds.has(node.id)) {
         ctx.addIssue({
           code: "custom",
           path: ["nodes", index],
-          message: `Duplicate node id "${node.id}"`,
+          message: "Duplicate node",
         })
       }
       nodeIds.add(node.id)
 
       if (node.type === "conversation" && node.data.isStart === true) {
-        startLabels.push(flowItemLabel(node.id, node.data.name))
+        startCount += 1
       }
     })
 
-    if (startLabels.length === 0) {
+    if (startCount === 0) {
       ctx.addIssue({
         code: "custom",
         path: ["nodes"],
         message: "Add a start node to the flow",
       })
-    } else if (startLabels.length > 1) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["nodes"],
-        message: `Only one start node is allowed (${startLabels.join(", ")})`,
+    } else if (startCount > 1) {
+      config.nodes.forEach((node, index) => {
+        if (node.type === "conversation" && node.data.isStart === true) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["nodes", index],
+            message: "Only one start node is allowed",
+          })
+        }
       })
     }
 
@@ -303,14 +297,11 @@ export const agentConfigSchema = z
     const edgesBySource = new Map<string, number>()
 
     config.edges.forEach((edge, index) => {
-      const source = nodeLabel(config.nodes, edge.source)
-      const target = nodeLabel(config.nodes, edge.target)
-
       if (edgeIds.has(edge.id)) {
         ctx.addIssue({
           code: "custom",
           path: ["edges", index],
-          message: `Duplicate transition id "${edge.id}"`,
+          message: "Duplicate transition",
         })
       }
       edgeIds.add(edge.id)
@@ -319,7 +310,7 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["edges", index],
-          message: `Transition from "${source}" to "${target}" is disconnected`,
+          message: "Transition is disconnected",
         })
       }
 
@@ -328,7 +319,7 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["edges", index],
-          message: `Duplicate transition from "${source}" to "${target}"`,
+          message: "Duplicate transition",
         })
       }
       sourceTargetKeys.add(key)
@@ -343,10 +334,7 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["edges", index],
-          message: `Always transition from "${nodeLabel(
-            config.nodes,
-            edge.source
-          )}" must be the only transition on that node`,
+          message: "Always transition must be the only transition on that node",
         })
       }
     })

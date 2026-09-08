@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { CircleAlertIcon, CircleCheckIcon } from "lucide-react"
 import { useEffect } from "react"
 
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
@@ -21,6 +22,7 @@ export function AgentAutoSave() {
   const savedConfig = useAgentStore((state) => state.savedConfig)
   const markSaved = useAgentStore((state) => state.markSaved)
   const validation = useAgentStore((state) => state.validation)
+  const globalErrors = useAgentStore((state) => state.flowErrors.global)
   const dragging = useAgentStore((state) =>
     state.config.nodes.some((node) => node.dragging)
   )
@@ -47,16 +49,6 @@ export function AgentAutoSave() {
   })
 
   useEffect(() => {
-    if (readOnly || dragging || validation.success) {
-      return
-    }
-
-    toast.error(
-      validation.error.issues.map((issue) => issue.message).join(", ")
-    )
-  }, [dragging, readOnly, validation])
-
-  useEffect(() => {
     if (
       readOnly ||
       dragging ||
@@ -79,16 +71,22 @@ export function AgentAutoSave() {
   }
 
   return (
-    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mr-5">
+    <div className="flex items-center gap-1.5 text-xs text-muted-foreground mr-4">
       {saveMutation.isPending ? (
         <>
           <Spinner className="size-3" />
           Saving
         </>
       ) : validation.success ? (
-        "Auto saved"
+        <>
+          <CircleCheckIcon className="size-3" />
+          Auto saved
+        </>
       ) : (
-        <span className="text-destructive">Fix error</span>
+        <span className="flex items-center gap-1.5 text-destructive">
+          <CircleAlertIcon className="size-3" />
+          {globalErrors.length > 0 ? globalErrors.join(", ") : "Fix error"}
+        </span>
       )}
     </div>
   )

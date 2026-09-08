@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { Link } from "@tanstack/react-router"
 import {
   CopyIcon,
   DownloadIcon,
+  HistoryIcon,
   MoreHorizontalIcon,
   PencilIcon,
   Trash2Icon,
@@ -96,6 +98,13 @@ export function AgentRowActions({ agent }: { agent: AgentsListItem }) {
           <DropdownMenuItem onClick={() => setDownloadOpen(true)}>
             <DownloadIcon />
             Download
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            nativeButton={false}
+            render={<Link to="/calls" search={{ agentIds: agent.id }} />}
+          >
+            <HistoryIcon />
+            View calls
           </DropdownMenuItem>
           <DropdownMenuItem
             variant="destructive"

@@ -1,59 +1,45 @@
+import type { Edge, Node } from "@xyflow/react"
+
+import { agentConfigSchema } from "@workspace/shared/api/agent-config/schemas"
 import type {
   AgentConfig,
   FlowEdgeConfig,
   FlowNodeConfig,
 } from "@workspace/shared/api/agent-config/types"
 
-export type ClientFlowNode = FlowNodeConfig & {
-  selected?: boolean
-  dragging?: boolean
-  measured?: { width?: number; height?: number }
-  width?: number
-  height?: number
-}
-export type ClientFlowEdge = FlowEdgeConfig & { selected?: boolean }
+export type EditorFlowNode = FlowNodeConfig & Node
 
-export type ClientAgentConfig = Omit<AgentConfig, "nodes" | "edges"> & {
-  nodes: ClientFlowNode[]
-  edges: ClientFlowEdge[]
+export type EditorFlowEdge = FlowEdgeConfig & Edge
+
+export type EditorAgentConfig = Omit<AgentConfig, "nodes" | "edges"> & {
+  nodes: EditorFlowNode[]
+  edges: EditorFlowEdge[]
 }
 
-export function toClientAgentConfig(server: AgentConfig): ClientAgentConfig {
-  return {
-    ...server,
-    nodes: server.nodes.map((node) => ({ ...node })),
-    edges: server.edges.map((edge) => ({ ...edge })),
-  }
-}
+export type AgentConfigValidation = ReturnType<
+  typeof agentConfigSchema.safeParse
+>
 
-export function toServerAgentConfig(config: ClientAgentConfig): AgentConfig {
-  return {
-    ...config,
-    nodes: config.nodes.map(
-      ({
-        selected: _selected,
-        dragging: _dragging,
-        measured: _measured,
-        width: _width,
-        height: _height,
-        ...node
-      }) => node
-    ),
-    edges: config.edges.map(({ selected: _selected, ...edge }) => edge),
-  }
-}
-
-export function snapshotAgentConfig(config: ClientAgentConfig): AgentConfig {
-  return structuredClone(toServerAgentConfig(config))
-}
-
-export function agentConfigsEqual(a: AgentConfig, b: AgentConfig): boolean {
-  return JSON.stringify(a) === JSON.stringify(b)
-}
-
-export function hasUnsavedAgentChanges(
-  config: ClientAgentConfig,
+export function loadEditorAgentConfig(server: AgentConfig): {
+  config: EditorAgentConfig
+  validation: AgentConfigValidation
   savedConfig: AgentConfig
-): boolean {
-  return !agentConfigsEqual(snapshotAgentConfig(config), savedConfig)
+} {
+  const config = server as EditorAgentConfig
+  const validation = validateAgentConfig(config)
+  return {
+    config,
+    validation,
+    savedConfig: validation.success ? validation.data : server,
+  }
+}
+
+export function validateAgentConfig(
+  config: EditorAgentConfig
+): AgentConfigValidation {
+  return agentConfigSchema.safeParse(config)
+}
+
+export function areAgentConfigsEqual(a: AgentConfig, b: AgentConfig) {
+  return JSON.stringify(a) === JSON.stringify(b)
 }

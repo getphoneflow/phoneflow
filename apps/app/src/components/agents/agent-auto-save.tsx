@@ -8,10 +8,7 @@ import type {
 } from "@workspace/shared/api/agents/types"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
-import {
-  hasUnsavedAgentChanges,
-  snapshotAgentConfig,
-} from "@/components/flow/agent-config"
+import { areAgentConfigsEqual } from "@/components/flow/agent-config"
 import { api } from "@/lib/api"
 import { useAgentStore } from "@/stores/agent"
 
@@ -21,20 +18,25 @@ export function AgentAutoSave() {
   const queryClient = useQueryClient()
   const agentId = useAgentStore((state) => state.agent.id)
   const readOnly = useAgentStore((state) => state.readOnly)
-  const config = useAgentStore((state) => state.config)
   const savedConfig = useAgentStore((state) => state.savedConfig)
   const markSaved = useAgentStore((state) => state.markSaved)
   const validation = useAgentStore((state) => state.validation)
-  const dragging = config.nodes.some((node) => node.dragging)
+  const dragging = useAgentStore((state) =>
+    state.config.nodes.some((node) => node.dragging)
+  )
+
+  const nextConfig = validation.success ? validation.data : null
+  const isDirty =
+    nextConfig !== null && !areAgentConfigsEqual(nextConfig, savedConfig)
 
   const saveMutation = useMutation({
-    mutationFn: (nextConfig: AgentConfig) =>
+    mutationFn: (config: AgentConfig) =>
       api.patch<AgentConfigResponse, UpdateAgentConfigRequest>(
         `/agents/${agentId}/config`,
-        { body: { config: nextConfig } }
+        { body: { config } }
       ),
-    onSuccess: (_serverConfig, nextConfig) => {
-      markSaved(nextConfig)
+    onSuccess: (_serverConfig, config) => {
+      markSaved(config)
       queryClient.invalidateQueries({
         queryKey: ["agents", "detail", agentId],
       })
@@ -58,27 +60,19 @@ export function AgentAutoSave() {
     if (
       readOnly ||
       dragging ||
-      !validation.success ||
-      saveMutation.isPending ||
-      !hasUnsavedAgentChanges(config, savedConfig)
+      !isDirty ||
+      !nextConfig ||
+      saveMutation.isPending
     ) {
       return
     }
 
     const timeout = setTimeout(() => {
-      saveMutation.mutate(snapshotAgentConfig(config))
+      saveMutation.mutate(nextConfig)
     }, AUTOSAVE_DELAY_MS)
 
     return () => clearTimeout(timeout)
-  }, [
-    agentId,
-    config,
-    dragging,
-    readOnly,
-    saveMutation.isPending,
-    savedConfig,
-    validation.success,
-  ])
+  }, [dragging, isDirty, nextConfig, readOnly, saveMutation.isPending])
 
   if (readOnly) {
     return null

@@ -9,7 +9,6 @@ import {
 import { create } from "zustand"
 
 import { createDefaultAgentConfig } from "@workspace/shared/agents/templates/defaults"
-import { agentConfigSchema } from "@workspace/shared/api/agent-config/schemas"
 import type {
   AgentConfig,
   FlowEdgeConfig,
@@ -17,12 +16,13 @@ import type {
 } from "@workspace/shared/api/agent-config/types"
 import type { AgentDetailResponse } from "@workspace/shared/api/agents/types"
 import {
-  agentConfigsEqual,
-  type ClientAgentConfig,
-  type ClientFlowEdge,
-  type ClientFlowNode,
-  snapshotAgentConfig,
-  toClientAgentConfig,
+  type AgentConfigValidation,
+  areAgentConfigsEqual,
+  type EditorAgentConfig,
+  type EditorFlowEdge,
+  type EditorFlowNode,
+  loadEditorAgentConfig,
+  validateAgentConfig,
 } from "@/components/flow/agent-config"
 
 export type FlowSidePanelState =
@@ -37,11 +37,11 @@ type FlowSelection = { nodeId?: string; edgeId?: string }
 
 type AgentEditorState = {
   agent: AgentDetailResponse
-  config: ClientAgentConfig
-  validation: ReturnType<typeof agentConfigSchema.safeParse>
+  config: EditorAgentConfig
+  validation: AgentConfigValidation
   savedConfig: AgentConfig
-  past: AgentConfig[]
-  future: AgentConfig[]
+  past: EditorAgentConfig[]
+  future: EditorAgentConfig[]
   readOnly: boolean
   activeVersionNumber: number | null
   activeVersionId: string | null
@@ -50,7 +50,7 @@ type AgentEditorState = {
 
 type AgentEditorStore = AgentEditorState & {
   setAgent: (agent: AgentDetailResponse) => void
-  setConfig: (config: ClientAgentConfig) => void
+  setConfig: (config: EditorAgentConfig) => void
   loadAgentConfig: (config: AgentConfig, readOnly: boolean) => void
   loadAgentVersionConfig: (
     config: AgentConfig,
@@ -59,11 +59,11 @@ type AgentEditorStore = AgentEditorState & {
   setNode: (node: FlowNodeConfig) => void
   setEdge: (edge: FlowEdgeConfig) => void
   addNode: (node: FlowNodeConfig) => void
-  onNodesChange: (changes: NodeChange<ClientFlowNode>[]) => void
-  onEdgesChange: (changes: EdgeChange<ClientFlowEdge>[]) => void
+  onNodesChange: (changes: NodeChange<EditorFlowNode>[]) => void
+  onEdgesChange: (changes: EdgeChange<EditorFlowEdge>[]) => void
   onConnect: (connection: Connection) => void
-  selectNode: (node: ClientFlowNode) => void
-  selectEdge: (edge: ClientFlowEdge) => void
+  selectNode: (node: EditorFlowNode) => void
+  selectEdge: (edge: EditorFlowEdge) => void
   setSidePanel: (sidePanel: FlowSidePanelState) => void
   undo: () => void
   redo: () => void
@@ -87,7 +87,7 @@ export const emptyAgent: AgentDetailResponse = {
   versions: [],
 }
 
-function selectionFromSidePanel(
+function flowSelectionFromSidePanel(
   sidePanel: FlowSidePanelState
 ): FlowSelection | undefined {
   if (sidePanel.kind === "node") {
@@ -98,10 +98,10 @@ function selectionFromSidePanel(
   }
 }
 
-function applySelection(
-  config: ClientAgentConfig,
+function applyFlowSelection(
+  config: EditorAgentConfig,
   selection?: FlowSelection
-): ClientAgentConfig {
+): EditorAgentConfig {
   const selectedNodeId = selection?.nodeId
   const selectedEdgeId = selection?.edgeId
 
@@ -118,15 +118,18 @@ function applySelection(
   }
 }
 
-function commitConfig(
+function commitEditorConfig(
   state: AgentEditorState,
-  nextConfig: ClientAgentConfig,
+  nextConfig: EditorAgentConfig,
   extra: Partial<AgentEditorState> = {}
 ): Partial<AgentEditorState> {
-  const previous = snapshotAgentConfig(state.config)
-  const next = snapshotAgentConfig(nextConfig)
+  const validation = validateAgentConfig(nextConfig)
 
-  if (agentConfigsEqual(previous, next)) {
+  if (
+    state.validation.success &&
+    validation.success &&
+    areAgentConfigsEqual(state.validation.data, validation.data)
+  ) {
     return { ...extra, config: nextConfig }
   }
 
@@ -139,61 +142,71 @@ function commitConfig(
   return {
     ...extra,
     config: nextConfig,
-    validation: agentConfigSchema.safeParse(next),
+    validation,
     past: shouldPush
-      ? [...state.past, previous].slice(-HISTORY_LIMIT)
+      ? [...state.past, structuredClone(state.config)].slice(-HISTORY_LIMIT)
       : state.past,
     future: shouldPush ? [] : state.future,
   }
 }
 
-function applySnapshot(
+function restoreEditorConfig(
   state: AgentEditorState,
-  snapshot: AgentConfig
+  historyConfig: EditorAgentConfig
 ): Pick<AgentEditorState, "config" | "validation" | "sidePanel"> {
-  const config = toClientAgentConfig(snapshot)
   let sidePanel = state.sidePanel
 
   if (sidePanel.kind === "node") {
     const nodeId = sidePanel.node.id
-    const node = config.nodes.find((entry) => entry.id === nodeId)
+    const node = historyConfig.nodes.find((entry) => entry.id === nodeId)
     sidePanel = node ? { kind: "node", node } : closedSidePanel
   } else if (sidePanel.kind === "edge") {
     const edgeId = sidePanel.edge.id
-    const edge = config.edges.find((entry) => entry.id === edgeId)
+    const edge = historyConfig.edges.find((entry) => entry.id === edgeId)
     sidePanel = edge ? { kind: "edge", edge } : closedSidePanel
   }
 
-  const nextConfig = applySelection(config, selectionFromSidePanel(sidePanel))
+  const nextConfig = applyFlowSelection(
+    historyConfig,
+    flowSelectionFromSidePanel(sidePanel)
+  )
 
   return {
     sidePanel,
     config: nextConfig,
-    validation: agentConfigSchema.safeParse(snapshotAgentConfig(nextConfig)),
+    validation: validateAgentConfig(nextConfig),
   }
 }
 
-function resetHistory(config: AgentConfig) {
+function resetEditorHistory(config: AgentConfig) {
   clearTimeout(coalesceTimer)
   coalesceTimer = undefined
-  const clientConfig = toClientAgentConfig(config)
+  const {
+    config: clientConfig,
+    validation,
+    savedConfig,
+  } = loadEditorAgentConfig(config)
   return {
     config: clientConfig,
-    validation: agentConfigSchema.safeParse(snapshotAgentConfig(clientConfig)),
-    savedConfig: snapshotAgentConfig(clientConfig),
-    past: [] as AgentConfig[],
-    future: [] as AgentConfig[],
+    validation,
+    savedConfig,
+    past: [] as EditorAgentConfig[],
+    future: [] as EditorAgentConfig[],
     sidePanel: closedSidePanel,
   }
 }
 
-const initialConfig = toClientAgentConfig(createDefaultAgentConfig())
+const {
+  config: initialConfig,
+  validation: initialValidation,
+  savedConfig: initialSavedConfig,
+} = loadEditorAgentConfig(createDefaultAgentConfig())
 
 const initialState: AgentEditorState = {
   agent: emptyAgent,
   config: initialConfig,
-  validation: agentConfigSchema.safeParse(snapshotAgentConfig(initialConfig)),
-  savedConfig: snapshotAgentConfig(initialConfig),
+  validation: initialValidation,
+  savedConfig: initialSavedConfig,
   past: [],
   future: [],
   readOnly: true,
@@ -205,10 +218,10 @@ const initialState: AgentEditorState = {
 export const useAgentStore = create<AgentEditorStore>((set) => ({
   ...initialState,
   setAgent: (agent) => set({ agent }),
-  setConfig: (config) => set((state) => commitConfig(state, config)),
+  setConfig: (config) => set((state) => commitEditorConfig(state, config)),
   loadAgentConfig: (config, readOnly) =>
     set((state) => ({
-      ...resetHistory(config),
+      ...resetEditorHistory(config),
       readOnly,
       activeVersionNumber: null,
       activeVersionId: null,
@@ -216,7 +229,7 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
     })),
   loadAgentVersionConfig: (config, version) =>
     set((state) => ({
-      ...resetHistory(config),
+      ...resetEditorHistory(config),
       readOnly: true,
       activeVersionNumber: version.number,
       activeVersionId: version.id,
@@ -224,9 +237,9 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
     })),
   setNode: (node) =>
     set((state) =>
-      commitConfig(
+      commitEditorConfig(
         state,
-        applySelection(
+        applyFlowSelection(
           {
             ...state.config,
             nodes: state.config.nodes.map((entry) =>
@@ -240,9 +253,9 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
     ),
   setEdge: (edge) =>
     set((state) =>
-      commitConfig(
+      commitEditorConfig(
         state,
-        applySelection(
+        applyFlowSelection(
           {
             ...state.config,
             edges: state.config.edges.map((entry) =>
@@ -256,9 +269,9 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
     ),
   addNode: (node) =>
     set((state) =>
-      commitConfig(
+      commitEditorConfig(
         state,
-        applySelection(
+        applyFlowSelection(
           { ...state.config, nodes: [...state.config.nodes, node] },
           { nodeId: node.id }
         ),
@@ -296,11 +309,11 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
           ? closedSidePanel
           : panel
 
-      return commitConfig(
+      return commitEditorConfig(
         state,
-        applySelection(
+        applyFlowSelection(
           { ...state.config, nodes },
-          selectionFromSidePanel(sidePanel)
+          flowSelectionFromSidePanel(sidePanel)
         ),
         { sidePanel }
       )
@@ -327,11 +340,11 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
           ? closedSidePanel
           : panel
 
-      return commitConfig(
+      return commitEditorConfig(
         state,
-        applySelection(
+        applyFlowSelection(
           { ...state.config, edges },
-          selectionFromSidePanel(sidePanel)
+          flowSelectionFromSidePanel(sidePanel)
         ),
         { sidePanel }
       )
@@ -340,8 +353,9 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
   onConnect: (connection) => {
     lastConnectAt = Date.now()
     const edge: FlowEdgeConfig = {
-      ...connection,
       id: crypto.randomUUID(),
+      source: connection.source,
+      target: connection.target,
       data: {
         condition: { type: "prompt", prompt: "Transition condition" },
       },
@@ -353,9 +367,9 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
         return state
       }
 
-      return commitConfig(
+      return commitEditorConfig(
         state,
-        applySelection({ ...state.config, edges }, { edgeId: edge.id }),
+        applyFlowSelection({ ...state.config, edges }, { edgeId: edge.id }),
         { sidePanel: { kind: "edge", edge } }
       )
     })
@@ -363,12 +377,12 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
   selectNode: (node) =>
     set((state) => ({
       sidePanel: { kind: "node", node },
-      config: applySelection(state.config, { nodeId: node.id }),
+      config: applyFlowSelection(state.config, { nodeId: node.id }),
     })),
   selectEdge: (edge) =>
     set((state) => ({
       sidePanel: { kind: "edge", edge },
-      config: applySelection(state.config, { edgeId: edge.id }),
+      config: applyFlowSelection(state.config, { edgeId: edge.id }),
     })),
   setSidePanel: (sidePanel) => {
     if (
@@ -380,7 +394,10 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
 
     set((state) => ({
       sidePanel,
-      config: applySelection(state.config, selectionFromSidePanel(sidePanel)),
+      config: applyFlowSelection(
+        state.config,
+        flowSelectionFromSidePanel(sidePanel)
+      ),
     }))
   },
   undo: () =>
@@ -393,9 +410,9 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
       }
 
       return {
-        ...applySnapshot(state, previous),
+        ...restoreEditorConfig(state, previous),
         past: state.past.slice(0, -1),
-        future: [snapshotAgentConfig(state.config), ...state.future],
+        future: [structuredClone(state.config), ...state.future],
       }
     }),
   redo: () =>
@@ -408,8 +425,8 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
       }
 
       return {
-        ...applySnapshot(state, next),
-        past: [...state.past, snapshotAgentConfig(state.config)].slice(
+        ...restoreEditorConfig(state, next),
+        past: [...state.past, structuredClone(state.config)].slice(
           -HISTORY_LIMIT
         ),
         future: state.future.slice(1),

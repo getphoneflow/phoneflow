@@ -36,7 +36,7 @@ import { Skeleton } from "@workspace/ui/components/skeleton"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { Textarea } from "@workspace/ui/components/textarea"
-import { hasUnsavedAgentChanges } from "@/components/flow/agent-config"
+import { areAgentConfigsEqual } from "@/components/flow/agent-config"
 import { api } from "@/lib/api"
 import { useAgentStore } from "@/stores/agent"
 
@@ -70,11 +70,12 @@ export function PublishAgentForm() {
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
   const agent = useAgentStore((state) => state.agent)
-  const readOnly = useAgentStore((state) => state.readOnly)
-  const isValid = useAgentStore((state) => state.validation.success)
   const savedConfig = useAgentStore((state) => state.savedConfig)
-  const hasUnsavedChanges = useAgentStore((state) =>
-    hasUnsavedAgentChanges(state.config, state.savedConfig)
+  const canPublish = useAgentStore(
+    (state) =>
+      !state.readOnly &&
+      state.validation.success &&
+      areAgentConfigsEqual(state.validation.data, state.savedConfig)
   )
   const latestVersion = agent.versions[0]
   const nextVersionNumber = (latestVersion?.number ?? 0) + 1
@@ -117,10 +118,7 @@ export function PublishAgentForm() {
         publishAgentMutation.reset()
       }}
     >
-      <Button
-        disabled={readOnly || !isValid || hasUnsavedChanges}
-        onClick={() => setOpen(true)}
-      >
+      <Button disabled={!canPublish} onClick={() => setOpen(true)}>
         <UploadIcon />
         Publish
       </Button>

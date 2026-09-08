@@ -22,7 +22,6 @@ import { AgentNameField } from "@/components/agents/agent-name-field"
 import { AgentVersionSelector } from "@/components/agents/agent-version-selector"
 import { PublishAgentForm } from "@/components/agents/publish-agent-form"
 import { TestAgentButton } from "@/components/agents/test-agent-button"
-import { UnsavedChangesGuard } from "@/components/agents/unsaved-changes-dialog"
 import Canvas from "@/components/flow/canvas"
 import { FlowSidePanel } from "@/components/flow/sidepanel"
 import { api } from "@/lib/api"
@@ -133,7 +132,6 @@ function AgentEditor() {
       <Header />
       <Canvas />
       <FlowSidePanel />
-      <UnsavedChangesGuard />
     </>
   )
 }

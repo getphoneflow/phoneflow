@@ -52,8 +52,8 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
+import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
 import {
-  formatAgentName,
   formatAgentVersionLabel,
   formatPhoneNumber,
 } from "@/components/helpers"
@@ -112,11 +112,10 @@ const columns = columnHelper.columns([
     id: "agent",
     header: "Agent",
     cell: ({ row }) => (
-      <span
-        className={row.original.agent ? undefined : "text-muted-foreground"}
-      >
-        {formatAgentName(row.original.agent)}
-      </span>
+      <AgentReferenceLink
+        agentId={row.original.agentId}
+        agent={row.original.agent}
+      />
     ),
   }),
   columnHelper.display({
@@ -196,25 +195,7 @@ export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
                   }
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={
-                        cell.column.id === "agent" && row.original.agent
-                          ? "hover:underline"
-                          : undefined
-                      }
-                      onClick={
-                        cell.column.id === "agent" && row.original.agent
-                          ? (event) => {
-                              event.stopPropagation()
-                              navigate({
-                                to: "/agents/$agentId",
-                                params: { agentId: row.original.agentId },
-                              })
-                            }
-                          : undefined
-                      }
-                    >
+                    <TableCell key={cell.id}>
                       <table.FlexRender cell={cell} />
                     </TableCell>
                   ))}

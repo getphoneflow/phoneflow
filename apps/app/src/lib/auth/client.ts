@@ -29,6 +29,7 @@ export const authClient = createAuthClient({
         timezone: {
           type: "string",
           required: true,
+          defaultValue: "UTC",
           input: true,
         },
       },

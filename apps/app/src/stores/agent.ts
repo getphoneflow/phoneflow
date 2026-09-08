@@ -9,6 +9,7 @@ import {
 import { create } from "zustand"
 
 import { createDefaultAgentConfig } from "@workspace/shared/agents/templates/defaults"
+import { agentConfigSchema } from "@workspace/shared/api/agent-config/schemas"
 import type {
   AgentConfig,
   FlowEdgeConfig,
@@ -37,6 +38,7 @@ type FlowSelection = { nodeId?: string; edgeId?: string }
 type AgentEditorState = {
   agent: AgentDetailResponse
   config: ClientAgentConfig
+  validation: ReturnType<typeof agentConfigSchema.safeParse>
   savedConfig: AgentConfig
   past: AgentConfig[]
   future: AgentConfig[]
@@ -137,6 +139,7 @@ function commitConfig(
   return {
     ...extra,
     config: nextConfig,
+    validation: agentConfigSchema.safeParse(next),
     past: shouldPush
       ? [...state.past, previous].slice(-HISTORY_LIMIT)
       : state.past,
@@ -147,7 +150,7 @@ function commitConfig(
 function applySnapshot(
   state: AgentEditorState,
   snapshot: AgentConfig
-): Pick<AgentEditorState, "config" | "sidePanel"> {
+): Pick<AgentEditorState, "config" | "validation" | "sidePanel"> {
   const config = toClientAgentConfig(snapshot)
   let sidePanel = state.sidePanel
 
@@ -161,9 +164,12 @@ function applySnapshot(
     sidePanel = edge ? { kind: "edge", edge } : closedSidePanel
   }
 
+  const nextConfig = applySelection(config, selectionFromSidePanel(sidePanel))
+
   return {
     sidePanel,
-    config: applySelection(config, selectionFromSidePanel(sidePanel)),
+    config: nextConfig,
+    validation: agentConfigSchema.safeParse(snapshotAgentConfig(nextConfig)),
   }
 }
 
@@ -173,6 +179,7 @@ function resetHistory(config: AgentConfig) {
   const clientConfig = toClientAgentConfig(config)
   return {
     config: clientConfig,
+    validation: agentConfigSchema.safeParse(snapshotAgentConfig(clientConfig)),
     savedConfig: snapshotAgentConfig(clientConfig),
     past: [] as AgentConfig[],
     future: [] as AgentConfig[],
@@ -185,6 +192,7 @@ const initialConfig = toClientAgentConfig(createDefaultAgentConfig())
 const initialState: AgentEditorState = {
   agent: emptyAgent,
   config: initialConfig,
+  validation: agentConfigSchema.safeParse(snapshotAgentConfig(initialConfig)),
   savedConfig: snapshotAgentConfig(initialConfig),
   past: [],
   future: [],

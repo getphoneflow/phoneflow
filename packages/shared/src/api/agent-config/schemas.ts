@@ -2,11 +2,17 @@ import { z } from "zod"
 
 import { BACKGROUND_AUDIO_IDS } from "@workspace/shared/constants/background-audio"
 
+function requiredString(message: string) {
+  return z.string().trim().min(1, message)
+}
+
 export const sttConfigSchema = z
   .object({
-    model: z.string().trim().min(1),
-    language: z.string().trim().min(1).exactOptional(),
-    keyterms: z.array(z.string().trim().min(1)).exactOptional(),
+    model: requiredString("Speech-to-text model is required"),
+    language: requiredString("Language is required").exactOptional(),
+    keyterms: z
+      .array(requiredString("Keyterm cannot be empty"))
+      .exactOptional(),
     // Deepgram, xAI
     endpointingMs: z.number().int().nonnegative().exactOptional(),
     vadThreshold: z.number().min(0).max(1).exactOptional(),
@@ -43,7 +49,7 @@ export const sttConfigSchema = z
 
 export const llmConfigSchema = z
   .object({
-    model: z.string().trim().min(1),
+    model: requiredString("Language model is required"),
     temperature: z.number().min(0).max(2).exactOptional(),
     maxTokens: z.number().int().positive().exactOptional(),
     toolChoice: z.enum(["auto", "none", "required"]).exactOptional(),
@@ -55,16 +61,16 @@ export const llmConfigSchema = z
 
 export const ttsConfigSchema = z
   .object({
-    model: z.string().trim().min(1),
-    voice: z.string().trim().min(1),
-    language: z.string().trim().min(1).exactOptional(),
+    model: requiredString("Text-to-speech model is required"),
+    voice: requiredString("Voice is required"),
+    language: requiredString("Language is required").exactOptional(),
     // Deepgram
     mipOptOut: z.boolean().exactOptional(),
     // Fish Audio
     latencyMode: z.enum(["normal", "balanced", "low"]).exactOptional(),
     speed: z.number().positive().exactOptional(),
     volume: z.number().exactOptional(),
-    emotion: z.array(z.string().trim().min(1)).exactOptional(),
+    emotion: z.array(requiredString("Emotion cannot be empty")).exactOptional(),
   })
   .strict()
 
@@ -109,7 +115,9 @@ export const turnHandlingConfigSchema = z
 
 export const keytermsOptionsSchema = z
   .object({
-    keyterms: z.array(z.string().trim().min(1)).exactOptional(),
+    keyterms: z
+      .array(requiredString("Keyterm cannot be empty"))
+      .exactOptional(),
     keytermDetection: z
       .object({
         enabled: z.boolean().exactOptional(),
@@ -130,15 +138,15 @@ export const backgroundAudioSchema = z
 
 export const flowNodeInstructionsSchema = z.object({
   type: z.enum(["prompt", "say"]),
-  text: z.string().trim().min(1),
+  text: requiredString("Conversation instructions are required"),
 })
 
 export const extractVariableSchema = z
   .object({
-    key: z
-      .string()
-      .trim()
-      .regex(/^[a-z0-9_]+$/, "Invalid variable key"),
+    key: requiredString("Variable key is required").regex(
+      /^[a-z0-9_]+$/,
+      "Variable key must be lowercase letters, numbers, or underscores"
+    ),
     description: z.string().trim(),
     type: z.enum(["string", "number", "boolean"]),
   })
@@ -151,7 +159,7 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
     position: z.object({ x: z.number(), y: z.number() }),
     data: z
       .object({
-        name: z.string().trim().min(1),
+        name: requiredString("Conversation node name is required"),
         isStart: z.literal(true).optional(),
         startSpeaker: z.enum(["agent", "user"]).optional(),
         instructions: flowNodeInstructionsSchema,
@@ -165,7 +173,7 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
     position: z.object({ x: z.number(), y: z.number() }),
     data: z
       .object({
-        name: z.string().trim().min(1),
+        name: requiredString("End node name is required"),
       })
       .strict(),
   }),
@@ -191,7 +199,7 @@ const valuelessOperators = new Set<z.infer<typeof expressionOperatorSchema>>([
 
 export const expressionConditionSchema = z
   .object({
-    variable: z.string().trim().min(1),
+    variable: requiredString("Transition variable is required"),
     operator: expressionOperatorSchema,
     value: z.string().optional(),
   })
@@ -201,7 +209,7 @@ export const expressionConditionSchema = z
       valuelessOperators.has(condition.operator) ||
       (condition.value?.trim().length ?? 0) > 0,
     {
-      message: "Value is required for this operator.",
+      message: "Value is required for this operator",
       path: ["value"],
     }
   )
@@ -210,14 +218,16 @@ export const flowEdgeConditionSchema = z.discriminatedUnion("type", [
   z
     .object({
       type: z.literal("prompt"),
-      prompt: z.string().trim().min(1),
+      prompt: requiredString("Transition prompt is required"),
     })
     .strict(),
   z
     .object({
       type: z.literal("expression"),
       match: z.enum(["all", "any"]),
-      conditions: z.array(expressionConditionSchema).min(1),
+      conditions: z
+        .array(expressionConditionSchema)
+        .min(1, "Add at least one transition condition"),
     })
     .strict(),
   z.object({ type: z.literal("always") }).strict(),
@@ -232,6 +242,16 @@ export const flowEdgeConfigSchema = z.object({
   }),
 })
 
+function flowItemLabel(id: string, name: string) {
+  const trimmed = name.trim()
+  return trimmed || id
+}
+
+function nodeLabel(nodes: z.infer<typeof flowNodeConfigSchema>[], id: string) {
+  const node = nodes.find((entry) => entry.id === id)
+  return node ? flowItemLabel(node.id, node.data.name) : id
+}
+
 export const agentConfigSchema = z
   .object({
     stt: sttConfigSchema,
@@ -242,35 +262,39 @@ export const agentConfigSchema = z
     backgroundAudio: backgroundAudioSchema.exactOptional(),
     globalPrompt: z.string(),
     timezone: z.string().optional(),
-    nodes: z.array(flowNodeConfigSchema).min(1),
+    nodes: z.array(flowNodeConfigSchema).min(1, "Add at least one node"),
     edges: z.array(flowEdgeConfigSchema),
   })
   .superRefine((config, ctx) => {
     const nodeIds = new Set<string>()
-    let startNodeCount = 0
+    const startLabels: string[] = []
 
     config.nodes.forEach((node, index) => {
-      // Node IDs must be unique
       if (nodeIds.has(node.id)) {
         ctx.addIssue({
           code: "custom",
           path: ["nodes", index],
-          message: `Duplicate node id "${node.id}".`,
+          message: `Duplicate node id "${node.id}"`,
         })
       }
       nodeIds.add(node.id)
 
       if (node.type === "conversation" && node.data.isStart === true) {
-        startNodeCount++
+        startLabels.push(flowItemLabel(node.id, node.data.name))
       }
     })
 
-    // Exactly one start node
-    if (startNodeCount !== 1) {
+    if (startLabels.length === 0) {
       ctx.addIssue({
         code: "custom",
         path: ["nodes"],
-        message: `Flow must have exactly one start node, found ${startNodeCount}.`,
+        message: "Add a start node to the flow",
+      })
+    } else if (startLabels.length > 1) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["nodes"],
+        message: `Only one start node is allowed (${startLabels.join(", ")})`,
       })
     }
 
@@ -279,48 +303,38 @@ export const agentConfigSchema = z
     const edgesBySource = new Map<string, number>()
 
     config.edges.forEach((edge, index) => {
-      // Edge IDs must be unique
+      const source = nodeLabel(config.nodes, edge.source)
+      const target = nodeLabel(config.nodes, edge.target)
+
       if (edgeIds.has(edge.id)) {
         ctx.addIssue({
           code: "custom",
           path: ["edges", index],
-          message: `Duplicate edge id "${edge.id}".`,
+          message: `Duplicate transition id "${edge.id}"`,
         })
       }
       edgeIds.add(edge.id)
 
-      // Edge sources must reference existing nodes
-      if (!nodeIds.has(edge.source)) {
+      if (!nodeIds.has(edge.source) || !nodeIds.has(edge.target)) {
         ctx.addIssue({
           code: "custom",
-          path: ["edges", index, "source"],
-          message: `Edge "${edge.id}": source node "${edge.source}" does not exist.`,
+          path: ["edges", index],
+          message: `Transition from "${source}" to "${target}" is disconnected`,
         })
       }
 
-      // Edge targets must reference existing nodes
-      if (!nodeIds.has(edge.target)) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["edges", index, "target"],
-          message: `Edge "${edge.id}": target node "${edge.target}" does not exist.`,
-        })
-      }
-
-      // Edges must be unique
       const key = `${edge.source}-${edge.target}`
       if (sourceTargetKeys.has(key)) {
         ctx.addIssue({
           code: "custom",
           path: ["edges", index],
-          message: `Duplicate edge from "${edge.source}" to "${edge.target}".`,
+          message: `Duplicate transition from "${source}" to "${target}"`,
         })
       }
       sourceTargetKeys.add(key)
       edgesBySource.set(edge.source, (edgesBySource.get(edge.source) ?? 0) + 1)
     })
 
-    // No more edges if there is an always
     config.edges.forEach((edge, index) => {
       if (
         edge.data.condition.type === "always" &&
@@ -329,8 +343,10 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["edges", index],
-          message:
-            "An always transition must be the only transition on a node.",
+          message: `Always transition from "${nodeLabel(
+            config.nodes,
+            edge.source
+          )}" must be the only transition on that node`,
         })
       }
     })

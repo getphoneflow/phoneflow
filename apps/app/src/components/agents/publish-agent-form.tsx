@@ -37,6 +37,7 @@ export function PublishAgentForm() {
   const queryClient = useQueryClient()
   const agent = useAgentStore((state) => state.agent)
   const readOnly = useAgentStore((state) => state.readOnly)
+  const isValid = useAgentStore((state) => state.validation.success)
   const versions = agent.versions
   const nextVersionNumber =
     versions.length > 0
@@ -81,7 +82,7 @@ export function PublishAgentForm() {
         publishAgentMutation.reset()
       }}
     >
-      <Button disabled={readOnly} onClick={() => setOpen(true)}>
+      <Button disabled={readOnly || !isValid} onClick={() => setOpen(true)}>
         <UploadIcon />
         Publish
       </Button>
@@ -151,7 +152,10 @@ export function PublishAgentForm() {
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={publishAgentMutation.isPending}>
+            <Button
+              type="submit"
+              disabled={publishAgentMutation.isPending || !isValid}
+            >
               {publishAgentMutation.isPending ? (
                 <Spinner className="mx-5" />
               ) : (

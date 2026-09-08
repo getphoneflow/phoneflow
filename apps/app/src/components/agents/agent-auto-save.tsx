@@ -6,6 +6,7 @@ import type {
   AgentConfigResponse,
   UpdateAgentConfigRequest,
 } from "@workspace/shared/api/agents/types"
+import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import {
   hasUnsavedAgentChanges,
@@ -23,8 +24,8 @@ export function AgentAutoSave() {
   const config = useAgentStore((state) => state.config)
   const savedConfig = useAgentStore((state) => state.savedConfig)
   const markSaved = useAgentStore((state) => state.markSaved)
-  const isDirty = hasUnsavedAgentChanges(config, savedConfig)
-  const isDragging = config.nodes.some((node) => node.dragging)
+  const validation = useAgentStore((state) => state.validation)
+  const dragging = config.nodes.some((node) => node.dragging)
 
   const saveMutation = useMutation({
     mutationFn: (nextConfig: AgentConfig) =>
@@ -38,19 +39,46 @@ export function AgentAutoSave() {
         queryKey: ["agents", "detail", agentId],
       })
     },
+    onError: (error) => {
+      toast.error(error.message)
+    },
   })
 
   useEffect(() => {
-    if (readOnly || !isDirty || isDragging || saveMutation.isPending) {
+    if (readOnly || dragging || validation.success) {
+      return
+    }
+
+    toast.error(
+      validation.error.issues.map((issue) => issue.message).join(", ")
+    )
+  }, [dragging, readOnly, validation])
+
+  useEffect(() => {
+    if (
+      readOnly ||
+      dragging ||
+      !validation.success ||
+      saveMutation.isPending ||
+      !hasUnsavedAgentChanges(config, savedConfig)
+    ) {
       return
     }
 
     const timeout = setTimeout(() => {
-      saveMutation.mutate(snapshotAgentConfig(useAgentStore.getState().config))
+      saveMutation.mutate(snapshotAgentConfig(config))
     }, AUTOSAVE_DELAY_MS)
 
     return () => clearTimeout(timeout)
-  }, [agentId, config, isDirty, isDragging, readOnly, saveMutation.isPending])
+  }, [
+    agentId,
+    config,
+    dragging,
+    readOnly,
+    saveMutation.isPending,
+    savedConfig,
+    validation.success,
+  ])
 
   if (readOnly) {
     return null
@@ -63,8 +91,10 @@ export function AgentAutoSave() {
           <Spinner className="size-3" />
           Saving
         </>
-      ) : (
+      ) : validation.success ? (
         "Auto saved"
+      ) : (
+        <span className="text-destructive">Fix error</span>
       )}
     </div>
   )

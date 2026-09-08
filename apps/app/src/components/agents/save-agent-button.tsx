@@ -16,6 +16,7 @@ export function SaveAgentButton() {
   const agent = useAgentStore((state) => state.agent)
   const readOnly = useAgentStore((state) => state.readOnly)
   const config = useAgentStore((state) => state.config)
+  const markSaved = useAgentStore((state) => state.markSaved)
 
   const saveMutation = useMutation({
     mutationFn: () =>
@@ -24,6 +25,7 @@ export function SaveAgentButton() {
         { body: { config: toServerAgentConfig(config) } }
       ),
     onSuccess: () => {
+      markSaved()
       toast.success("Agent saved")
       queryClient.invalidateQueries({
         queryKey: ["agents", "detail", agent.id],

@@ -22,6 +22,7 @@ import { AgentVersionSelector } from "@/components/agents/agent-version-selector
 import { PublishAgentForm } from "@/components/agents/publish-agent-form"
 import { SaveAgentButton } from "@/components/agents/save-agent-button"
 import { TestAgentButton } from "@/components/agents/test-agent-button"
+import { UnsavedChangesBadge } from "@/components/agents/unsaved-changes-badge"
 import Canvas from "@/components/flow/canvas"
 import { FlowSidePanel } from "@/components/flow/sidepanel"
 import { api } from "@/lib/api"
@@ -90,7 +91,8 @@ function Header() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="ml-auto flex space-x-3">
+      <div className="ml-auto flex items-center space-x-3">
+        <UnsavedChangesBadge />
         <SaveAgentButton />
         <TestAgentButton />
         <AgentVersionSelector />

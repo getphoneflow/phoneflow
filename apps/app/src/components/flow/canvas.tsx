@@ -1,4 +1,4 @@
-import { Background, Controls, MiniMap, ReactFlow } from "@xyflow/react"
+import { Background, MiniMap, Panel, ReactFlow } from "@xyflow/react"
 import { useShallow } from "zustand/react/shallow"
 
 import { FlowConfigButtons } from "@/components/agents/flow-config-buttons"
@@ -7,6 +7,7 @@ import { useAgentStore } from "@/stores/agent"
 import { ConditionEdge } from "./edges/condition"
 import { ConversationNode } from "./nodes/conversation"
 import { EndNode } from "./nodes/end"
+import { FlowToolbar } from "./toolbar"
 import "./canvas.css"
 
 const selector = (state: ReturnType<typeof useAgentStore.getState>) => ({
@@ -63,8 +64,10 @@ export default function Canvas() {
       proOptions={{ hideAttribution: true }}
     >
       <FlowConfigButtons />
+      <Panel position="bottom-left">
+        <FlowToolbar />
+      </Panel>
       <Background />
-      <Controls position="bottom-left" />
       <MiniMap zoomable pannable />
     </ReactFlow>
   )

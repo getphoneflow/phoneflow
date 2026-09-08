@@ -17,12 +17,11 @@ import {
 import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { Skeleton } from "@workspace/ui/components/skeleton"
+import { AgentAutoSave } from "@/components/agents/agent-auto-save"
 import { AgentNameField } from "@/components/agents/agent-name-field"
 import { AgentVersionSelector } from "@/components/agents/agent-version-selector"
 import { PublishAgentForm } from "@/components/agents/publish-agent-form"
-import { SaveAgentButton } from "@/components/agents/save-agent-button"
 import { TestAgentButton } from "@/components/agents/test-agent-button"
-import { UnsavedChangesBadge } from "@/components/agents/unsaved-changes-badge"
 import { UnsavedChangesGuard } from "@/components/agents/unsaved-changes-dialog"
 import Canvas from "@/components/flow/canvas"
 import { FlowSidePanel } from "@/components/flow/sidepanel"
@@ -58,10 +57,9 @@ function AgentEditorSkeleton() {
         <Skeleton className="h-4 w-20" />
         <Skeleton className="h-4 w-40" />
         <div className="ml-auto flex space-x-3">
-          <Skeleton className="h-9 w-20" />
-          <Skeleton className="h-9 w-20" />
+          <Skeleton className="h-9 w-18" />
           <Skeleton className="h-9 w-28" />
-          <Skeleton className="h-9 w-24" />
+          <Skeleton className="h-9 w-23" />
         </div>
       </header>
       <Skeleton className="size-full rounded-none" />
@@ -93,8 +91,7 @@ function Header() {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="ml-auto flex items-center space-x-3">
-        <UnsavedChangesBadge />
-        <SaveAgentButton />
+        <AgentAutoSave />
         <TestAgentButton />
         <AgentVersionSelector />
         <PublishAgentForm />

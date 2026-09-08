@@ -65,7 +65,7 @@ type AgentEditorStore = AgentEditorState & {
   setSidePanel: (sidePanel: FlowSidePanelState) => void
   undo: () => void
   redo: () => void
-  markSaved: () => void
+  markSaved: (savedConfig: AgentConfig) => void
 }
 
 const closedSidePanel: FlowSidePanelState = { kind: "closed" }
@@ -407,8 +407,5 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
         future: state.future.slice(1),
       }
     }),
-  markSaved: () =>
-    set((state) => ({
-      savedConfig: snapshotAgentConfig(state.config),
-    })),
+  markSaved: (savedConfig) => set({ savedConfig }),
 }))

@@ -85,20 +85,32 @@ export const auth = betterAuth({
           organizationName: data.organization.name,
         })
       },
+      organizationHooks: {
+        async beforeCreateOrganization({ organization: org, user }) {
+          if (!env.IS_CLOUD) {
+            return
+          }
+
+          const stripeCustomer = await stripeClient.customers.create({
+            name: org.name,
+            email: user.email,
+          })
+
+          return {
+            data: {
+              stripeCustomerId: stripeCustomer.id,
+            },
+          }
+        },
+      },
     }),
     ...(env.IS_CLOUD
       ? [
           stripe({
             stripeClient,
             stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
-            createCustomerOnSignUp: true,
             organization: {
               enabled: true,
-              getCustomerCreateParams: async (org) => ({
-                metadata: {
-                  organizationId: org.id,
-                },
-              }),
             },
             onEvent: handleStripeEvent,
           }),

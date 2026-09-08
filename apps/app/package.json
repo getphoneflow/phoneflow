@@ -11,6 +11,7 @@
     "format": "biome check --write --linter-enabled=false ."
   },
   "dependencies": {
+    "@better-auth/stripe": "catalog:",
     "@hookform/resolvers": "5.8.0",
     "@livekit/components-react": "catalog:",
     "@tanstack/react-query": "^5.101.4",
@@ -21,11 +22,11 @@
     "@workspace/ui": "workspace:*",
     "@xyflow/react": "^12.11.3",
     "better-auth": "catalog:",
-    "@better-auth/stripe": "catalog:",
     "cn": "catalog:",
     "livekit-client": "catalog:",
     "lucide-react": "catalog:",
     "react": "catalog:",
+    "react-diff-viewer-continued": "^4.4.0",
     "react-dom": "catalog:",
     "react-hook-form": "^7.85.0",
     "recharts": "catalog:",

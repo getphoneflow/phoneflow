@@ -6,6 +6,7 @@ export const MODELS = {
         "universal-3-5-pro": {
           name: "Universal 3.5 Pro Streaming",
           usdPerMinute: 0.0075,
+          latencyMs: 420,
           languages: [
             "en",
             "en-US",
@@ -45,11 +46,13 @@ export const MODELS = {
         "universal-streaming-english": {
           name: "Universal Streaming English",
           usdPerMinute: 0.0025,
+          latencyMs: 310,
           languages: ["en", "en-US"],
         },
         "universal-streaming-multilingual": {
           name: "Universal Streaming Multilingual",
           usdPerMinute: 0.0025,
+          latencyMs: 270,
           languages: [
             "multi",
             "en",
@@ -72,6 +75,7 @@ export const MODELS = {
         "u3-rt-pro": {
           name: "Universal 3 Pro Streaming",
           usdPerMinute: 0.0075,
+          latencyMs: 400,
           languages: [
             "en",
             "en-US",
@@ -98,11 +102,13 @@ export const MODELS = {
         "ink-2": {
           name: "Ink 2",
           usdPerMinute: 0.009,
+          latencyMs: 120,
           languages: ["en"],
         },
         "ink-whisper": {
           name: "Ink Whisper",
           usdPerMinute: 0.003,
+          latencyMs: 80,
           languages: [
             "en",
             "zh",
@@ -145,11 +151,13 @@ export const MODELS = {
         "flux-general-en": {
           name: "Flux",
           usdPerMinute: 0.0065,
+          latencyMs: 270,
           languages: ["en"],
         },
         "flux-general-multi": {
           name: "Flux (Multilingual)",
           usdPerMinute: 0.0078,
+          latencyMs: 250,
           languages: [
             "multi",
             "en",
@@ -167,6 +175,7 @@ export const MODELS = {
         "nova-3": {
           name: "Nova 3",
           usdPerMinute: 0.0058,
+          latencyMs: 260,
           languages: [
             "multi",
             "en",
@@ -230,6 +239,7 @@ export const MODELS = {
         "nova-3-medical": {
           name: "Nova 3 Medical",
           usdPerMinute: 0.0077,
+          latencyMs: 290,
           languages: [
             "en",
             "en-US",
@@ -244,6 +254,7 @@ export const MODELS = {
         "nova-2": {
           name: "Nova 2",
           usdPerMinute: 0.0058,
+          latencyMs: 300,
           languages: [
             "multi",
             "en",
@@ -296,36 +307,43 @@ export const MODELS = {
         "nova-2-conversationalai": {
           name: "Nova 2 Conversational AI",
           usdPerMinute: 0.0058,
+          latencyMs: 180,
           languages: ["en", "en-US"],
         },
         "nova-2-medical": {
           name: "Nova 2 Medical",
           usdPerMinute: 0.0058,
+          latencyMs: 290,
           languages: ["en", "en-US"],
         },
         "nova-2-phonecall": {
           name: "Nova 2 Phone Call",
           usdPerMinute: 0.0058,
+          latencyMs: 290,
           languages: ["en", "en-US"],
         },
         "nova-2-finance": {
           name: "Nova 2 Finance",
           usdPerMinute: 0.0058,
+          latencyMs: 210,
           languages: ["en", "en-US"],
         },
         "nova-2-drivetrain": {
           name: "Nova 2 Drive Thru",
           usdPerMinute: 0.0058,
+          latencyMs: 190,
           languages: ["en", "en-US"],
         },
         "nova-2-voicemail": {
           name: "Nova 2 Voicemail",
           usdPerMinute: 0.0058,
+          latencyMs: 250,
           languages: ["en", "en-US"],
         },
         "nova-2-automotive": {
           name: "Nova 2 Automotive",
           usdPerMinute: 0.0058,
+          latencyMs: 260,
           languages: ["en", "en-US"],
         },
       },
@@ -336,6 +354,7 @@ export const MODELS = {
         scribe_v2_realtime: {
           name: "Scribe v2 Realtime",
           usdPerMinute: 0.005,
+          latencyMs: 270,
           languages: [
             "multi",
             "en",
@@ -372,11 +391,13 @@ export const MODELS = {
         scribe_v2: {
           name: "Scribe v2",
           usdPerMinute: 0.005,
+          latencyMs: 210,
           languages: ["multi"],
         },
         scribe_v1: {
           name: "Scribe v1",
           usdPerMinute: 0.005,
+          latencyMs: 170,
           languages: ["multi"],
         },
       },
@@ -387,6 +408,7 @@ export const MODELS = {
         "inworld-stt-1": {
           name: "Inworld STT 1",
           usdPerMinute: 0.005,
+          latencyMs: 240,
           languages: ["en"],
         },
       },
@@ -397,11 +419,13 @@ export const MODELS = {
         "voxtral-mini-latest": {
           name: "Voxtral Mini",
           usdPerMinute: 0.005,
+          latencyMs: 100,
           languages: ["multi", "en"],
         },
         "voxtral-mini-transcribe-realtime-2602": {
           name: "Voxtral Mini Transcribe Realtime",
           usdPerMinute: 0.005,
+          latencyMs: 170,
           languages: ["multi", "en"],
         },
       },
@@ -412,21 +436,25 @@ export const MODELS = {
         "gpt-realtime-whisper": {
           name: "GPT Realtime Whisper",
           usdPerMinute: 0.006,
+          latencyMs: 110,
           languages: ["multi"],
         },
         "whisper-1": {
           name: "Whisper 1",
           usdPerMinute: 0.006,
+          latencyMs: 130,
           languages: ["multi"],
         },
         "gpt-4o-transcribe": {
           name: "GPT-4o Transcribe",
           usdPerMinute: 0.006,
+          latencyMs: 280,
           languages: ["multi"],
         },
         "gpt-4o-mini-transcribe": {
           name: "GPT-4o Mini Transcribe",
           usdPerMinute: 0.006,
+          latencyMs: 200,
           languages: ["multi"],
         },
       },
@@ -437,6 +465,7 @@ export const MODELS = {
         "whisper-large-v3-turbo": {
           name: "Whisper Large v3 Turbo",
           usdPerMinute: 0.004,
+          latencyMs: 100,
           languages: ["multi"],
         },
       },
@@ -447,11 +476,13 @@ export const MODELS = {
         "stt-rt-v5": {
           name: "STT Realtime v5",
           usdPerMinute: 0.005,
+          latencyMs: 210,
           languages: ["multi"],
         },
         "stt-rt-v4": {
           name: "STT Realtime v4",
           usdPerMinute: 0.005,
+          latencyMs: 230,
           languages: ["multi"],
         },
       },
@@ -462,6 +493,7 @@ export const MODELS = {
         "stt-1": {
           name: "Speech to Text",
           usdPerMinute: 0.0033,
+          latencyMs: 330,
           languages: [
             "en",
             "ar",
@@ -496,26 +528,32 @@ export const MODELS = {
         "claude-sonnet-5": {
           name: "Claude Sonnet 5",
           usdPerMinute: 0.006,
+          latencyMs: 640,
         },
         "claude-sonnet-4-6": {
           name: "Claude Sonnet 4.6",
           usdPerMinute: 0.008,
+          latencyMs: 660,
         },
         "claude-sonnet-4-5": {
           name: "Claude Sonnet 4.5",
           usdPerMinute: 0.008,
+          latencyMs: 610,
         },
         "claude-haiku-4-5": {
           name: "Claude Haiku 4.5",
           usdPerMinute: 0.002,
+          latencyMs: 380,
         },
         "claude-opus-4-6": {
           name: "Claude Opus 4.6",
           usdPerMinute: 0.02,
+          latencyMs: 760,
         },
         "claude-opus-4-5": {
           name: "Claude Opus 4.5",
           usdPerMinute: 0.02,
+          latencyMs: 830,
         },
       },
     },
@@ -525,71 +563,98 @@ export const MODELS = {
         "deepseek-ai/DeepSeek-V4-Pro-0813": {
           name: "DeepSeek V4 Pro 0813",
           usdPerMinute: 0.005,
+          latencyMs: 750,
         },
         "deepseek-ai/DeepSeek-V4-Pro": {
           name: "DeepSeek V4 Pro",
           usdPerMinute: 0.005,
+          latencyMs: 770,
         },
         "deepseek-ai/DeepSeek-V4-Flash-0731": {
           name: "DeepSeek V4 Flash 0731",
           usdPerMinute: 0.001,
+          latencyMs: 390,
         },
         "openai/gpt-oss-120b": {
           name: "OpenAI GPT OSS 120B",
           usdPerMinute: 0.0008,
+          latencyMs: 700,
         },
         "zai-org/GLM-5.3": {
           name: "GLM 5.3",
           usdPerMinute: 0.005,
+          latencyMs: 650,
         },
         "zai-org/GLM-5.3-Fast": {
           name: "GLM 5.3 Fast",
           usdPerMinute: 0.007,
+          latencyMs: 700,
         },
         "zai-org/GLM-5.3-Flash": {
           name: "GLM 5.3 Flash",
           usdPerMinute: 0.001,
+          latencyMs: 370,
         },
         "zai-org/GLM-5.2": {
           name: "GLM 5.2",
           usdPerMinute: 0.005,
+          latencyMs: 720,
         },
         "zai-org/GLM-5.2-Fast": {
           name: "GLM 5.2 Fast",
           usdPerMinute: 0.007,
+          latencyMs: 670,
         },
         "zai-org/GLM-4.7": {
           name: "GLM 4.7",
           usdPerMinute: 0.002,
+          latencyMs: 600,
         },
         "moonshotai/Kimi-K3": {
           name: "Kimi K3",
           usdPerMinute: 0.012,
+          latencyMs: 650,
         },
         "moonshotai/Kimi-K2.6": {
           name: "Kimi K2.6",
           usdPerMinute: 0.004,
+          latencyMs: 670,
         },
         "thinkingmachines/inkling": {
           name: "Inkling",
           usdPerMinute: 0.004,
+          latencyMs: 320,
         },
         "thinkingmachines/inkling-small": {
           name: "Inkling Small",
           usdPerMinute: 0.002,
+          latencyMs: 290,
         },
         "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B": {
           name: "Nemotron Ultra",
           usdPerMinute: 0.003,
+          latencyMs: 810,
         },
       },
     },
     cerebras: {
       name: "Cerebras",
       models: {
-        "gemma-4-31b": { name: "Gemma 4 31B", usdPerMinute: 0.0014 },
-        "gpt-oss-120b": { name: "GPT OSS 120B", usdPerMinute: 0.0006 },
-        "qwen-3.8-27b": { name: "Qwen 3.8 27B", usdPerMinute: 0.001 },
+        "gemma-4-31b": {
+          name: "Gemma 4 31B",
+          usdPerMinute: 0.0014,
+          latencyMs: 650,
+        },
+        "gpt-oss-120b": {
+          name: "GPT OSS 120B",
+          usdPerMinute: 0.0006,
+          latencyMs: 580,
+        },
+        "qwen-3.8-27b": {
+          name: "Qwen 3.8 27B",
+          usdPerMinute: 0.001,
+          latencyMs: 610,
+        },
       },
     },
     deepinfra: {
@@ -598,90 +663,112 @@ export const MODELS = {
         "zai-org/GLM-5.3": {
           name: "GLM 5.3",
           usdPerMinute: 0.005,
+          latencyMs: 650,
         },
         "zai-org/GLM-5.3-Flash": {
           name: "GLM 5.3 Flash",
           usdPerMinute: 0.001,
+          latencyMs: 370,
         },
         "moonshotai/Kimi-K3": {
           name: "Kimi K3",
           usdPerMinute: 0.012,
+          latencyMs: 650,
         },
         "Qwen/Qwen3.8-2.4T-A95B": {
           name: "Qwen 3.8 2.4T A95B",
           usdPerMinute: 0.006,
+          latencyMs: 630,
         },
         "deepseek-ai/DeepSeek-V4-Pro-0813": {
           name: "DeepSeek V4 Pro 0813",
           usdPerMinute: 0.005,
+          latencyMs: 750,
         },
         "deepseek-ai/DeepSeek-V4-Flash-0731": {
           name: "DeepSeek V4 Flash 0731",
           usdPerMinute: 0.0015,
+          latencyMs: 390,
         },
         "zai-org/GLM-5.2": {
           name: "GLM 5.2",
           usdPerMinute: 0.005,
+          latencyMs: 720,
         },
         "moonshotai/Kimi-K2.7-Code": {
           name: "Kimi K2.7 Code",
           usdPerMinute: 0.004,
+          latencyMs: 590,
         },
         "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B": {
           name: "NVIDIA Nemotron 3 Ultra 550B A55B",
           usdPerMinute: 0.004,
+          latencyMs: 780,
         },
         "deepseek-ai/DeepSeek-V4-Flash": {
           name: "DeepSeek V4 Flash",
           usdPerMinute: 0.0015,
+          latencyMs: 390,
         },
         "deepseek-ai/DeepSeek-V4-Pro": {
           name: "DeepSeek V4 Pro",
           usdPerMinute: 0.005,
+          latencyMs: 770,
         },
         "moonshotai/Kimi-K2.6": {
           name: "Kimi K2.6",
           usdPerMinute: 0.004,
+          latencyMs: 670,
         },
         "XiaomiMiMo/MiMo-V2.5-Pro": {
           name: "MiMo V2.5 Pro",
           usdPerMinute: 0.003,
+          latencyMs: 810,
         },
         "Qwen/Qwen3.6-35B-A3B": {
           name: "Qwen 3.6 35B A3B",
           usdPerMinute: 0.001,
+          latencyMs: 610,
         },
         "zai-org/GLM-5.1": {
           name: "GLM 5.1",
           usdPerMinute: 0.004,
+          latencyMs: 640,
         },
         "Qwen/Qwen3.5-397B-A17B": {
           name: "Qwen 3.5 397B A17B",
           usdPerMinute: 0.003,
+          latencyMs: 670,
         },
         "google/gemma-4-26B-A4B-it": {
           name: "Gemma 4 26B A4B Instruct",
           usdPerMinute: 0.001,
+          latencyMs: 670,
         },
         "google/gemma-4-31B-it": {
           name: "Gemma 4 31B Instruct",
           usdPerMinute: 0.0014,
+          latencyMs: 630,
         },
         "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B": {
           name: "NVIDIA Nemotron 3 Super 120B A12B",
           usdPerMinute: 0.002,
+          latencyMs: 640,
         },
         "Qwen/Qwen3-Max": {
           name: "Qwen 3 Max",
           usdPerMinute: 0.006,
+          latencyMs: 790,
         },
         "Qwen/Qwen3-Max-Thinking": {
           name: "Qwen 3 Max Thinking",
           usdPerMinute: 0.006,
+          latencyMs: 350,
         },
         "deepseek-ai/DeepSeek-V3.2": {
           name: "DeepSeek V3.2",
           usdPerMinute: 0.002,
+          latencyMs: 630,
         },
       },
     },
@@ -691,18 +778,22 @@ export const MODELS = {
         "deepseek-v4-flash": {
           name: "DeepSeek V4 Flash",
           usdPerMinute: 0.0015,
+          latencyMs: 410,
         },
         "deepseek-v4-pro": {
           name: "DeepSeek V4 Pro",
           usdPerMinute: 0.0058,
+          latencyMs: 740,
         },
         "deepseek-v3": {
           name: "DeepSeek V3",
           usdPerMinute: 0.002,
+          latencyMs: 620,
         },
         "deepseek-r1": {
           name: "DeepSeek R1",
           usdPerMinute: 0.003,
+          latencyMs: 760,
         },
       },
     },
@@ -712,70 +803,87 @@ export const MODELS = {
         "accounts/fireworks/models/glm-5p3": {
           name: "GLM 5.3",
           usdPerMinute: 0.005,
+          latencyMs: 590,
         },
         "accounts/fireworks/models/glm-5p3-flash": {
           name: "GLM 5.3 Flash",
           usdPerMinute: 0.001,
+          latencyMs: 320,
         },
         "accounts/fireworks/models/glm-5p2": {
           name: "GLM 5.2",
           usdPerMinute: 0.005,
+          latencyMs: 620,
         },
         "accounts/fireworks/models/deepseek-v4-pro-0813": {
           name: "DeepSeek V4 Pro 0813",
           usdPerMinute: 0.005,
+          latencyMs: 760,
         },
         "accounts/fireworks/models/deepseek-v4-flash-0731": {
           name: "DeepSeek V4 Flash 0731",
           usdPerMinute: 0.0015,
+          latencyMs: 400,
         },
         "accounts/fireworks/models/deepseek-v4-flash-vision-exp": {
           name: "DeepSeek V4 Flash Vision Exp",
           usdPerMinute: 0.0015,
+          latencyMs: 360,
         },
         "accounts/fireworks/models/muse-glimmer-30b": {
           name: "Muse Glimmer 30B",
           usdPerMinute: 0.002,
+          latencyMs: 580,
         },
         "accounts/fireworks/models/nemotron-lightning-3p5-30b-a3b": {
           name: "Nemotron Lightning 3.5 30B",
           usdPerMinute: 0.0005,
+          latencyMs: 610,
         },
         "accounts/fireworks/models/nemotron-3-ultra-nvfp4": {
           name: "Nemotron 3 Ultra NVFP4",
           usdPerMinute: 0.003,
+          latencyMs: 780,
         },
         "accounts/fireworks/models/qwen3p8-max": {
           name: "Qwen 3.8 Max",
           usdPerMinute: 0.006,
+          latencyMs: 860,
         },
         "accounts/fireworks/models/qwen3p7-plus": {
           name: "Qwen 3.7 Plus",
           usdPerMinute: 0.002,
+          latencyMs: 650,
         },
         "accounts/fireworks/models/kimi-k3": {
           name: "Kimi K3",
           usdPerMinute: 0.012,
+          latencyMs: 620,
         },
         "accounts/fireworks/models/kimi-k2p6": {
           name: "Kimi K2.6",
           usdPerMinute: 0.004,
+          latencyMs: 580,
         },
         "accounts/fireworks/models/kimi-k2p7-code": {
           name: "Kimi K2.7 Code",
           usdPerMinute: 0.004,
+          latencyMs: 650,
         },
         "accounts/fireworks/models/minimax-m3": {
           name: "MiniMax M3",
           usdPerMinute: 0.0015,
+          latencyMs: 330,
         },
         "accounts/fireworks/models/gpt-oss-120b": {
           name: "OpenAI GPT OSS 120B",
           usdPerMinute: 0.0008,
+          latencyMs: 690,
         },
         "accounts/fireworks/models/inkling": {
           name: "Inkling",
           usdPerMinute: 0.004,
+          latencyMs: 340,
         },
       },
     },
@@ -785,34 +893,42 @@ export const MODELS = {
         "gemini-3-flash-preview": {
           name: "Gemini 3 Flash",
           usdPerMinute: 0.002,
+          latencyMs: 430,
         },
         "gemini-3.1-flash-lite": {
           name: "Gemini 3.1 Flash Lite",
           usdPerMinute: 0.001,
+          latencyMs: 320,
         },
         "gemini-3.1-pro-preview": {
           name: "Gemini 3.1 Pro",
           usdPerMinute: 0.0152,
+          latencyMs: 330,
         },
         "gemini-3.5-flash": {
           name: "Gemini 3.5 Flash",
           usdPerMinute: 0.0061,
+          latencyMs: 340,
         },
         "gemini-3.5-flash-lite": {
           name: "Gemini 3.5 Flash Lite",
           usdPerMinute: 0.001,
+          latencyMs: 380,
         },
         "gemini-3.6-flash": {
           name: "Gemini 3.6 Flash",
           usdPerMinute: 0.0048,
+          latencyMs: 370,
         },
         "gemini-3.7-flash": {
           name: "Gemini 3.7 Flash",
           usdPerMinute: 0.0029,
+          latencyMs: 390,
         },
         "gemini-3.8-flash": {
           name: "Gemini 3.8 Flash",
           usdPerMinute: 0.0029,
+          latencyMs: 420,
         },
       },
     },
@@ -822,18 +938,22 @@ export const MODELS = {
         "openai/gpt-oss-120b": {
           name: "OpenAI GPT OSS 120B",
           usdPerMinute: 0.0008,
+          latencyMs: 700,
         },
         "openai/gpt-oss-20b": {
           name: "OpenAI GPT OSS 20B",
           usdPerMinute: 0.0004,
+          latencyMs: 670,
         },
         "qwen/qwen3.6-27b": {
           name: "Qwen 3.6 27B",
           usdPerMinute: 0.003,
+          latencyMs: 660,
         },
         "qwen/qwen3.8-27b": {
           name: "Qwen 3.8 27B",
           usdPerMinute: 0.004,
+          latencyMs: 600,
         },
       },
     },
@@ -843,74 +963,144 @@ export const MODELS = {
         "mistral-medium-latest": {
           name: "Mistral Medium 3.5",
           usdPerMinute: 0.008,
+          latencyMs: 630,
         },
         "mistral-small-latest": {
           name: "Mistral Small 4",
           usdPerMinute: 0.001,
+          latencyMs: 590,
         },
         "mistral-large-latest": {
           name: "Mistral Large 3",
           usdPerMinute: 0.0025,
+          latencyMs: 600,
         },
         "ministral-14b-latest": {
           name: "Ministral 3 14B",
           usdPerMinute: 0.001,
+          latencyMs: 320,
         },
         "ministral-8b-latest": {
           name: "Ministral 3 8B",
           usdPerMinute: 0.0008,
+          latencyMs: 300,
         },
         "ministral-3b-latest": {
           name: "Ministral 3 3B",
           usdPerMinute: 0.0005,
+          latencyMs: 300,
         },
       },
     },
     openai: {
       name: "OpenAI",
       models: {
-        "gpt-6-astra": { name: "GPT-6 Astra", usdPerMinute: 0.05 },
-        "chat-latest": { name: "GPT Instant Latest", usdPerMinute: 0.0203 },
-        "gpt-5.6-sol": { name: "GPT-5.6 Sol", usdPerMinute: 0.0203 },
-        "gpt-5.6-terra": { name: "GPT-5.6 Terra", usdPerMinute: 0.0081 },
-        "gpt-5.6-luna": { name: "GPT-5.6 Luna", usdPerMinute: 0.0008 },
-        "gpt-5.5": { name: "GPT-5.5", usdPerMinute: 0.0379 },
-        "gpt-5.5-pro": { name: "GPT-5.5 Pro", usdPerMinute: 0.05 },
-        "gpt-5.4": { name: "GPT-5.4", usdPerMinute: 0.0189 },
-        "gpt-5.4-pro": { name: "GPT-5.4 Pro", usdPerMinute: 0.03 },
-        "gpt-5.4-mini": { name: "GPT-5.4 mini", usdPerMinute: 0.003 },
-        "gpt-5.4-nano": { name: "GPT-5.4 nano", usdPerMinute: 0.0008 },
+        "gpt-6-astra": {
+          name: "GPT-6 Astra",
+          usdPerMinute: 0.05,
+          latencyMs: 700,
+        },
+        "chat-latest": {
+          name: "GPT Instant Latest",
+          usdPerMinute: 0.0203,
+          latencyMs: 370,
+        },
+        "gpt-5.6-sol": {
+          name: "GPT-5.6 Sol",
+          usdPerMinute: 0.0203,
+          latencyMs: 650,
+        },
+        "gpt-5.6-terra": {
+          name: "GPT-5.6 Terra",
+          usdPerMinute: 0.0081,
+          latencyMs: 700,
+        },
+        "gpt-5.6-luna": {
+          name: "GPT-5.6 Luna",
+          usdPerMinute: 0.0008,
+          latencyMs: 580,
+        },
+        "gpt-5.5": { name: "GPT-5.5", usdPerMinute: 0.0379, latencyMs: 710 },
+        "gpt-5.5-pro": {
+          name: "GPT-5.5 Pro",
+          usdPerMinute: 0.05,
+          latencyMs: 750,
+        },
+        "gpt-5.4": { name: "GPT-5.4", usdPerMinute: 0.0189, latencyMs: 720 },
+        "gpt-5.4-pro": {
+          name: "GPT-5.4 Pro",
+          usdPerMinute: 0.03,
+          latencyMs: 820,
+        },
+        "gpt-5.4-mini": {
+          name: "GPT-5.4 mini",
+          usdPerMinute: 0.003,
+          latencyMs: 360,
+        },
+        "gpt-5.4-nano": {
+          name: "GPT-5.4 nano",
+          usdPerMinute: 0.0008,
+          latencyMs: 610,
+        },
         "gpt-5.3-chat-latest": {
           name: "GPT-5.3 Chat Latest",
           usdPerMinute: 0.01,
+          latencyMs: 580,
         },
-        "gpt-5.2": { name: "GPT-5.2", usdPerMinute: 0.0077 },
-        "gpt-5.2-pro": { name: "GPT-5.2 Pro", usdPerMinute: 0.02 },
+        "gpt-5.2": { name: "GPT-5.2", usdPerMinute: 0.0077, latencyMs: 600 },
+        "gpt-5.2-pro": {
+          name: "GPT-5.2 Pro",
+          usdPerMinute: 0.02,
+          latencyMs: 820,
+        },
         "gpt-5.2-chat-latest": {
           name: "GPT-5.2 Chat Latest",
           usdPerMinute: 0.0077,
+          latencyMs: 610,
         },
-        "gpt-5.1": { name: "GPT-5.1", usdPerMinute: 0.0055 },
+        "gpt-5.1": { name: "GPT-5.1", usdPerMinute: 0.0055, latencyMs: 620 },
         "gpt-5.1-chat-latest": {
           name: "GPT-5.1 Chat Latest",
           usdPerMinute: 0.0055,
+          latencyMs: 640,
         },
-        "gpt-5": { name: "GPT-5", usdPerMinute: 0.0055 },
-        "gpt-5-pro": { name: "GPT-5 Pro", usdPerMinute: 0.015 },
-        "gpt-5-mini": { name: "GPT-5 mini", usdPerMinute: 0.0011 },
-        "gpt-5-nano": { name: "GPT-5 nano", usdPerMinute: 0.0002 },
+        "gpt-5": { name: "GPT-5", usdPerMinute: 0.0055, latencyMs: 700 },
+        "gpt-5-pro": { name: "GPT-5 Pro", usdPerMinute: 0.015, latencyMs: 800 },
+        "gpt-5-mini": {
+          name: "GPT-5 mini",
+          usdPerMinute: 0.0011,
+          latencyMs: 360,
+        },
+        "gpt-5-nano": {
+          name: "GPT-5 nano",
+          usdPerMinute: 0.0002,
+          latencyMs: 660,
+        },
         "gpt-5-chat-latest": {
           name: "GPT-5 Chat Latest",
           usdPerMinute: 0.0055,
+          latencyMs: 630,
         },
-        "gpt-4.1": { name: "GPT-4.1", usdPerMinute: 0.0074 },
-        "gpt-4.1-mini": { name: "GPT-4.1 mini", usdPerMinute: 0.0015 },
-        "gpt-4.1-nano": { name: "GPT-4.1 nano", usdPerMinute: 0.0004 },
-        "gpt-4o": { name: "GPT-4o", usdPerMinute: 0.0093 },
-        "gpt-4o-mini": { name: "GPT-4o mini", usdPerMinute: 0.0006 },
-        "o4-mini": { name: "o4 mini", usdPerMinute: 0.004 },
-        o3: { name: "o3", usdPerMinute: 0.02 },
-        "o3-mini": { name: "o3 mini", usdPerMinute: 0.004 },
+        "gpt-4.1": { name: "GPT-4.1", usdPerMinute: 0.0074, latencyMs: 650 },
+        "gpt-4.1-mini": {
+          name: "GPT-4.1 mini",
+          usdPerMinute: 0.0015,
+          latencyMs: 430,
+        },
+        "gpt-4.1-nano": {
+          name: "GPT-4.1 nano",
+          usdPerMinute: 0.0004,
+          latencyMs: 680,
+        },
+        "gpt-4o": { name: "GPT-4o", usdPerMinute: 0.0093, latencyMs: 650 },
+        "gpt-4o-mini": {
+          name: "GPT-4o mini",
+          usdPerMinute: 0.0006,
+          latencyMs: 290,
+        },
+        "o4-mini": { name: "o4 mini", usdPerMinute: 0.004, latencyMs: 350 },
+        o3: { name: "o3", usdPerMinute: 0.02, latencyMs: 290 },
+        "o3-mini": { name: "o3 mini", usdPerMinute: 0.004, latencyMs: 390 },
       },
     },
     ovhcloud: {
@@ -919,14 +1109,17 @@ export const MODELS = {
         "Meta-Llama-3_3-70B-Instruct": {
           name: "Llama 3.3 70B Instruct",
           usdPerMinute: 0.001,
+          latencyMs: 620,
         },
         "gpt-oss-20b": {
           name: "OpenAI GPT OSS 20B",
           usdPerMinute: 0.0004,
+          latencyMs: 640,
         },
         "gpt-oss-120b": {
           name: "OpenAI GPT OSS 120B",
           usdPerMinute: 0.0006,
+          latencyMs: 640,
         },
       },
     },
@@ -936,10 +1129,12 @@ export const MODELS = {
         sonar: {
           name: "Sonar",
           usdPerMinute: 0.003,
+          latencyMs: 630,
         },
         "sonar-pro": {
           name: "Sonar Pro",
           usdPerMinute: 0.006,
+          latencyMs: 760,
         },
       },
     },
@@ -949,82 +1144,102 @@ export const MODELS = {
         "zai-org/GLM-5.3": {
           name: "GLM 5.3",
           usdPerMinute: 0.005,
+          latencyMs: 650,
         },
         "zai-org/GLM-5.3-Flash": {
           name: "GLM 5.3 Flash",
           usdPerMinute: 0.001,
+          latencyMs: 370,
         },
         "zai-org/GLM-5.2": {
           name: "GLM 5.2",
           usdPerMinute: 0.005,
+          latencyMs: 720,
         },
         "moonshotai/Kimi-K3": {
           name: "Kimi K3",
           usdPerMinute: 0.012,
+          latencyMs: 650,
         },
         "deepseek-ai/DeepSeek-V4-Pro-0813": {
           name: "DeepSeek V4 Pro 0813",
           usdPerMinute: 0.005,
+          latencyMs: 750,
         },
         "deepseek-ai/DeepSeek-V4-Flash-0731": {
           name: "DeepSeek V4 Flash 0731",
           usdPerMinute: 0.001,
+          latencyMs: 390,
         },
         "meta-models/Muse-Glimmer-30B": {
           name: "Muse Glimmer 30B",
           usdPerMinute: 0.002,
+          latencyMs: 690,
         },
         "Qwen/Qwen3.8-2.4T-A95B": {
           name: "Qwen 3.8 2.4T A95B",
           usdPerMinute: 0.006,
+          latencyMs: 630,
         },
         "Qwen/Qwen3.8-Flash": {
           name: "Qwen 3.8 Flash",
           usdPerMinute: 0.001,
+          latencyMs: 420,
         },
         "Qwen/Qwen3.7-Max": {
           name: "Qwen 3.7 Max",
           usdPerMinute: 0.008,
+          latencyMs: 880,
         },
         "Qwen/Qwen3.7-Plus": {
           name: "Qwen 3.7 Plus",
           usdPerMinute: 0.002,
+          latencyMs: 680,
         },
         "Qwen/Qwen3.6-Plus": {
           name: "Qwen 3.6 Plus",
           usdPerMinute: 0.003,
+          latencyMs: 650,
         },
         "Qwen/Qwen3.5-9B": {
           name: "Qwen 3.5 9B FP8",
           usdPerMinute: 0.0008,
+          latencyMs: 650,
         },
         "thinkingmachines/Inkling": {
           name: "Inkling FP4",
           usdPerMinute: 0.004,
+          latencyMs: 410,
         },
         "thinkingmachines/Inkling-Small": {
           name: "Inkling Small",
           usdPerMinute: 0.002,
+          latencyMs: 290,
         },
         "MiniMaxAI/MiniMax-M3": {
           name: "MiniMax M3",
           usdPerMinute: 0.0015,
+          latencyMs: 290,
         },
         "google/gemma-4-31B-it": {
           name: "Gemma 4 31B Instruct FP8",
           usdPerMinute: 0.0015,
+          latencyMs: 600,
         },
         "openai/gpt-oss-120b": {
           name: "OpenAI GPT OSS 120B",
           usdPerMinute: 0.0008,
+          latencyMs: 700,
         },
         "openai/gpt-oss-20b": {
           name: "OpenAI GPT OSS 20B",
           usdPerMinute: 0.0004,
+          latencyMs: 670,
         },
         "meta-llama/Llama-3.3-70B-Instruct-Turbo": {
           name: "Llama 3.3 70B Instruct Turbo",
           usdPerMinute: 0.003,
+          latencyMs: 350,
         },
       },
     },
@@ -1034,30 +1249,37 @@ export const MODELS = {
         "grok-4.20-0309-non-reasoning": {
           name: "Grok 4.20",
           usdPerMinute: 0.007,
+          latencyMs: 610,
         },
         "grok-4.20-0309-reasoning": {
           name: "Grok 4.20 Reasoning",
           usdPerMinute: 0.007,
+          latencyMs: 580,
         },
         "grok-4.20-multi-agent-0309": {
           name: "Grok 4.20 Multi Agent",
           usdPerMinute: 0.007,
+          latencyMs: 610,
         },
         "grok-4.3": {
           name: "Grok 4.3",
           usdPerMinute: 0.003,
+          latencyMs: 600,
         },
         "grok-4.5": {
           name: "Grok 4.5",
           usdPerMinute: 0.007,
+          latencyMs: 670,
         },
         "grok-4.6": {
           name: "Grok 4.6",
           usdPerMinute: 0.007,
+          latencyMs: 630,
         },
         "grok-3": {
           name: "Grok 3",
           usdPerMinute: 0.003,
+          latencyMs: 720,
         },
       },
     },
@@ -1069,6 +1291,7 @@ export const MODELS = {
         "sonic-3": {
           name: "Sonic 3",
           usdPerMinute: 0.03,
+          latencyMs: 260,
           languages: [
             "en",
             "de",
@@ -1117,6 +1340,7 @@ export const MODELS = {
         "sonic-3.5": {
           name: "Sonic 3.5",
           usdPerMinute: 0.03,
+          latencyMs: 230,
           languages: [
             "en",
             "de",
@@ -1163,6 +1387,7 @@ export const MODELS = {
         "sonic-3.6": {
           name: "Sonic 3.6",
           usdPerMinute: 0.03,
+          latencyMs: 210,
           languages: [
             "en",
             "fr",
@@ -1213,6 +1438,7 @@ export const MODELS = {
         "sonic-latest": {
           name: "Sonic Latest",
           usdPerMinute: 0.03,
+          latencyMs: 160,
           languages: [
             "en",
             "de",
@@ -1259,6 +1485,7 @@ export const MODELS = {
         "sonic-preview": {
           name: "Sonic Preview",
           usdPerMinute: 0.03,
+          latencyMs: 190,
           languages: [
             "en",
             "fr",
@@ -1309,6 +1536,7 @@ export const MODELS = {
         "sonic-2": {
           name: "Sonic 2",
           usdPerMinute: 0.03,
+          latencyMs: 280,
           languages: ["en", "fr", "de", "es", "pt", "zh", "ja", "ko"],
         },
       },
@@ -1319,11 +1547,13 @@ export const MODELS = {
         aura: {
           name: "Aura",
           usdPerMinute: 0.015,
+          latencyMs: 290,
           languages: ["en", "en-US"],
         },
         "aura-2": {
           name: "Aura 2",
           usdPerMinute: 0.018,
+          latencyMs: 260,
           languages: [
             "en",
             "en-US",
@@ -1356,6 +1586,7 @@ export const MODELS = {
         eleven_flash_v2_5: {
           name: "Eleven Flash v2.5",
           usdPerMinute: 0.03,
+          latencyMs: 80,
           languages: [
             "en",
             "ja",
@@ -1394,11 +1625,13 @@ export const MODELS = {
         eleven_flash_v2: {
           name: "Eleven Flash v2",
           usdPerMinute: 0.03,
+          latencyMs: 170,
           languages: ["en"],
         },
         eleven_turbo_v2_5: {
           name: "Eleven Turbo v2.5",
           usdPerMinute: 0.03,
+          latencyMs: 80,
           languages: [
             "en",
             "ja",
@@ -1437,11 +1670,13 @@ export const MODELS = {
         eleven_turbo_v2: {
           name: "Eleven Turbo v2",
           usdPerMinute: 0.03,
+          latencyMs: 180,
           languages: ["en"],
         },
         eleven_multilingual_v2: {
           name: "Eleven Multilingual v2",
           usdPerMinute: 0.03,
+          latencyMs: 220,
           languages: [
             "en",
             "ja",
@@ -1482,6 +1717,7 @@ export const MODELS = {
         "s2-pro": {
           name: "S2 Pro",
           usdPerMinute: 0.009,
+          latencyMs: 310,
           languages: [
             "en",
             "zh",
@@ -1501,6 +1737,7 @@ export const MODELS = {
         "s2.1-pro": {
           name: "S2.1 Pro",
           usdPerMinute: 0.009,
+          latencyMs: 270,
           languages: [
             "en",
             "zh",
@@ -1520,6 +1757,7 @@ export const MODELS = {
         "s2.1-pro-free": {
           name: "S2.1 Pro Free",
           usdPerMinute: 0,
+          latencyMs: 260,
           languages: [
             "en",
             "zh",
@@ -1544,6 +1782,7 @@ export const MODELS = {
         "inworld-tts-1.5-max": {
           name: "Realtime TTS 1.5 Max",
           usdPerMinute: 0.021,
+          latencyMs: 210,
           languages: [
             "en",
             "zh",
@@ -1565,6 +1804,7 @@ export const MODELS = {
         "inworld-tts-1.5-mini": {
           name: "Realtime TTS 1.5 Mini",
           usdPerMinute: 0.009,
+          latencyMs: 190,
           languages: [
             "en",
             "zh",
@@ -1586,6 +1826,7 @@ export const MODELS = {
         "inworld-tts-2": {
           name: "Realtime TTS 2.0",
           usdPerMinute: 0.015,
+          latencyMs: 240,
           languages: [
             "en",
             "zh",
@@ -1607,6 +1848,7 @@ export const MODELS = {
         "inworld-tts-2-flash": {
           name: "Realtime TTS 2.0 Flash",
           usdPerMinute: 0.009,
+          latencyMs: 80,
           languages: [
             "en",
             "zh",
@@ -1633,6 +1875,7 @@ export const MODELS = {
         "voxtral-mini-tts-latest": {
           name: "Voxtral Mini TTS",
           usdPerMinute: 0.01,
+          latencyMs: 120,
           languages: ["multi", "en"],
         },
       },
@@ -1643,16 +1886,19 @@ export const MODELS = {
         "tts-1": {
           name: "TTS 1",
           usdPerMinute: 0.015,
+          latencyMs: 270,
           languages: ["multi"],
         },
         "tts-1-hd": {
           name: "TTS 1 HD",
           usdPerMinute: 0.015,
+          latencyMs: 150,
           languages: ["multi"],
         },
         "gpt-4o-mini-tts": {
           name: "GPT-4o Mini TTS",
           usdPerMinute: 0.015,
+          latencyMs: 80,
           languages: ["multi"],
         },
       },
@@ -1663,11 +1909,13 @@ export const MODELS = {
         "tts-rt-v2": {
           name: "Realtime TTS v2",
           usdPerMinute: 0.01,
+          latencyMs: 220,
           languages: ["en", "es", "fr", "de", "it", "pt"],
         },
         "tts-rt-v1": {
           name: "Realtime TTS v1",
           usdPerMinute: 0.01,
+          latencyMs: 240,
           languages: ["en", "es", "fr", "de", "it", "pt"],
         },
       },
@@ -1678,6 +1926,7 @@ export const MODELS = {
         "tts-1": {
           name: "Text to Speech",
           usdPerMinute: 0.009,
+          latencyMs: 280,
           languages: [
             "auto",
             "en",

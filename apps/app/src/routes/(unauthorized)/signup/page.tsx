@@ -28,6 +28,7 @@ import { Input } from "@workspace/ui/components/input"
 import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { GoogleIcon } from "@/components/logos/google"
 import { signIn, signUp } from "@/lib/auth/client"
 import { env } from "@/lib/env"
 import { TIME_ZONES } from "@/lib/time"
@@ -228,11 +229,7 @@ function Page() {
                   disabled={signUpMutation.isPending}
                   onClick={handleGoogleSignUp}
                 >
-                  <img
-                    src="/logos/google.svg"
-                    alt="Google logo"
-                    className="size-5"
-                  />
+                  <GoogleIcon className="size-5" />
                   Sign up with Google
                 </Button>
 

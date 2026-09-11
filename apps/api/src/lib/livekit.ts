@@ -19,7 +19,7 @@ import {
 
 import type { CallVariableValues } from "@workspace/shared/api/calls/types"
 import { env } from "@/lib/env"
-import { getObject, s3Configured } from "@/lib/s3"
+import { getPrivateObject, privateConfig, privateS3Configured } from "@/lib/s3"
 
 const ROOM_PREFIX = "call-"
 
@@ -121,13 +121,15 @@ export function getRecordingKey(callId: string) {
 }
 
 export async function getRecording(callId: string) {
-  const { Body, ContentLength } = await getObject(getRecordingKey(callId))
+  const { Body, ContentLength } = await getPrivateObject(
+    getRecordingKey(callId)
+  )
   if (!Body) throw new Error("Recording not found")
   return { Body, ContentLength }
 }
 
 export async function startCallRecording(roomName: string, callId: string) {
-  if (!s3Configured()) return
+  if (!privateS3Configured()) return
 
   const egress = createEgressClient()
   await egress.startRoomCompositeEgress(
@@ -140,11 +142,11 @@ export async function startCallRecording(roomName: string, callId: string) {
         output: {
           case: "s3",
           value: new S3Upload({
-            accessKey: env.S3_ACCESS_KEY,
-            secret: env.S3_SECRET_KEY,
-            bucket: env.S3_BUCKET,
-            region: env.S3_REGION,
-            endpoint: env.S3_ENDPOINT,
+            accessKey: privateConfig.accessKey,
+            secret: privateConfig.secretKey,
+            bucket: privateConfig.bucket,
+            region: privateConfig.region,
+            endpoint: privateConfig.endpoint,
             forcePathStyle: true,
           }),
         },
@@ -155,7 +157,7 @@ export async function startCallRecording(roomName: string, callId: string) {
 }
 
 export async function stopCallRecording(roomName: string) {
-  if (!s3Configured()) return
+  if (!privateS3Configured()) return
 
   const egress = createEgressClient()
   const active = await egress.listEgress({ roomName, active: true })

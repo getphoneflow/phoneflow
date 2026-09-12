@@ -14,13 +14,6 @@ type CatalogProvider = {
   models: Record<string, CatalogModel>
 }
 
-type VoiceEntry = {
-  id: string
-  name: string
-  languages: readonly string[]
-  description: string
-}
-
 export type ModelOption = {
   id: string
   name: string
@@ -28,6 +21,17 @@ export type ModelOption = {
   providerName: string
   usdPerMinute: number
   latencyMs: number
+}
+
+export type VoiceGender = "male" | "female"
+
+export type Voice = {
+  id: string
+  name: string
+  languages: string[]
+  description: string
+  gender: VoiceGender
+  tags: string[]
 }
 
 function splitModelId(modelId: string) {
@@ -69,13 +73,11 @@ export function getModels(kind: ModelKind): ModelOption[] {
   )
 }
 
-export function getVoices(modelId: string) {
-  const { providerId, modelKey } = splitModelId(modelId)
-  const providerVoices = VOICES[providerId as keyof typeof VOICES] as
-    | Record<string, readonly VoiceEntry[]>
-    | undefined
+const voicesByProvider = VOICES as Record<string, Record<string, Voice[]>>
 
-  return providerVoices?.[modelKey] ? [...providerVoices[modelKey]] : []
+export function getVoices(modelId: string): Voice[] {
+  const { providerId, modelKey } = splitModelId(modelId)
+  return voicesByProvider[providerId]?.[modelKey] ?? []
 }
 
 export function pickFirstVoice(modelId: string, voiceId?: string) {

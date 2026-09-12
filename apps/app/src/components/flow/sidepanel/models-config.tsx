@@ -1,7 +1,9 @@
+import { pickFirstVoice } from "@workspace/shared/models/helpers"
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
-import { BackgroundAudioPicker } from "@/components/background-audio-picker"
+import { BackgroundAudioSelect } from "@/components/flow/sidepanel/background-audio-select"
 import { ModelSelect } from "@/components/flow/sidepanel/model-select"
+import { VoiceSelect } from "@/components/flow/sidepanel/voice-select"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "./base"
 
@@ -52,30 +54,27 @@ export function ModelsConfigPanel() {
               tts: {
                 ...config.tts,
                 model,
+                voice: pickFirstVoice(model, config.tts.voice) ?? "",
               },
             })
           }}
         />
 
-        <Field>
-          <FieldLabel>Voice</FieldLabel>
-          <Input
-            value={config.tts.voice}
-            readOnly={readOnly}
-            placeholder="Provider voice ID"
-            onChange={(event) =>
-              setConfig({
-                ...config,
-                tts: { ...config.tts, voice: event.target.value },
-              })
-            }
-          />
-        </Field>
+        <VoiceSelect
+          modelId={config.tts.model}
+          voiceId={config.tts.voice}
+          readOnly={readOnly}
+          onVoiceChange={(voice) =>
+            setConfig({
+              ...config,
+              tts: { ...config.tts, voice },
+            })
+          }
+        />
 
         <div className="grid grid-cols-5 items-end gap-4">
-          <Field className="col-span-3">
-            <FieldLabel>Background audio</FieldLabel>
-            <BackgroundAudioPicker
+          <div className="col-span-3">
+            <BackgroundAudioSelect
               value={backgroundAudio?.sound}
               readOnly={readOnly}
               onValueChange={(sound) =>
@@ -87,30 +86,30 @@ export function ModelsConfigPanel() {
                 })
               }
             />
-          </Field>
+          </div>
 
-          {backgroundAudio && (
-            <Field className="col-span-2">
-              <FieldLabel>Volume</FieldLabel>
-              <Input
-                type="number"
-                min={0}
-                max={1}
-                step={0.1}
-                readOnly={readOnly}
-                value={backgroundAudio.volume}
-                onChange={(event) =>
-                  setConfig({
-                    ...config,
-                    backgroundAudio: {
-                      ...backgroundAudio,
-                      volume: Number(event.target.value),
-                    },
-                  })
-                }
-              />
-            </Field>
-          )}
+          <Field className="col-span-2">
+            <FieldLabel>Volume</FieldLabel>
+            <Input
+              type="number"
+              min={0}
+              max={1}
+              step={0.1}
+              disabled={!backgroundAudio || readOnly}
+              readOnly={readOnly}
+              value={backgroundAudio?.volume ?? 0.8}
+              onChange={(event) => {
+                if (!backgroundAudio) return
+                setConfig({
+                  ...config,
+                  backgroundAudio: {
+                    ...backgroundAudio,
+                    volume: Number(event.target.value),
+                  },
+                })
+              }}
+            />
+          </Field>
         </div>
       </FieldGroup>
     </FlowSidePanelBase>

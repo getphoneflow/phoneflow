@@ -33,7 +33,7 @@ export function TTS(config: AgentConfig["tts"]): tts.TTS {
       })
     case "deepgram":
       return new deepgram.TTS({
-        model: `${model}-${config.voice}-en`,
+        model: config.voice,
         apiKey: env.DEEPGRAM_API_KEY,
         mipOptOut: config.mipOptOut ?? false,
       })

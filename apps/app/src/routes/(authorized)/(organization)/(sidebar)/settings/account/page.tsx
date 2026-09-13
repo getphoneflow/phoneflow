@@ -41,6 +41,7 @@ function Page() {
         <UserInformation
           name={session.user.name}
           email={session.user.email}
+          image={session.user.image}
           timezone={session.user.timezone}
         />
         <SetNewPassword accounts={accounts} />

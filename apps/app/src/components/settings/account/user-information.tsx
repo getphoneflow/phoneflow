@@ -23,6 +23,7 @@ import {
 } from "@workspace/ui/components/select"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { ProfilePicture } from "@/components/settings/account/profile-picture"
 import { updateUser } from "@/lib/auth/client"
 import { TIME_ZONES } from "@/lib/time"
 
@@ -36,12 +37,14 @@ type UserInformationValues = z.infer<typeof userInformationSchema>
 type UserInformationProps = {
   name: string
   email: string
+  image: string | null | undefined
   timezone: string
 }
 
 export function UserInformation({
   name,
   email,
+  image,
   timezone,
 }: UserInformationProps) {
   const queryClient = useQueryClient()
@@ -79,6 +82,11 @@ export function UserInformation({
         <FieldLegend>Account information</FieldLegend>
         <FieldDescription>Update your account information</FieldDescription>
       </FieldSet>
+
+      <Field>
+        <FieldLabel>Profile picture</FieldLabel>
+        <ProfilePicture name={name} image={image} />
+      </Field>
 
       <form
         onSubmit={form.handleSubmit((values) =>

@@ -1,12 +1,7 @@
 import sendEmail from "@workspace/email/send"
 import AcceptOrganizationInvitationEmail from "@workspace/email/templates/auth/accept-organization-invitation"
+import type { SendOrganizationInvitationPayload } from "@workspace/shared/jobs/emails/types"
 import { env } from "@/lib/env"
-
-export type SendOrganizationInvitationPayload = {
-  to: string
-  url: string
-  organizationName: string
-}
 
 export async function sendOrganizationInvitation(
   payload: SendOrganizationInvitationPayload

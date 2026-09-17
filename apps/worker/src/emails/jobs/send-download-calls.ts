@@ -1,14 +1,9 @@
 import sendEmail from "@workspace/email/send"
 import DownloadCallsEmail from "@workspace/email/templates/download-calls"
 import type { CallDownloadResponse } from "@workspace/shared/api/calls/types"
+import type { SendDownloadCallsPayload } from "@workspace/shared/jobs/emails/types"
 import { api } from "@/lib/api"
 import { env } from "@/lib/env"
-
-export type SendDownloadCallsPayload = {
-  to: string
-  organizationId: string
-  organizationName: string
-}
 
 export async function sendDownloadCalls(payload: SendDownloadCallsPayload) {
   const calls = await api.get<CallDownloadResponse>(

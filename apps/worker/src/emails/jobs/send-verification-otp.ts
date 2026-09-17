@@ -1,11 +1,7 @@
 import sendEmail from "@workspace/email/send"
 import VerificationOtpEmail from "@workspace/email/templates/auth/verification-otp"
+import type { SendVerificationOtpPayload } from "@workspace/shared/jobs/emails/types"
 import { env } from "@/lib/env"
-
-export type SendVerificationOtpPayload = {
-  to: string
-  otp: string
-}
 
 export async function sendVerificationOtp(payload: SendVerificationOtpPayload) {
   await sendEmail(

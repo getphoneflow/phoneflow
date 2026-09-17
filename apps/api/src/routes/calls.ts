@@ -30,6 +30,7 @@ import type {
   TriggerOutboundCallResponse,
   UnansweredCallResponse,
 } from "@workspace/shared/api/calls/types"
+import type { SendDownloadCallsPayload } from "@workspace/shared/jobs/emails/types"
 import { auth } from "@/lib/auth/config"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
@@ -459,7 +460,7 @@ callRoutes.post("/download", requireOrganization, async (c) => {
       to: session.user.email,
       organizationId,
       organizationName: organization.name,
-    })
+    } satisfies SendDownloadCallsPayload)
 
     return c.json({ ok: true } satisfies RequestCallDownloadResponse)
   } catch {

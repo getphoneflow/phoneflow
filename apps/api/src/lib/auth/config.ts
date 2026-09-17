@@ -6,6 +6,11 @@ import { emailOTP, lastLoginMethod, organization } from "better-auth/plugins"
 import { db } from "@workspace/db/client"
 import * as schema from "@workspace/db/schema/auth"
 import { ac, admin, member, owner } from "@workspace/shared/auth/roles"
+import type {
+  SendOrganizationInvitationPayload,
+  SendResetPasswordPayload,
+  SendVerificationOtpPayload,
+} from "@workspace/shared/jobs/emails/types"
 import { handleStripeEvent } from "@/lib/credits"
 import { env } from "@/lib/env"
 import { emailsQueue } from "@/lib/queues"
@@ -37,7 +42,7 @@ export const auth = betterAuth({
         to: data.user.email,
         name: data.user.name,
         url: data.url,
-      })
+      } satisfies SendResetPasswordPayload)
     },
   },
   emailVerification: {
@@ -62,7 +67,7 @@ export const auth = betterAuth({
           await emailsQueue.add("send-verification-otp", {
             to: email,
             otp,
-          })
+          } satisfies SendVerificationOtpPayload)
         }
       },
     }),
@@ -83,7 +88,7 @@ export const auth = betterAuth({
           to: data.email,
           url: inviteLink,
           organizationName: data.organization.name,
-        })
+        } satisfies SendOrganizationInvitationPayload)
       },
       organizationHooks: {
         async beforeCreateOrganization({ organization: org, user }) {

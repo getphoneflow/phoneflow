@@ -15,6 +15,7 @@ import type {
   CreateBatchCallResponse,
   TriggerBatchCallResponse,
 } from "@workspace/shared/api/batch-calls/types"
+import type { ProcessBatchCallPayload } from "@workspace/shared/jobs/batch-calls/types"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
@@ -166,7 +167,7 @@ batchCallRoutes.post(
 
       await batchCallsQueue.add(
         "process-batch-call",
-        { batchCallId },
+        { batchCallId } satisfies ProcessBatchCallPayload,
         scheduledAt ? { delay: scheduledAt.getTime() - Date.now() } : undefined
       )
 

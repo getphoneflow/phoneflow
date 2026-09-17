@@ -1,12 +1,7 @@
 import sendEmail from "@workspace/email/send"
 import ResetPasswordEmail from "@workspace/email/templates/auth/reset-password"
+import type { SendResetPasswordPayload } from "@workspace/shared/jobs/emails/types"
 import { env } from "@/lib/env"
-
-export type SendResetPasswordPayload = {
-  to: string
-  name: string
-  url: string
-}
 
 export async function sendResetPassword(payload: SendResetPasswordPayload) {
   await sendEmail(

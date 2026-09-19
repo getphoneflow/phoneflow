@@ -1,5 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -22,6 +26,7 @@ import { Input } from "@workspace/ui/components/input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
+import { sessionQueryOptions } from "@/lib/auth/session"
 
 export const Route = createFileRoute("/(authorized)/create-organization/")({
   component: Page,
@@ -30,6 +35,7 @@ export const Route = createFileRoute("/(authorized)/create-organization/")({
 function Page() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { data: session } = useSuspenseQuery(sessionQueryOptions())
 
   const createOrganizationFormSchema = z.object({
     name: z.string().trim().min(1, "Organization name is required"),
@@ -42,7 +48,7 @@ function Page() {
   const form = useForm<CreateOrganizationFormValues>({
     resolver: zodResolver(createOrganizationFormSchema),
     defaultValues: {
-      name: "",
+      name: session?.user.name ? `${session.user.name}'s Org` : "",
     },
   })
 

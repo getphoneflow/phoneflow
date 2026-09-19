@@ -1,3 +1,4 @@
+/** @jsxRuntime automatic */
 import { Button, Section, Text } from "react-email"
 
 import EmailBase from "@workspace/email/components/base"

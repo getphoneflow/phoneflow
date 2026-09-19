@@ -1,3 +1,4 @@
+/** @jsxRuntime automatic */
 import type { ReactNode } from "react"
 import {
   Body,

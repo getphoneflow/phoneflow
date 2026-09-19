@@ -1,3 +1,4 @@
+/** @jsxRuntime automatic */
 import { Body, Html, Text } from "react-email"
 
 export default function DownloadCallsEmail() {

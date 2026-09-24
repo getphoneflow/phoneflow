@@ -3,11 +3,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query"
-import {
-  ChevronsUpDownIcon,
-  GalleryVerticalEndIcon,
-  PlusIcon,
-} from "lucide-react"
+import { ChevronsUpDownIcon, PlusIcon } from "lucide-react"
 import { Suspense, useState } from "react"
 
 import {
@@ -89,8 +85,8 @@ function OrganizationSwitcherContent() {
               />
             }
           >
-            <div className="flex aspect-square size-8 items-center justify-center rounded-lg border">
-              <GalleryVerticalEndIcon className="size-4" />
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+              {activeOrganization.name[0]?.toUpperCase()}
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">
@@ -115,8 +111,8 @@ function OrganizationSwitcherContent() {
                   onClick={() => setActiveMutation.mutate(org.id)}
                   className="gap-2 p-2"
                 >
-                  <div className="flex size-6 items-center justify-center rounded-md border">
-                    <GalleryVerticalEndIcon className="size-4 shrink-0" />
+                  <div className="flex size-6 items-center justify-center rounded-md border bg-muted text-muted-foreground">
+                    {org.name[0]?.toUpperCase()}
                   </div>
                   {org.name}
                 </DropdownMenuItem>

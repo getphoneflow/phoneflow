@@ -120,6 +120,16 @@ export function LLM(config: AgentConfig["llm"]): llm.LLM {
         apiKey: env.TOGETHER_API_KEY,
         temperature: config.temperature,
       })
+    case "wafer":
+      return new openai.LLM({
+        model,
+        apiKey: env.WAFER_API_KEY,
+        baseURL: "https://pass.wafer.ai/v1",
+        temperature: config.temperature,
+        maxCompletionTokens: config.maxTokens,
+        toolChoice: config.toolChoice,
+        reasoningEffort: config.reasoningEffort,
+      })
     case "xai":
       return openai.LLM.withXAI({
         model,

@@ -21,6 +21,7 @@ import { OvhcloudIcon } from "@/components/logos/ovhcloud"
 import { PerplexityIcon } from "@/components/logos/perplexity"
 import { SonioxIcon } from "@/components/logos/sonoix"
 import { TogetherIcon } from "@/components/logos/together"
+import { WaferIcon } from "@/components/logos/wafer"
 import { XaiIcon } from "@/components/logos/xai"
 
 const PROVIDER_ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
@@ -44,6 +45,7 @@ const PROVIDER_ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   perplexity: PerplexityIcon,
   soniox: SonioxIcon,
   together: TogetherIcon,
+  wafer: WaferIcon,
   xai: XaiIcon,
 }
 

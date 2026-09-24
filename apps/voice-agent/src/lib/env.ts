@@ -32,5 +32,6 @@ export const env = {
   PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY ?? "",
   SONIOX_API_KEY: process.env.SONIOX_API_KEY ?? "",
   TOGETHER_API_KEY: process.env.TOGETHER_API_KEY ?? "",
+  WAFER_API_KEY: process.env.WAFER_API_KEY ?? "",
   XAI_API_KEY: process.env.XAI_API_KEY ?? "",
 }

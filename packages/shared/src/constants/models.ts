@@ -1243,6 +1243,51 @@ export const MODELS = {
         },
       },
     },
+    wafer: {
+      name: "Wafer",
+      models: {
+        "GLM-5.3": {
+          name: "GLM 5.3",
+          usdPerMinute: 0.005,
+          latencyMs: 590,
+        },
+        "GLM-5.3-Flash": {
+          name: "GLM 5.3 Flash",
+          usdPerMinute: 0.001,
+          latencyMs: 320,
+        },
+        "GLM-5.2": {
+          name: "GLM 5.2",
+          usdPerMinute: 0.005,
+          latencyMs: 620,
+        },
+        "DeepSeek-V4-Pro": {
+          name: "DeepSeek V4 Pro",
+          usdPerMinute: 0.005,
+          latencyMs: 760,
+        },
+        "DeepSeek-V4.1-Flash": {
+          name: "DeepSeek V4.1 Flash",
+          usdPerMinute: 0.0015,
+          latencyMs: 390,
+        },
+        "DeepSeek-V4-Flash-0731-Fast": {
+          name: "DeepSeek V4 Flash 0731 Fast",
+          usdPerMinute: 0.001,
+          latencyMs: 340,
+        },
+        "Kimi-K3": {
+          name: "Kimi K3",
+          usdPerMinute: 0.012,
+          latencyMs: 620,
+        },
+        "Qwen3.8-27B": {
+          name: "Qwen 3.8 27B",
+          usdPerMinute: 0.002,
+          latencyMs: 480,
+        },
+      },
+    },
     xai: {
       name: "xAI",
       models: {

@@ -7,5 +7,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "rolldown.config.ts"]
+  "include": ["src", "scripts", "rolldown.config.ts"]
 }

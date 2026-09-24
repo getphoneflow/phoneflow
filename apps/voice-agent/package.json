@@ -8,7 +8,8 @@
     "start": "node dist/apps/voice-agent/src/main.js start",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint .",
-    "format": "biome check --write --linter-enabled=false ."
+    "format": "biome check --write --linter-enabled=false .",
+    "benchmark-model-latency": "tsx scripts/benchmark-model-latency.ts"
   },
   "dependencies": {
     "@livekit/agents": "^1.7.1",

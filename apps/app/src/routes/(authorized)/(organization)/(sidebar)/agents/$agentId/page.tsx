@@ -18,6 +18,7 @@ import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { AgentAutoSave } from "@/components/agents/agent-auto-save"
+import { AgentEditorActions } from "@/components/agents/agent-editor-actions"
 import { AgentNameField } from "@/components/agents/agent-name-field"
 import { AgentVersionSelector } from "@/components/agents/agent-version-selector"
 import { PublishAgentForm } from "@/components/agents/publish-agent-form"
@@ -59,6 +60,7 @@ function AgentEditorSkeleton() {
           <Skeleton className="h-9 w-18" />
           <Skeleton className="h-9 w-28" />
           <Skeleton className="h-9 w-23" />
+          <Skeleton className="size-9" />
         </div>
       </header>
       <Skeleton className="size-full rounded-none" />
@@ -66,7 +68,7 @@ function AgentEditorSkeleton() {
   )
 }
 
-function Header() {
+function Header({ agent }: { agent: AgentDetailResponse }) {
   return (
     <header className="flex h-18 shrink-0 items-center gap-2 px-5">
       <SidebarTrigger className="-ml-1" />
@@ -94,6 +96,7 @@ function Header() {
         <TestAgentButton />
         <AgentVersionSelector />
         <PublishAgentForm />
+        <AgentEditorActions agent={agent} />
       </div>
     </header>
   )
@@ -129,7 +132,7 @@ function AgentEditor() {
   return (
     <>
       <title>{name}</title>
-      <Header />
+      <Header agent={agent} />
       <Canvas />
       <FlowSidePanel />
     </>

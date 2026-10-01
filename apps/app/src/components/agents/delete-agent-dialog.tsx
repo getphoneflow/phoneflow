@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import type {
-  AgentsListItem,
+  AgentResponse,
   DeleteAgentResponse,
 } from "@workspace/shared/api/agents/types"
 import {
@@ -19,15 +19,17 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
 
 type DeleteAgentDialogProps = {
-  agent: AgentsListItem
+  agent: Pick<AgentResponse, "id" | "name">
   open: boolean
   onOpenChange: (open: boolean) => void
+  onDeleted?: () => void
 }
 
 export function DeleteAgentDialog({
   agent,
   open,
   onOpenChange,
+  onDeleted,
 }: DeleteAgentDialogProps) {
   const queryClient = useQueryClient()
 
@@ -37,6 +39,7 @@ export function DeleteAgentDialog({
       toast.success(`${agent.name} deleted`)
       onOpenChange(false)
       queryClient.invalidateQueries({ queryKey: ["agents", "list"] })
+      onDeleted?.()
     },
     onError: (error) => {
       toast.error(error.message)

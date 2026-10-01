@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form"
 
 import { updateAgentNameRequestSchema } from "@workspace/shared/api/agents/schemas"
 import type {
-  AgentsListItem,
+  AgentResponse,
   UpdateAgentNameRequest,
   UpdateAgentNameResponse,
 } from "@workspace/shared/api/agents/types"
@@ -30,7 +30,7 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
 
 type EditAgentNameDialogProps = {
-  agent: AgentsListItem
+  agent: Pick<AgentResponse, "id" | "name">
   open: boolean
   onOpenChange: (open: boolean) => void
 }

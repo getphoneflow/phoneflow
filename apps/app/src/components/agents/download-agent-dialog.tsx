@@ -3,7 +3,7 @@ import { useState } from "react"
 
 import type {
   AgentConfigResponse,
-  AgentsListItem,
+  AgentResponse,
   AgentVersionConfigResponse,
   AgentVersionsListResponse,
 } from "@workspace/shared/api/agents/types"
@@ -34,7 +34,7 @@ import {
 import { api } from "@/lib/api"
 
 type DownloadAgentDialogProps = {
-  agent: AgentsListItem
+  agent: Pick<AgentResponse, "id" | "name">
   open: boolean
   onOpenChange: (open: boolean) => void
 }

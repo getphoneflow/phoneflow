@@ -4,6 +4,14 @@ import type { PieSectorShapeProps } from "recharts/types/polar/Pie"
 
 import type { CallListItem } from "@workspace/shared/api/calls/types"
 
+export const segmentColor = {
+  stt: "#22c55e",
+  llm: "#facd02",
+  tts: "#38bdf8",
+  telephony: "#8b5cf6",
+  platform: "#f97316",
+} as const
+
 const usdFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -30,35 +38,35 @@ const costItems = [
     label: "STT",
     modelKey: "sttModel",
     costKey: "sttCost",
-    color: "#22c55e",
+    color: segmentColor.stt,
   },
   {
     key: "llm",
     label: "LLM",
     modelKey: "llmModel",
     costKey: "llmCost",
-    color: "#facd02",
+    color: segmentColor.llm,
   },
   {
     key: "tts",
     label: "TTS",
     modelKey: "ttsModel",
     costKey: "ttsCost",
-    color: "#38bdf8",
+    color: segmentColor.tts,
   },
   {
     key: "telephony",
     label: "Telephony",
     modelKey: null,
     costKey: "telephonyCost",
-    color: "#8b5cf6",
+    color: segmentColor.telephony,
   },
   {
     key: "platform",
     label: "Platform",
     modelKey: null,
     costKey: "platformCost",
-    color: "#f97316",
+    color: segmentColor.platform,
   },
 ] as const
 

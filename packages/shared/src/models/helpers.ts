@@ -34,6 +34,25 @@ function getKindCatalog(kind: ModelKind) {
   return MODELS[kind] as Record<string, CatalogProvider<string>>
 }
 
+export function getModel(
+  kind: ModelKind,
+  modelId: string
+): ModelOption | undefined {
+  const { providerId, modelKey } = splitModelId(modelId)
+  const provider = getKindCatalog(kind)[providerId]
+  const model = provider?.models[modelKey]
+  if (!provider || !model) return
+
+  return {
+    id: modelId,
+    name: model.name,
+    providerId,
+    providerName: provider.name,
+    usdPerMinute: model.usdPerMinute,
+    latencyMs: model.latencyMs,
+  }
+}
+
 export function getModelPricePerMinute(kind: ModelKind, modelId: string) {
   const { providerId, modelKey } = splitModelId(modelId)
   return getKindCatalog(kind)[providerId].models[modelKey].usdPerMinute

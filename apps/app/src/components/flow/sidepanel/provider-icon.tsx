@@ -15,6 +15,7 @@ import { FishAudioIcon } from "@/components/logos/fishaudio"
 import { GeminiIcon } from "@/components/logos/gemini"
 import { GroqIcon } from "@/components/logos/groq"
 import { InworldIcon } from "@/components/logos/inworld"
+import { MetaIcon } from "@/components/logos/meta"
 import { MistralIcon } from "@/components/logos/mistral"
 import { OpenAIIcon } from "@/components/logos/openai"
 import { OvhcloudIcon } from "@/components/logos/ovhcloud"
@@ -39,6 +40,7 @@ const PROVIDER_ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   google: GeminiIcon,
   groq: GroqIcon,
   inworld: InworldIcon,
+  meta: MetaIcon,
   mistral: MistralIcon,
   openai: OpenAIIcon,
   ovhcloud: OvhcloudIcon,

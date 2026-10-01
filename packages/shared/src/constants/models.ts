@@ -459,6 +459,18 @@ export const MODELS: ModelsCatalog = {
         },
       },
     },
+    meta: {
+      name: "Meta",
+      turnTaking: true,
+      fields: ["keyterms"],
+      models: {
+        "muse-voice-transcribe-1.0": {
+          name: "Muse Voice Transcribe",
+          usdPerMinute: 0.003,
+          latencyMs: 250,
+        },
+      },
+    },
     mistral: {
       name: "Mistral",
       fields: ["language"],
@@ -1029,6 +1041,17 @@ export const MODELS: ModelsCatalog = {
           name: "Qwen 3.8 27B",
           usdPerMinute: 0.004,
           latencyMs: 600,
+        },
+      },
+    },
+    meta: {
+      name: "Meta",
+      fields: ["temperature", "maxTokens", "toolChoice"],
+      models: {
+        "muse-spark-1.3": {
+          name: "Muse Spark 1.3",
+          usdPerMinute: 0.003,
+          latencyMs: 620,
         },
       },
     },

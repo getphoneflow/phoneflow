@@ -3,7 +3,6 @@ import type { SVGProps } from "react"
 export function MistralIcon({ ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 256 233" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <title>Mistral</title>
       <path d="M186.18182 0h46.54545v46.54545h-46.54545z" />
       <path fill="#F7D046" d="M209.45454 0h46.54545v46.54545h-46.54545z" />
       <path d="M0 0h46.54545v46.54545H0zM0 46.54545h46.54545V93.0909H0zM0 93.09091h46.54545v46.54545H0zM0 139.63636h46.54545v46.54545H0zM0 186.18182h46.54545v46.54545H0z" />

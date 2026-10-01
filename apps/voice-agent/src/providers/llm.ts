@@ -82,6 +82,16 @@ export function LLM(config: AgentConfig["llm"]): llm.LLM {
         apiKey: env.GROQ_API_KEY,
         temperature: config.temperature,
       })
+    case "meta":
+      return new openai.LLM({
+        model,
+        apiKey: env.META_API_KEY,
+        baseURL: "https://api.meta.ai/v1",
+        temperature: config.temperature,
+        maxCompletionTokens: config.maxTokens,
+        toolChoice: config.toolChoice,
+        reasoningEffort: "low",
+      })
     case "mistral":
       return new mistralai.LLM({
         model,

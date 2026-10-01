@@ -100,7 +100,7 @@ importers:
         version: 3.1118.0
       '@better-auth/stripe':
         specifier: 'catalog:'
-        version: 1.6.29(@better-auth/core@1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.8)(kysely@0.29.5)(nanostores@1.4.2))(better-auth@1.6.29(@opentelemetry/api@1.9.1)(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(better-call@1.4.0(zod@4.4.3))(stripe@22.6.1(@types/node@26.2.0))
+        version: 1.6.29(@better-auth/core@1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.8)(kysely@0.29.5)(nanostores@1.4.2))(better-auth@1.6.29(@opentelemetry/api@1.9.1)(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(better-call@1.4.0(zod@4.4.3))(stripe@22.6.1(@types/node@26.2.0))
       '@hono/node-server':
         specifier: ^2.1.1
         version: 2.1.1(hono@4.13.2)
@@ -118,7 +118,7 @@ importers:
         version: link:../../packages/shared
       better-auth:
         specifier: 'catalog:'
-        version: 1.6.29(@opentelemetry/api@1.9.1)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.6.29(@opentelemetry/api@1.9.1)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))(next@16.3.0(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       bullmq:
         specifier: 'catalog:'
         version: 6.1.0(ioredis@6.0.0)(pg@8.23.0)
@@ -158,7 +158,7 @@ importers:
     dependencies:
       '@better-auth/stripe':
         specifier: 'catalog:'
-        version: 1.6.29(@better-auth/core@1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.8)(kysely@0.29.5)(nanostores@1.4.2))(better-auth@1.6.29(@opentelemetry/api@1.9.1)(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(better-call@1.4.0(zod@4.4.3))(stripe@22.6.1(@types/node@26.2.0))
+        version: 1.6.29(@better-auth/core@1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.8)(kysely@0.29.5)(nanostores@1.4.2))(better-auth@1.6.29(@opentelemetry/api@1.9.1)(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(better-call@1.4.0(zod@4.4.3))(stripe@22.6.1(@types/node@26.2.0))
       '@hookform/resolvers':
         specifier: 5.8.0
         version: 5.8.0(@standard-schema/spec@1.1.0)(ajv-formats@2.1.1(ajv@8.20.0))(ajv@8.20.0)(effect@3.22.1)(react-hook-form@7.85.0(react@19.2.8))(zod@4.4.3)
@@ -188,7 +188,7 @@ importers:
         version: 12.11.3(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(immer@11.1.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       better-auth:
         specifier: 'catalog:'
-        version: 1.6.29(@opentelemetry/api@1.9.1)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.6.29(@opentelemetry/api@1.9.1)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))(next@16.3.0(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       cn:
         specifier: 'catalog:'
         version: 0.2.4
@@ -251,50 +251,53 @@ importers:
   apps/voice-agent:
     dependencies:
       '@livekit/agents':
-        specifier: ^1.7.1
-        version: 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+        specifier: 1.9.0
+        version: 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
       '@livekit/agents-plugin-anthropic':
-        specifier: ^1.7.1
-        version: 1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)
+        specifier: 1.9.0
+        version: 1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)
       '@livekit/agents-plugin-assemblyai':
-        specifier: ^1.7.1
-        version: 1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)
+        specifier: 1.9.0
+        version: 1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)
       '@livekit/agents-plugin-cartesia':
-        specifier: ~1.7.1
-        version: 1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(zod@4.4.3)
+        specifier: 1.9.0
+        version: 1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(zod@4.4.3)
       '@livekit/agents-plugin-cerebras':
-        specifier: ^1.7.1
-        version: 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents-plugin-openai@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(zod@4.4.3))(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(ws@8.21.3)(zod@4.4.3)
+        specifier: 1.9.0
+        version: 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents-plugin-openai@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3))(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(ws@8.21.3)(zod@4.4.3)
       '@livekit/agents-plugin-deepgram':
-        specifier: ~1.7.1
-        version: 1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)
+        specifier: 1.9.0
+        version: 1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)
       '@livekit/agents-plugin-elevenlabs':
-        specifier: ~1.7.1
-        version: 1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)
+        specifier: 1.9.0
+        version: 1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)
       '@livekit/agents-plugin-fishaudio':
-        specifier: ^1.7.1
-        version: 1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)
+        specifier: 1.9.0
+        version: 1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)
       '@livekit/agents-plugin-google':
-        specifier: ^1.7.1
-        version: 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))(@smithy/signature-v4@5.7.3)(ws@8.21.3)(zod@4.4.3)
+        specifier: 1.9.0
+        version: 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))(@smithy/signature-v4@5.7.3)(ws@8.21.3)(zod@4.4.3)
       '@livekit/agents-plugin-inworld':
-        specifier: ~1.7.1
-        version: 1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)
+        specifier: 1.9.0
+        version: 1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)
+      '@livekit/agents-plugin-meta':
+        specifier: 1.9.0
+        version: 1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)
       '@livekit/agents-plugin-mistralai':
-        specifier: ^1.7.1
-        version: 1.7.1(@livekit/agents-plugin-silero@1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34))(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@opentelemetry/api@1.9.1)(@opentelemetry/resources@2.10.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.10.0(@opentelemetry/api@1.9.1))
+        specifier: 1.9.0
+        version: 1.9.0(@livekit/agents-plugin-silero@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35))(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@opentelemetry/api@1.9.1)(@opentelemetry/resources@2.10.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.10.0(@opentelemetry/api@1.9.1))
       '@livekit/agents-plugin-openai':
-        specifier: ^1.7.1
-        version: 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(zod@4.4.3)
+        specifier: 1.9.0
+        version: 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3)
       '@livekit/agents-plugin-silero':
-        specifier: ^1.7.1
-        version: 1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)
+        specifier: 1.9.0
+        version: 1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)
       '@livekit/agents-plugin-soniox':
-        specifier: ^1.7.1
-        version: 1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)
+        specifier: 1.9.0
+        version: 1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)
       '@livekit/agents-plugin-xai':
-        specifier: ~1.7.1
-        version: 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents-plugin-openai@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(zod@4.4.3))(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(zod@4.4.3)
+        specifier: 1.9.0
+        version: 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents-plugin-openai@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3))(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3)
       '@workspace/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -397,7 +400,7 @@ importers:
     devDependencies:
       '@react-email/ui':
         specifier: ^6.9.2
-        version: 6.9.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 6.9.2(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@types/node':
         specifier: 'catalog:'
         version: 26.2.0
@@ -415,7 +418,7 @@ importers:
     dependencies:
       better-auth:
         specifier: 'catalog:'
-        version: 1.6.29(@opentelemetry/api@1.9.1)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 1.6.29(@opentelemetry/api@1.9.1)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))(next@16.3.0(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -1566,8 +1569,20 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
+  '@img/sharp-darwin-arm64@0.35.4':
+    resolution: {integrity: sha512-Uhfl4V4lhP2nbUVF9+hyH1+luj86f1gUFeo8ALYxFoULoU+G87D43BfeMP8XHsk9boxAnCY/bf2EHwhA7MuGsA==}
+    engines: {node: '>=20.9.0'}
+    cpu: [arm64]
+    os: [darwin]
+
   '@img/sharp-darwin-x64@0.35.3':
     resolution: {integrity: sha512-Xo+5uFBtLN0BKqieTxiFzFPQAUlBbbH5iBKyRX/z1JrbnYsHTfKJnUfL8+p2TPXr1pXqao4eeL4Rl144uDpK9w==}
+    engines: {node: '>=20.9.0'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@img/sharp-darwin-x64@0.35.4':
+    resolution: {integrity: sha512-hWniXY3bG5qKpkKrAwPe4y+VTPmf086YQAnkxWh7uA1YrlRouWGa0M0Mxj3ZjnXFkv7/TD1bTy9lGUK26vRvWw==}
     engines: {node: '>=20.9.0'}
     cpu: [x64]
     os: [darwin]
@@ -1577,8 +1592,18 @@ packages:
     engines: {node: '>=20.9.0'}
     os: [freebsd]
 
+  '@img/sharp-freebsd-wasm32@0.35.4':
+    resolution: {integrity: sha512-lIsKw/BU+kjB4eZjxrYrZmwOJYi3Ajrv66iAlBmUPyKc3HpnloevB1g3wxGD9P/5BbQ1brBGl65VRRrCvQDEqA==}
+    engines: {node: '>=20.9.0'}
+    os: [freebsd]
+
   '@img/sharp-libvips-darwin-arm64@1.3.2':
     resolution: {integrity: sha512-9J6ypZFpQBj4YnePGoq/S38w6nz+vqg5WZLrLGY4YuSemdMq47GMLBPO42MzwdGwpg/agZ7xzZcFHa48xlywfg==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@img/sharp-libvips-darwin-arm64@1.3.3':
+    resolution: {integrity: sha512-suTBPTDGrI9WodccaDdwZItTSaBYASlBk1NSfElSHrUfzu3szG6lvIF58+WiFvnfzuK8ZBFS5zE00PxqxnRiPg==}
     cpu: [arm64]
     os: [darwin]
 
@@ -1587,8 +1612,19 @@ packages:
     cpu: [x64]
     os: [darwin]
 
+  '@img/sharp-libvips-darwin-x64@1.3.3':
+    resolution: {integrity: sha512-FVJZ5mITMobmXIz/hPDTw0EintTW5H3WfrxwLqEqjiIihlu+hVRyGrFQ60xl0Lxn7Bt3zdpevPaQi0HEzqz9fw==}
+    cpu: [x64]
+    os: [darwin]
+
   '@img/sharp-libvips-linux-arm64@1.3.2':
     resolution: {integrity: sha512-dqVSFynCox4C/J8kT16V7SIFAns0IjgLwkvYT7p8LQVmJ5OS5b6tI9IGflxTeuBS//zXeFIUbwt5dwxyZ17cnA==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linux-arm64@1.3.3':
+    resolution: {integrity: sha512-0DaL0A6Xu6sQSQFwe4iVCrKWU2cCTItnRsYsCdxAMm9NF6twAA9BKnoqy4hqz4+azQ0JHuA26qiUKsf1XJ/v5A==}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
@@ -1599,8 +1635,20 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  '@img/sharp-libvips-linux-arm@1.3.3':
+    resolution: {integrity: sha512-3rbU4vqXXc3hY/OiXdl52xZvT0F1yEngWfvqudtPJg/KkyiaQw2DRsFrNzpmLvfavbwOq3qXn36GP8obHRULQA==}
+    cpu: [arm]
+    os: [linux]
+    libc: [glibc]
+
   '@img/sharp-libvips-linux-ppc64@1.3.2':
     resolution: {integrity: sha512-3z0NHDxD6n5I9gc05U1eW1AyRm+Gznzq3naMrthPNqE6oYykcogW0l/jfpJdjYnuNl8R7yI9pNbE1XiUeyq0Aw==}
+    cpu: [ppc64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linux-ppc64@1.3.3':
+    resolution: {integrity: sha512-cdn1OvUBwsXhbC0zSzJnNzf5MZ/mTrobawDvNXBTxe8VtqKAm0sRuEY2Evzovb/w9JMk4TvRxqt1mekSuJz64w==}
     cpu: [ppc64]
     os: [linux]
     libc: [glibc]
@@ -1611,8 +1659,20 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  '@img/sharp-libvips-linux-riscv64@1.3.3':
+    resolution: {integrity: sha512-HjPVx7yKz+0lqdhDlTw1tt90wamBoxhiXpvl1XZpJLiHH4RCJ5yDTqH+VlYPv2fwFs89JFw4c1IexYOcQUi4IQ==}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
   '@img/sharp-libvips-linux-s390x@1.3.2':
     resolution: {integrity: sha512-/ABshyj8gCpyIrNXnHn4LorDJ0HHm1VhXPBlxZ8zAtfVPAaSafXPGn+sUSIRiwaSBy0mmFjSjiXI5mkcwdChKQ==}
+    cpu: [s390x]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linux-s390x@1.3.3':
+    resolution: {integrity: sha512-neWLh+3yCNThxnfy3c4BbVBeGgt9aftno+XbT56iK28RgeDs3UOFWviLWlUu0bArYVYJaFDK+RRohbicUNCm8Q==}
     cpu: [s390x]
     os: [linux]
     libc: [glibc]
@@ -1623,8 +1683,20 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  '@img/sharp-libvips-linux-x64@1.3.3':
+    resolution: {integrity: sha512-4vKmvAst9nrowcqquKFAyZJUDolUaIp8uRiN0mWFguJ1IplC9/pitXtlnnlU4aa/eJw3J7i67V+pwUL+wZGdsA==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
   '@img/sharp-libvips-linuxmusl-arm64@1.3.2':
     resolution: {integrity: sha512-zE9EdiUzUmg5mDT5a1rk5fYJ6GWPloTwWBYDS14naqHsL+EaMpDj1AWnpLgh3u0YCORv2Tt50wrcrpYqkP97Kw==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@img/sharp-libvips-linuxmusl-arm64@1.3.3':
+    resolution: {integrity: sha512-Y9kQaLMuNoB0bPYOOdcZMaseNrFpPodIWWMrx+CZyydf2xn68j9WYc6sWWRrDwNkzCQjKYfc68L7jKjGlHMibw==}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
@@ -1635,8 +1707,21 @@ packages:
     os: [linux]
     libc: [musl]
 
+  '@img/sharp-libvips-linuxmusl-x64@1.3.3':
+    resolution: {integrity: sha512-fj8Mv0HHfD1Rr+4I68+3agJynxDWtBFgicTbSOb9Bke6pIwzGcJ+RX/yHjmiEGFMCavY/dxvem7MyNaJF+wDiw==}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
   '@img/sharp-linux-arm64@0.35.3':
     resolution: {integrity: sha512-QgKDspHPnrU+GQ55XPhGwyhC8acLVOOSyAvo1oVfFmrIXLkDNmGWzAfDZ4xK8oSA1qBQrALcHX0G5UZni/SuFQ==}
+    engines: {node: '>=20.9.0'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linux-arm64@0.35.4':
+    resolution: {integrity: sha512-De4jpEnAU8Hd5oT0j1G3uL4ZvTuipVMn7YC6vPaJhy6/7EwEae0SVAoBrUMYQbkLGDm85taVWwuPc1a44LTzCQ==}
     engines: {node: '>=20.9.0'}
     cpu: [arm64]
     os: [linux]
@@ -1649,8 +1734,22 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  '@img/sharp-linux-arm@0.35.4':
+    resolution: {integrity: sha512-7OAS8gI0EReKGVN2HssHlM6umJgxF5VI3xN0p9FA91p/YO+ou5hiNghLdZ5BEHztwaaK5+bLKRf8x/o2L2nk9A==}
+    engines: {node: '>=20.9.0'}
+    cpu: [arm]
+    os: [linux]
+    libc: [glibc]
+
   '@img/sharp-linux-ppc64@0.35.3':
     resolution: {integrity: sha512-sMd8rDxmpLOwv/7N44klFjOD5DUO7FLdjiXDI0hoxYaf7Ar262dQIEkosE98bps+5HPLtp/EvNqeqQtOycP/IA==}
+    engines: {node: '>=20.9.0'}
+    cpu: [ppc64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linux-ppc64@0.35.4':
+    resolution: {integrity: sha512-2oYZJeIl4kCcMGk4ouZVjnkCtFrpQFlNEtJ6GbxzhHQchwH0NH/qEb9ykmOl29dqwMq+JhFdZn+1ak2FKhI9fQ==}
     engines: {node: '>=20.9.0'}
     cpu: [ppc64]
     os: [linux]
@@ -1663,8 +1762,22 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  '@img/sharp-linux-riscv64@0.35.4':
+    resolution: {integrity: sha512-cPbNChoRURAWdebDIHSenxRpgEdy7JkPydSnUxRm9VvKD7m0/xVaR/8Fzlu81pk5nHEvHH87UZUA7cTtwnbJSA==}
+    engines: {node: '>=20.9.0'}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
   '@img/sharp-linux-s390x@0.35.3':
     resolution: {integrity: sha512-KgAxQ0DxpNOq1rG2t5cgTgShJFGSuU7XO45cqC+1NVOuZnP6tlgZRuSYOfNupGkHID0o3cJOsw4DVeJpMovcGw==}
+    engines: {node: '>=20.9.0'}
+    cpu: [s390x]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linux-s390x@0.35.4':
+    resolution: {integrity: sha512-RY0JFY8Fd6RonCBtHz+DvadaPkXDSI1AUn6yWL9TipqkZ1vY8w8evqdgyDFnkm4/K1ve1TvZiaePP5oSd4+WVQ==}
     engines: {node: '>=20.9.0'}
     cpu: [s390x]
     os: [linux]
@@ -1677,8 +1790,22 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  '@img/sharp-linux-x64@0.35.4':
+    resolution: {integrity: sha512-9qvvEAuk8k89TfWUoX2htWjbAMX8p+NxCppjpcg5k6xMsjhBQPTsoIh36h9Qde4WRuGpJeYnOjdosDn/cnv+OA==}
+    engines: {node: '>=20.9.0'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
   '@img/sharp-linuxmusl-arm64@0.35.3':
     resolution: {integrity: sha512-Vz0iQjzzcSX3HCbfwFfCSG/9SCIqyO0mH2sXyiHaAYfBk0cRsCWXRyQYX0ovCK/PAQBbTzQ0dsPQHh5MAFL59w==}
+    engines: {node: '>=20.9.0'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@img/sharp-linuxmusl-arm64@0.35.4':
+    resolution: {integrity: sha512-KB5jxpfWQTr0nc3xdHtWChdbifHrBGsd2SM62Eyxrl8afikm+f5qGBU75SJIZBT/S1MC8XyacdlXBMSWq6OURA==}
     engines: {node: '>=20.9.0'}
     cpu: [arm64]
     os: [linux]
@@ -1691,8 +1818,19 @@ packages:
     os: [linux]
     libc: [musl]
 
+  '@img/sharp-linuxmusl-x64@0.35.4':
+    resolution: {integrity: sha512-f+eZJZIQNEEd26RPSW+76chwOf1XtA2Y/O+5ocVyLliHkeih3e+jhLVBdNTd2rS3IbNXK8+ug93Vf5ZXtF5Lxg==}
+    engines: {node: '>=20.9.0'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
   '@img/sharp-wasm32@0.35.3':
     resolution: {integrity: sha512-cZ0XkcYGpHZkqW6iCkqTcmUC0CD9DhD5d/qeZlZkfRBn6GnHniZXLUo5+9xw8Iv76YE6LQFN9YNBlKREcCG76w==}
+    engines: {node: '>=20.9.0'}
+
+  '@img/sharp-wasm32@0.35.4':
+    resolution: {integrity: sha512-zQnl4Kwp7Q6NHsENtU2T/00Zi+w3AQNwz3+UaTyVBy2FpXrzXzGjndpK61onhZjRtRpQXxCTeqw19bVyXOh7jA==}
     engines: {node: '>=20.9.0'}
 
   '@img/sharp-webcontainers-wasm32@0.35.3':
@@ -1700,8 +1838,19 @@ packages:
     engines: {node: '>=20.9.0'}
     cpu: [wasm32]
 
+  '@img/sharp-webcontainers-wasm32@0.35.4':
+    resolution: {integrity: sha512-ESfNkywmCfPNyaZjxooddJQiQ+l/nTpGEOGthxiLnIHXC/CmcBixnfwUleX9mCz9ovrUUvKMap/pm8RYbzfwaA==}
+    engines: {node: '>=20.9.0'}
+    cpu: [wasm32]
+
   '@img/sharp-win32-arm64@0.35.3':
     resolution: {integrity: sha512-4bPwFdMbeC4JQ8L8LOyWp6nsHcboP5fxkp6iPOXz2Vg49R42TuMs2whkJ5OAP4/Ul035qOzy0AecOF9VOscn4w==}
+    engines: {node: '>=20.9.0'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@img/sharp-win32-arm64@0.35.4':
+    resolution: {integrity: sha512-iNdlBX9gLVvqe2I3uIJSIKTq6wckP/DYxZtcqxm09x5Gi24DnFBmPAWZmr60ZyYMG0xlzo6goG3670ar+RXvRw==}
     engines: {node: '>=20.9.0'}
     cpu: [arm64]
     os: [win32]
@@ -1712,8 +1861,20 @@ packages:
     cpu: [ia32]
     os: [win32]
 
+  '@img/sharp-win32-ia32@0.35.4':
+    resolution: {integrity: sha512-kqRsbaa5CS6KHlpxnN7WhE6vAAugXyZButpRdvDWetlv6Qv4N9WTcrWzF7tXfB9T7MsoadqdI8hmwLq6UlLvtw==}
+    engines: {node: ^20.9.0}
+    cpu: [ia32]
+    os: [win32]
+
   '@img/sharp-win32-x64@0.35.3':
     resolution: {integrity: sha512-D4y1vNeZrIIJCN+uHaWVtH86B+aCrdMYYjicy9pXHvbGZeGYLLSd3wdVuC37FxVXlU1ARsk84eKWfWMXGYEqvA==}
+    engines: {node: '>=20.9.0'}
+    cpu: [x64]
+    os: [win32]
+
+  '@img/sharp-win32-x64@0.35.4':
+    resolution: {integrity: sha512-XtmnYhBcrORsJ4XJngyzr/EWP0hRZLAZRFaApdKuviyqF78+ylxh2y06ZmtULAMOnObJ3ucpN0AcwSWnMowTRg==}
     engines: {node: '>=20.9.0'}
     cpu: [x64]
     os: [win32]
@@ -1741,100 +1902,106 @@ packages:
     resolution: {integrity: sha512-hloP58zRVCRSpgDxmqCWJNlizAlUgJFqG2ypq79DCvyv9tHjRYMDOcPFjzfl/A1/YxDvRCZz8wvZvmapQnKwFQ==}
     engines: {node: '>=12'}
 
-  '@livekit/agents-plugin-anthropic@1.7.1':
-    resolution: {integrity: sha512-MSkBVEjL5XVH/JJSeTuh7e3WnywDHeA2Gj1cAs7LFMh5Bs+OfmkQu+Scj4cijSUUOEJA0sbc+bKbxP1lG9tpcg==}
+  '@livekit/agents-plugin-anthropic@1.9.0':
+    resolution: {integrity: sha512-PsIfIApQwtiZiuwlJ5RtHta11Ev50vFCzmiP8yqlh0NZ32xqHcahhHKU90uPFbBrTXX0iQjWFOfccUwf9Co6Wg==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
+      '@livekit/agents': 1.9.0
       '@livekit/rtc-node': ^0.13.34
 
-  '@livekit/agents-plugin-assemblyai@1.7.1':
-    resolution: {integrity: sha512-KgSy6/DGXosrSlHGYW3tTENBE4RA82vbWsQCODK8acilyx6Mcj7EqJH+x44X3hUYyDCQ8mYlH6J8GtSbUtDWcg==}
+  '@livekit/agents-plugin-assemblyai@1.9.0':
+    resolution: {integrity: sha512-aAFSbCXwI55DsuHzo0nmp3DKLvD//KjV00wglJ4ur4Yw06ZoAHKLmVAtu8Ut+aj+X314A0rW+/YpfM/PpbTlmA==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
+      '@livekit/agents': 1.9.0
       '@livekit/rtc-node': ^0.13.34
 
-  '@livekit/agents-plugin-cartesia@1.7.1':
-    resolution: {integrity: sha512-AzO6gIeTEJYNPrlF4U5DtoNghHABn5zWFpDl+K/xTSzkS6zJdVcpdz4WZBvPlfBa2Vf5i/WbxRmS1zaHqKFTAw==}
+  '@livekit/agents-plugin-cartesia@1.9.0':
+    resolution: {integrity: sha512-wRfIkrUtVXzixU/PcsjEMWQMdLX/muTVFlIo8SbTm9p528FM++9b/VP+bOIj7O4+U+R/mi5R1C21tCDROeGamA==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
+      '@livekit/agents': 1.9.0
       '@livekit/rtc-node': ^0.13.34
       zod: ^3.25.76 || ^4.1.8
 
-  '@livekit/agents-plugin-cerebras@1.7.1':
-    resolution: {integrity: sha512-wc2dJkCWKH0jpTrZ5wRUjbVTXlv/OV5u4CqQdmYYqbroWW0H5DAqr4GGF7hFtYFKKHhg1OX/6W4yrnG9NmEpTQ==}
+  '@livekit/agents-plugin-cerebras@1.9.0':
+    resolution: {integrity: sha512-7y+QhJFQbtG3k4Z4ouxKSbeL9tHgKLU1lVDLtN9BJ8uBoxNC25+heUXLiuXsSqYy6OBHUsrLlqllWIyr/VcoGg==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
-      '@livekit/agents-plugin-openai': 1.7.1
+      '@livekit/agents': 1.9.0
+      '@livekit/agents-plugin-openai': 1.9.0
       '@livekit/rtc-node': ^0.13.34
 
-  '@livekit/agents-plugin-deepgram@1.7.1':
-    resolution: {integrity: sha512-sL5zZWA3Ab9WZgx/8J7tSPwZusW9AIvzTaxJ+sw1mAdEcDaO6ISyme4UrtYlEF6TQRsLmdLX9fYNVJceLmOcMA==}
+  '@livekit/agents-plugin-deepgram@1.9.0':
+    resolution: {integrity: sha512-BbP1RCaowKq4BKfxVjxqorEkuU9jwBpwW0bwWiZEigHLwwoR5vwTi6QoYr352oVzDM5yJS0QqC7aBbe18xkjJA==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
+      '@livekit/agents': 1.9.0
       '@livekit/rtc-node': ^0.13.34
 
-  '@livekit/agents-plugin-elevenlabs@1.7.1':
-    resolution: {integrity: sha512-WykqtWbqnFs46fA3j39XfdtmhoxskZ+1lyqqIBCLbn52yodOn2fPasYKLdTV+igTBocrvzOH5t6e3z7AfdxDAA==}
+  '@livekit/agents-plugin-elevenlabs@1.9.0':
+    resolution: {integrity: sha512-lV23L73l22dgMFKbxWVowmk2OEDw+fH2omqbNMunGPneGiy4NmTPDq8Pf1tWsKn+BeasbbmlLfovQKA5BxCdyw==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
+      '@livekit/agents': 1.9.0
       '@livekit/rtc-node': ^0.13.34
 
-  '@livekit/agents-plugin-fishaudio@1.7.1':
-    resolution: {integrity: sha512-9l1+zwgDqoPrmATkJmTLN0KEWnfMBUc4aNEbgfpj1J2JuIEr8dknFeaXtjP+zEJTnZGKXtOsipWm6RZDYxQCDA==}
+  '@livekit/agents-plugin-fishaudio@1.9.0':
+    resolution: {integrity: sha512-fDSSuS3flK6u3EDNDna+tpuDQL2F6fVPJ9VXjw/mdAryNnfErr1G6oJmrq/u1XXnzm3WblGzFIZW7jTpnYn6pA==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
+      '@livekit/agents': 1.9.0
       '@livekit/rtc-node': ^0.13.34
 
-  '@livekit/agents-plugin-google@1.7.1':
-    resolution: {integrity: sha512-MOAmDFEtgrBLMHvLNG69dCfAbAXkElYibFrXHDHmwUQfnY4v6QTY19SMWQHODSDQwJJeMJVXFltW3poWfEnofA==}
+  '@livekit/agents-plugin-google@1.9.0':
+    resolution: {integrity: sha512-Xc0DllOnVOtRm6B9ztN8qr/b3N8xxLQUHpfEwZ3PrJA8P2SUWb8Fhdvxqh+876T3RRxRXffLLvMjQAt9ZS8evg==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
+      '@livekit/agents': 1.9.0
       '@livekit/rtc-node': ^0.13.34
 
-  '@livekit/agents-plugin-inworld@1.7.1':
-    resolution: {integrity: sha512-WWnz1IKCJFy58a9fNPjyQKD4oAPr3ErhT3uQpP9tRDodNAwJd3FFwiJO2LlwUhtgSANsEo1Ox1Hl1Wej1j/qqw==}
+  '@livekit/agents-plugin-inworld@1.9.0':
+    resolution: {integrity: sha512-CoBjvpNVYOyijDsXyKS2yROj10ZT0MrV4lQYnLZSrbFejiQWPLMwrNgwNrzI3g7ratiHkNfjflnHC0mO4UvIaw==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
+      '@livekit/agents': 1.9.0
       '@livekit/rtc-node': ^0.13.34
 
-  '@livekit/agents-plugin-mistralai@1.7.1':
-    resolution: {integrity: sha512-f9BRi8viCECgozMeLVsyUedJEw9WDoLmk2160Rk86xBLGMcLlH8aFQxwTsR43iZuWobFzTp4uCqv9CF9ERkkmg==}
+  '@livekit/agents-plugin-meta@1.9.0':
+    resolution: {integrity: sha512-iHwf4jtwlaeviwj+PNtQZqmHmnwMbnsr9ellaL5mXoNUOGNaFdC6GsI3VIpJ+Cp9hclqBclCUBMDCtnKlj9XBw==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
-      '@livekit/agents-plugin-silero': 1.7.1
+      '@livekit/agents': 1.9.0
+      '@livekit/rtc-node': ^0.13.34
+
+  '@livekit/agents-plugin-mistralai@1.9.0':
+    resolution: {integrity: sha512-yRjJhYtpJPMjFQ6gAQnQG7L0c3/0WnfEi0/oK8tSmNVmJg863siT/06tBBTuwhYn+PHJLX6h4iCw4naV7NHsJA==}
+    peerDependencies:
+      '@livekit/agents': 1.9.0
+      '@livekit/agents-plugin-silero': 1.9.0
       '@livekit/rtc-node': ^0.13.34
     peerDependenciesMeta:
       '@livekit/agents-plugin-silero':
         optional: true
 
-  '@livekit/agents-plugin-openai@1.7.1':
-    resolution: {integrity: sha512-BCvp+Mx2ZkrxQIAJgbvmr/xtkQWNIPVxY2tLHiMCDo7QhOmho2dgYrZ5Mk9/5VoBROubfdRz6cguKDQcBQHVAg==}
+  '@livekit/agents-plugin-openai@1.9.0':
+    resolution: {integrity: sha512-KMO9v/OlQwl7Ua8SQ4iQLuuApCQy7FY2baDRkuyRaVt89zs4zNTO/li387G22U0hmIcTNZVv6yaFEP+OmgCceQ==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
+      '@livekit/agents': 1.9.0
       '@livekit/rtc-node': ^0.13.34
       zod: ^3.25.76 || ^4.1.8
 
-  '@livekit/agents-plugin-silero@1.7.1':
-    resolution: {integrity: sha512-psdf0OLfMvYwVyM9kksI/lzqhYOrIQU0dJ2yPbn+zoW13fCFcM1hDB3JggS9WLygZg0Y7pnhRL/XG0Oa8bdRiA==}
+  '@livekit/agents-plugin-silero@1.9.0':
+    resolution: {integrity: sha512-V0zh+X1K2GVXPTZb+31OpcDaoEF2wGe8cVbJVzkDoodp8eS4oHVPoaM+0RiwkGXcHAmpYjOD06Ksrv9GsJrqXA==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
+      '@livekit/agents': 1.9.0
       '@livekit/rtc-node': ^0.13.34
 
-  '@livekit/agents-plugin-soniox@1.7.1':
-    resolution: {integrity: sha512-EdYPrH9+Qturrmuf8Xr0AKnmEK4u0xeZMJG4YcK7iKJhN9MZFZf8UUa5PtlzGSKp0CsHXtVpRLN/pNtoi38tkA==}
+  '@livekit/agents-plugin-soniox@1.9.0':
+    resolution: {integrity: sha512-GSsd+yJWy9vw0pyrtsUUgb2ntLSfn+6OOuCQX6h5a/oMQ/6Wv9AbamlmUD5Y49foQaBkCql2YO6efVzUx8yxbw==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
+      '@livekit/agents': 1.9.0
       '@livekit/rtc-node': ^0.13.34
 
-  '@livekit/agents-plugin-xai@1.7.1':
-    resolution: {integrity: sha512-jfLS1gJ4zUcyL1awakp47g8iR6fDJZAuY0LIY6G0Yucxiavgmwab+fl1T0vNe47rl8OP4Z6Jf66Z88c8P1Elkg==}
+  '@livekit/agents-plugin-xai@1.9.0':
+    resolution: {integrity: sha512-9GAvTJLRJZG9r/rcHW2nrqBYfcjv1NhpILTa2ikRmgnrzU8iF/10YttZyLGgeg92E+5VDmURXkseqpCP1Z/Tlw==}
     peerDependencies:
-      '@livekit/agents': 1.7.1
-      '@livekit/agents-plugin-openai': 1.7.1
+      '@livekit/agents': 1.9.0
+      '@livekit/agents-plugin-openai': 1.9.0
       '@livekit/rtc-node': ^0.13.34
 
-  '@livekit/agents@1.7.1':
-    resolution: {integrity: sha512-k2vfU+xp7MDrUERJ1REbn18Te8hfJxwJ/SkR/RPGiNvX3udW4LvfBysmYMFVe3oLYHjRBplfy7bGJvGqvtLxwA==}
+  '@livekit/agents@1.9.0':
+    resolution: {integrity: sha512-OBpai/S+6sf41N/ytFE7sZFY1LI2zUckf7LwNrIHX/f7TclPGEniGOA6c16YILmmw4dsgL0gy0oyqExuR1FNPw==}
     hasBin: true
     peerDependencies:
       '@livekit/rtc-node': ^0.13.34
@@ -1962,8 +2129,8 @@ packages:
     resolution: {integrity: sha512-ZxkCQlsfTG7Eqi6KBXulEWJBUxeRVRYqCc795CsmKsGfqmBX5gE5CnTiynN8fFdzSGwApaVogeGSB6JszCf/Xw==}
     engines: {node: '>= 18'}
 
-  '@livekit/rtc-node@0.13.34':
-    resolution: {integrity: sha512-22EWklyNUGJ5EamOcC/eUnLy0Gu3SpzxzUkuXCixCequwNDmj8PGjKgtpWThlqTWkzvh9xsAKmQoDWhlXhkrzA==}
+  '@livekit/rtc-node@0.13.35':
+    resolution: {integrity: sha512-ZRkVKie0/6sfKX3J4SrEaQeRJ4pdBi4DlweQ61dAvJqvRIf5NoJCX8SVimmJKwvyLYppbqANezzFGJpU2IxalA==}
     engines: {node: '>= 18'}
 
   '@livekit/throws-transformer@0.1.8':
@@ -2139,6 +2306,18 @@ packages:
 
   '@opentelemetry/exporter-logs-otlp-proto@0.220.0':
     resolution: {integrity: sha512-8LZAxdJ0ENDAFwr4j0oY35mHBltiSzvlhdQAPGiC7p9VnxtuSq4SW1gfBAdW6t6hiQG6OwUl8w7KHaOdJPKHWg==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': ^1.3.0
+
+  '@opentelemetry/exporter-metrics-otlp-http@0.220.0':
+    resolution: {integrity: sha512-Yqt3RBw/bRVncaE9qIIhk4WfjbAQqXuP9FgAaU+IKPndnLEp/cUqZlSC324+bpmduRz7DoTjig8Ub0PeILWXUA==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': ^1.3.0
+
+  '@opentelemetry/exporter-metrics-otlp-proto@0.220.0':
+    resolution: {integrity: sha512-lyO+IQBdSvqHN/ZOW/OzrSWemtfD+HgWngn+HBNLhjy0YrCQQTz0OE/kSekH2Pl340dn9DWzhqHdz5Eftr+HLA==}
     engines: {node: ^18.19.0 || >=20.6.0}
     peerDependencies:
       '@opentelemetry/api': ^1.3.0
@@ -3920,8 +4099,8 @@ packages:
   fast-copy@3.0.2:
     resolution: {integrity: sha512-dl0O9Vhju8IrcLndv2eU4ldt1ftXMqqfgN4H1cpmGV7P6jeB9FwpN9a2c8DPGE1Ys88rNUJVYDHq73CGAGOPfQ==}
 
-  fast-copy@4.0.4:
-    resolution: {integrity: sha512-eVAiWVNPSEGIzDl5yPuLrx8fNMogScXvD9xp1Kzd41FjRIz2I3sSIcxsFeM5EzFfHAfobdvs8ZySffUopljvIA==}
+  fast-copy@4.1.1:
+    resolution: {integrity: sha512-A4QTJmuiztpGtr6AMeJts9R4hbj2ZBUwtOaKrG6rw2y7t6+IaJKjz5M3XDs8BUznxDH43FVc6A0y/gWlMl4UtA==}
 
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
@@ -5414,6 +5593,15 @@ packages:
       '@types/node':
         optional: true
 
+  sharp@0.35.4:
+    resolution: {integrity: sha512-n++8XWcj+jCOr2IOl7h8LbKnGBDY4aPbmprMONBNFdn0ImXqpGVv5zliDs0V9HbmbCQLpbuo2ej9rAoOQTvMDA==}
+    engines: {node: '>=20.9.0'}
+    peerDependencies:
+      '@types/node': '*'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
     engines: {node: '>=8'}
@@ -6391,10 +6579,10 @@ snapshots:
       '@better-auth/core': 1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.8)(kysely@0.29.5)(nanostores@1.4.2)
       '@better-auth/utils': 0.4.2
 
-  '@better-auth/stripe@1.6.29(@better-auth/core@1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.8)(kysely@0.29.5)(nanostores@1.4.2))(better-auth@1.6.29(@opentelemetry/api@1.9.1)(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(better-call@1.4.0(zod@4.4.3))(stripe@22.6.1(@types/node@26.2.0))':
+  '@better-auth/stripe@1.6.29(@better-auth/core@1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.8)(kysely@0.29.5)(nanostores@1.4.2))(better-auth@1.6.29(@opentelemetry/api@1.9.1)(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(better-call@1.4.0(zod@4.4.3))(stripe@22.6.1(@types/node@26.2.0))':
     dependencies:
       '@better-auth/core': 1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.8)(kysely@0.29.5)(nanostores@1.4.2)
-      better-auth: 1.6.29(@opentelemetry/api@1.9.1)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      better-auth: 1.6.29(@opentelemetry/api@1.9.1)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))(next@16.3.0(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       better-call: 1.4.0(zod@4.4.3)
       defu: 6.1.7
       stripe: 22.6.1(@types/node@26.2.0)
@@ -6857,9 +7045,19 @@ snapshots:
       '@img/sharp-libvips-darwin-arm64': 1.3.2
     optional: true
 
+  '@img/sharp-darwin-arm64@0.35.4':
+    optionalDependencies:
+      '@img/sharp-libvips-darwin-arm64': 1.3.3
+    optional: true
+
   '@img/sharp-darwin-x64@0.35.3':
     optionalDependencies:
       '@img/sharp-libvips-darwin-x64': 1.3.2
+    optional: true
+
+  '@img/sharp-darwin-x64@0.35.4':
+    optionalDependencies:
+      '@img/sharp-libvips-darwin-x64': 1.3.3
     optional: true
 
   '@img/sharp-freebsd-wasm32@0.35.3':
@@ -6867,34 +7065,69 @@ snapshots:
       '@img/sharp-wasm32': 0.35.3
     optional: true
 
+  '@img/sharp-freebsd-wasm32@0.35.4':
+    dependencies:
+      '@img/sharp-wasm32': 0.35.4
+    optional: true
+
   '@img/sharp-libvips-darwin-arm64@1.3.2':
+    optional: true
+
+  '@img/sharp-libvips-darwin-arm64@1.3.3':
     optional: true
 
   '@img/sharp-libvips-darwin-x64@1.3.2':
     optional: true
 
+  '@img/sharp-libvips-darwin-x64@1.3.3':
+    optional: true
+
   '@img/sharp-libvips-linux-arm64@1.3.2':
+    optional: true
+
+  '@img/sharp-libvips-linux-arm64@1.3.3':
     optional: true
 
   '@img/sharp-libvips-linux-arm@1.3.2':
     optional: true
 
+  '@img/sharp-libvips-linux-arm@1.3.3':
+    optional: true
+
   '@img/sharp-libvips-linux-ppc64@1.3.2':
+    optional: true
+
+  '@img/sharp-libvips-linux-ppc64@1.3.3':
     optional: true
 
   '@img/sharp-libvips-linux-riscv64@1.3.2':
     optional: true
 
+  '@img/sharp-libvips-linux-riscv64@1.3.3':
+    optional: true
+
   '@img/sharp-libvips-linux-s390x@1.3.2':
+    optional: true
+
+  '@img/sharp-libvips-linux-s390x@1.3.3':
     optional: true
 
   '@img/sharp-libvips-linux-x64@1.3.2':
     optional: true
 
+  '@img/sharp-libvips-linux-x64@1.3.3':
+    optional: true
+
   '@img/sharp-libvips-linuxmusl-arm64@1.3.2':
     optional: true
 
+  '@img/sharp-libvips-linuxmusl-arm64@1.3.3':
+    optional: true
+
   '@img/sharp-libvips-linuxmusl-x64@1.3.2':
+    optional: true
+
+  '@img/sharp-libvips-linuxmusl-x64@1.3.3':
     optional: true
 
   '@img/sharp-linux-arm64@0.35.3':
@@ -6902,9 +7135,19 @@ snapshots:
       '@img/sharp-libvips-linux-arm64': 1.3.2
     optional: true
 
+  '@img/sharp-linux-arm64@0.35.4':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-arm64': 1.3.3
+    optional: true
+
   '@img/sharp-linux-arm@0.35.3':
     optionalDependencies:
       '@img/sharp-libvips-linux-arm': 1.3.2
+    optional: true
+
+  '@img/sharp-linux-arm@0.35.4':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-arm': 1.3.3
     optional: true
 
   '@img/sharp-linux-ppc64@0.35.3':
@@ -6912,9 +7155,19 @@ snapshots:
       '@img/sharp-libvips-linux-ppc64': 1.3.2
     optional: true
 
+  '@img/sharp-linux-ppc64@0.35.4':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-ppc64': 1.3.3
+    optional: true
+
   '@img/sharp-linux-riscv64@0.35.3':
     optionalDependencies:
       '@img/sharp-libvips-linux-riscv64': 1.3.2
+    optional: true
+
+  '@img/sharp-linux-riscv64@0.35.4':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-riscv64': 1.3.3
     optional: true
 
   '@img/sharp-linux-s390x@0.35.3':
@@ -6922,9 +7175,19 @@ snapshots:
       '@img/sharp-libvips-linux-s390x': 1.3.2
     optional: true
 
+  '@img/sharp-linux-s390x@0.35.4':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-s390x': 1.3.3
+    optional: true
+
   '@img/sharp-linux-x64@0.35.3':
     optionalDependencies:
       '@img/sharp-libvips-linux-x64': 1.3.2
+    optional: true
+
+  '@img/sharp-linux-x64@0.35.4':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-x64': 1.3.3
     optional: true
 
   '@img/sharp-linuxmusl-arm64@0.35.3':
@@ -6932,12 +7195,27 @@ snapshots:
       '@img/sharp-libvips-linuxmusl-arm64': 1.3.2
     optional: true
 
+  '@img/sharp-linuxmusl-arm64@0.35.4':
+    optionalDependencies:
+      '@img/sharp-libvips-linuxmusl-arm64': 1.3.3
+    optional: true
+
   '@img/sharp-linuxmusl-x64@0.35.3':
     optionalDependencies:
       '@img/sharp-libvips-linuxmusl-x64': 1.3.2
     optional: true
 
+  '@img/sharp-linuxmusl-x64@0.35.4':
+    optionalDependencies:
+      '@img/sharp-libvips-linuxmusl-x64': 1.3.3
+    optional: true
+
   '@img/sharp-wasm32@0.35.3':
+    dependencies:
+      '@emnapi/runtime': 1.11.3
+    optional: true
+
+  '@img/sharp-wasm32@0.35.4':
     dependencies:
       '@emnapi/runtime': 1.11.3
     optional: true
@@ -6947,13 +7225,27 @@ snapshots:
       '@img/sharp-wasm32': 0.35.3
     optional: true
 
+  '@img/sharp-webcontainers-wasm32@0.35.4':
+    dependencies:
+      '@img/sharp-wasm32': 0.35.4
+    optional: true
+
   '@img/sharp-win32-arm64@0.35.3':
+    optional: true
+
+  '@img/sharp-win32-arm64@0.35.4':
     optional: true
 
   '@img/sharp-win32-ia32@0.35.3':
     optional: true
 
+  '@img/sharp-win32-ia32@0.35.4':
+    optional: true
+
   '@img/sharp-win32-x64@0.35.3':
+    optional: true
+
+  '@img/sharp-win32-x64@0.35.4':
     optional: true
 
   '@ioredis/commands@2.0.0': {}
@@ -6981,38 +7273,38 @@ snapshots:
     dependencies:
       jsbi: 4.3.2
 
-  '@livekit/agents-plugin-anthropic@1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)':
+  '@livekit/agents-plugin-anthropic@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)':
     dependencies:
       '@anthropic-ai/sdk': 0.33.1
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
     transitivePeerDependencies:
       - encoding
 
-  '@livekit/agents-plugin-assemblyai@1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)':
+  '@livekit/agents-plugin-assemblyai@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
       ws: 8.21.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@livekit/agents-plugin-cartesia@1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(zod@4.4.3)':
+  '@livekit/agents-plugin-cartesia@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(zod@4.4.3)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
       ws: 8.21.3
       zod: 4.4.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@livekit/agents-plugin-cerebras@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents-plugin-openai@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(zod@4.4.3))(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(ws@8.21.3)(zod@4.4.3)':
+  '@livekit/agents-plugin-cerebras@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents-plugin-openai@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3))(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(ws@8.21.3)(zod@4.4.3)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
-      '@livekit/agents-plugin-openai': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(zod@4.4.3)
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/agents-plugin-openai': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
       '@msgpack/msgpack': 3.1.3
       openai: 6.49.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.3)(zod@4.4.3)
     transitivePeerDependencies:
@@ -7022,41 +7314,41 @@ snapshots:
       - ws
       - zod
 
-  '@livekit/agents-plugin-deepgram@1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)':
+  '@livekit/agents-plugin-deepgram@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
       ws: 8.21.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@livekit/agents-plugin-elevenlabs@1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)':
+  '@livekit/agents-plugin-elevenlabs@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
       '@livekit/mutex': 1.1.1
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/rtc-node': 0.13.35
       ws: 8.21.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@livekit/agents-plugin-fishaudio@1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)':
+  '@livekit/agents-plugin-fishaudio@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
       '@msgpack/msgpack': 3.1.3
       ws: 8.21.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@livekit/agents-plugin-google@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))(@smithy/signature-v4@5.7.3)(ws@8.21.3)(zod@4.4.3)':
+  '@livekit/agents-plugin-google@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))(@smithy/signature-v4@5.7.3)(ws@8.21.3)(zod@4.4.3)':
     dependencies:
       '@google/genai': 2.20.0(@modelcontextprotocol/sdk@1.30.0(zod@4.4.3))
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
       '@livekit/mutex': 1.1.1
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/rtc-node': 0.13.35
       '@types/json-schema': 7.0.15
       google-auth-library: 10.9.1
       json-schema: 0.4.0
@@ -7072,22 +7364,31 @@ snapshots:
       - ws
       - zod
 
-  '@livekit/agents-plugin-inworld@1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)':
+  '@livekit/agents-plugin-inworld@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
       ws: 8.21.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@livekit/agents-plugin-mistralai@1.7.1(@livekit/agents-plugin-silero@1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34))(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@opentelemetry/api@1.9.1)(@opentelemetry/resources@2.10.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.10.0(@opentelemetry/api@1.9.1))':
+  '@livekit/agents-plugin-meta@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
+      ws: 8.21.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  '@livekit/agents-plugin-mistralai@1.9.0(@livekit/agents-plugin-silero@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35))(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@opentelemetry/api@1.9.1)(@opentelemetry/resources@2.10.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.10.0(@opentelemetry/api@1.9.1))':
+    dependencies:
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
       '@mistralai/mistralai': 2.6.4(@opentelemetry/api@1.9.1)(@opentelemetry/resources@2.10.0(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.10.0(@opentelemetry/api@1.9.1))
     optionalDependencies:
-      '@livekit/agents-plugin-silero': 1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)
+      '@livekit/agents-plugin-silero': 1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)
     transitivePeerDependencies:
       - '@opentelemetry/api'
       - '@opentelemetry/exporter-trace-otlp-http'
@@ -7096,11 +7397,11 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@livekit/agents-plugin-openai@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(zod@4.4.3)':
+  '@livekit/agents-plugin-openai@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
       '@livekit/mutex': 1.1.1
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/rtc-node': 0.13.35
       openai: 6.49.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.3)(zod@4.4.3)
       ws: 8.21.3
       zod: 4.4.3
@@ -7111,30 +7412,30 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@livekit/agents-plugin-silero@1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)':
+  '@livekit/agents-plugin-silero@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
       onnxruntime-node: 1.24.3
       ws: 8.21.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@livekit/agents-plugin-soniox@1.7.1(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)':
+  '@livekit/agents-plugin-soniox@1.9.0(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
       ws: 8.21.3
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@livekit/agents-plugin-xai@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents-plugin-openai@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(zod@4.4.3))(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(zod@4.4.3)':
+  '@livekit/agents-plugin-xai@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents-plugin-openai@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3))(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3)':
     dependencies:
-      '@livekit/agents': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
-      '@livekit/agents-plugin-openai': 1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(zod@4.4.3)
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/agents': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)
+      '@livekit/agents-plugin-openai': 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3)
+      '@livekit/rtc-node': 0.13.35
       openai: 6.49.0(@aws-sdk/credential-provider-node@3.972.81)(@smithy/signature-v4@5.7.3)(ws@8.21.3)(zod@4.4.3)
       ws: 8.21.3
     transitivePeerDependencies:
@@ -7145,25 +7446,27 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@livekit/agents@1.7.1(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.34)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)':
+  '@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3)':
     dependencies:
       '@bufbuild/protobuf': 1.10.1
       '@livekit/av': 10.0.0
       '@livekit/local-inference': 0.2.7
       '@livekit/mutex': 1.1.1
       '@livekit/protocol': 1.50.4
-      '@livekit/rtc-node': 0.13.34
+      '@livekit/rtc-node': 0.13.35
       '@livekit/throws-transformer': 0.1.8(typescript@7.0.2)
       '@livekit/typed-emitter': 3.0.0
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/api-logs': 0.220.0
       '@opentelemetry/core': 2.10.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/exporter-logs-otlp-proto': 0.220.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/exporter-metrics-otlp-proto': 0.220.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/exporter-trace-otlp-proto': 0.220.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/instrumentation-pino': 0.66.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/otlp-exporter-base': 0.220.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/resources': 2.10.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-logs': 0.220.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/sdk-metrics': 2.9.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-trace-base': 2.10.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-trace-node': 2.10.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/semantic-conventions': 1.43.0
@@ -7180,7 +7483,7 @@ snapshots:
       pidusage: 4.0.1
       pino: 8.21.0
       pino-pretty: 11.3.0
-      sharp: 0.35.3(@types/node@26.2.0)
+      sharp: 0.35.4(@types/node@26.2.0)
       ws: 8.21.3
       zod: 4.4.3
       zod-to-json-schema: 3.25.2(zod@4.4.3)
@@ -7293,7 +7596,7 @@ snapshots:
       '@livekit/rtc-ffi-bindings-linux-x64-gnu': 0.12.73
       '@livekit/rtc-ffi-bindings-win32-x64-msvc': 0.12.73
 
-  '@livekit/rtc-node@0.13.34':
+  '@livekit/rtc-node@0.13.35':
     dependencies:
       '@datastructures-js/deque': 1.0.8
       '@livekit/mutex': 1.1.1
@@ -7457,6 +7760,25 @@ snapshots:
       '@opentelemetry/otlp-transformer': 0.220.0(@opentelemetry/api@1.9.1)
       '@opentelemetry/sdk-logs': 0.220.0(@opentelemetry/api@1.9.1)
 
+  '@opentelemetry/exporter-metrics-otlp-http@0.220.0(@opentelemetry/api@1.9.1)':
+    dependencies:
+      '@opentelemetry/api': 1.9.1
+      '@opentelemetry/core': 2.9.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/otlp-exporter-base': 0.220.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/otlp-transformer': 0.220.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/resources': 2.9.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/sdk-metrics': 2.9.0(@opentelemetry/api@1.9.1)
+
+  '@opentelemetry/exporter-metrics-otlp-proto@0.220.0(@opentelemetry/api@1.9.1)':
+    dependencies:
+      '@opentelemetry/api': 1.9.1
+      '@opentelemetry/core': 2.9.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/exporter-metrics-otlp-http': 0.220.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/otlp-exporter-base': 0.220.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/otlp-transformer': 0.220.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/resources': 2.9.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/sdk-metrics': 2.9.0(@opentelemetry/api@1.9.1)
+
   '@opentelemetry/exporter-trace-otlp-proto@0.220.0(@opentelemetry/api@1.9.1)':
     dependencies:
       '@opentelemetry/api': 1.9.1
@@ -7591,10 +7913,10 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
-  '@react-email/ui@6.9.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@react-email/ui@6.9.2(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       esbuild: 0.28.1
-      next: 16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      next: 16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     transitivePeerDependencies:
       - '@babel/core'
       - '@opentelemetry/api'
@@ -8257,7 +8579,7 @@ snapshots:
 
   baseline-browser-mapping@2.11.14: {}
 
-  better-auth@1.6.29(@opentelemetry/api@1.9.1)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  better-auth@1.6.29(@opentelemetry/api@1.9.1)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))(next@16.3.0(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.23.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@better-auth/core': 1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.8)(kysely@0.29.5)(nanostores@1.4.2)
       '@better-auth/drizzle-adapter': 1.6.29(@better-auth/core@1.6.29(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.4.3))(jose@6.2.8)(kysely@0.29.5)(nanostores@1.4.2))(@better-auth/utils@0.4.2)(drizzle-orm@1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3))
@@ -8278,7 +8600,7 @@ snapshots:
       zod: 4.4.3
     optionalDependencies:
       drizzle-orm: 1.0.0-rc.4(@opentelemetry/api@1.9.1)(@types/pg@8.21.0)(pg@8.23.0)(zod@4.4.3)
-      next: 16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      next: 16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       pg: 8.23.0
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
@@ -8965,7 +9287,7 @@ snapshots:
 
   fast-copy@3.0.2: {}
 
-  fast-copy@4.0.4: {}
+  fast-copy@4.1.1: {}
 
   fast-deep-equal@3.1.3: {}
 
@@ -9676,7 +9998,7 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
 
-  next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(babel-plugin-macros@3.1.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@next/env': 16.3.0
       '@swc/helpers': 0.5.15
@@ -9685,7 +10007,7 @@ snapshots:
       postcss: 8.5.23
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
-      styled-jsx: 5.1.6(@babel/core@7.29.7)(babel-plugin-macros@3.1.0)(react@19.2.8)
+      styled-jsx: 5.1.6(@babel/core@7.29.7)(react@19.2.8)
     optionalDependencies:
       '@next/swc-darwin-arm64': 16.3.0
       '@next/swc-darwin-x64': 16.3.0
@@ -9969,7 +10291,7 @@ snapshots:
     dependencies:
       colorette: 2.0.20
       dateformat: 4.6.3
-      fast-copy: 4.0.4
+      fast-copy: 4.1.1
       fast-safe-stringify: 2.1.1
       help-me: 5.0.0
       joycon: 3.1.1
@@ -10505,6 +10827,40 @@ snapshots:
       '@img/sharp-win32-ia32': 0.35.3
       '@img/sharp-win32-x64': 0.35.3
       '@types/node': 26.2.0
+    optional: true
+
+  sharp@0.35.4(@types/node@26.2.0):
+    dependencies:
+      '@img/colour': 1.1.0
+      detect-libc: 2.1.2
+      semver: 7.8.5
+    optionalDependencies:
+      '@img/sharp-darwin-arm64': 0.35.4
+      '@img/sharp-darwin-x64': 0.35.4
+      '@img/sharp-freebsd-wasm32': 0.35.4
+      '@img/sharp-libvips-darwin-arm64': 1.3.3
+      '@img/sharp-libvips-darwin-x64': 1.3.3
+      '@img/sharp-libvips-linux-arm': 1.3.3
+      '@img/sharp-libvips-linux-arm64': 1.3.3
+      '@img/sharp-libvips-linux-ppc64': 1.3.3
+      '@img/sharp-libvips-linux-riscv64': 1.3.3
+      '@img/sharp-libvips-linux-s390x': 1.3.3
+      '@img/sharp-libvips-linux-x64': 1.3.3
+      '@img/sharp-libvips-linuxmusl-arm64': 1.3.3
+      '@img/sharp-libvips-linuxmusl-x64': 1.3.3
+      '@img/sharp-linux-arm': 0.35.4
+      '@img/sharp-linux-arm64': 0.35.4
+      '@img/sharp-linux-ppc64': 0.35.4
+      '@img/sharp-linux-riscv64': 0.35.4
+      '@img/sharp-linux-s390x': 0.35.4
+      '@img/sharp-linux-x64': 0.35.4
+      '@img/sharp-linuxmusl-arm64': 0.35.4
+      '@img/sharp-linuxmusl-x64': 0.35.4
+      '@img/sharp-webcontainers-wasm32': 0.35.4
+      '@img/sharp-win32-arm64': 0.35.4
+      '@img/sharp-win32-ia32': 0.35.4
+      '@img/sharp-win32-x64': 0.35.4
+      '@types/node': 26.2.0
 
   shebang-command@2.0.0:
     dependencies:
@@ -10660,13 +11016,12 @@ snapshots:
 
   stubborn-utils@1.0.2: {}
 
-  styled-jsx@5.1.6(@babel/core@7.29.7)(babel-plugin-macros@3.1.0)(react@19.2.8):
+  styled-jsx@5.1.6(@babel/core@7.29.7)(react@19.2.8):
     dependencies:
       client-only: 0.0.1
       react: 19.2.8
     optionalDependencies:
       '@babel/core': 7.29.7
-      babel-plugin-macros: 3.1.0
 
   stylis@4.2.0: {}
 

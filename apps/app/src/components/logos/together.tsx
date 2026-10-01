@@ -3,7 +3,6 @@ import type { SVGProps } from "react"
 export function TogetherIcon({ ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
-      <title>Together</title>
       <path
         d="M23.197 4.503A6 6 0 0015 2.307a5.973 5.973 0 00-2.995 4.933l5.996.008v.515h-5.996c.039.937.298 1.87.8 2.74a6 6 0 1010.39-6z"
         fill="#EF2CC1"

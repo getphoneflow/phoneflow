@@ -4,6 +4,7 @@ import * as cartesia from "@livekit/agents-plugin-cartesia"
 import * as deepgram from "@livekit/agents-plugin-deepgram"
 import * as elevenlabs from "@livekit/agents-plugin-elevenlabs"
 import * as inworld from "@livekit/agents-plugin-inworld"
+import * as meta from "@livekit/agents-plugin-meta"
 import * as mistralai from "@livekit/agents-plugin-mistralai"
 import * as openai from "@livekit/agents-plugin-openai"
 import * as soniox from "@livekit/agents-plugin-soniox"
@@ -85,6 +86,12 @@ export function STT(config: AgentConfig["stt"]): stt.STT {
         endOfTurnConfidenceThreshold: config.endOfTurnConfidenceThreshold,
         enableVoiceProfile: config.enableVoiceProfile,
         voiceProfileTopN: config.voiceProfileTopN,
+      })
+    case "meta":
+      return new meta.STT({
+        model,
+        apiKey: env.META_API_KEY,
+        keywords: config.keyterms,
       })
     case "mistral":
       return new mistralai.STT({

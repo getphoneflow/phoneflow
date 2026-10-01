@@ -26,6 +26,7 @@ export const env = {
   GOOGLE_API_KEY: process.env.GOOGLE_API_KEY ?? "",
   GROQ_API_KEY: process.env.GROQ_API_KEY ?? "",
   INWORLD_API_KEY: process.env.INWORLD_API_KEY ?? "",
+  META_API_KEY: process.env.META_API_KEY ?? "",
   MISTRAL_API_KEY: process.env.MISTRAL_API_KEY ?? "",
   OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "",
   OVHCLOUD_API_KEY: process.env.OVHCLOUD_API_KEY ?? "",

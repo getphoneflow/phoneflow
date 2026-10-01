@@ -26,7 +26,7 @@ export function TTS(config: AgentConfig["tts"]): tts.TTS {
       return new cartesia.TTS({
         model,
         voice: config.voice,
-        language: config.language ?? "en",
+        language: config.language,
         speed: config.speed,
         emotion: config.emotion,
         apiKey: env.CARTESIA_API_KEY,
@@ -35,7 +35,7 @@ export function TTS(config: AgentConfig["tts"]): tts.TTS {
       return new deepgram.TTS({
         model: config.voice,
         apiKey: env.DEEPGRAM_API_KEY,
-        mipOptOut: config.mipOptOut ?? false,
+        mipOptOut: config.mipOptOut,
       })
     case "elevenlabs":
       return new elevenlabs.TTS({
@@ -49,7 +49,7 @@ export function TTS(config: AgentConfig["tts"]): tts.TTS {
         model,
         voiceId: config.voice,
         apiKey: env.FISHAUDIO_API_KEY,
-        latencyMode: config.latencyMode ?? "balanced",
+        latencyMode: config.latencyMode,
         speed: config.speed,
         volume: config.volume,
       })
@@ -77,7 +77,7 @@ export function TTS(config: AgentConfig["tts"]): tts.TTS {
       return new soniox.TTS({
         model,
         voice: config.voice,
-        language: config.language ?? "en",
+        language: config.language,
         apiKey: env.SONIOX_API_KEY,
       })
     case "xai":

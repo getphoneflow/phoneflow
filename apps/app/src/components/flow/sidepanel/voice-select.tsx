@@ -132,7 +132,7 @@ export function VoiceSelect({
             </ComboboxInput>
           </div>
           <ComboboxEmpty>No voices found</ComboboxEmpty>
-          <ComboboxList className="pt-0">
+          <ComboboxList className="pt-0 min-h-80">
             {(voice: Voice) => (
               <ComboboxItem
                 key={voice.id}

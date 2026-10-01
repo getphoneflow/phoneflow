@@ -1,5 +1,5 @@
 import { Panel } from "@xyflow/react"
-import { MicIcon, PencilLineIcon } from "lucide-react"
+import { PencilLineIcon, SettingsIcon } from "lucide-react"
 
 import { Button } from "@workspace/ui/components/button"
 import { AddNodeButton } from "@/components/agents/add-node-button"
@@ -25,10 +25,10 @@ export function FlowConfigButtons() {
       <div>
         <Button
           variant="outline"
-          onClick={() => setSidePanel({ kind: "models-config" })}
+          onClick={() => setSidePanel({ kind: "config" })}
         >
-          <MicIcon />
-          Models
+          <SettingsIcon />
+          Config
         </Button>
       </div>
     </Panel>

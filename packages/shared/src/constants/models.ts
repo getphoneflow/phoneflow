@@ -1,7 +1,23 @@
-export const MODELS = {
+import type { ModelsCatalog } from "@workspace/shared/models/types"
+
+export const MODELS: ModelsCatalog = {
   stt: {
     assemblyai: {
       name: "AssemblyAI",
+      turnTaking: true,
+      fields: [
+        "language",
+        "keyterms",
+        "mode",
+        "vadThreshold",
+        "minTurnSilence",
+        "maxTurnSilence",
+        "endOfTurnConfidenceThreshold",
+        "voiceFocus",
+        "voiceFocusThreshold",
+        "agentContextCarryover",
+        "diarize",
+      ],
       models: {
         "universal-3-5-pro": {
           name: "Universal 3.5 Pro Streaming",
@@ -98,6 +114,7 @@ export const MODELS = {
     },
     cartesia: {
       name: "Cartesia",
+      fields: ["language"],
       models: {
         "ink-2": {
           name: "Ink 2",
@@ -147,15 +164,34 @@ export const MODELS = {
     },
     deepgram: {
       name: "Deepgram",
+      fields: ["language", "keyterms", "endpointingMs", "diarize"],
       models: {
         "flux-general-en": {
           name: "Flux",
+          turnTaking: true,
+          fields: [
+            "language",
+            "keyterms",
+            "eagerEotThreshold",
+            "eotThreshold",
+            "eotTimeoutMs",
+            "mipOptOut",
+          ],
           usdPerMinute: 0.0065,
           latencyMs: 270,
           languages: ["en"],
         },
         "flux-general-multi": {
           name: "Flux (Multilingual)",
+          turnTaking: true,
+          fields: [
+            "language",
+            "keyterms",
+            "eagerEotThreshold",
+            "eotThreshold",
+            "eotTimeoutMs",
+            "mipOptOut",
+          ],
           usdPerMinute: 0.0078,
           latencyMs: 250,
           languages: [
@@ -350,6 +386,7 @@ export const MODELS = {
     },
     elevenlabs: {
       name: "ElevenLabs",
+      fields: ["language", "keyterms"],
       models: {
         scribe_v2_realtime: {
           name: "Scribe v2 Realtime",
@@ -404,6 +441,15 @@ export const MODELS = {
     },
     inworld: {
       name: "Inworld",
+      turnTaking: true,
+      fields: [
+        "language",
+        "vadThreshold",
+        "minEndOfTurnSilenceWhenConfident",
+        "endOfTurnConfidenceThreshold",
+        "enableVoiceProfile",
+        "voiceProfileTopN",
+      ],
       models: {
         "inworld-stt-1": {
           name: "Inworld STT 1",
@@ -415,6 +461,7 @@ export const MODELS = {
     },
     mistral: {
       name: "Mistral",
+      fields: ["language"],
       models: {
         "voxtral-mini-latest": {
           name: "Voxtral Mini",
@@ -432,6 +479,7 @@ export const MODELS = {
     },
     openai: {
       name: "OpenAI",
+      fields: ["language", "keyterms"],
       models: {
         "gpt-realtime-whisper": {
           name: "GPT Realtime Whisper",
@@ -461,6 +509,7 @@ export const MODELS = {
     },
     ovhcloud: {
       name: "OVHcloud",
+      fields: ["language"],
       models: {
         "whisper-large-v3-turbo": {
           name: "Whisper Large v3 Turbo",
@@ -472,6 +521,14 @@ export const MODELS = {
     },
     soniox: {
       name: "Soniox",
+      turnTaking: true,
+      fields: [
+        "language",
+        "keyterms",
+        "languageHintsStrict",
+        "endpointLatencyAdjustmentLevel",
+        "diarize",
+      ],
       models: {
         "stt-rt-v5": {
           name: "STT Realtime v5",
@@ -489,6 +546,16 @@ export const MODELS = {
     },
     xai: {
       name: "xAI",
+      turnTaking: true,
+      fields: [
+        "language",
+        "keyterms",
+        "endpointingMs",
+        "vadThreshold",
+        "diarize",
+        "smartTurn",
+        "smartTurnTimeout",
+      ],
       models: {
         "stt-1": {
           name: "Speech to Text",
@@ -524,6 +591,7 @@ export const MODELS = {
   llm: {
     anthropic: {
       name: "Anthropic",
+      fields: ["temperature", "maxTokens", "toolChoice"],
       models: {
         "claude-sonnet-5": {
           name: "Claude Sonnet 5",
@@ -559,6 +627,7 @@ export const MODELS = {
     },
     baseten: {
       name: "Baseten",
+      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
       models: {
         "deepseek-ai/DeepSeek-V4-Pro-0813": {
           name: "DeepSeek V4 Pro 0813",
@@ -639,6 +708,7 @@ export const MODELS = {
     },
     cerebras: {
       name: "Cerebras",
+      fields: ["temperature", "toolChoice"],
       models: {
         "gemma-4-31b": {
           name: "Gemma 4 31B",
@@ -659,6 +729,7 @@ export const MODELS = {
     },
     deepinfra: {
       name: "DeepInfra",
+      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
       models: {
         "zai-org/GLM-5.3": {
           name: "GLM 5.3",
@@ -774,6 +845,7 @@ export const MODELS = {
     },
     deepseek: {
       name: "DeepSeek",
+      fields: ["temperature"],
       models: {
         "deepseek-v4-flash": {
           name: "DeepSeek V4 Flash",
@@ -799,6 +871,7 @@ export const MODELS = {
     },
     fireworks: {
       name: "Fireworks",
+      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
       models: {
         "accounts/fireworks/models/glm-5p3": {
           name: "GLM 5.3",
@@ -889,6 +962,7 @@ export const MODELS = {
     },
     google: {
       name: "Google",
+      fields: ["temperature", "maxTokens", "toolChoice"],
       models: {
         "gemini-3-flash-preview": {
           name: "Gemini 3 Flash",
@@ -934,6 +1008,7 @@ export const MODELS = {
     },
     groq: {
       name: "Groq",
+      fields: ["temperature"],
       models: {
         "openai/gpt-oss-120b": {
           name: "OpenAI GPT OSS 120B",
@@ -959,6 +1034,7 @@ export const MODELS = {
     },
     mistral: {
       name: "Mistral",
+      fields: ["temperature"],
       models: {
         "mistral-medium-latest": {
           name: "Mistral Medium 3.5",
@@ -994,6 +1070,7 @@ export const MODELS = {
     },
     openai: {
       name: "OpenAI",
+      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
       models: {
         "gpt-6-astra": {
           name: "GPT-6 Astra",
@@ -1105,6 +1182,7 @@ export const MODELS = {
     },
     ovhcloud: {
       name: "OVHcloud",
+      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
       models: {
         "Meta-Llama-3_3-70B-Instruct": {
           name: "Llama 3.3 70B Instruct",
@@ -1125,6 +1203,7 @@ export const MODELS = {
     },
     perplexity: {
       name: "Perplexity",
+      fields: ["temperature"],
       models: {
         sonar: {
           name: "Sonar",
@@ -1140,6 +1219,7 @@ export const MODELS = {
     },
     together: {
       name: "Together",
+      fields: ["temperature"],
       models: {
         "zai-org/GLM-5.3": {
           name: "GLM 5.3",
@@ -1245,6 +1325,7 @@ export const MODELS = {
     },
     wafer: {
       name: "Wafer",
+      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
       models: {
         "GLM-5.3": {
           name: "GLM 5.3",
@@ -1290,6 +1371,7 @@ export const MODELS = {
     },
     xai: {
       name: "xAI",
+      fields: ["temperature"],
       models: {
         "grok-4.20-0309-non-reasoning": {
           name: "Grok 4.20",
@@ -1332,6 +1414,7 @@ export const MODELS = {
   tts: {
     cartesia: {
       name: "Cartesia",
+      fields: ["language", "speed", "emotion"],
       models: {
         "sonic-3": {
           name: "Sonic 3",
@@ -1588,6 +1671,7 @@ export const MODELS = {
     },
     deepgram: {
       name: "Deepgram",
+      fields: ["mipOptOut"],
       models: {
         aura: {
           name: "Aura",
@@ -1627,6 +1711,7 @@ export const MODELS = {
     },
     elevenlabs: {
       name: "ElevenLabs",
+      fields: ["language"],
       models: {
         eleven_flash_v2_5: {
           name: "Eleven Flash v2.5",
@@ -1758,6 +1843,7 @@ export const MODELS = {
     },
     fishaudio: {
       name: "Fish Audio",
+      fields: ["latencyMode", "speed", "volume"],
       models: {
         "s2-pro": {
           name: "S2 Pro",
@@ -1823,6 +1909,7 @@ export const MODELS = {
     },
     inworld: {
       name: "Inworld",
+      fields: ["language"],
       models: {
         "inworld-tts-1.5-max": {
           name: "Realtime TTS 1.5 Max",
@@ -1916,6 +2003,7 @@ export const MODELS = {
     },
     mistral: {
       name: "Mistral",
+      fields: [],
       models: {
         "voxtral-mini-tts-latest": {
           name: "Voxtral Mini TTS",
@@ -1927,6 +2015,7 @@ export const MODELS = {
     },
     openai: {
       name: "OpenAI",
+      fields: ["speed"],
       models: {
         "tts-1": {
           name: "TTS 1",
@@ -1950,6 +2039,7 @@ export const MODELS = {
     },
     soniox: {
       name: "Soniox",
+      fields: ["language"],
       models: {
         "tts-rt-v2": {
           name: "Realtime TTS v2",
@@ -1967,6 +2057,7 @@ export const MODELS = {
     },
     xai: {
       name: "xAI",
+      fields: ["language"],
       models: {
         "tts-1": {
           name: "Text to Speech",

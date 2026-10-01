@@ -50,11 +50,11 @@ export function STT(config: AgentConfig["stt"]): stt.STT {
           model,
           apiKey: env.DEEPGRAM_API_KEY,
           language: config.language,
-          keyterms: config.keyterms ?? [],
+          keyterms: config.keyterms,
           eagerEotThreshold: config.eagerEotThreshold,
           eotThreshold: config.eotThreshold,
           eotTimeoutMs: config.eotTimeoutMs,
-          mipOptOut: config.mipOptOut ?? false,
+          mipOptOut: config.mipOptOut,
         })
       }
 
@@ -62,7 +62,7 @@ export function STT(config: AgentConfig["stt"]): stt.STT {
         model,
         apiKey: env.DEEPGRAM_API_KEY,
         language: config.language,
-        keyterm: config.keyterms ?? [],
+        keyterm: config.keyterms,
         endpointing: config.endpointingMs,
         diarize: config.diarize,
       })
@@ -72,19 +72,19 @@ export function STT(config: AgentConfig["stt"]): stt.STT {
         model,
         apiKey: env.ELEVEN_API_KEY,
         languageCode: config.language,
+        keyterms: config.keyterms,
       })
     case "inworld":
       return new inworld.STT({
         model: config.model,
         apiKey: env.INWORLD_API_KEY,
-        language: config.language ?? "en-US",
+        language: config.language,
         vadThreshold: config.vadThreshold,
         minEndOfTurnSilenceWhenConfident:
-          config.minEndOfTurnSilenceWhenConfident ?? 200,
-        endOfTurnConfidenceThreshold:
-          config.endOfTurnConfidenceThreshold ?? 0.3,
-        enableVoiceProfile: config.enableVoiceProfile ?? true,
-        voiceProfileTopN: config.voiceProfileTopN ?? 1,
+          config.minEndOfTurnSilenceWhenConfident,
+        endOfTurnConfidenceThreshold: config.endOfTurnConfidenceThreshold,
+        enableVoiceProfile: config.enableVoiceProfile,
+        voiceProfileTopN: config.voiceProfileTopN,
       })
     case "mistral":
       return new mistralai.STT({
@@ -118,9 +118,9 @@ export function STT(config: AgentConfig["stt"]): stt.STT {
     case "xai":
       return new xai.STT({
         apiKey: env.XAI_API_KEY,
-        language: config.language ?? "en",
-        endpointing: config.endpointingMs ?? 100,
-        enableDiarization: config.diarize ?? false,
+        language: config.language,
+        endpointing: config.endpointingMs,
+        enableDiarization: config.diarize,
         vadThreshold: config.vadThreshold,
         smartTurn: config.smartTurn,
         smartTurnTimeout: config.smartTurnTimeout,

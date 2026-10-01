@@ -73,33 +73,13 @@ export default defineAgent({
       stt: STT(config.stt),
       llm: LLM(config.llm),
       tts: TTS(config.tts),
-      keytermsOptions: config.keytermsOptions,
       turnHandling: {
-        turnDetection: turn?.turnDetection ?? "vad",
-        endpointing: {
-          mode: turn?.endpointing?.mode ?? "fixed",
-          minDelay: turn?.endpointing?.minDelay ?? 500,
-          maxDelay: turn?.endpointing?.maxDelay ?? 3000,
-          alpha: turn?.endpointing?.alpha ?? 0.9,
-        },
-        preemptiveGeneration: {
-          enabled: turn?.preemptiveGeneration?.enabled ?? true,
-          preemptiveTts: turn?.preemptiveGeneration?.preemptiveTts ?? false,
-          maxSpeechDuration:
-            turn?.preemptiveGeneration?.maxSpeechDuration ?? 10_000,
-          maxRetries: turn?.preemptiveGeneration?.maxRetries ?? 3,
-        },
+        turnDetection: turn.turnDetection,
+        endpointing: turn.endpointing,
+        preemptiveGeneration: turn.preemptiveGeneration,
         interruption: {
+          ...turn.interruption,
           mode: "vad",
-          enabled: turn?.interruption?.enabled ?? true,
-          discardAudioIfUninterruptible:
-            turn?.interruption?.discardAudioIfUninterruptible ?? true,
-          minDuration: turn?.interruption?.minDuration ?? 500,
-          minWords: turn?.interruption?.minWords ?? 0,
-          falseInterruptionTimeout:
-            turn?.interruption?.falseInterruptionTimeout ?? 2000,
-          resumeFalseInterruption:
-            turn?.interruption?.resumeFalseInterruption ?? true,
         },
       },
     })

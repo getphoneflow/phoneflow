@@ -1,18 +1,6 @@
 import { MODELS } from "@workspace/shared/constants/models"
 import { VOICES } from "@workspace/shared/constants/voices"
-import type { ModelKind } from "./types"
-
-type CatalogModel = {
-  name: string
-  languages?: readonly string[]
-  usdPerMinute: number
-  latencyMs: number
-}
-
-type CatalogProvider = {
-  name: string
-  models: Record<string, CatalogModel>
-}
+import type { CatalogProvider, ModelKind } from "./types"
 
 export type ModelOption = {
   id: string
@@ -34,7 +22,7 @@ export type Voice = {
   tags: string[]
 }
 
-function splitModelId(modelId: string) {
+export function splitModelId(modelId: string) {
   const slash = modelId.indexOf("/")
   return {
     providerId: modelId.slice(0, slash),
@@ -43,12 +31,19 @@ function splitModelId(modelId: string) {
 }
 
 function getKindCatalog(kind: ModelKind) {
-  return MODELS[kind] as Record<string, CatalogProvider>
+  return MODELS[kind] as Record<string, CatalogProvider<string>>
 }
 
 export function getModelPricePerMinute(kind: ModelKind, modelId: string) {
   const { providerId, modelKey } = splitModelId(modelId)
   return getKindCatalog(kind)[providerId].models[modelKey].usdPerMinute
+}
+
+export function getModelLanguages(kind: ModelKind, modelId: string): string[] {
+  const { providerId, modelKey } = splitModelId(modelId)
+  const languages =
+    getKindCatalog(kind)[providerId]?.models[modelKey]?.languages
+  return languages ? [...languages] : []
 }
 
 export function formatUsdPerMinute(usdPerMinute: number) {

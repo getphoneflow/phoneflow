@@ -76,56 +76,48 @@ export const ttsConfigSchema = z
 
 export const turnHandlingConfigSchema = z
   .object({
-    turnDetection: z.enum(["stt", "vad"]).exactOptional(),
-    endpointing: z
-      .object({
-        mode: z.enum(["fixed", "dynamic"]).exactOptional(),
-        minDelay: z.number().int().nonnegative().exactOptional(),
-        maxDelay: z.number().int().nonnegative().exactOptional(),
-        alpha: z.number().min(0).max(1).exactOptional(),
-      })
-      .strict()
-      .exactOptional(),
-    preemptiveGeneration: z
-      .object({
-        enabled: z.boolean().exactOptional(),
-        preemptiveTts: z.boolean().exactOptional(),
-        maxSpeechDuration: z.number().int().positive().exactOptional(),
-        maxRetries: z.number().int().positive().exactOptional(),
-      })
-      .strict()
-      .exactOptional(),
-    interruption: z
-      .object({
-        enabled: z.boolean().exactOptional(),
-        discardAudioIfUninterruptible: z.boolean().exactOptional(),
-        minDuration: z.number().int().nonnegative().exactOptional(),
-        minWords: z.number().int().nonnegative().exactOptional(),
-        falseInterruptionTimeout: z
-          .number()
-          .int()
-          .nonnegative()
-          .exactOptional(),
-        resumeFalseInterruption: z.boolean().exactOptional(),
-      })
-      .strict()
-      .exactOptional(),
-  })
-  .strict()
-
-export const keytermsOptionsSchema = z
-  .object({
-    keyterms: z
-      .array(requiredString("Keyterm cannot be empty"))
-      .exactOptional(),
-    keytermDetection: z
-      .object({
-        enabled: z.boolean().exactOptional(),
-        turnInterval: z.number().int().positive().exactOptional(),
-        maxKeyterms: z.number().int().positive().exactOptional(),
-      })
-      .strict()
-      .exactOptional(),
+    turnDetection: z.enum(["stt", "vad"]),
+    endpointing: z.discriminatedUnion("mode", [
+      z
+        .object({
+          mode: z.literal("fixed"),
+          minDelay: z.number().int().nonnegative(),
+          maxDelay: z.number().int().nonnegative(),
+        })
+        .strict(),
+      z
+        .object({
+          mode: z.literal("dynamic"),
+          minDelay: z.number().int().nonnegative(),
+          maxDelay: z.number().int().nonnegative(),
+          alpha: z.number().min(0).max(1),
+        })
+        .strict(),
+    ]),
+    preemptiveGeneration: z.discriminatedUnion("enabled", [
+      z.object({ enabled: z.literal(false) }).strict(),
+      z
+        .object({
+          enabled: z.literal(true),
+          preemptiveTts: z.boolean(),
+          maxSpeechDuration: z.number().int().positive(),
+          maxRetries: z.number().int().positive(),
+        })
+        .strict(),
+    ]),
+    interruption: z.discriminatedUnion("enabled", [
+      z.object({ enabled: z.literal(false) }).strict(),
+      z
+        .object({
+          enabled: z.literal(true),
+          discardAudioIfUninterruptible: z.boolean(),
+          minDuration: z.number().int().nonnegative(),
+          minWords: z.number().int().nonnegative(),
+          falseInterruptionTimeout: z.number().int().nonnegative(),
+          resumeFalseInterruption: z.boolean(),
+        })
+        .strict(),
+    ]),
   })
   .strict()
 
@@ -247,8 +239,7 @@ export const agentConfigSchema = z
     stt: sttConfigSchema,
     llm: llmConfigSchema,
     tts: ttsConfigSchema,
-    turnHandling: turnHandlingConfigSchema.exactOptional(),
-    keytermsOptions: keytermsOptionsSchema.exactOptional(),
+    turnHandling: turnHandlingConfigSchema,
     backgroundAudio: backgroundAudioSchema.exactOptional(),
     globalPrompt: z.string(),
     timezone: z.string().optional(),

@@ -108,7 +108,7 @@ export function FlowToolbar() {
   }, [undo, redo, zoomIn, zoomOut, zoomTo, fitView])
 
   return (
-    <div className="flex items-center gap-0.5 rounded-lg border border-border bg-background p-1 shadow-sm">
+    <div className="flex items-center gap-0.5 rounded-lg border border-border bg-background p-0.5 shadow-sm">
       <ToolbarButton label="Undo" disabled={!canUndo} onClick={undo}>
         <Undo2Icon />
       </ToolbarButton>

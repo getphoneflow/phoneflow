@@ -1,20 +1,19 @@
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
+import { DEFAULT_TURN_HANDLING } from "@workspace/shared/models/turn-handling"
 
 export function createDefaultAgentConfig(): AgentConfig {
   return {
     stt: {
-      model: "soniox/stt-rt-v5",
+      model: "assemblyai/universal-3-5-pro",
     },
     llm: {
-      model: "cerebras/gemma-4-31b",
+      model: "wafer/GLM-5.3",
     },
     tts: {
       model: "fishaudio/s2.1-pro",
       voice: "3b480f554a5b4ab9a6bc62d6ebd7c98a",
     },
-    turnHandling: {
-      turnDetection: "stt",
-    },
+    turnHandling: DEFAULT_TURN_HANDLING,
     globalPrompt: "You are a helpful assistant",
     nodes: [
       {

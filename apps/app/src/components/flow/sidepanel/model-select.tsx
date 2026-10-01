@@ -33,6 +33,12 @@ import { env } from "@/lib/env"
 
 type ModelSort = "default" | "price" | "latency"
 
+const searchLabel = {
+  stt: "transcription",
+  llm: "language",
+  tts: "voice",
+}
+
 function ModelRow({ model }: { model: ModelOption }) {
   return (
     <div className="flex min-w-0 flex-1 gap-2 text-left">
@@ -105,7 +111,7 @@ export function ModelSelect({
           <div className="flex items-center gap-1.5 p-1.5">
             <ComboboxInput
               showTrigger={false}
-              placeholder={`Search ${label} models...`}
+              placeholder={`Search ${searchLabel[kind]} models...`}
               className="min-w-0 flex-1"
             >
               <InputGroupAddon>
@@ -141,7 +147,7 @@ export function ModelSelect({
             </DropdownMenu>
           </div>
           <ComboboxEmpty>No models found</ComboboxEmpty>
-          <ComboboxList className="pt-0">
+          <ComboboxList className="pt-0 min-h-80">
             {(model: ModelOption) => (
               <ComboboxItem key={model.id} value={model}>
                 <ModelRow model={model} />

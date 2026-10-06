@@ -30,6 +30,7 @@ export type CallDispatchMetadata = {
   fromNumber?: string
   batchCallId?: string | null
   triggeredAt?: string
+  ringDurationMs?: number
 }
 
 export type CallTranscript = z.infer<typeof callTranscriptSchema>

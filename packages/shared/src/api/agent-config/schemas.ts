@@ -128,6 +128,13 @@ export const backgroundAudioSchema = z
   })
   .strict()
 
+export const callSettingsSchema = z
+  .object({
+    maxDurationSec: z.number().int().positive(),
+    endOnSilenceSec: z.number().int().positive(),
+  })
+  .strict()
+
 export const flowNodeInstructionsSchema = z.object({
   type: z.enum(["prompt", "say"]),
   text: requiredString("Conversation instructions are required"),
@@ -241,6 +248,7 @@ export const agentConfigSchema = z
     tts: ttsConfigSchema,
     turnHandling: turnHandlingConfigSchema,
     backgroundAudio: backgroundAudioSchema.exactOptional(),
+    call: callSettingsSchema,
     globalPrompt: z.string(),
     timezone: z.string().optional(),
     nodes: z.array(flowNodeConfigSchema).min(1, "Add at least one node"),

@@ -14,6 +14,10 @@ export function createDefaultAgentConfig(): AgentConfig {
       voice: "3b480f554a5b4ab9a6bc62d6ebd7c98a",
     },
     turnHandling: DEFAULT_TURN_HANDLING,
+    call: {
+      maxDurationSec: 1800,
+      endOnSilenceSec: 300,
+    },
     globalPrompt: "You are a helpful assistant",
     nodes: [
       {

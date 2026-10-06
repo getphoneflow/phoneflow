@@ -5,6 +5,7 @@ import {
   TabsTrigger,
 } from "@workspace/ui/components/tabs"
 import { segmentColor } from "@/components/calls/call-cost-breakdown"
+import { CallTab } from "@/components/flow/sidepanel/config/call-tab"
 import { CostLatency } from "@/components/flow/sidepanel/config/cost-latency"
 import { ModelTab } from "@/components/flow/sidepanel/config/model-tab"
 import { TranscriberTab } from "@/components/flow/sidepanel/config/transcriber-tab"
@@ -36,6 +37,7 @@ export function ConfigPanel() {
               <ColorDot color={segmentColor.tts} />
               Voice
             </TabsTrigger>
+            <TabsTrigger value="call">Call</TabsTrigger>
           </TabsList>
         </div>
         <TabsContent value="transcriber" className="overflow-y-auto p-4">
@@ -46,6 +48,9 @@ export function ConfigPanel() {
         </TabsContent>
         <TabsContent value="voice" className="overflow-y-auto p-4">
           <VoiceTab />
+        </TabsContent>
+        <TabsContent value="call" className="overflow-y-auto p-4">
+          <CallTab />
         </TabsContent>
       </Tabs>
     </FlowSidePanelBase>

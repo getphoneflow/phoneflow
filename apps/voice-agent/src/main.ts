@@ -20,13 +20,14 @@ import {
   recordUnansweredCall,
   startCall,
 } from "@/lib/calls"
+import { endCall } from "@/lib/end-call"
 import { env } from "@/lib/env"
 import { buildCallTranscript } from "@/lib/transcript"
 import { LLM } from "@/providers/llm"
 import { STT } from "@/providers/stt"
 import { TTS } from "@/providers/tts"
 
-const ANSWER_TIMEOUT_MS = 45_000
+const RING_DURATION_MS = 45_000
 
 export default defineAgent({
   prewarm: async (proc: JobProcess) => {
@@ -46,7 +47,9 @@ export default defineAgent({
           identity: participant.identity,
           attribute: "sip.callStatus",
           value: "active",
-          signal: AbortSignal.timeout(ANSWER_TIMEOUT_MS),
+          signal: AbortSignal.timeout(
+            metadata.ringDurationMs ?? RING_DURATION_MS
+          ),
         })
       } catch {
         await ctx.deleteRoom()
@@ -73,6 +76,7 @@ export default defineAgent({
       stt: STT(config.stt),
       llm: LLM(config.llm),
       tts: TTS(config.tts),
+      userAwayTimeout: config.call.endOnSilenceSec,
       turnHandling: {
         turnDetection: turn.turnDetection,
         endpointing: turn.endpointing,
@@ -83,6 +87,8 @@ export default defineAgent({
         },
       },
     })
+
+    setTimeout(() => endCall(), config.call.maxDurationSec * 1000)
 
     ctx.room.on("participantDisconnected", (remoteParticipant) => {
       if (remoteParticipant.identity === participant.identity) {

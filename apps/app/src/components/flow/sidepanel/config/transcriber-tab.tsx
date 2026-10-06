@@ -98,8 +98,8 @@ export function TranscriberTab() {
 
       {caps?.turnTaking ? (
         <SwitchField
-          label="STT endpointing"
-          description="Use this transcriber to decide when the user finished. Off uses VAD"
+          label="Intelligent turn taking"
+          description="On, the transcriber decides when the user finished. Off, the agent waits a fixed silence delay instead"
           checked={turn.turnDetection === "stt"}
           readOnly={readOnly}
           onCheckedChange={(enabled) =>
@@ -109,8 +109,8 @@ export function TranscriberTab() {
       ) : null}
 
       <NumberField
-        label="Min response delay (ms)"
-        description="Minimum wait after the last detected speech before the user's turn ends"
+        label="Min end of turn wait (ms)"
+        description="How long to wait after the user stops speaking before the agent can respond"
         value={endpointing.minDelay}
         min={0}
         step={50}
@@ -121,8 +121,8 @@ export function TranscriberTab() {
       />
 
       <NumberField
-        label="Max response delay (ms)"
-        description="Longest the agent waits before ending the turn, so it does not wait forever"
+        label="Max end of turn wait (ms)"
+        description="Longest the agent waits after the user stops speaking before ending the turn"
         value={endpointing.maxDelay}
         min={0}
         step={50}

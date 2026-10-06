@@ -187,7 +187,7 @@ export function VoiceTab() {
             />
             <NumberField
               label="Min interruption duration (ms)"
-              description="How long the user must speak before it counts as an interruption"
+              description="How long the user must speak before the agent stops talking"
               value={interruption.minDuration}
               min={0}
               step={50}
@@ -198,7 +198,7 @@ export function VoiceTab() {
             />
             <NumberField
               label="Min interruption words"
-              description="How many words the user must say before it counts as an interruption"
+              description="How many words the user must say before the agent stops talking"
               value={interruption.minWords}
               min={0}
               step={1}
@@ -209,7 +209,7 @@ export function VoiceTab() {
             />
             <NumberField
               label="False interruption timeout (ms)"
-              description="How long to wait, with no transcript, before an interruption counts as false"
+              description="How long to wait with no transcript before an interruption counts as false"
               value={interruption.falseInterruptionTimeout}
               min={0}
               step={50}

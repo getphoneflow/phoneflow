@@ -60,7 +60,7 @@ export function ModelTab() {
       {fields?.has("temperature") ? (
         <NumberField
           label="Temperature"
-          description="Controls randomness. Lower is more deterministic, higher is more creative"
+          description="Controls randomness. Lower values are more deterministic, higher values more creative"
           value={llmValue(llm, "temperature")}
           min={0}
           max={2}
@@ -91,7 +91,7 @@ export function ModelTab() {
         {fields?.has("maxTokens") ? (
           <NumberField
             label="Max tokens"
-            description="Max tokens the agent can generate each turn"
+            description="Max tokens the agent can generate in each turn of the conversation"
             value={llmValue(llm, "maxTokens")}
             min={1}
             step={1}

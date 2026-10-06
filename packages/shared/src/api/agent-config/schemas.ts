@@ -252,7 +252,7 @@ export const agentConfigSchema = z
     backgroundAudio: backgroundAudioSchema.exactOptional(),
     call: callSettingsSchema,
     globalPrompt: z.string(),
-    timezone: z.string().optional(),
+    timezone: z.string(),
     nodes: z.array(flowNodeConfigSchema).min(1, "Add at least one node"),
     edges: z.array(flowEdgeConfigSchema),
   })

@@ -65,10 +65,7 @@ export default defineAgent({
     )
 
     const flowGraph = buildFlowGraph(config)
-    const variables = createVariables(
-      participant.attributes,
-      config.timezone ?? "UTC"
-    )
+    const variables = createVariables(participant.attributes, config.timezone)
 
     const turn = config.turnHandling
     const session = new voice.AgentSession({

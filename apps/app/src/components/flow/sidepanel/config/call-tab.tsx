@@ -1,9 +1,16 @@
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 import {
   ConfigSection,
+  EnumField,
   NumberField,
 } from "@/components/flow/sidepanel/config/fields"
+import { TIME_ZONES } from "@/lib/time"
 import { useAgentStore } from "@/stores/agent"
+
+const TIMEZONE_OPTIONS = TIME_ZONES.map((timezone) => ({
+  value: timezone,
+  label: timezone,
+}))
 
 export function CallTab() {
   const readOnly = useAgentStore((state) => state.readOnly)
@@ -59,6 +66,15 @@ export function CallTab() {
         step={1}
         readOnly={readOnly}
         onChange={(endOnSilenceSec) => patchCall({ endOnSilenceSec })}
+      />
+
+      <EnumField
+        label="Timezone"
+        description="Used for {{date}} and {{time}} variables"
+        value={config.timezone}
+        options={TIMEZONE_OPTIONS}
+        readOnly={readOnly}
+        onChange={(timezone) => setConfig({ ...config, timezone })}
       />
     </ConfigSection>
   )

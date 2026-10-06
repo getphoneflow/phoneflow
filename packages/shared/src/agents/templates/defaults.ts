@@ -16,6 +16,8 @@ export function createDefaultAgentConfig(): AgentConfig {
     turnHandling: DEFAULT_TURN_HANDLING,
     call: {
       maxDurationSec: 1800,
+      idleTimeoutSec: 10,
+      maxIdleMessages: 2,
       endOnSilenceSec: 300,
     },
     globalPrompt: "You are a helpful assistant",

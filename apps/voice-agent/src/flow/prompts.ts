@@ -1,6 +1,7 @@
 export const PLATFORM_INSTRUCTIONS = `You should provide helpful and informative responses to the user's questions.
 Since your answers will be converted to audio, make sure to not use symbols like $, %, #, @, etc. or digits in your responses, if you need to use them write them out as words e.g. "three dollars", "hashtag", "one", "two", etc.".
-Unless specified differently in the character answer in around 3-4 sentences for most cases.`
+Unless specified differently in the character answer in around 3-4 sentences for most cases.
+If the user responds with '...' it means that they didn't respond or say anything, you should prompt them to speak, or if they don't respond for a while then ask if they're still there.`
 
 export const TRANSITION_INSTRUCTIONS = `Whenever the condition for one of the available \`notify_condition_X_met\` tools is met, you should immediately call the corresponding tool.
 You can do that at any time during the conversation, even multiple times.

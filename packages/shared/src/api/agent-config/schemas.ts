@@ -131,6 +131,8 @@ export const backgroundAudioSchema = z
 export const callSettingsSchema = z
   .object({
     maxDurationSec: z.number().int().positive(),
+    idleTimeoutSec: z.number().int().positive(),
+    maxIdleMessages: z.number().int().positive(),
     endOnSilenceSec: z.number().int().positive(),
   })
   .strict()

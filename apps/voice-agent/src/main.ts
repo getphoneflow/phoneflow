@@ -76,7 +76,7 @@ export default defineAgent({
       stt: STT(config.stt),
       llm: LLM(config.llm),
       tts: TTS(config.tts),
-      userAwayTimeout: config.call.endOnSilenceSec,
+      userAwayTimeout: config.call.idleTimeoutSec,
       turnHandling: {
         turnDetection: turn.turnDetection,
         endpointing: turn.endpointing,
@@ -88,7 +88,29 @@ export default defineAgent({
       },
     })
 
-    setTimeout(() => endCall(), config.call.maxDurationSec * 1000)
+    setTimeout(endCall, config.call.maxDurationSec * 1000)
+
+    let idleCount = 0
+    let silenceTimer = setTimeout(endCall, config.call.endOnSilenceSec * 1000)
+
+    session.on(
+      voice.AgentSessionEventTypes.UserStateChanged,
+      async function (event) {
+        if (event.newState === "speaking") {
+          idleCount = 0
+          clearTimeout(silenceTimer)
+          silenceTimer = setTimeout(endCall, config.call.endOnSilenceSec * 1000)
+          return
+        }
+
+        if (event.newState !== "away") return
+        if (idleCount >= config.call.maxIdleMessages) return
+
+        idleCount += 1
+        await session.generateReply({ userInput: "..." }).waitForPlayout()
+        session._updateUserState("listening")
+      }
+    )
 
     ctx.room.on("participantDisconnected", (remoteParticipant) => {
       if (remoteParticipant.identity === participant.identity) {

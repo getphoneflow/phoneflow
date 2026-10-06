@@ -8,7 +8,7 @@ export function buildCallTranscript(history: ChatContext): CallTranscript {
     if (item.role !== "user" && item.role !== "assistant") return []
 
     const content = item.textContent?.trim()
-    if (!content) return []
+    if (!content || content === "...") return []
 
     return [
       {

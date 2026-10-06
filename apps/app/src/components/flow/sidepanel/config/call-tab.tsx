@@ -32,6 +32,26 @@ export function CallTab() {
       />
 
       <NumberField
+        label="Idle timeout (s)"
+        description="How long to wait after the user stays silent before the agent checks if they are still there"
+        value={call.idleTimeoutSec}
+        min={1}
+        step={1}
+        readOnly={readOnly}
+        onChange={(idleTimeoutSec) => patchCall({ idleTimeoutSec })}
+      />
+
+      <NumberField
+        label="Max idle messages"
+        description="Maximum times the agent can check if the user is still there during the call"
+        value={call.maxIdleMessages}
+        min={1}
+        step={1}
+        readOnly={readOnly}
+        onChange={(maxIdleMessages) => patchCall({ maxIdleMessages })}
+      />
+
+      <NumberField
         label="Silence timeout (s)"
         description="End the call if the user stays silent for more than this duration"
         value={call.endOnSilenceSec}

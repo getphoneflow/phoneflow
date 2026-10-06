@@ -83,7 +83,7 @@ function Page() {
         name: values.name,
         email: values.email,
         password: values.password,
-        timezone: TIME_ZONES.includes(timezone) ? timezone : "UTC",
+        timezone: TIME_ZONES.includes(timezone) ? timezone : "America/New_York",
       })
       if (result.error) {
         throw new Error(result.error.message)

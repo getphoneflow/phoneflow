@@ -4,7 +4,7 @@ import { createContext, useContext } from "react"
 import { sessionQueryOptions } from "@/lib/auth/session"
 import { formatDateTime } from "@/lib/time"
 
-const UserTimeZoneContext = createContext("UTC")
+const UserTimeZoneContext = createContext("America/New_York")
 
 export function UserTimeZoneProvider({
   children,

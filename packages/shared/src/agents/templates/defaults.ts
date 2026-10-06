@@ -21,7 +21,7 @@ export function createDefaultAgentConfig(): AgentConfig {
       endOnSilenceSec: 300,
     },
     globalPrompt: "You are a helpful assistant",
-    timezone: "UTC",
+    timezone: "America/New_York",
     nodes: [
       {
         id: "conversation",

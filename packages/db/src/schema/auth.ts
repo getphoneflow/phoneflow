@@ -20,7 +20,7 @@ export const user = pgTable("user", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   lastLoginMethod: text("last_login_method"),
-  timezone: text("timezone").notNull().default("UTC"),
+  timezone: text("timezone").notNull().default("America/New_York"),
   image: text("image"),
   stripeCustomerId: text("stripe_customer_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),

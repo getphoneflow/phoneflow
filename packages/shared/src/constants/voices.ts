@@ -22,6 +22,10 @@ export const VOICES = {
     "aura-2": deepgramAura2Voices,
   },
   elevenlabs: {
+    eleven_v4: elevenlabsVoices,
+    eleven_v4_turbo: elevenlabsVoices,
+    eleven_v3: elevenlabsVoices,
+    eleven_v3_conversational: elevenlabsVoices,
     eleven_flash_v2_5: elevenlabsVoices,
     eleven_flash_v2: elevenlabsVoices,
     eleven_turbo_v2_5: elevenlabsVoices,

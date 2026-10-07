@@ -1,10 +1,12 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { Suspense, useLayoutEffect } from "react"
+import { z } from "zod"
 
 import type {
   AgentConfigResponse,
   AgentDetailResponse,
+  AgentVersionConfigResponse,
 } from "@workspace/shared/api/agents/types"
 import {
   Breadcrumb,
@@ -29,6 +31,12 @@ import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 import { useAgentStore } from "@/stores/agent"
 
+const agentPageSearchSchema = z
+  .object({
+    agentVersionId: z.uuid().optional(),
+  })
+  .strict()
+
 function agentQueryOptions(agentId: string) {
   return {
     queryKey: ["agents", "detail", agentId],
@@ -43,9 +51,23 @@ function agentConfigQueryOptions(agentId: string) {
   }
 }
 
+function agentVersionConfigQueryOptions(
+  agentId: string,
+  versionNumber: number
+) {
+  return {
+    queryKey: ["agents", "version-config", agentId, versionNumber],
+    queryFn: () =>
+      api.get<AgentVersionConfigResponse>(
+        `/agents/${agentId}/versions/${versionNumber}/config`
+      ),
+  }
+}
+
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/agents/$agentId/"
 )({
+  validateSearch: agentPageSearchSchema,
   component: Page,
 })
 
@@ -112,22 +134,55 @@ function Page() {
 
 function AgentEditor() {
   const { agentId } = Route.useParams()
+  const { agentVersionId } = Route.useSearch()
+  const navigate = Route.useNavigate()
   const { data: agent } = useSuspenseQuery(agentQueryOptions(agentId))
-  const { data: agentConfig } = useSuspenseQuery(
-    agentConfigQueryOptions(agentId)
-  )
   const canUpdateAgent = useCheckPermission({ agent: ["update"] })
   const setAgent = useAgentStore((state) => state.setAgent)
   const loadAgentConfig = useAgentStore((state) => state.loadAgentConfig)
+  const loadAgentVersionConfig = useAgentStore(
+    (state) => state.loadAgentVersionConfig
+  )
   const name = useAgentStore((state) => state.agent.name)
+
+  const version = agentVersionId
+    ? agent.versions.find((entry) => entry.id === agentVersionId)
+    : undefined
+
+  const { data: config } = useSuspenseQuery(
+    version
+      ? agentVersionConfigQueryOptions(agentId, version.number)
+      : agentConfigQueryOptions(agentId)
+  )
 
   useLayoutEffect(() => {
     setAgent(agent)
   }, [agent, setAgent])
 
   useLayoutEffect(() => {
-    loadAgentConfig(agentConfig, !canUpdateAgent)
-  }, [agentId, agentConfig, canUpdateAgent, loadAgentConfig])
+    if (version) {
+      loadAgentVersionConfig(config, version)
+      return
+    }
+
+    // Version ID not found, clear it
+    if (agentVersionId) {
+      navigate({
+        search: (prev) => ({ ...prev, agentVersionId: undefined }),
+        replace: true,
+      })
+    }
+
+    loadAgentConfig(config, !canUpdateAgent)
+  }, [
+    agentVersionId,
+    version,
+    config,
+    canUpdateAgent,
+    navigate,
+    loadAgentConfig,
+    loadAgentVersionConfig,
+  ])
 
   return (
     <>

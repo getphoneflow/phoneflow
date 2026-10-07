@@ -1,11 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useIsFetching } from "@tanstack/react-query"
+import { useNavigate } from "@tanstack/react-router"
 import { CheckIcon, ChevronDownIcon } from "lucide-react"
 
-import type {
-  AgentConfigResponse,
-  AgentVersionConfigResponse,
-  AgentVersionResponse,
-} from "@workspace/shared/api/agents/types"
 import { Button } from "@workspace/ui/components/button"
 import {
   DropdownMenu,
@@ -13,25 +9,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu"
-import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { formatAgentVersionLabel } from "@/components/helpers"
 import { UserDateTime } from "@/components/user-timezone-provider"
-import { api } from "@/lib/api"
-import { useCheckPermission } from "@/lib/auth/permissions"
 import { useAgentStore } from "@/stores/agent"
 
 export function AgentVersionSelector() {
-  const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const agent = useAgentStore((state) => state.agent)
   const activeVersionNumber = useAgentStore(
     (state) => state.activeVersionNumber
   )
-  const loadAgentConfig = useAgentStore((state) => state.loadAgentConfig)
-  const loadAgentVersionConfig = useAgentStore(
-    (state) => state.loadAgentVersionConfig
-  )
-  const canUpdateAgent = useCheckPermission({ agent: ["update"] })
+  const isFetchingVersion =
+    useIsFetching({
+      queryKey: ["agents", "version-config", agent.id],
+    }) > 0
 
   const draftVersionNumber =
     agent.versions.length > 0
@@ -39,28 +31,15 @@ export function AgentVersionSelector() {
       : 1
   const isDraftSelected = activeVersionNumber === null
 
-  const fetchVersionMutation = useMutation({
-    mutationFn: (version: AgentVersionResponse) =>
-      api.get<AgentVersionConfigResponse>(
-        `/agents/${agent.id}/versions/${version.number}/config`
-      ),
-    onSuccess: (config, version) => {
-      loadAgentVersionConfig(config, version)
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-  })
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Button
           variant="outline"
           className="w-28 justify-between"
-          disabled={fetchVersionMutation.isPending}
+          disabled={isFetchingVersion}
         >
-          {fetchVersionMutation.isPending ? (
+          {isFetchingVersion ? (
             <Spinner className="mx-auto" />
           ) : (
             <>
@@ -76,14 +55,11 @@ export function AgentVersionSelector() {
       <DropdownMenuContent className="max-h-120 w-65">
         <DropdownMenuItem
           onClick={() => {
-            const config = queryClient.getQueryData<AgentConfigResponse>([
-              "agents",
-              "config",
-              agent.id,
-            ])
-            if (config) {
-              loadAgentConfig(config, !canUpdateAgent)
-            }
+            navigate({
+              to: "/agents/$agentId",
+              params: { agentId: agent.id },
+              search: (prev) => ({ ...prev, agentVersionId: undefined }),
+            })
           }}
         >
           <div className="min-w-0 flex-1">
@@ -103,7 +79,14 @@ export function AgentVersionSelector() {
               key={version.id}
               onClick={() => {
                 if (!isSelected) {
-                  fetchVersionMutation.mutate(version)
+                  navigate({
+                    to: "/agents/$agentId",
+                    params: { agentId: agent.id },
+                    search: (prev) => ({
+                      ...prev,
+                      agentVersionId: version.id,
+                    }),
+                  })
                 }
               }}
             >

@@ -14,7 +14,6 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react"
-import { useState } from "react"
 
 import type {
   ContactListItem,
@@ -36,7 +35,6 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
-import { ContactDetailSheet } from "@/components/contacts/contact-detail-sheet"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
 import { formatDurationMs } from "@/lib/time"
@@ -98,6 +96,7 @@ type ContactsDataTableProps = {
   pageSize: number
   sortBy: ContactListSortBy
   sortDir: "asc" | "desc"
+  onContactSelect: (contactId: string) => void
   onSortingChange: (sorting: {
     sortBy: ContactListSortBy
     sortDir: "asc" | "desc"
@@ -113,12 +112,11 @@ export function ContactsDataTable({
   pageSize,
   sortBy,
   sortDir,
+  onContactSelect,
   onSortingChange,
   onPageChange,
   onPageSizeChange,
 }: ContactsDataTableProps) {
-  const [selectedContact, setSelectedContact] =
-    useState<ContactListItem | null>(null)
   const sorting: SortingState = [{ id: sortBy, desc: sortDir === "desc" }]
 
   const table = useTable({
@@ -175,7 +173,7 @@ export function ContactsDataTable({
                 <TableRow
                   key={row.id}
                   className={cn("cursor-pointer")}
-                  onClick={() => setSelectedContact(row.original)}
+                  onClick={() => onContactSelect(row.original.id)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -254,17 +252,6 @@ export function ContactsDataTable({
           </Button>
         </div>
       </div>
-      {selectedContact && (
-        <ContactDetailSheet
-          contact={selectedContact}
-          open
-          onOpenChange={(open) => {
-            if (!open) {
-              setSelectedContact(null)
-            }
-          }}
-        />
-      )}
     </div>
   )
 }

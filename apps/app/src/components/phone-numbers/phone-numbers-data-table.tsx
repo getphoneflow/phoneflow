@@ -49,7 +49,6 @@ import {
 } from "@workspace/ui/components/table"
 import { formatAgentVersionLabel } from "@/components/helpers"
 import { PhoneNumberRowActions } from "@/components/phone-numbers/phone-number-row-actions"
-import { PhoneNumberSheet } from "@/components/phone-numbers/phone-number-sheet"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
 
@@ -112,12 +111,13 @@ const columns = columnHelper.columns([
 
 export function PhoneNumbersDataTable({
   data,
+  onPhoneNumberSelect,
 }: {
   data: PhoneNumberListResponse
+  onPhoneNumberSelect: (phoneNumberId: string) => void
 }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
-  const [selected, setSelected] = useState<PhoneNumber | null>(null)
 
   const table = useTable({
     features,
@@ -172,7 +172,7 @@ export function PhoneNumbersDataTable({
                 <TableRow
                   key={row.id}
                   className="cursor-pointer"
-                  onClick={() => setSelected(row.original)}
+                  onClick={() => onPhoneNumberSelect(row.original.id)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -262,19 +262,6 @@ export function PhoneNumbersDataTable({
           </Button>
         </div>
       </div>
-
-      {selected && (
-        <PhoneNumberSheet
-          key={selected.id}
-          phoneNumber={selected}
-          open
-          onOpenChange={(open) => {
-            if (!open) {
-              setSelected(null)
-            }
-          }}
-        />
-      )}
     </div>
   )
 }

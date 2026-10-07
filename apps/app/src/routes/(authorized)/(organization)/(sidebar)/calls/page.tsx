@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { Suspense } from "react"
+import { z } from "zod"
 
 import { callListQuerySchema } from "@workspace/shared/api/calls/schemas"
 import type {
@@ -16,10 +17,17 @@ import {
 import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { Skeleton } from "@workspace/ui/components/skeleton"
+import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
 import { CallsDataTable } from "@/components/calls/calls-data-table"
 import { CallsFilters } from "@/components/calls/calls-filters"
 import { DownloadCallsDialog } from "@/components/calls/download-calls-dialog"
+import { LiveCallSheet } from "@/components/calls/live-call-sheet"
 import { api } from "@/lib/api"
+
+const callsPageSearchSchema = callListQuerySchema.extend({
+  callId: z.uuid().optional(),
+  liveCallId: z.uuid().optional(),
+})
 
 function buildCallsListPath(search: CallListQuery) {
   const params = new URLSearchParams()
@@ -116,7 +124,7 @@ function queryOptions(search: CallListQuery) {
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/calls/"
 )({
-  validateSearch: callListQuerySchema,
+  validateSearch: callsPageSearchSchema,
   component: Page,
 })
 
@@ -174,43 +182,74 @@ function Page() {
 function CallsTable() {
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
-  const { data } = useSuspenseQuery(queryOptions(search))
-  const { sortBy, sortDir } = search
+  const { callId, liveCallId, ...listQuery } = search
+  const { data } = useSuspenseQuery(queryOptions(listQuery))
+  const { sortBy, sortDir } = listQuery
 
   return (
-    <CallsDataTable
-      items={data.items}
-      total={data.total}
-      page={data.page}
-      pageSize={data.pageSize}
-      sortBy={sortBy}
-      sortDir={sortDir}
-      onSortingChange={(sorting) => {
-        navigate({
-          search: {
-            ...search,
-            ...sorting,
-            page: 1,
-          },
-        })
-      }}
-      onPageChange={(page) => {
-        navigate({
-          search: {
-            ...search,
-            page,
-          },
-        })
-      }}
-      onPageSizeChange={(pageSize) => {
-        navigate({
-          search: {
-            ...search,
-            pageSize,
-            page: 1,
-          },
-        })
-      }}
-    />
+    <>
+      <CallsDataTable
+        items={data.items}
+        total={data.total}
+        page={data.page}
+        pageSize={data.pageSize}
+        sortBy={sortBy}
+        sortDir={sortDir}
+        onCallSelect={(nextCallId) => {
+          navigate({
+            search: { ...search, callId: nextCallId, liveCallId: undefined },
+          })
+        }}
+        onLiveCallSelect={(nextLiveCallId) => {
+          navigate({
+            search: {
+              ...search,
+              liveCallId: nextLiveCallId,
+              callId: undefined,
+            },
+          })
+        }}
+        onSortingChange={(sorting) => {
+          navigate({
+            search: {
+              ...search,
+              ...sorting,
+              page: 1,
+            },
+          })
+        }}
+        onPageChange={(page) => {
+          navigate({
+            search: {
+              ...search,
+              page,
+            },
+          })
+        }}
+        onPageSizeChange={(pageSize) => {
+          navigate({
+            search: {
+              ...search,
+              pageSize,
+              page: 1,
+            },
+          })
+        }}
+      />
+      <CallDetailSheet
+        callId={callId}
+        open={Boolean(callId)}
+        onClose={() => {
+          navigate({ search: { ...search, callId: undefined } })
+        }}
+      />
+      <LiveCallSheet
+        callId={liveCallId}
+        open={Boolean(liveCallId)}
+        onClose={() => {
+          navigate({ search: { ...search, liveCallId: undefined } })
+        }}
+      />
+    </>
   )
 }

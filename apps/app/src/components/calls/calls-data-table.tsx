@@ -19,7 +19,6 @@ import {
   Globe,
   Phone,
 } from "lucide-react"
-import { useState } from "react"
 
 import type {
   CallListItem,
@@ -58,8 +57,6 @@ import {
   getCallCostBreakdown,
   parseCallCost,
 } from "@/components/calls/call-cost-breakdown"
-import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
-import { LiveCallSheet } from "@/components/calls/live-call-sheet"
 import { formatAgentName } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
@@ -224,6 +221,8 @@ type CallsDataTableProps = {
   pageSize: number
   sortBy: CallListSortBy
   sortDir: "asc" | "desc"
+  onCallSelect: (callId: string) => void
+  onLiveCallSelect: (liveCallId: string) => void
   onSortingChange: (sorting: {
     sortBy: CallListSortBy
     sortDir: "asc" | "desc"
@@ -239,12 +238,12 @@ export function CallsDataTable({
   pageSize,
   sortBy,
   sortDir,
+  onCallSelect,
+  onLiveCallSelect,
   onSortingChange,
   onPageChange,
   onPageSizeChange,
 }: CallsDataTableProps) {
-  const [selectedCall, setSelectedCall] = useState<CallListItem | null>(null)
-  const [liveCall, setLiveCall] = useState<CallListItem | null>(null)
   const sorting: SortingState = [{ id: sortBy, desc: sortDir === "desc" }]
 
   const table = useTable({
@@ -307,10 +306,10 @@ export function CallsDataTable({
                   onClick={() => {
                     if (row.original.status === "no_answer") return
                     if (row.original.status === "in_progress") {
-                      setLiveCall(row.original)
+                      onLiveCallSelect(row.original.id)
                       return
                     }
-                    setSelectedCall(row.original)
+                    onCallSelect(row.original.id)
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -390,28 +389,6 @@ export function CallsDataTable({
           </Button>
         </div>
       </div>
-      {selectedCall && (
-        <CallDetailSheet
-          call={selectedCall}
-          open
-          onOpenChange={(open) => {
-            if (!open) {
-              setSelectedCall(null)
-            }
-          }}
-        />
-      )}
-      {liveCall && (
-        <LiveCallSheet
-          call={liveCall}
-          open
-          onOpenChange={(open) => {
-            if (!open) {
-              setLiveCall(null)
-            }
-          }}
-        />
-      )}
     </div>
   )
 }

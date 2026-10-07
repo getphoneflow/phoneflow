@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { Suspense } from "react"
+import { z } from "zod"
 
 import { contactListQuerySchema } from "@workspace/shared/api/contacts/schemas"
 import type {
@@ -16,10 +17,19 @@ import {
 import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { Skeleton } from "@workspace/ui/components/skeleton"
+import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
+import { LiveCallSheet } from "@/components/calls/live-call-sheet"
+import { ContactDetailSheet } from "@/components/contacts/contact-detail-sheet"
 import { ContactsDataTable } from "@/components/contacts/contacts-data-table"
 import { ContactsFilters } from "@/components/contacts/contacts-filters"
 import { DownloadContactsDialog } from "@/components/contacts/download-contacts-dialog"
 import { api } from "@/lib/api"
+
+const contactsPageSearchSchema = contactListQuerySchema.extend({
+  contactId: z.uuid().optional(),
+  callId: z.uuid().optional(),
+  liveCallId: z.uuid().optional(),
+})
 
 function buildContactsListPath(search: ContactListQuery) {
   const params = new URLSearchParams()
@@ -85,7 +95,7 @@ function queryOptions(search: ContactListQuery) {
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/contacts/"
 )({
-  validateSearch: contactListQuerySchema,
+  validateSearch: contactsPageSearchSchema,
   component: Page,
 })
 
@@ -143,43 +153,102 @@ function Page() {
 function ContactsTable() {
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
-  const { data } = useSuspenseQuery(queryOptions(search))
-  const { sortBy, sortDir } = search
+  const { contactId, callId, liveCallId, ...listQuery } = search
+  const { data } = useSuspenseQuery(queryOptions(listQuery))
+  const { sortBy, sortDir } = listQuery
 
   return (
-    <ContactsDataTable
-      items={data.items}
-      total={data.total}
-      page={data.page}
-      pageSize={data.pageSize}
-      sortBy={sortBy}
-      sortDir={sortDir}
-      onSortingChange={(sorting) => {
-        navigate({
-          search: {
-            ...search,
-            ...sorting,
-            page: 1,
-          },
-        })
-      }}
-      onPageChange={(page) => {
-        navigate({
-          search: {
-            ...search,
-            page,
-          },
-        })
-      }}
-      onPageSizeChange={(pageSize) => {
-        navigate({
-          search: {
-            ...search,
-            pageSize,
-            page: 1,
-          },
-        })
-      }}
-    />
+    <>
+      <ContactsDataTable
+        items={data.items}
+        total={data.total}
+        page={data.page}
+        pageSize={data.pageSize}
+        sortBy={sortBy}
+        sortDir={sortDir}
+        onContactSelect={(nextContactId) => {
+          navigate({
+            search: {
+              ...search,
+              contactId: nextContactId,
+              callId: undefined,
+              liveCallId: undefined,
+            },
+          })
+        }}
+        onSortingChange={(sorting) => {
+          navigate({
+            search: {
+              ...search,
+              ...sorting,
+              page: 1,
+            },
+          })
+        }}
+        onPageChange={(page) => {
+          navigate({
+            search: {
+              ...search,
+              page,
+            },
+          })
+        }}
+        onPageSizeChange={(pageSize) => {
+          navigate({
+            search: {
+              ...search,
+              pageSize,
+              page: 1,
+            },
+          })
+        }}
+      />
+      <ContactDetailSheet
+        contactId={contactId}
+        open={Boolean(contactId)}
+        onClose={() => {
+          navigate({
+            search: {
+              ...search,
+              contactId: undefined,
+              callId: undefined,
+              liveCallId: undefined,
+            },
+          })
+        }}
+        onCallSelect={(nextCallId) => {
+          navigate({
+            search: {
+              ...search,
+              callId: nextCallId,
+              liveCallId: undefined,
+            },
+          })
+        }}
+        onLiveCallSelect={(nextLiveCallId) => {
+          navigate({
+            search: {
+              ...search,
+              liveCallId: nextLiveCallId,
+              callId: undefined,
+            },
+          })
+        }}
+      />
+      <CallDetailSheet
+        callId={callId}
+        open={Boolean(callId)}
+        onClose={() => {
+          navigate({ search: { ...search, callId: undefined } })
+        }}
+      />
+      <LiveCallSheet
+        callId={liveCallId}
+        open={Boolean(liveCallId)}
+        onClose={() => {
+          navigate({ search: { ...search, liveCallId: undefined } })
+        }}
+      />
+    </>
   )
 }

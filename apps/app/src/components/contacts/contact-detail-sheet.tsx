@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { Globe, PhoneIncoming, PhoneOutgoing } from "lucide-react"
-import { type ReactNode, useState } from "react"
+import { type ReactNode, Suspense } from "react"
 
 import type { CallListItem } from "@workspace/shared/api/calls/types"
 import type {
@@ -14,19 +14,11 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@workspace/ui/components/sheet"
-import { Skeleton } from "@workspace/ui/components/skeleton"
 import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
-import { CallDetailSheet } from "@/components/calls/call-detail-sheet"
-import { LiveCallSheet } from "@/components/calls/live-call-sheet"
+import { SheetSkeleton } from "@/components/sheet-skeleton"
 import { UserDateTime } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
 import { formatDurationMs } from "@/lib/time"
-
-type ContactDetailSheetProps = {
-  contact: ContactListItem
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}
 
 function formatContactDisplayName(contact: ContactListItem) {
   if (contact.phoneNumber) {
@@ -107,128 +99,129 @@ function CallCard({
   )
 }
 
-export function ContactDetailSheet({
-  contact,
-  open,
-  onOpenChange,
-}: ContactDetailSheetProps) {
-  const [selectedCall, setSelectedCall] = useState<CallListItem | null>(null)
-  const [liveCall, setLiveCall] = useState<CallListItem | null>(null)
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["contacts", contact.id],
-    queryFn: () => api.get<ContactDetailResponse>(`/contacts/${contact.id}`),
-    enabled: open,
+function ContactDetailBody({
+  contactId,
+  onCallSelect,
+  onLiveCallSelect,
+}: {
+  contactId: string
+  onCallSelect: (callId: string) => void
+  onLiveCallSelect: (liveCallId: string) => void
+}) {
+  const { data: contact } = useSuspenseQuery({
+    queryKey: ["contacts", contactId],
+    queryFn: () => api.get<ContactDetailResponse>(`/contacts/${contactId}`),
   })
-
-  const detail = data ?? contact
-  const callsCount = data?.calls.length ?? detail.callCount
 
   return (
     <>
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent className="gap-0 sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle className="pr-8">
-              {formatContactDisplayName(detail)}
-            </SheetTitle>
-          </SheetHeader>
+      <SheetHeader>
+        <SheetTitle className="pr-8">
+          {formatContactDisplayName(contact)}
+        </SheetTitle>
+      </SheetHeader>
 
-          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pb-6">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <div className="text-xs text-muted-foreground">Total time</div>
-                <div className="font-medium">
-                  {formatDurationMs(detail.totalDurationMs)}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">Avg / call</div>
-                <div className="font-medium">
-                  {formatDurationMs(averageDurationMs(detail))}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">First call</div>
-                <div className="font-medium">
-                  {detail.firstCallAt ? (
-                    <UserDateTime value={detail.firstCallAt} />
-                  ) : null}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">Last call</div>
-                <div className="font-medium">
-                  {detail.latestCallAt ? (
-                    <UserDateTime value={detail.latestCallAt} />
-                  ) : null}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 divide-y border-y">
-              <FieldRow label="Phone" value={detail.phoneNumber} />
-              <FieldRow label="First name" value={detail.firstName} />
-              <FieldRow label="Last name" value={detail.lastName} />
-              <FieldRow label="External ID" value={detail.externalId} />
-            </div>
-
-            <div className="mt-6">
-              <h3 className="mb-3 text-sm font-medium">Calls ({callsCount})</h3>
-              {isLoading ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-20 w-full rounded-lg" />
-                  <Skeleton className="h-20 w-full rounded-lg" />
-                  <Skeleton className="h-20 w-full rounded-lg" />
-                </div>
-              ) : data && data.calls.length > 0 ? (
-                <div className="space-y-2">
-                  {data.calls.map((call) => (
-                    <CallCard
-                      key={call.id}
-                      call={call}
-                      onClick={() => {
-                        if (call.status === "in_progress") {
-                          setLiveCall(call)
-                          return
-                        }
-                        if (call.status === "completed") {
-                          setSelectedCall(call)
-                        }
-                      }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">No calls yet</p>
-              )}
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-4 pb-6">
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <div className="text-xs text-muted-foreground">Total time</div>
+            <div className="font-medium">
+              {formatDurationMs(contact.totalDurationMs)}
             </div>
           </div>
-        </SheetContent>
-      </Sheet>
+          <div>
+            <div className="text-xs text-muted-foreground">Avg / call</div>
+            <div className="font-medium">
+              {formatDurationMs(averageDurationMs(contact))}
+            </div>
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground">First call</div>
+            <div className="font-medium">
+              {contact.firstCallAt ? (
+                <UserDateTime value={contact.firstCallAt} />
+              ) : null}
+            </div>
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground">Last call</div>
+            <div className="font-medium">
+              {contact.latestCallAt ? (
+                <UserDateTime value={contact.latestCallAt} />
+              ) : null}
+            </div>
+          </div>
+        </div>
 
-      {selectedCall && (
-        <CallDetailSheet
-          call={selectedCall}
-          open
-          onOpenChange={(nextOpen) => {
-            if (!nextOpen) {
-              setSelectedCall(null)
-            }
-          }}
-        />
-      )}
-      {liveCall && (
-        <LiveCallSheet
-          call={liveCall}
-          open
-          onOpenChange={(nextOpen) => {
-            if (!nextOpen) {
-              setLiveCall(null)
-            }
-          }}
-        />
-      )}
+        <div className="mt-8 divide-y border-y">
+          <FieldRow label="Phone" value={contact.phoneNumber} />
+          <FieldRow label="First name" value={contact.firstName} />
+          <FieldRow label="Last name" value={contact.lastName} />
+          <FieldRow label="External ID" value={contact.externalId} />
+        </div>
+
+        <div className="mt-6">
+          <h3 className="mb-3 text-sm font-medium">
+            Calls ({contact.calls.length})
+          </h3>
+          {contact.calls.length > 0 ? (
+            <div className="space-y-2">
+              {contact.calls.map((call) => (
+                <CallCard
+                  key={call.id}
+                  call={call}
+                  onClick={() => {
+                    if (call.status === "in_progress") {
+                      onLiveCallSelect(call.id)
+                      return
+                    }
+                    if (call.status === "completed") {
+                      onCallSelect(call.id)
+                    }
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">No calls yet</p>
+          )}
+        </div>
+      </div>
     </>
+  )
+}
+
+export function ContactDetailSheet({
+  contactId,
+  open,
+  onClose,
+  onCallSelect,
+  onLiveCallSelect,
+}: {
+  contactId?: string
+  open: boolean
+  onClose: () => void
+  onCallSelect: (callId: string) => void
+  onLiveCallSelect: (liveCallId: string) => void
+}) {
+  return (
+    <Sheet
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) onClose()
+      }}
+    >
+      <SheetContent className="gap-0 sm:max-w-md">
+        <Suspense fallback={<SheetSkeleton />}>
+          {contactId ? (
+            <ContactDetailBody
+              contactId={contactId}
+              onCallSelect={onCallSelect}
+              onLiveCallSelect={onLiveCallSelect}
+            />
+          ) : null}
+        </Suspense>
+      </SheetContent>
+    </Sheet>
   )
 }

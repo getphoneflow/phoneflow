@@ -6,6 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "@tanstack/react-router"
+import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
 
@@ -28,6 +29,7 @@ import { Input } from "@workspace/ui/components/input"
 import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { Captcha } from "@/components/captcha"
 import { GoogleIcon } from "@/components/logos/google"
 import { signIn, signUp } from "@/lib/auth/client"
 import { env } from "@/lib/env"
@@ -46,6 +48,7 @@ function Page() {
   const callbackURL = redirect
     ? `${env.FRONTEND_URL}${redirect}`
     : env.FRONTEND_URL
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
 
   const signUpFormSchema = z
     .object({
@@ -84,6 +87,11 @@ function Page() {
         email: values.email,
         password: values.password,
         timezone: TIME_ZONES.includes(timezone) ? timezone : "America/New_York",
+        fetchOptions: {
+          headers: {
+            "x-captcha-response": captchaToken,
+          },
+        },
       })
       if (result.error) {
         throw new Error(result.error.message)
@@ -96,6 +104,7 @@ function Page() {
       })
     },
     onError: (error) => {
+      setCaptchaToken(null)
       toast.error(error.message)
     },
   })
@@ -218,7 +227,17 @@ function Page() {
                   )}
                 />
 
-                <Button type="submit" disabled={signUpMutation.isPending}>
+                <Captcha
+                  key={signUpMutation.failureCount}
+                  onTokenChange={setCaptchaToken}
+                />
+
+                <Button
+                  type="submit"
+                  disabled={
+                    signUpMutation.isPending || (env.IS_CLOUD && !captchaToken)
+                  }
+                >
                   {signUpMutation.isPending ? <Spinner /> : "Sign up"}
                 </Button>
 

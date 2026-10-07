@@ -14,6 +14,7 @@
     "@better-auth/stripe": "catalog:",
     "@hookform/resolvers": "5.8.0",
     "@livekit/components-react": "catalog:",
+    "@marsidev/react-turnstile": "^1.6.1",
     "@tanstack/react-query": "^5.101.4",
     "@tanstack/react-router": "^1.170.29",
     "@tanstack/react-table": "catalog:",

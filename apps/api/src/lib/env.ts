@@ -7,6 +7,7 @@ export const env = {
   NODE_ENV: process.env.NODE_ENV ?? "development",
   IS_CLOUD: process.env.IS_CLOUD === "true",
   BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET ?? "",
+  TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY ?? "",
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ?? "",
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ?? "",
   REDIS_URL: process.env.REDIS_URL ?? "",

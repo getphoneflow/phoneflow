@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
+import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
 
@@ -21,6 +22,7 @@ import {
 import { Input } from "@workspace/ui/components/input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { Captcha } from "@/components/captcha"
 import { requestPasswordReset } from "@/lib/auth/client"
 import { env } from "@/lib/env"
 
@@ -29,6 +31,8 @@ export const Route = createFileRoute("/(unauthorized)/reset-password/")({
 })
 
 function Page() {
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+
   const recoverPasswordFormSchema = z.object({
     email: z.email("Enter a valid email address"),
   })
@@ -47,6 +51,11 @@ function Page() {
       const result = await requestPasswordReset({
         email: values.email,
         redirectTo: `${env.FRONTEND_URL}/set-new-password`,
+        fetchOptions: {
+          headers: {
+            "x-captcha-response": captchaToken,
+          },
+        },
       })
       if (result.error) {
         throw new Error(result.error.message)
@@ -57,8 +66,10 @@ function Page() {
         "If an account exists for this email, a reset link has been sent"
       )
       form.reset()
+      setCaptchaToken(null)
     },
     onError: (error) => {
+      setCaptchaToken(null)
       toast.error(error.message)
     },
   })
@@ -104,9 +115,17 @@ function Page() {
                   )}
                 />
 
+                <Captcha
+                  key={resetPasswordMutation.submittedAt}
+                  onTokenChange={setCaptchaToken}
+                />
+
                 <Button
                   type="submit"
-                  disabled={resetPasswordMutation.isPending}
+                  disabled={
+                    resetPasswordMutation.isPending ||
+                    (env.IS_CLOUD && !captchaToken)
+                  }
                 >
                   {resetPasswordMutation.isPending ? (
                     <Spinner className="mx-12" />

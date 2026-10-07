@@ -6,6 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "@tanstack/react-router"
+import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
 
@@ -29,6 +30,7 @@ import { Input } from "@workspace/ui/components/input"
 import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { Captcha } from "@/components/captcha"
 import { GoogleIcon } from "@/components/logos/google"
 import { getLastUsedLoginMethod, signIn } from "@/lib/auth/client"
 import { env } from "@/lib/env"
@@ -45,6 +47,7 @@ function Page() {
     new URLSearchParams(redirect?.split("?")[1] ?? "").get("email") ?? ""
   const queryClient = useQueryClient()
   const lastLoginMethod = getLastUsedLoginMethod()
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
 
   const callbackURL = redirect
     ? `${env.FRONTEND_URL}${redirect}`
@@ -70,6 +73,11 @@ function Page() {
       const result = await signIn.email({
         email: values.email,
         password: values.password,
+        fetchOptions: {
+          headers: {
+            "x-captcha-response": captchaToken,
+          },
+        },
       })
       if (result.error) {
         if (result.error.code === "EMAIL_NOT_VERIFIED") {
@@ -92,6 +100,7 @@ function Page() {
       navigate({ to: "/" })
     },
     onError: (error) => {
+      setCaptchaToken(null)
       toast.error(error.message)
     },
   })
@@ -179,9 +188,16 @@ function Page() {
                   )}
                 />
 
+                <Captcha
+                  key={signInMutation.failureCount}
+                  onTokenChange={setCaptchaToken}
+                />
+
                 <Button
                   type="submit"
-                  disabled={signInMutation.isPending}
+                  disabled={
+                    signInMutation.isPending || (env.IS_CLOUD && !captchaToken)
+                  }
                   className="relative"
                 >
                   {signInMutation.isPending ? <Spinner /> : "Sign in"}

@@ -1,7 +1,12 @@
 import { stripe } from "@better-auth/stripe"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
-import { emailOTP, lastLoginMethod, organization } from "better-auth/plugins"
+import {
+  captcha,
+  emailOTP,
+  lastLoginMethod,
+  organization,
+} from "better-auth/plugins"
 
 import { db } from "@workspace/db/client"
 import * as schema from "@workspace/db/schema/auth"
@@ -111,6 +116,10 @@ export const auth = betterAuth({
     }),
     ...(env.IS_CLOUD
       ? [
+          captcha({
+            provider: "cloudflare-turnstile",
+            secretKey: env.TURNSTILE_SECRET_KEY,
+          }),
           stripe({
             stripeClient,
             stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,

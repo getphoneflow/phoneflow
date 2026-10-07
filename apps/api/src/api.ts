@@ -8,6 +8,7 @@ import { agentRoutes } from "@/routes/agents"
 import { batchCallRoutes } from "@/routes/batch-calls"
 import { billingRoutes } from "@/routes/billing"
 import { callRoutes } from "@/routes/calls"
+import { contactRoutes } from "@/routes/contacts"
 import { phoneNumberRoutes } from "@/routes/phone-numbers"
 import { tokenRoutes } from "@/routes/token"
 import { userRoutes } from "@/routes/user"
@@ -33,6 +34,7 @@ api.on(["POST", "GET"], "/api/auth/*", (c) => {
 api.route("/api/agents", agentRoutes)
 api.route("/api/batch-calls", batchCallRoutes)
 api.route("/api/calls", callRoutes)
+api.route("/api/contacts", contactRoutes)
 api.route("/api/phone-numbers", phoneNumberRoutes)
 api.route("/api/token", tokenRoutes)
 api.route("/api/user", userRoutes)

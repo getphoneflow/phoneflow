@@ -64,16 +64,12 @@ import { formatAgentName } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
 import { env } from "@/lib/env"
+import { formatDurationMs } from "@/lib/time"
 
 const features = tableFeatures({
   columnVisibilityFeature,
   rowSortingFeature,
   rowPaginationFeature,
-})
-
-const secondsFormatter = new Intl.NumberFormat("en", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
 })
 
 function CostCell({ call }: { call: CallListItem }) {
@@ -128,7 +124,7 @@ const columns = columnHelper.columns([
     cell: ({ row }) =>
       row.original.durationMs === null
         ? null
-        : `${secondsFormatter.format(row.original.durationMs / 1000)}s`,
+        : formatDurationMs(row.original.durationMs),
   }),
   columnHelper.accessor((row) => parseCallCost(row.totalCost), {
     id: "cost",

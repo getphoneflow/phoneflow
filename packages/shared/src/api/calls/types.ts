@@ -73,6 +73,7 @@ export type CallListItem = {
   organizationId: string
   agentId: string
   agentVersionId: string | null
+  contactId: string | null
   channel: CallChannel
   direction: CallDirection
   status: CallStatus
@@ -110,6 +111,7 @@ export type CallDetailResponse = {
   organizationId: string
   agentId: string
   agentVersionId: string | null
+  contactId: string | null
   channel: CallChannel
   direction: CallDirection
   status: CallStatus

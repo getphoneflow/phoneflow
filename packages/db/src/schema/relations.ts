@@ -14,6 +14,7 @@ import {
   batchCallsTable,
 } from "@workspace/db/schema/batch-calls"
 import { callsTable } from "@workspace/db/schema/calls"
+import { contactsTable } from "@workspace/db/schema/contacts"
 import { creditPurchasesTable } from "@workspace/db/schema/credits"
 import { phoneNumbersTable } from "@workspace/db/schema/phone-numbers"
 
@@ -24,6 +25,7 @@ export const relations = defineRelations(
     batchCallsTable,
     batchCallRecipientsTable,
     callsTable,
+    contactsTable,
     creditPurchasesTable,
     phoneNumbersTable,
     user,
@@ -119,6 +121,20 @@ export const relations = defineRelations(
         from: r.callsTable.batchCallId,
         to: r.batchCallsTable.id,
       }),
+      contact: r.one.contactsTable({
+        from: r.callsTable.contactId,
+        to: r.contactsTable.id,
+      }),
+    },
+    contactsTable: {
+      organization: r.one.organization({
+        from: r.contactsTable.organizationId,
+        to: r.organization.id,
+      }),
+      calls: r.many.callsTable({
+        from: r.contactsTable.id,
+        to: r.callsTable.contactId,
+      }),
     },
     phoneNumbersTable: {
       organization: r.one.organization({
@@ -184,6 +200,10 @@ export const relations = defineRelations(
       calls: r.many.callsTable({
         from: r.organization.id,
         to: r.callsTable.organizationId,
+      }),
+      contacts: r.many.contactsTable({
+        from: r.organization.id,
+        to: r.contactsTable.organizationId,
       }),
       batchCalls: r.many.batchCallsTable({
         from: r.organization.id,

@@ -12,6 +12,7 @@ import {
 import { agentVersionsTable } from "@workspace/db/schema/agents"
 import { organization } from "@workspace/db/schema/auth"
 import { batchCallsTable } from "@workspace/db/schema/batch-calls"
+import { contactsTable } from "@workspace/db/schema/contacts"
 import type {
   CallTranscript,
   CallVariableValues,
@@ -30,6 +31,9 @@ export const callsTable = pgTable(
       { onDelete: "set null" }
     ),
     batchCallId: uuid("batch_call_id").references(() => batchCallsTable.id, {
+      onDelete: "set null",
+    }),
+    contactId: uuid("contact_id").references(() => contactsTable.id, {
       onDelete: "set null",
     }),
     channel: text("channel").notNull().$type<"web_call" | "phone_call">(),
@@ -93,5 +97,10 @@ export const callsTable = pgTable(
       table.totalCost
     ),
     index("calls_batch_call_id_idx").on(table.batchCallId),
+    index("calls_organization_id_contact_id_started_at_idx").on(
+      table.organizationId,
+      table.contactId,
+      table.startedAt
+    ),
   ]
 )

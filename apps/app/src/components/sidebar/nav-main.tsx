@@ -4,6 +4,7 @@ import {
   PhoneIcon,
   PhoneOutgoingIcon,
   SettingsIcon,
+  UsersIcon,
   WorkflowIcon,
 } from "lucide-react"
 
@@ -49,6 +50,11 @@ const nav = {
           title: "Calls",
           url: "/calls",
           icon: <HistoryIcon />,
+        },
+        {
+          title: "Contacts",
+          url: "/contacts",
+          icon: <UsersIcon />,
         },
       ],
     },

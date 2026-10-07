@@ -28,6 +28,7 @@ import { Route as authorizedorganizationsidebarSplatPageRouteImport } from './ro
 import { Route as authorizedorganizationsidebarAgentsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/page'
 import { Route as authorizedorganizationsidebarBatchCallsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/batch-calls/page'
 import { Route as authorizedorganizationsidebarCallsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/calls/page'
+import { Route as authorizedorganizationsidebarContactsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/contacts/page'
 import { Route as authorizedorganizationsidebarPhoneNumbersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/phone-numbers/page'
 import { Route as authorizedorganizationsidebarSettingsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/page'
 import { Route as authorizedorganizationsidebarAgentsAgentIdPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/$agentId/page'
@@ -144,6 +145,12 @@ const authorizedorganizationsidebarCallsPageRoute =
     path: '/calls/',
     getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
   } as any)
+const authorizedorganizationsidebarContactsPageRoute =
+  authorizedorganizationsidebarContactsPageRouteImport.update({
+    id: '/contacts/',
+    path: '/contacts/',
+    getParentRoute: () => authorizedorganizationsidebarLayoutRoute,
+  } as any)
 const authorizedorganizationsidebarPhoneNumbersPageRoute =
   authorizedorganizationsidebarPhoneNumbersPageRouteImport.update({
     id: '/phone-numbers/',
@@ -215,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/agents/': typeof authorizedorganizationsidebarAgentsPageRoute
   '/batch-calls/': typeof authorizedorganizationsidebarBatchCallsPageRoute
   '/calls/': typeof authorizedorganizationsidebarCallsPageRoute
+  '/contacts/': typeof authorizedorganizationsidebarContactsPageRoute
   '/phone-numbers/': typeof authorizedorganizationsidebarPhoneNumbersPageRoute
   '/settings/': typeof authorizedorganizationsidebarSettingsPageRoute
   '/agents/$agentId/': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
@@ -240,6 +248,7 @@ export interface FileRoutesByTo {
   '/agents': typeof authorizedorganizationsidebarAgentsPageRoute
   '/batch-calls': typeof authorizedorganizationsidebarBatchCallsPageRoute
   '/calls': typeof authorizedorganizationsidebarCallsPageRoute
+  '/contacts': typeof authorizedorganizationsidebarContactsPageRoute
   '/phone-numbers': typeof authorizedorganizationsidebarPhoneNumbersPageRoute
   '/settings': typeof authorizedorganizationsidebarSettingsPageRoute
   '/agents/$agentId': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
@@ -271,6 +280,7 @@ export interface FileRoutesById {
   '/(authorized)/(organization)/(sidebar)/agents/': typeof authorizedorganizationsidebarAgentsPageRoute
   '/(authorized)/(organization)/(sidebar)/batch-calls/': typeof authorizedorganizationsidebarBatchCallsPageRoute
   '/(authorized)/(organization)/(sidebar)/calls/': typeof authorizedorganizationsidebarCallsPageRoute
+  '/(authorized)/(organization)/(sidebar)/contacts/': typeof authorizedorganizationsidebarContactsPageRoute
   '/(authorized)/(organization)/(sidebar)/phone-numbers/': typeof authorizedorganizationsidebarPhoneNumbersPageRoute
   '/(authorized)/(organization)/(sidebar)/settings/': typeof authorizedorganizationsidebarSettingsPageRoute
   '/(authorized)/(organization)/(sidebar)/agents/$agentId/': typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
@@ -299,6 +309,7 @@ export interface FileRouteTypes {
     | '/agents/'
     | '/batch-calls/'
     | '/calls/'
+    | '/contacts/'
     | '/phone-numbers/'
     | '/settings/'
     | '/agents/$agentId/'
@@ -324,6 +335,7 @@ export interface FileRouteTypes {
     | '/agents'
     | '/batch-calls'
     | '/calls'
+    | '/contacts'
     | '/phone-numbers'
     | '/settings'
     | '/agents/$agentId'
@@ -354,6 +366,7 @@ export interface FileRouteTypes {
     | '/(authorized)/(organization)/(sidebar)/agents/'
     | '/(authorized)/(organization)/(sidebar)/batch-calls/'
     | '/(authorized)/(organization)/(sidebar)/calls/'
+    | '/(authorized)/(organization)/(sidebar)/contacts/'
     | '/(authorized)/(organization)/(sidebar)/phone-numbers/'
     | '/(authorized)/(organization)/(sidebar)/settings/'
     | '/(authorized)/(organization)/(sidebar)/agents/$agentId/'
@@ -505,6 +518,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationsidebarCallsPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarLayoutRoute
     }
+    '/(authorized)/(organization)/(sidebar)/contacts/': {
+      id: '/(authorized)/(organization)/(sidebar)/contacts/'
+      path: '/contacts'
+      fullPath: '/contacts/'
+      preLoaderRoute: typeof authorizedorganizationsidebarContactsPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarLayoutRoute
+    }
     '/(authorized)/(organization)/(sidebar)/phone-numbers/': {
       id: '/(authorized)/(organization)/(sidebar)/phone-numbers/'
       path: '/phone-numbers'
@@ -608,6 +628,7 @@ interface authorizedorganizationsidebarLayoutRouteChildren {
   authorizedorganizationsidebarAgentsPageRoute: typeof authorizedorganizationsidebarAgentsPageRoute
   authorizedorganizationsidebarBatchCallsPageRoute: typeof authorizedorganizationsidebarBatchCallsPageRoute
   authorizedorganizationsidebarCallsPageRoute: typeof authorizedorganizationsidebarCallsPageRoute
+  authorizedorganizationsidebarContactsPageRoute: typeof authorizedorganizationsidebarContactsPageRoute
   authorizedorganizationsidebarPhoneNumbersPageRoute: typeof authorizedorganizationsidebarPhoneNumbersPageRoute
   authorizedorganizationsidebarAgentsAgentIdPageRoute: typeof authorizedorganizationsidebarAgentsAgentIdPageRoute
   authorizedorganizationsidebarBatchCallsCreatePageRoute: typeof authorizedorganizationsidebarBatchCallsCreatePageRoute
@@ -627,6 +648,8 @@ const authorizedorganizationsidebarLayoutRouteChildren: authorizedorganizationsi
       authorizedorganizationsidebarBatchCallsPageRoute,
     authorizedorganizationsidebarCallsPageRoute:
       authorizedorganizationsidebarCallsPageRoute,
+    authorizedorganizationsidebarContactsPageRoute:
+      authorizedorganizationsidebarContactsPageRoute,
     authorizedorganizationsidebarPhoneNumbersPageRoute:
       authorizedorganizationsidebarPhoneNumbersPageRoute,
     authorizedorganizationsidebarAgentsAgentIdPageRoute:

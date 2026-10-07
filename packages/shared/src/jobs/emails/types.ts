@@ -20,3 +20,9 @@ export type SendDownloadCallsPayload = {
   organizationId: string
   organizationName: string
 }
+
+export type SendDownloadContactsPayload = {
+  to: string
+  organizationId: string
+  organizationName: string
+}

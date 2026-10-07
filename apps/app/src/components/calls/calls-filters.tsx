@@ -1,7 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { cn } from "cn"
-import { CalendarIcon } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo } from "react"
 
 import type { AgentsListResponse } from "@workspace/shared/api/agents/types"
 import type { BatchCallListResponse } from "@workspace/shared/api/batch-calls/types"
@@ -9,32 +7,10 @@ import type {
   CallChannel,
   CallDirection,
   CallListQuery,
-  CallNumericFilterOperator,
   CallStatus,
 } from "@workspace/shared/api/calls/types"
 import type { PhoneNumberListResponse } from "@workspace/shared/api/phone-numbers/types"
-import { Button } from "@workspace/ui/components/button"
-import { Calendar } from "@workspace/ui/components/calendar"
-import {
-  Combobox,
-  ComboboxChip,
-  ComboboxChips,
-  ComboboxChipsInput,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-  ComboboxValue,
-  useComboboxAnchor,
-} from "@workspace/ui/components/combobox"
 import { Field, FieldLabel } from "@workspace/ui/components/field"
-import { Input } from "@workspace/ui/components/input"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@workspace/ui/components/popover"
 import {
   Select,
   SelectContent,
@@ -42,10 +18,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select"
+import { DateRangeFilter } from "@/components/filters/date-range-filter"
+import {
+  FilterMultiSelect,
+  type MultiSelectOption,
+} from "@/components/filters/filter-multi-select"
+import {
+  FilterSingleSelect,
+  type SingleSelectOption,
+} from "@/components/filters/filter-single-select"
+import { NumericFilter } from "@/components/filters/numeric-filter"
 import { useUserTimeZone } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
 import { env } from "@/lib/env"
-import { formatDate, zonedDayBounds } from "@/lib/time"
+import { formatDate } from "@/lib/time"
 
 const channelFilterOptions = [
   { value: "all", label: "All channels" },
@@ -66,16 +52,6 @@ const statusFilterOptions = [
   { value: "no_answer", label: "No answer" },
 ]
 
-const numericOperatorOptions: {
-  value: CallNumericFilterOperator
-  label: string
-}[] = [
-  { value: "eq", label: "is equal to" },
-  { value: "between", label: "is between" },
-  { value: "gte", label: "is greater than or equal to" },
-  { value: "lte", label: "is less than or equal to" },
-]
-
 type CallListFilters = Omit<
   CallListQuery,
   "page" | "pageSize" | "sortBy" | "sortDir"
@@ -84,315 +60,6 @@ type CallListFilters = Omit<
 type CallsFiltersProps = {
   filters: CallListFilters
   onFiltersChange: (filters: CallListFilters) => void
-}
-
-type MultiSelectOption = {
-  value: string
-  label: string
-  description?: string
-}
-
-function FilterMultiSelect({
-  label,
-  placeholder,
-  items,
-  selectedValues,
-  onSelectedValuesChange,
-}: {
-  label: string
-  placeholder: string
-  items: MultiSelectOption[]
-  selectedValues: string[]
-  onSelectedValuesChange: (values: string[]) => void
-}) {
-  const anchor = useComboboxAnchor()
-  const selectedItems = items.filter((item) =>
-    selectedValues.includes(item.value)
-  )
-
-  return (
-    <Field className="w-72 gap-1.5">
-      <FieldLabel>{label}</FieldLabel>
-      <Combobox
-        multiple
-        autoHighlight
-        items={items}
-        value={selectedItems}
-        onValueChange={(next) => {
-          onSelectedValuesChange(next.map((item) => item.value))
-        }}
-        itemToStringValue={(item) =>
-          item.description ? `${item.label} ${item.description}` : item.label
-        }
-      >
-        <ComboboxChips ref={anchor} className="w-full">
-          <ComboboxValue>
-            {(values: MultiSelectOption[]) => (
-              <>
-                {values.map((item) => (
-                  <ComboboxChip key={item.value}>{item.label}</ComboboxChip>
-                ))}
-                <ComboboxChipsInput
-                  placeholder={values.length === 0 ? placeholder : undefined}
-                />
-              </>
-            )}
-          </ComboboxValue>
-        </ComboboxChips>
-        <ComboboxContent anchor={anchor}>
-          <ComboboxInput showTrigger={false} placeholder="Search..." />
-          <ComboboxEmpty>No items found</ComboboxEmpty>
-          <ComboboxList>
-            {(item: MultiSelectOption) => (
-              <ComboboxItem key={item.value} value={item}>
-                <span className="flex min-w-0 flex-col">
-                  <span className="truncate">{item.label}</span>
-                  {item.description ? (
-                    <span className="truncate text-xs text-muted-foreground">
-                      {item.description}
-                    </span>
-                  ) : null}
-                </span>
-              </ComboboxItem>
-            )}
-          </ComboboxList>
-        </ComboboxContent>
-      </Combobox>
-    </Field>
-  )
-}
-
-function FilterSingleSelect({
-  label,
-  placeholder,
-  items,
-  selectedValue,
-  onSelectedValueChange,
-}: {
-  label: string
-  placeholder: string
-  items: MultiSelectOption[]
-  selectedValue?: string
-  onSelectedValueChange: (value: string | undefined) => void
-}) {
-  const selectedItem =
-    items.find((item) => item.value === selectedValue) ?? null
-
-  return (
-    <Field className="w-48 gap-1.5">
-      <FieldLabel>{label}</FieldLabel>
-      <Combobox
-        autoHighlight
-        items={items}
-        value={selectedItem}
-        onValueChange={(next) => {
-          onSelectedValueChange(next?.value)
-        }}
-        itemToStringValue={(item) =>
-          item.description ? `${item.label} ${item.description}` : item.label
-        }
-      >
-        <ComboboxInput placeholder={placeholder} showClear={!!selectedItem} />
-        <ComboboxContent>
-          <ComboboxEmpty>No batches found</ComboboxEmpty>
-          <ComboboxList>
-            {(item: MultiSelectOption) => (
-              <ComboboxItem key={item.value} value={item}>
-                <span className="flex min-w-0 flex-col">
-                  <span className="truncate">{item.label}</span>
-                  {item.description ? (
-                    <span className="truncate text-xs text-muted-foreground">
-                      {item.description}
-                    </span>
-                  ) : null}
-                </span>
-              </ComboboxItem>
-            )}
-          </ComboboxList>
-        </ComboboxContent>
-      </Combobox>
-    </Field>
-  )
-}
-
-function NumericFilter({
-  label,
-  placeholder,
-  unitBefore = "",
-  unitAfter = "",
-  operator,
-  value,
-  valueMax,
-  onChange,
-}: {
-  label: string
-  placeholder: string
-  unitBefore?: string
-  unitAfter?: string
-  operator?: CallNumericFilterOperator
-  value?: number
-  valueMax?: number
-  onChange: (next: {
-    operator?: CallNumericFilterOperator
-    value?: number
-    valueMax?: number
-  }) => void
-}) {
-  const [open, setOpen] = useState(false)
-  const [draftOperator, setDraftOperator] = useState<CallNumericFilterOperator>(
-    operator ?? "eq"
-  )
-  const [draftValue, setDraftValue] = useState(value?.toString() ?? "")
-  const [draftValueMax, setDraftValueMax] = useState(valueMax?.toString() ?? "")
-
-  useEffect(() => {
-    if (open) {
-      return
-    }
-
-    setDraftOperator(operator ?? "eq")
-    setDraftValue(value?.toString() ?? "")
-    setDraftValueMax(valueMax?.toString() ?? "")
-  }, [open, operator, value, valueMax])
-
-  const formatValue = (amount: number) => `${unitBefore}${amount}${unitAfter}`
-
-  let summary = placeholder
-  if (value !== undefined) {
-    if (operator === "between" && valueMax !== undefined) {
-      summary = `${formatValue(value)} – ${formatValue(valueMax)}`
-    } else if (operator === "eq") {
-      summary = `= ${formatValue(value)}`
-    } else if (operator === "lte") {
-      summary = `≤ ${formatValue(value)}`
-    } else if (operator === "gte") {
-      summary = `≥ ${formatValue(value)}`
-    }
-  }
-
-  return (
-    <Field className="w-44 gap-1.5">
-      <FieldLabel>{label}</FieldLabel>
-      <Popover
-        open={open}
-        onOpenChange={(nextOpen) => {
-          if (!nextOpen) {
-            const parsedValue =
-              draftValue.trim() === "" ? undefined : Number(draftValue)
-            const parsedValueMax =
-              draftValueMax.trim() === "" ? undefined : Number(draftValueMax)
-            const hasValue =
-              parsedValue !== undefined && Number.isFinite(parsedValue)
-            const hasValueMax =
-              parsedValueMax !== undefined && Number.isFinite(parsedValueMax)
-
-            if (draftOperator === "between") {
-              if (!hasValue && !hasValueMax) {
-                onChange({
-                  operator: undefined,
-                  value: undefined,
-                  valueMax: undefined,
-                })
-              } else if (hasValue && hasValueMax) {
-                onChange({
-                  operator: draftOperator,
-                  value: parsedValue,
-                  valueMax: parsedValueMax,
-                })
-              }
-            } else if (!hasValue) {
-              onChange({
-                operator: undefined,
-                value: undefined,
-                valueMax: undefined,
-              })
-            } else {
-              onChange({
-                operator: draftOperator,
-                value: parsedValue,
-                valueMax: undefined,
-              })
-            }
-          }
-
-          setOpen(nextOpen)
-        }}
-      >
-        <PopoverTrigger
-          render={
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full justify-start font-normal",
-                value === undefined && "text-muted-foreground"
-              )}
-            />
-          }
-        >
-          <span className="truncate">{summary}</span>
-        </PopoverTrigger>
-        <PopoverContent className="w-72 gap-3 p-3" align="start">
-          <Select
-            value={draftOperator}
-            onValueChange={(nextOperator) => {
-              const operatorValue = nextOperator as CallNumericFilterOperator
-              setDraftOperator(operatorValue)
-              if (operatorValue !== "between") {
-                setDraftValueMax("")
-              }
-            }}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue>
-                {
-                  numericOperatorOptions.find(
-                    (option) => option.value === draftOperator
-                  )?.label
-                }
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {numericOperatorOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {draftOperator === "between" ? (
-            <div className="flex items-center gap-2">
-              <Input
-                type="number"
-                min={0}
-                step="any"
-                className="flex-1"
-                value={draftValue}
-                onChange={(event) => setDraftValue(event.target.value)}
-              />
-              <span className="text-sm text-muted-foreground">and</span>
-              <Input
-                type="number"
-                min={0}
-                step="any"
-                className="flex-1"
-                value={draftValueMax}
-                onChange={(event) => setDraftValueMax(event.target.value)}
-              />
-            </div>
-          ) : (
-            <Input
-              type="number"
-              min={0}
-              step="any"
-              placeholder={placeholder}
-              value={draftValue}
-              onChange={(event) => setDraftValue(event.target.value)}
-            />
-          )}
-        </PopoverContent>
-      </Popover>
-    </Field>
-  )
 }
 
 export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
@@ -426,7 +93,7 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
       })),
     [phoneNumbers]
   )
-  const batchCallItems = useMemo<MultiSelectOption[]>(
+  const batchCallItems = useMemo<SingleSelectOption[]>(
     () =>
       batchCalls.map((batchCall) => ({
         value: batchCall.id,
@@ -442,76 +109,22 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
   const channelFilter = filters.channel ?? "all"
   const directionFilter = filters.direction ?? "all"
   const statusFilter = filters.status ?? "all"
-  const selectedDateRange = filters.startedAtFrom
-    ? {
-        from: new Date(filters.startedAtFrom),
-        to: filters.startedAtTo ? new Date(filters.startedAtTo) : undefined,
-      }
-    : undefined
 
   return (
     <div className="mb-5 flex flex-wrap items-end gap-3">
-      <Field className="w-60 gap-1.5">
-        <FieldLabel htmlFor="calls-date-range">Date</FieldLabel>
-        <Popover>
-          <PopoverTrigger
-            render={
-              <Button
-                variant="outline"
-                id="calls-date-range"
-                className={cn(
-                  "justify-start px-2.5 font-normal",
-                  !selectedDateRange?.from && "text-muted-foreground"
-                )}
-              />
-            }
-          >
-            <CalendarIcon data-icon="inline-start" />
-            {selectedDateRange?.from ? (
-              selectedDateRange.to ? (
-                <>
-                  {formatDate(selectedDateRange.from, timeZone)} -{" "}
-                  {formatDate(selectedDateRange.to, timeZone)}
-                </>
-              ) : (
-                formatDate(selectedDateRange.from, timeZone)
-              )
-            ) : (
-              <span>All dates</span>
-            )}
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="range"
-              defaultMonth={selectedDateRange?.from}
-              selected={selectedDateRange}
-              numberOfMonths={2}
-              onSelect={(range) => {
-                if (!range?.from) {
-                  onFiltersChange({
-                    ...filters,
-                    startedAtFrom: undefined,
-                    startedAtTo: undefined,
-                  })
-                  return
-                }
-
-                const from = new Date(range.from)
-                const to = range.to ? new Date(range.to) : undefined
-                const bounds = zonedDayBounds(from, timeZone)
-
-                onFiltersChange({
-                  ...filters,
-                  startedAtFrom: bounds.start,
-                  startedAtTo: to
-                    ? zonedDayBounds(to, timeZone).end
-                    : undefined,
-                })
-              }}
-            />
-          </PopoverContent>
-        </Popover>
-      </Field>
+      <DateRangeFilter
+        id="calls-date-range"
+        label="Date"
+        from={filters.startedAtFrom}
+        to={filters.startedAtTo}
+        onChange={({ from, to }) =>
+          onFiltersChange({
+            ...filters,
+            startedAtFrom: from,
+            startedAtTo: to,
+          })
+        }
+      />
 
       <FilterMultiSelect
         label="Agent"
@@ -572,6 +185,7 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
         placeholder="All batches"
         items={batchCallItems}
         selectedValue={filters.batchId}
+        emptyText="No batches found"
         onSelectedValueChange={(batchId) =>
           onFiltersChange({
             ...filters,

@@ -25,11 +25,7 @@ import { CallRecordingPlayer } from "@/components/calls/call-recording-player"
 import { UserDateTime } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
 import { env } from "@/lib/env"
-
-const secondsFormatter = new Intl.NumberFormat("en", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-})
+import { formatDurationMs } from "@/lib/time"
 
 type CallDetailSheetProps = {
   call: CallListItem
@@ -72,6 +68,20 @@ export function CallDetailSheet({
           <SheetTitle className="pr-8">
             <UserDateTime value={call.startedAt} /> {channelLabel}
           </SheetTitle>
+          {call.channel === "phone_call" ? (
+            <div className="text-sm text-muted-foreground">
+              <p>
+                From:{" "}
+                <span className="font-medium text-foreground">
+                  {call.fromNumber}
+                </span>
+                {" · "}To:{" "}
+                <span className="font-medium text-foreground">
+                  {call.toNumber}
+                </span>
+              </p>
+            </div>
+          ) : null}
           <div className="flex items-center gap-1 text-sm">
             <span className="text-muted-foreground">Agent: </span>
             <AgentReferenceLink
@@ -83,7 +93,7 @@ export function CallDetailSheet({
           </div>
           {call.durationMs && (
             <p className="text-sm text-muted-foreground">
-              Duration: {secondsFormatter.format(call.durationMs / 1000)}s
+              Duration: {formatDurationMs(call.durationMs)}
             </p>
           )}
           <div className="mt-2">

@@ -36,6 +36,7 @@ import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { computeCallCosts } from "@/lib/call-cost"
+import { recordContactCall, resolvePhoneContactId } from "@/lib/contacts"
 import {
   deductOrganizationCredits,
   organizationHasCredits,
@@ -203,6 +204,13 @@ callRoutes.post(
         return c.json({ error: "Insufficient credits" }, 402)
       }
 
+      const contactId = await resolvePhoneContactId(
+        phoneNumber.organizationId,
+        "inbound",
+        payload.fromNumber,
+        payload.toNumber
+      )
+
       const [call] = await db
         .insert(callsTable)
         .values({
@@ -210,6 +218,7 @@ callRoutes.post(
           organizationId: phoneNumber.organizationId,
           agentId: phoneNumber.agentId,
           agentVersionId: resolved.agentVersionId,
+          contactId,
           channel: "phone_call",
           direction: "inbound",
           status: "in_progress",
@@ -262,6 +271,13 @@ callRoutes.post(
         return c.json({ error: "Insufficient credits" }, 402)
       }
 
+      const contactId = await resolvePhoneContactId(
+        resolved.organizationId,
+        "outbound",
+        payload.fromNumber,
+        payload.toNumber
+      )
+
       const [call] = await db
         .insert(callsTable)
         .values({
@@ -269,6 +285,7 @@ callRoutes.post(
           organizationId: resolved.organizationId,
           agentId: payload.agentId,
           agentVersionId: resolved.agentVersionId,
+          contactId,
           channel: "phone_call",
           direction: "outbound",
           status: "in_progress",
@@ -315,6 +332,14 @@ callRoutes.post(
         return c.json({ error: "Agent not found" }, 404)
       }
 
+      const contactId = await resolvePhoneContactId(
+        resolved.organizationId,
+        "outbound",
+        payload.fromNumber,
+        payload.toNumber
+      )
+      const startedAt = new Date(payload.startedAt)
+
       const [call] = await db
         .insert(callsTable)
         .values({
@@ -322,6 +347,7 @@ callRoutes.post(
           organizationId: resolved.organizationId,
           agentId: payload.agentId,
           agentVersionId: resolved.agentVersionId,
+          contactId,
           channel: "phone_call",
           direction: "outbound",
           status: "no_answer",
@@ -331,7 +357,7 @@ callRoutes.post(
           llmModel: resolved.config.llm.model,
           ttsModel: resolved.config.tts.model,
           livekitRoomName: payload.livekitRoomName,
-          startedAt: new Date(payload.startedAt),
+          startedAt,
           endedAt: new Date(payload.endedAt),
           durationMs: 0,
           ...(env.IS_CLOUD
@@ -347,6 +373,10 @@ callRoutes.post(
           batchCallId: payload.batchCallId,
         })
         .returning({ id: callsTable.id })
+
+      if (contactId) {
+        await recordContactCall(contactId, startedAt, 0)
+      }
 
       return c.json({ callId: call.id } satisfies UnansweredCallResponse, 201)
     } catch {
@@ -418,6 +448,10 @@ callRoutes.post(
         })
         .where(eq(callsTable.id, payload.callId))
         .returning()
+
+      if (call.contactId) {
+        await recordContactCall(call.contactId, call.startedAt, durationMs)
+      }
 
       if (costs) {
         await deductOrganizationCredits(call.organizationId, costs.total)

@@ -2,6 +2,7 @@ import { Worker } from "bullmq"
 
 import { connection } from "@/lib/redis"
 import { sendDownloadCalls } from "./jobs/send-download-calls"
+import { sendDownloadContacts } from "./jobs/send-download-contacts"
 import { sendOrganizationInvitation } from "./jobs/send-organization-invitation"
 import { sendResetPassword } from "./jobs/send-reset-password"
 import { sendVerificationOtp } from "./jobs/send-verification-otp"
@@ -18,6 +19,8 @@ export const emailsWorker = new Worker(
         return sendOrganizationInvitation(job.data)
       case "send-download-calls":
         return sendDownloadCalls(job.data)
+      case "send-download-contacts":
+        return sendDownloadContacts(job.data)
       default:
         throw new Error(`Unknown job: ${job.name}`)
     }

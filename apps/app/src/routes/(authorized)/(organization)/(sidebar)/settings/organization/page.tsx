@@ -22,7 +22,7 @@ function Page() {
 
   return (
     <>
-      <title>Organization settings</title>
+      <title>Organization settings - PhoneFlow</title>
       <div className="mx-auto max-w-lg space-y-8">
         <OrganizationInformation
           organizationId={activeOrganization.id}

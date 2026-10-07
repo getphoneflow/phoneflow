@@ -67,7 +67,7 @@ function Page() {
 
   return (
     <>
-      <title>Phone numbers</title>
+      <title>Phone numbers - PhoneFlow</title>
       <Header />
       <div className="p-5 pt-0">
         <PhoneNumbersDataTable

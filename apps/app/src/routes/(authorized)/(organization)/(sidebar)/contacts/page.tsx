@@ -127,7 +127,7 @@ function Page() {
 
   return (
     <>
-      <title>Contacts</title>
+      <title>Contacts - PhoneFlow</title>
       <Header />
       <div className="p-5 pt-0">
         <ContactsFilters

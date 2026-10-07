@@ -11,7 +11,7 @@ export const Route = createFileRoute(
 function Page() {
   return (
     <>
-      <title>Roles settings</title>
+      <title>Roles settings - PhoneFlow</title>
       <RolesTable />
     </>
   )

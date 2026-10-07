@@ -35,7 +35,7 @@ function MembersSettingsSkeleton() {
 function Page() {
   return (
     <>
-      <title>Members settings</title>
+      <title>Members settings - PhoneFlow</title>
       <Suspense fallback={<MembersSettingsSkeleton />}>
         <MembersSettings />
       </Suspense>

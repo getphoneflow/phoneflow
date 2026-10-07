@@ -42,7 +42,7 @@ function BillingSettingsSkeleton() {
 function Page() {
   return (
     <>
-      <title>Billing settings</title>
+      <title>Billing settings - PhoneFlow</title>
       <Suspense fallback={<BillingSettingsSkeleton />}>
         <BillingSettings />
       </Suspense>

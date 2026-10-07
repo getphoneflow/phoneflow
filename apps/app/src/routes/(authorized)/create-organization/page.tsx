@@ -74,7 +74,7 @@ function Page() {
 
   return (
     <>
-      <title>Create organization</title>
+      <title>Create organization - PhoneFlow</title>
       <div className="flex h-screen w-full items-center justify-center p-6">
         <Card className="w-full max-w-md">
           <CardHeader>

@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router"
 import {
   type ColumnFiltersState,
   columnFilteringFeature,
@@ -47,6 +46,7 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
+import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
 import { formatAgentVersionLabel } from "@/components/helpers"
 import { PhoneNumberRowActions } from "@/components/phone-numbers/phone-number-row-actions"
 import { SortableHeader } from "@/components/sortable-header"
@@ -77,14 +77,12 @@ const columns = columnHelper.columns([
     id: "agent",
     header: "Agent",
     cell: ({ row }) =>
-      row.original.agent && row.original.agentId ? (
-        <Link
-          to="/agents/$agentId"
-          params={{ agentId: row.original.agentId }}
-          className="hover:underline"
-        >
-          {row.original.agent.name}
-        </Link>
+      row.original.agentId ? (
+        <AgentReferenceLink
+          agentId={row.original.agentId}
+          agent={row.original.agent}
+          agentVersionId={row.original.agentVersionId}
+        />
       ) : null,
   }),
   columnHelper.display({

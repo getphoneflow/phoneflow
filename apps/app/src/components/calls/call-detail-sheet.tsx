@@ -73,6 +73,7 @@ function CallDetailBody({ callId }: { callId: string }) {
           <AgentReferenceLink
             agentId={call.agentId}
             agent={call.agent}
+            agentVersionId={call.agentVersionId}
             className="font-medium hover:underline"
           />
           <span className="text-muted-foreground">· {versionLabel}</span>

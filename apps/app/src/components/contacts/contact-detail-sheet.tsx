@@ -90,7 +90,11 @@ function CallCard({
         ) : (
           <Badge variant="secondary">Completed</Badge>
         )}
-        <AgentReferenceLink agentId={call.agentId} agent={call.agent} />
+        <AgentReferenceLink
+          agentId={call.agentId}
+          agent={call.agent}
+          agentVersionId={call.agentVersionId}
+        />
         <span className="text-xs text-muted-foreground">
           {call.agentVersion ? `V${call.agentVersion.number}` : "Latest"}
         </span>

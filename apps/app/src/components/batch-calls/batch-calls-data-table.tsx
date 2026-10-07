@@ -115,6 +115,7 @@ const columns = columnHelper.columns([
       <AgentReferenceLink
         agentId={row.original.agentId}
         agent={row.original.agent}
+        agentVersionId={row.original.agentVersionId}
       />
     ),
   }),

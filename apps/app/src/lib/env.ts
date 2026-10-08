@@ -5,4 +5,6 @@ export const env = {
   LIVEKIT_AGENT_NAME: import.meta.env.VITE_LIVEKIT_AGENT_NAME ?? "voice-agent",
   PUBLIC_S3_URL: import.meta.env.VITE_PUBLIC_S3_URL ?? "",
   TURNSTILE_SITE_KEY: import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "",
+  POSTHOG_PROJECT_TOKEN: import.meta.env.VITE_POSTHOG_PROJECT_TOKEN ?? "",
+  POSTHOG_HOST: import.meta.env.VITE_POSTHOG_HOST ?? "https://us.i.posthog.com",
 }

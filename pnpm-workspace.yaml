@@ -5,6 +5,7 @@ packages:
 allowBuilds:
   '@google/genai': true
   '@livekit/local-inference': true
+  core-js: true
   esbuild: true
   msgpackr-extract: true
   onnxruntime-node: true

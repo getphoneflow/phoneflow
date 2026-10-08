@@ -30,6 +30,7 @@
     "react-diff-viewer-continued": "^4.4.0",
     "react-dom": "catalog:",
     "react-hook-form": "^7.85.0",
+    "react-qr-code": "^2.2.0",
     "recharts": "catalog:",
     "wavesurfer.js": "^7.12.11",
     "zod": "catalog:",

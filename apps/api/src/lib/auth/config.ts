@@ -6,6 +6,7 @@ import {
   emailOTP,
   lastLoginMethod,
   organization,
+  twoFactor,
 } from "better-auth/plugins"
 
 import { db } from "@workspace/db/client"
@@ -61,6 +62,9 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    twoFactor({
+      issuer: "PhoneFlow",
+    }),
     emailOTP({
       overrideDefaultEmailVerification: true,
       rateLimit: {

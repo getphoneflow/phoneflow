@@ -122,7 +122,7 @@ function Layout() {
   return (
     <>
       <SettingsPageHeader />
-      <div className="flex p-5">
+      <div className="flex p-5 pb-25">
         <div className="w-60 pr-10">
           <SettingsNav />
         </div>

@@ -21,6 +21,7 @@ import { Route as unauthorizedResetPasswordPageRouteImport } from './routes/(una
 import { Route as unauthorizedSetNewPasswordPageRouteImport } from './routes/(unauthorized)/set-new-password/page'
 import { Route as unauthorizedSigninPageRouteImport } from './routes/(unauthorized)/signin/page'
 import { Route as unauthorizedSignupPageRouteImport } from './routes/(unauthorized)/signup/page'
+import { Route as unauthorizedTwoFactorPageRouteImport } from './routes/(unauthorized)/two-factor/page'
 import { Route as authorizedorganizationsidebarPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/page'
 import { Route as authorizedorganizationsidebarSettingsLayoutRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/layout'
 import { Route as authorizedorganizationInviteMembersPageRouteImport } from './routes/(authorized)/(organization)/invite-members/page'
@@ -103,6 +104,12 @@ const unauthorizedSignupPageRoute = unauthorizedSignupPageRouteImport.update({
   path: '/signup/',
   getParentRoute: () => unauthorizedLayoutRoute,
 } as any)
+const unauthorizedTwoFactorPageRoute =
+  unauthorizedTwoFactorPageRouteImport.update({
+    id: '/two-factor/',
+    path: '/two-factor/',
+    getParentRoute: () => unauthorizedLayoutRoute,
+  } as any)
 const authorizedorganizationsidebarPageRoute =
   authorizedorganizationsidebarPageRouteImport.update({
     id: '/',
@@ -215,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
   '/signin/': typeof unauthorizedSigninPageRoute
   '/signup/': typeof unauthorizedSignupPageRoute
+  '/two-factor/': typeof unauthorizedTwoFactorPageRoute
   '/settings': typeof authorizedorganizationsidebarSettingsLayoutRouteWithChildren
   '/': typeof authorizedorganizationsidebarPageRoute
   '/invite-members/': typeof authorizedorganizationInviteMembersPageRoute
@@ -242,6 +250,7 @@ export interface FileRoutesByTo {
   '/set-new-password': typeof unauthorizedSetNewPasswordPageRoute
   '/signin': typeof unauthorizedSigninPageRoute
   '/signup': typeof unauthorizedSignupPageRoute
+  '/two-factor': typeof unauthorizedTwoFactorPageRoute
   '/': typeof authorizedorganizationsidebarPageRoute
   '/invite-members': typeof authorizedorganizationInviteMembersPageRoute
   '/$': typeof authorizedorganizationsidebarSplatPageRoute
@@ -273,6 +282,7 @@ export interface FileRoutesById {
   '/(unauthorized)/set-new-password/': typeof unauthorizedSetNewPasswordPageRoute
   '/(unauthorized)/signin/': typeof unauthorizedSigninPageRoute
   '/(unauthorized)/signup/': typeof unauthorizedSignupPageRoute
+  '/(unauthorized)/two-factor/': typeof unauthorizedTwoFactorPageRoute
   '/(authorized)/(organization)/(sidebar)/settings': typeof authorizedorganizationsidebarSettingsLayoutRouteWithChildren
   '/(authorized)/(organization)/(sidebar)/': typeof authorizedorganizationsidebarPageRoute
   '/(authorized)/(organization)/invite-members/': typeof authorizedorganizationInviteMembersPageRoute
@@ -302,6 +312,7 @@ export interface FileRouteTypes {
     | '/set-new-password/'
     | '/signin/'
     | '/signup/'
+    | '/two-factor/'
     | '/settings'
     | '/'
     | '/invite-members/'
@@ -329,6 +340,7 @@ export interface FileRouteTypes {
     | '/set-new-password'
     | '/signin'
     | '/signup'
+    | '/two-factor'
     | '/'
     | '/invite-members'
     | '/$'
@@ -359,6 +371,7 @@ export interface FileRouteTypes {
     | '/(unauthorized)/set-new-password/'
     | '/(unauthorized)/signin/'
     | '/(unauthorized)/signup/'
+    | '/(unauthorized)/two-factor/'
     | '/(authorized)/(organization)/(sidebar)/settings'
     | '/(authorized)/(organization)/(sidebar)/'
     | '/(authorized)/(organization)/invite-members/'
@@ -467,6 +480,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup/'
       preLoaderRoute: typeof unauthorizedSignupPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
+    }
+    '/(unauthorized)/two-factor/': {
+      id: '/(unauthorized)/two-factor/'
+      path: '/two-factor'
+      fullPath: '/two-factor/'
+      preLoaderRoute: typeof unauthorizedTwoFactorPageRouteImport
       parentRoute: typeof unauthorizedLayoutRoute
     }
     '/(authorized)/(organization)/(sidebar)/': {
@@ -705,6 +725,7 @@ interface unauthorizedLayoutRouteChildren {
   unauthorizedSetNewPasswordPageRoute: typeof unauthorizedSetNewPasswordPageRoute
   unauthorizedSigninPageRoute: typeof unauthorizedSigninPageRoute
   unauthorizedSignupPageRoute: typeof unauthorizedSignupPageRoute
+  unauthorizedTwoFactorPageRoute: typeof unauthorizedTwoFactorPageRoute
 }
 
 const unauthorizedLayoutRouteChildren: unauthorizedLayoutRouteChildren = {
@@ -714,6 +735,7 @@ const unauthorizedLayoutRouteChildren: unauthorizedLayoutRouteChildren = {
   unauthorizedSetNewPasswordPageRoute: unauthorizedSetNewPasswordPageRoute,
   unauthorizedSigninPageRoute: unauthorizedSigninPageRoute,
   unauthorizedSignupPageRoute: unauthorizedSignupPageRoute,
+  unauthorizedTwoFactorPageRoute: unauthorizedTwoFactorPageRoute,
 }
 
 const unauthorizedLayoutRouteWithChildren =

@@ -5,6 +5,7 @@ import {
   inferAdditionalFields,
   lastLoginMethodClient,
   organizationClient,
+  twoFactorClient,
 } from "better-auth/client/plugins"
 
 import { ac, admin, member, owner } from "@workspace/shared/auth/roles"
@@ -15,6 +16,7 @@ export const authClient = createAuthClient({
   plugins: [
     emailOTPClient(),
     lastLoginMethodClient(),
+    twoFactorClient(),
     organizationClient({
       ac,
       roles: {
@@ -62,6 +64,7 @@ export const {
   signIn,
   signOut,
   signUp,
+  twoFactor,
   unlinkAccount,
   updateSession,
   updateUser,

@@ -7,6 +7,7 @@ import {
   member,
   organization,
   session,
+  twoFactor,
   user,
 } from "@workspace/db/schema/auth"
 import {
@@ -31,6 +32,7 @@ export const relations = defineRelations(
     user,
     session,
     account,
+    twoFactor,
     organization,
     member,
     invitation,
@@ -163,6 +165,10 @@ export const relations = defineRelations(
         from: r.user.id,
         to: r.account.userId,
       }),
+      twoFactors: r.many.twoFactor({
+        from: r.user.id,
+        to: r.twoFactor.userId,
+      }),
       members: r.many.member({
         from: r.user.id,
         to: r.member.userId,
@@ -177,6 +183,12 @@ export const relations = defineRelations(
     account: {
       user: r.one.user({
         from: r.account.userId,
+        to: r.user.id,
+      }),
+    },
+    twoFactor: {
+      user: r.one.user({
+        from: r.twoFactor.userId,
         to: r.user.id,
       }),
     },

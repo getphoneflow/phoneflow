@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 
 import { DeleteAccount } from "@/components/settings/account/delete-account"
 import { SetNewPassword } from "@/components/settings/account/set-new-password"
+import { TwoFactorAuth } from "@/components/settings/account/two-factor-auth"
 import { UserInformation } from "@/components/settings/account/user-information"
 import { listAccounts } from "@/lib/auth/client"
 import { sessionQueryOptions } from "@/lib/auth/session"
@@ -45,6 +46,10 @@ function Page() {
           timezone={session.user.timezone}
         />
         <SetNewPassword accounts={accounts} />
+        <TwoFactorAuth
+          twoFactorEnabled={Boolean(session.user.twoFactorEnabled)}
+          accounts={accounts}
+        />
         <DeleteAccount email={session.user.email} />
       </div>
     </>

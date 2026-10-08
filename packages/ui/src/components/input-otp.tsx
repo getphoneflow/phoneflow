@@ -6,6 +6,7 @@ import * as React from "react"
 function InputOTP({
   className,
   containerClassName,
+  pushPasswordManagerStrategy = "none",
   ...props
 }: React.ComponentProps<typeof OTPInput> & {
   containerClassName?: string
@@ -19,6 +20,7 @@ function InputOTP({
       )}
       spellCheck={false}
       className={cn("disabled:cursor-not-allowed", className)}
+      pushPasswordManagerStrategy={pushPasswordManagerStrategy}
       {...props}
     />
   )

@@ -88,8 +88,17 @@ function Page() {
         }
         throw new Error(result.error.message)
       }
+      return result.data
     },
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      if ("twoFactorRedirect" in data) {
+        navigate({
+          to: "/two-factor",
+          search: { redirect },
+        })
+        return
+      }
+
       await queryClient.refetchQueries({ queryKey: ["session"] })
 
       if (redirect) {

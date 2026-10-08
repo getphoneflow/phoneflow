@@ -1,6 +1,7 @@
 import {
   boolean,
   index,
+  integer,
   numeric,
   pgTable,
   text,
@@ -23,12 +24,32 @@ export const user = pgTable("user", {
   timezone: text("timezone").notNull().default("America/New_York"),
   image: text("image"),
   stripeCustomerId: text("stripe_customer_id"),
+  twoFactorEnabled: boolean("two_factor_enabled").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),
 })
+
+export const twoFactor = pgTable(
+  "two_factor",
+  {
+    id: text("id").primaryKey(),
+    secret: text("secret").notNull(),
+    backupCodes: text("backup_codes").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    verified: boolean("verified").default(true),
+    failedVerificationCount: integer("failed_verification_count").default(0),
+    lockedUntil: timestamp("locked_until"),
+  },
+  (table) => [
+    index("twoFactor_userId_idx").on(table.userId),
+    index("twoFactor_secret_idx").on(table.secret),
+  ]
+)
 
 export const session = pgTable(
   "session",

@@ -20,6 +20,7 @@ import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { AgentAutoSave } from "@/components/agents/agent-auto-save"
+import { AgentConfigButton } from "@/components/agents/agent-config-button"
 import { AgentEditorActions } from "@/components/agents/agent-editor-actions"
 import { AgentNameField } from "@/components/agents/agent-name-field"
 import { AgentVersionSelector } from "@/components/agents/agent-version-selector"
@@ -116,6 +117,7 @@ function Header({ agent }: { agent: AgentDetailResponse }) {
       <div className="ml-auto flex items-center space-x-3">
         <AgentAutoSave />
         <TestAgentButton />
+        <AgentConfigButton />
         <AgentVersionSelector />
         <PublishAgentForm />
         <AgentEditorActions agent={agent} />

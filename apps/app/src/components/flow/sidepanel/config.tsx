@@ -20,7 +20,10 @@ function ColorDot({ color }: { color: string }) {
 
 export function ConfigPanel() {
   return (
-    <FlowSidePanelBase title="Config" contentClassName="flex flex-col p-0">
+    <FlowSidePanelBase
+      title="Agent config"
+      contentClassName="flex flex-col p-0"
+    >
       <Tabs defaultValue="transcriber" className="min-h-0 flex-1 gap-0">
         <div className="flex flex-col gap-5 px-4 pt-4">
           <CostLatency />

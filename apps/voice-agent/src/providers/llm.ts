@@ -43,6 +43,16 @@ export function LLM(config: AgentConfig["llm"]): llm.LLM {
         temperature: config.temperature,
         toolChoice: config.toolChoice,
       })
+    case "cloudflare":
+      return new openai.LLM({
+        model,
+        apiKey: env.CLOUDFLARE_API_TOKEN,
+        baseURL: `https://api.cloudflare.com/client/v4/accounts/${env.CLOUDFLARE_ACCOUNT_ID}/ai/v1`,
+        temperature: config.temperature,
+        maxCompletionTokens: config.maxTokens,
+        toolChoice: config.toolChoice,
+        reasoningEffort: config.reasoningEffort,
+      })
     case "deepinfra":
       return new openai.LLM({
         model,

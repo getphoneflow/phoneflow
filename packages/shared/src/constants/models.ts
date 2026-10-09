@@ -821,6 +821,97 @@ export const MODELS: ModelsCatalog = {
         },
       },
     },
+    cloudflare: {
+      name: "Cloudflare",
+      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
+      models: {
+        "@cf/zai-org/glm-5.3": {
+          name: "GLM 5.3",
+          usdPerMinute: 0.005,
+          latencyMs: 650,
+        },
+        "@cf/zai-org/glm-5.3-flash": {
+          name: "GLM 5.3 Flash",
+          usdPerMinute: 0.001,
+          latencyMs: 380,
+        },
+        "@cf/zai-org/glm-5.2": {
+          name: "GLM 5.2",
+          usdPerMinute: 0.005,
+          latencyMs: 620,
+        },
+        "@cf/zai-org/glm-4.7-flash": {
+          name: "GLM 4.7 Flash",
+          usdPerMinute: 0.0008,
+          latencyMs: 360,
+        },
+        "@cf/google/gemma-4-26b-a4b-it": {
+          name: "Gemma 4 26B A4B Instruct",
+          usdPerMinute: 0.001,
+          latencyMs: 450,
+        },
+        "@cf/meta/llama-4-scout-17b-16e-instruct": {
+          name: "Llama 4 Scout 17B",
+          usdPerMinute: 0.0012,
+          latencyMs: 480,
+        },
+        "@cf/meta/llama-3.3-70b-instruct-fp8-fast": {
+          name: "Llama 3.3 70B Instruct Fast",
+          usdPerMinute: 0.0015,
+          latencyMs: 520,
+        },
+        "@cf/openai/gpt-oss-120b": {
+          name: "GPT OSS 120B",
+          usdPerMinute: 0.0008,
+          latencyMs: 650,
+        },
+        "@cf/openai/gpt-oss-20b": {
+          name: "GPT OSS 20B",
+          usdPerMinute: 0.0004,
+          latencyMs: 420,
+        },
+        "@cf/qwen/qwen3.8-27b": {
+          name: "Qwen 3.8 27B",
+          usdPerMinute: 0.001,
+          latencyMs: 500,
+        },
+        "@cf/qwen/qwen3-30b-a3b-fp8": {
+          name: "Qwen 3 30B A3B",
+          usdPerMinute: 0.001,
+          latencyMs: 480,
+        },
+        "@cf/deepseek-ai/deepseek-v4-flash-0731": {
+          name: "DeepSeek V4 Flash",
+          usdPerMinute: 0.0015,
+          latencyMs: 400,
+        },
+        "@cf/deepseek-ai/deepseek-v4-pro-0813": {
+          name: "DeepSeek V4 Pro",
+          usdPerMinute: 0.005,
+          latencyMs: 750,
+        },
+        "@cf/moonshotai/kimi-k2.6": {
+          name: "Kimi K2.6",
+          usdPerMinute: 0.004,
+          latencyMs: 620,
+        },
+        "@cf/mistralai/mistral-small-3.1-24b-instruct": {
+          name: "Mistral Small 3.1 24B",
+          usdPerMinute: 0.001,
+          latencyMs: 430,
+        },
+        "@cf/nvidia/nemotron-3-120b-a12b": {
+          name: "Nemotron 3 Super 120B",
+          usdPerMinute: 0.002,
+          latencyMs: 580,
+        },
+        "@cf/ibm-granite/granite-4.0-h-micro": {
+          name: "Granite 4.0 H Micro",
+          usdPerMinute: 0.0004,
+          latencyMs: 320,
+        },
+      },
+    },
     deepinfra: {
       name: "DeepInfra",
       fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],

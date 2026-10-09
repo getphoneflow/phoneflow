@@ -6,6 +6,7 @@ import { AssemblyIcon } from "@/components/logos/assembly"
 import { BasetenIcon } from "@/components/logos/baseten"
 import { CartesiaIcon } from "@/components/logos/cartesia"
 import { CerebrasIcon } from "@/components/logos/cerebras"
+import { CloudflareIcon } from "@/components/logos/cloudflare"
 import { DeepgramIcon } from "@/components/logos/deepgram"
 import { DeepinfraIcon } from "@/components/logos/deepinfra"
 import { DeepSeekIcon } from "@/components/logos/deepseek"
@@ -31,6 +32,7 @@ const PROVIDER_ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   baseten: BasetenIcon,
   cartesia: CartesiaIcon,
   cerebras: CerebrasIcon,
+  cloudflare: CloudflareIcon,
   deepgram: DeepgramIcon,
   deepinfra: DeepinfraIcon,
   deepseek: DeepSeekIcon,

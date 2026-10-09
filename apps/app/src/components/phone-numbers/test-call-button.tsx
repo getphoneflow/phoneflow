@@ -47,6 +47,7 @@ import {
 } from "@/components/helpers"
 import { VariableValuesFields } from "@/components/variable-values-fields"
 import { useVariableValues } from "@/hooks/use-variable-values"
+import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 
@@ -127,7 +128,13 @@ export function TestCallButton() {
         "/calls/outbound",
         { body: values }
       ),
-    onSuccess: () => {
+    onSuccess: (_, values) => {
+      captureEvent("call_started", {
+        channel: "phone_call",
+        agent_id: values.agentId,
+        agent_version_id: values.agentVersionId ?? null,
+        phone_number_id: values.phoneNumberId,
+      })
       toast.success("Outbound call started")
       form.reset()
       setOpen(false)

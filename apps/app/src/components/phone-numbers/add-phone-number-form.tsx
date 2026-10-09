@@ -30,6 +30,7 @@ import { Input } from "@workspace/ui/components/input"
 import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 
@@ -54,7 +55,10 @@ export function AddPhoneNumberForm() {
         "/phone-numbers",
         { body: values }
       ),
-    onSuccess: () => {
+    onSuccess: (phoneNumber) => {
+      captureEvent("phone_number_created", {
+        phone_number_id: phoneNumber.id,
+      })
       form.reset()
       setOpen(false)
       queryClient.invalidateQueries({ queryKey: ["phone-numbers"] })

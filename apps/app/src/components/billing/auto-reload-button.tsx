@@ -40,6 +40,7 @@ import { Skeleton } from "@workspace/ui/components/skeleton"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { Switch } from "@workspace/ui/components/switch"
+import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 import { autoReloadQueryOptions } from "@/lib/billing"
@@ -69,6 +70,11 @@ export function AutoReloadButton() {
         { body: values }
       ),
     onSuccess: (data) => {
+      captureEvent("billing_auto_reload_updated", {
+        enabled: data.enabled,
+        amount: data.amount,
+        threshold: data.threshold,
+      })
       queryClient.setQueryData(autoReloadQueryOptions().queryKey, data)
       toast.success(
         data.enabled ? "Auto reload enabled" : "Auto reload settings saved"

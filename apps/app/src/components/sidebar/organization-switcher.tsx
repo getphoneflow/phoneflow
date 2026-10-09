@@ -23,6 +23,7 @@ import {
 } from "@workspace/ui/components/sidebar"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { toast } from "@workspace/ui/components/sonner"
+import { captureEvent } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
 import {
   fullOrganizationQueryOptions,
@@ -60,8 +61,12 @@ function OrganizationSwitcherContent() {
       if (result.error) {
         throw new Error(result.error.message)
       }
+      return organizationId
     },
-    onSuccess: async () => {
+    onSuccess: async (organizationId) => {
+      captureEvent("organization_switched", {
+        organization_id: organizationId,
+      })
       await queryClient.refetchQueries({ type: "active" })
     },
     onError: (error) => {

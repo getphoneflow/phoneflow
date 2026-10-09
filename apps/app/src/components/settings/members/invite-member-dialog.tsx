@@ -29,6 +29,7 @@ import {
 } from "@workspace/ui/components/select"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { captureEvent } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
 import {
   assignableRoleSchema,
@@ -73,6 +74,7 @@ export function InviteMemberDialog({
       }
     },
     onSuccess: (_data, values) => {
+      captureEvent("organization_member_invited", { role: values.role })
       toast.success(`Invitation sent to ${values.email}`)
       form.reset()
       onOpenChange(false)

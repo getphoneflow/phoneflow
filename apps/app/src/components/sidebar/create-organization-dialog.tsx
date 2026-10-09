@@ -22,6 +22,7 @@ import {
 import { Input } from "@workspace/ui/components/input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { captureEvent, identifyOrganization } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
 
 const createOrganizationFormSchema = z.object({
@@ -57,8 +58,14 @@ export function CreateOrganizationDialog({
       if (result.error) {
         throw new Error(result.error.message)
       }
+      return result.data
     },
-    onSuccess: async () => {
+    onSuccess: async (org) => {
+      identifyOrganization(org)
+      captureEvent("organization_created", {
+        organization_id: org?.id,
+        name: org?.name,
+      })
       toast.success("Organization created")
       form.reset()
       onOpenChange(false)

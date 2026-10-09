@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router"
 
 import { toast } from "@workspace/ui/components/sonner"
+import { captureEvent } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
 
 export const Route = createFileRoute("/(authorized)/join-organization/")({
@@ -20,6 +21,10 @@ export const Route = createFileRoute("/(authorized)/join-organization/")({
       throw redirect({ to: "/" })
     }
 
+    captureEvent("organization_joined", {
+      invitation_id: invitationId,
+      organization_id: result.data?.member?.organizationId,
+    })
     await context.queryClient.refetchQueries()
     toast.success("Joined organization successfully")
     throw redirect({ to: "/" })

@@ -30,6 +30,7 @@ import {
 } from "@workspace/ui/components/input-otp"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { captureEvent } from "@/lib/analytics"
 import { twoFactor } from "@/lib/auth/client"
 
 export const Route = createFileRoute("/(unauthorized)/two-factor/")({
@@ -58,6 +59,7 @@ function Page() {
   })
 
   async function completeSignIn() {
+    captureEvent("user_signed_in", { method: "email" })
     await queryClient.refetchQueries({ queryKey: ["session"] })
 
     if (redirectTo) {

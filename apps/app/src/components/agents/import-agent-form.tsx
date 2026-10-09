@@ -22,6 +22,7 @@ import {
 import { Dropzone } from "@workspace/ui/components/dropzone"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 
@@ -52,6 +53,7 @@ export function ImportAgentForm() {
       })
     },
     onSuccess: (agent) => {
+      captureEvent("agent_created", { agent_id: agent.id })
       setOpen(false)
       setFile(null)
       navigate({

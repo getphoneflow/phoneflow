@@ -56,6 +56,7 @@ import {
   formatAgentVersionLabel,
 } from "@/components/helpers"
 import { useUserTimeZone } from "@/components/user-timezone-provider"
+import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 import { TIME_ZONES, zonedDateTimeToIso } from "@/lib/time"
@@ -138,7 +139,8 @@ export function CreateBatchCallForm() {
         "/batch-calls",
         { body }
       ),
-    onSuccess: () => {
+    onSuccess: (batchCall) => {
+      captureEvent("batch_call_created", { batch_call_id: batchCall.id })
       toast.success("Batch call triggered")
       queryClient.invalidateQueries({ queryKey: ["batch-calls"] })
       navigate({ to: "/batch-calls" })

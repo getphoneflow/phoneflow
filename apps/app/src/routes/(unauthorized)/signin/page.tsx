@@ -32,6 +32,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { Captcha } from "@/components/captcha"
 import { GoogleIcon } from "@/components/logos/google"
+import { captureEvent } from "@/lib/analytics"
 import { getLastUsedLoginMethod, signIn } from "@/lib/auth/client"
 import { env } from "@/lib/env"
 
@@ -99,6 +100,7 @@ function Page() {
         return
       }
 
+      captureEvent("user_signed_in", { method: "email" })
       await queryClient.refetchQueries({ queryKey: ["session"] })
 
       if (redirect) {

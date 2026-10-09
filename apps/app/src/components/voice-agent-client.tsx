@@ -9,6 +9,7 @@ import type { ReactNode } from "react"
 
 import type { CallVariableValues } from "@workspace/shared/api/calls/types"
 import { Button } from "@workspace/ui/components/button"
+import { captureEvent } from "@/lib/analytics"
 import { env } from "@/lib/env"
 
 const tokenSource = TokenSource.endpoint(`${env.API_URL}/api/token`, {
@@ -41,6 +42,11 @@ export function VoiceAgentClient({
 
   async function handleConnect() {
     await session.start()
+    captureEvent("call_started", {
+      channel: "web_call",
+      agent_id: agentId,
+      agent_version_id: agentVersionId ?? null,
+    })
   }
 
   async function handleDisconnect() {

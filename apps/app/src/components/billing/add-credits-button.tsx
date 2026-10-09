@@ -36,6 +36,7 @@ import {
 } from "@workspace/ui/components/input-group"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 
@@ -66,7 +67,8 @@ export function AddCreditsButton({
         }
       )
     },
-    onSuccess: (data) => {
+    onSuccess: (data, values) => {
+      captureEvent("billing_checkout_started", { amount: values.amount })
       window.location.href = data.url
     },
     onError: (error) => {

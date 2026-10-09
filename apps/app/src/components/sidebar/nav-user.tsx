@@ -37,6 +37,7 @@ import {
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { toast } from "@workspace/ui/components/sonner"
 import { useTheme } from "@/components/theme-provider"
+import { resetAnalytics } from "@/lib/analytics"
 import { signOut } from "@/lib/auth/client"
 import { sessionQueryOptions } from "@/lib/auth/session"
 
@@ -74,6 +75,7 @@ function NavUserContent() {
     await signOut({
       fetchOptions: {
         onSuccess: async () => {
+          resetAnalytics()
           queryClient.clear()
           navigate({ to: "/signin" })
         },

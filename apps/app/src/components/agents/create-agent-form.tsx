@@ -31,6 +31,7 @@ import {
 import { Input } from "@workspace/ui/components/input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 
@@ -54,6 +55,7 @@ export function CreateAgentForm() {
         body: values,
       }),
     onSuccess: (agent) => {
+      captureEvent("agent_created", { agent_id: agent.id })
       form.reset()
       setOpen(false)
       navigate({

@@ -37,6 +37,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { Textarea } from "@workspace/ui/components/textarea"
 import { areAgentConfigsEqual } from "@/components/flow/agent-config"
+import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useAgentStore } from "@/stores/agent"
 
@@ -95,6 +96,11 @@ export function PublishAgentForm() {
         { body: values }
       ),
     onSuccess: (publishedVersion) => {
+      captureEvent("agent_published", {
+        agent_id: agent.id,
+        agent_version_id: publishedVersion.id,
+        version_number: publishedVersion.number,
+      })
       toast.success(`V${publishedVersion.number} published`)
       form.reset()
       setOpen(false)

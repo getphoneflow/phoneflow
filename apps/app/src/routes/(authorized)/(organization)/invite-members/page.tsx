@@ -29,6 +29,7 @@ import {
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { captureEvent } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
 import { fullOrganizationQueryOptions } from "@/lib/auth/organization"
 import {
@@ -46,6 +47,7 @@ async function inviteMember(email: string, role: InviteRole) {
     toast.error(`${email}: ${result.error.message}`)
     return
   }
+  captureEvent("organization_member_invited", { role })
   toast.success(`Invitation sent to ${email}`)
 }
 

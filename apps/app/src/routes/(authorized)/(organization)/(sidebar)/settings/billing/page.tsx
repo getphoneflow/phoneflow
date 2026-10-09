@@ -10,6 +10,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { ManageBillingButton } from "@/components/billing/manage-billing-button"
 import { BillingHistory } from "@/components/settings/billing/billing-history"
 import { CreditBalance } from "@/components/settings/billing/credit-balance"
+import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { env } from "@/lib/env"
 
@@ -65,6 +66,7 @@ function BillingSettings() {
       )
     },
     onSuccess: async () => {
+      captureEvent("billing_credits_purchased")
       toast.success("Credits added to your balance")
       await queryClient.invalidateQueries({ queryKey: ["billing"] })
     },

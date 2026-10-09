@@ -31,6 +31,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { Captcha } from "@/components/captcha"
 import { GoogleIcon } from "@/components/logos/google"
+import { captureEvent, identifyUser } from "@/lib/analytics"
 import { signIn, signUp } from "@/lib/auth/client"
 import { env } from "@/lib/env"
 import { TIME_ZONES } from "@/lib/time"
@@ -96,8 +97,11 @@ function Page() {
       if (result.error) {
         throw new Error(result.error.message)
       }
+      return result.data
     },
-    onSuccess: (_, values) => {
+    onSuccess: (data, values) => {
+      identifyUser(data.user)
+      captureEvent("user_signed_up", { method: "email" })
       navigate({
         to: "/email-verification",
         search: { email: values.email, redirect },

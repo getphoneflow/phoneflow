@@ -188,7 +188,7 @@ function AgentEditor() {
 
   return (
     <>
-      <title>{name} - PhoneFlow</title>
+      <title>{`${name} - PhoneFlow`}</title>
       <Header agent={agent} />
       <Canvas />
       <FlowSidePanel />

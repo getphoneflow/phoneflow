@@ -81,6 +81,7 @@ function AgentEditorSkeleton() {
         <Skeleton className="h-4 w-40" />
         <div className="ml-auto flex space-x-3">
           <Skeleton className="h-9 w-18" />
+          <Skeleton className="h-9 w-23" />
           <Skeleton className="h-9 w-28" />
           <Skeleton className="h-9 w-23" />
           <Skeleton className="size-9" />

@@ -33,7 +33,7 @@ function ProportionBar({
   if (total <= 0) return null
 
   return (
-    <div className="flex h-1.5 flex-1 overflow-hidden rounded-full">
+    <div className="flex h-1.5 overflow-hidden rounded-full">
       {parts.map((part) => {
         const value = amount(part)
         if (value <= 0) return null
@@ -100,31 +100,33 @@ export function CostLatency() {
   const latency = parts.reduce((sum, part) => sum + part.latencyMs, 0)
 
   return (
-    <div className="flex flex-col gap-3 text-xs">
+    <div className="grid grid-cols-[auto_1fr] items-center gap-x-3 gap-y-3 text-xs text-muted-foreground">
       {env.IS_CLOUD ? (
-        <div className="flex items-center">
-          <span className="w-14 text-muted-foreground">Cost:</span>
-          <span className="w-21 text-foreground tabular-nums">
-            {formatUsdPerMinute(cost)}
-          </span>
+        <>
+          <p>
+            Cost{" "}
+            <span className="text-foreground tabular-nums">
+              {formatUsdPerMinute(cost)}
+            </span>
+          </p>
           <ProportionBar
             parts={parts}
             amount={(part) => part.usdPerMinute}
             format={formatUsdPerMinute}
           />
-        </div>
+        </>
       ) : null}
-      <div className="flex items-center">
-        <span className="w-14 text-muted-foreground">Latency:</span>
-        <span className="w-21 text-foreground tabular-nums">
+      <p>
+        Latency{" "}
+        <span className="text-foreground tabular-nums">
           {formatLatency(latency)}
         </span>
-        <ProportionBar
-          parts={parts}
-          amount={(part) => part.latencyMs}
-          format={formatLatency}
-        />
-      </div>
+      </p>
+      <ProportionBar
+        parts={parts}
+        amount={(part) => part.latencyMs}
+        format={formatLatency}
+      />
     </div>
   )
 }

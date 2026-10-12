@@ -88,15 +88,21 @@ function CallDetailBody({ callId }: { callId: string }) {
         </div>
       </SheetHeader>
 
-      <Tabs defaultValue="transcript" className="min-h-0 flex-1">
-        <div className="px-4">
+      <Tabs
+        defaultValue="transcript"
+        className="min-h-0 flex-1 overflow-hidden"
+      >
+        <div className="shrink-0 px-4">
           <TabsList className="w-full">
             <TabsTrigger value="transcript">Transcript</TabsTrigger>
             <TabsTrigger value="data">Data</TabsTrigger>
             {env.IS_CLOUD ? <TabsTrigger value="cost">Cost</TabsTrigger> : null}
           </TabsList>
         </div>
-        <TabsContent value="transcript" className="flex min-h-0 flex-col">
+        <TabsContent
+          value="transcript"
+          className="flex min-h-0 flex-col overflow-hidden"
+        >
           {messages.length === 0 ? (
             <div className="flex flex-1 items-center justify-center">
               <p className="text-sm text-muted-foreground">
@@ -107,7 +113,10 @@ function CallDetailBody({ callId }: { callId: string }) {
             <AgentChatTranscript messages={messages} initial={false} />
           )}
         </TabsContent>
-        <TabsContent value="data" className="flex min-h-0 flex-col">
+        <TabsContent
+          value="data"
+          className="flex min-h-0 flex-col overflow-y-auto"
+        >
           {variables.length === 0 ? (
             <div className="flex flex-1 items-center justify-center">
               <p className="text-sm text-muted-foreground">No variables</p>
@@ -153,7 +162,7 @@ export function CallDetailSheet({
         if (!nextOpen) onClose()
       }}
     >
-      <SheetContent className="gap-0">
+      <SheetContent className="gap-0 overflow-hidden">
         <Suspense fallback={<SheetSkeleton />}>
           {callId ? <CallDetailBody callId={callId} /> : null}
         </Suspense>

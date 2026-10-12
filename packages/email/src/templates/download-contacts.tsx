@@ -5,7 +5,7 @@ export default function DownloadContactsEmail() {
   return (
     <Html>
       <Body>
-        <Text>Download contacts</Text>
+        <Text>Download contacts from Phoneflow</Text>
       </Body>
     </Html>
   )

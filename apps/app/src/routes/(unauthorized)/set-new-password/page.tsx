@@ -26,6 +26,7 @@ import {
 import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { PhoneflowIcon } from "@/components/logos/phoneflow"
 import { resetPassword } from "@/lib/auth/client"
 
 export const Route = createFileRoute("/(unauthorized)/set-new-password/")({
@@ -92,8 +93,12 @@ function Page() {
 
   return (
     <>
-      <title>Set new password - PhoneFlow</title>
-      <div className="flex h-screen w-full items-center justify-center p-6">
+      <title>Set new password - Phoneflow</title>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 py-8">
+        <div className="flex items-center gap-2">
+          <PhoneflowIcon className="size-6" />
+          <span className="select-none text-2xl font-medium">Phoneflow</span>
+        </div>
         <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-xl">Set new password</CardTitle>

@@ -23,6 +23,7 @@ import { Input } from "@workspace/ui/components/input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { Captcha } from "@/components/captcha"
+import { PhoneflowIcon } from "@/components/logos/phoneflow"
 import { requestPasswordReset } from "@/lib/auth/client"
 import { env } from "@/lib/env"
 
@@ -76,8 +77,12 @@ function Page() {
 
   return (
     <>
-      <title>Reset password - PhoneFlow</title>
-      <div className="flex h-screen w-full items-center justify-center p-6">
+      <title>Reset password - Phoneflow</title>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 py-8">
+        <div className="flex items-center gap-2">
+          <PhoneflowIcon className="size-6" />
+          <span className="select-none text-2xl font-medium">Phoneflow</span>
+        </div>
         <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-xl">Reset password</CardTitle>

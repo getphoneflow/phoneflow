@@ -9,7 +9,7 @@ export async function sendOrganizationInvitation(
   await sendEmail(
     env.EMAIL_FROM,
     payload.to,
-    "Accept invitation to join " + payload.organizationName,
+    `Accept invitation to join ${payload.organizationName} on Phoneflow`,
     AcceptOrganizationInvitationEmail({
       url: payload.url,
       organizationName: payload.organizationName,

@@ -156,7 +156,7 @@ function Page() {
 
   return (
     <>
-      <title>Calls - PhoneFlow</title>
+      <title>Calls - Phoneflow</title>
       <Header />
       <div className="p-5 pt-0">
         <CallsFilters

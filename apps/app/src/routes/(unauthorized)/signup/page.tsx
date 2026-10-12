@@ -31,6 +31,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { Captcha } from "@/components/captcha"
 import { GoogleIcon } from "@/components/logos/google"
+import { PhoneflowIcon } from "@/components/logos/phoneflow"
 import { captureEvent, identifyUser } from "@/lib/analytics"
 import { signIn, signUp } from "@/lib/auth/client"
 import { env } from "@/lib/env"
@@ -129,8 +130,12 @@ function Page() {
 
   return (
     <>
-      <title>Sign up - PhoneFlow</title>
-      <div className="flex h-screen w-full items-center justify-center p-6">
+      <title>Sign up - Phoneflow</title>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 py-8">
+        <div className="flex items-center gap-2">
+          <PhoneflowIcon className="size-6" />
+          <span className="select-none text-2xl font-medium">Phoneflow</span>
+        </div>
         <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-xl">Sign up</CardTitle>

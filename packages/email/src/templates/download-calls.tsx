@@ -5,7 +5,7 @@ export default function DownloadCallsEmail() {
   return (
     <Html>
       <Body>
-        <Text>Download calls</Text>
+        <Text>Download calls from Phoneflow</Text>
       </Body>
     </Html>
   )

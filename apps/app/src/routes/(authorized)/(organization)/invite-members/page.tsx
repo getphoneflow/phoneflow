@@ -116,7 +116,7 @@ function InviteMembersContent() {
 
   return (
     <>
-      <title>Invite members - PhoneFlow</title>
+      <title>Invite members - Phoneflow</title>
       <div className="flex h-screen w-full items-center justify-center p-6">
         <Card className="w-full max-w-md">
           <CardHeader>

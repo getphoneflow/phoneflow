@@ -7,7 +7,7 @@ export async function sendVerificationOtp(payload: SendVerificationOtpPayload) {
   await sendEmail(
     env.EMAIL_FROM,
     payload.to,
-    "Verify your email",
+    "Welcome to Phoneflow",
     VerificationOtpEmail({
       otp: payload.otp,
     })

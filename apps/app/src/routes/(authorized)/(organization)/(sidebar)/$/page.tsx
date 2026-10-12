@@ -20,7 +20,7 @@ export const Route = createFileRoute(
 function Page() {
   return (
     <>
-      <title>Page not found - PhoneFlow</title>
+      <title>Page not found - Phoneflow</title>
       <Empty className="mx-auto max-w-md">
         <EmptyHeader>
           <EmptyMedia variant="icon">

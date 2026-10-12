@@ -13,11 +13,11 @@ export default function ResetPasswordEmail({
   name,
 }: ResetPasswordEmailProps) {
   return (
-    <EmailBase preview="Reset your password">
+    <EmailBase preview="Reset your Phoneflow password">
       <Text>Hi {name},</Text>
       <Text>
-        We received a request to reset your password. If this was you, you can
-        set a new password here:
+        We received a request to reset your Phoneflow password. If this was you,
+        you can set a new password here:
       </Text>
       <Section className="my-8 text-center">
         <Button href={url} className="rounded-lg bg-black px-6 py-2 text-white">

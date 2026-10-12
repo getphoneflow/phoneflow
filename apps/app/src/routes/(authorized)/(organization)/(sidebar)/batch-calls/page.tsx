@@ -64,7 +64,7 @@ function Page() {
 
   return (
     <>
-      <title>Batch calls - PhoneFlow</title>
+      <title>Batch calls - Phoneflow</title>
       <Header />
       <div className="p-5 pt-0">
         <BatchCallsDataTable data={batchCalls} />

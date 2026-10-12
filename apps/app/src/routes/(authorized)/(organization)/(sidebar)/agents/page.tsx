@@ -56,7 +56,7 @@ function Page() {
 
   return (
     <>
-      <title>Agents - PhoneFlow</title>
+      <title>Agents - Phoneflow</title>
       <Header />
       <div className="p-5 pt-0">
         <AgentsDataTable data={agents} />

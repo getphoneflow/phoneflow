@@ -37,7 +37,7 @@ function Page() {
 
   return (
     <>
-      <title>Account settings - PhoneFlow</title>
+      <title>Account settings - Phoneflow</title>
       <div className="mx-auto max-w-lg space-y-8">
         <UserInformation
           name={session.user.name}

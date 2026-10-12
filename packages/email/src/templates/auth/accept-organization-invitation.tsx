@@ -13,10 +13,12 @@ export default function AcceptOrganizationInvitationEmail({
   organizationName,
 }: AcceptOrganizationInvitationEmailProps) {
   return (
-    <EmailBase preview={`Accept invitation to join ${organizationName}`}>
+    <EmailBase
+      preview={`Accept invitation to join ${organizationName} on Phoneflow`}
+    >
       <Text>
-        You have been invited to join {organizationName}. Click the button below
-        to accept the invitation:
+        You have been invited to join {organizationName} on Phoneflow. Click the
+        button below to accept the invitation:
       </Text>
       <Section className="my-8 text-center">
         <Button href={url} className="rounded-lg bg-black px-6 py-2 text-white">

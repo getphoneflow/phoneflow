@@ -13,7 +13,8 @@ export default function VerificationOtpEmail({
   return (
     <EmailBase preview="Verify your email address">
       <Text>
-        Thanks for signing up. Use this code to verify your email address:
+        Thanks for signing up for Phoneflow. Use this code to verify your email
+        address:
       </Text>
       <Text className="text-3xl my-8 text-center font-bold tracking-widest">
         {otp}

@@ -46,7 +46,7 @@ function Header() {
 function Page() {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <title>Create batch call - PhoneFlow</title>
+      <title>Create batch call - Phoneflow</title>
       <Header />
       <CreateBatchCallForm />
     </div>

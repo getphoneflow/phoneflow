@@ -7,7 +7,7 @@ export async function sendResetPassword(payload: SendResetPasswordPayload) {
   await sendEmail(
     env.EMAIL_FROM,
     payload.to,
-    "Reset Password",
+    "Reset your Phoneflow password",
     ResetPasswordEmail({
       name: payload.name,
       url: payload.url,

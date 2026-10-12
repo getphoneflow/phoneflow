@@ -31,7 +31,9 @@ import { InputGroupAddon } from "@workspace/ui/components/input-group"
 import { ProviderIcon } from "@/components/flow/sidepanel/provider-icon"
 import { env } from "@/lib/env"
 
-type ModelSort = "default" | "price" | "latency"
+type ModelSort = "default" | "price" | "latency" | "score"
+
+type ScoreOrder = 1 | -1
 
 const searchLabel = {
   stt: "transcription",
@@ -39,14 +41,46 @@ const searchLabel = {
   tts: "voice",
 }
 
-function ModelRow({ model }: { model: ModelOption }) {
+const scoreMeta: Record<
+  ModelKind,
+  { label: string; order: ScoreOrder; format: (score: number) => string }
+> = {
+  stt: {
+    label: "WER",
+    order: 1,
+    format: (score) => `${formatScore(score)}% WER`,
+  },
+  llm: {
+    label: "Score",
+    order: -1,
+    format: (score) => `${formatScore(score)}%`,
+  },
+  tts: {
+    label: "Score",
+    order: -1,
+    format: (score) => `${formatScore(score)}%`,
+  },
+}
+
+function formatScore(score: number) {
+  return Number.isInteger(score) ? String(score) : score.toFixed(1)
+}
+
+function ModelRow({
+  model,
+  formatScoreLabel,
+}: {
+  model: ModelOption
+  formatScoreLabel: (score: number) => string
+}) {
   return (
     <div className="flex min-w-0 flex-1 gap-2 text-left">
       <ProviderIcon providerId={model.providerId} className="mt-1" />
       <div className="min-w-0 flex-1">
         <div className="truncate font-medium">{model.name}</div>
         <div className="truncate text-xs text-muted-foreground tabular-nums">
-          {formatLatencyMs(model.latencyMs)}
+          {formatScoreLabel(model.score)}
+          {` · ${formatLatencyMs(model.latencyMs)}`}
           {env.IS_CLOUD ? ` · ${formatUsdPerMinute(model.usdPerMinute)}` : ""}
         </div>
       </div>
@@ -54,13 +88,18 @@ function ModelRow({ model }: { model: ModelOption }) {
   )
 }
 
-function sortModels(models: ModelOption[], sort: ModelSort) {
+function sortModels(
+  models: ModelOption[],
+  sort: ModelSort,
+  scoreOrder: ScoreOrder
+) {
   if (sort === "default") return models
-  return [...models].sort((a, b) =>
-    sort === "price"
-      ? a.usdPerMinute - b.usdPerMinute
-      : a.latencyMs - b.latencyMs
-  )
+
+  return [...models].sort((a, b) => {
+    if (sort === "price") return a.usdPerMinute - b.usdPerMinute
+    if (sort === "latency") return a.latencyMs - b.latencyMs
+    return (a.score - b.score) * scoreOrder
+  })
 }
 
 function filterModel(model: ModelOption, query: string) {
@@ -84,7 +123,12 @@ export function ModelSelect({
   readOnly?: boolean
 }) {
   const [sort, setSort] = useState<ModelSort>("default")
-  const models = sortModels(getModels(kind), sort)
+  const {
+    label: scoreLabel,
+    order: scoreOrder,
+    format: formatScoreLabel,
+  } = scoreMeta[kind]
+  const models = sortModels(getModels(kind), sort, scoreOrder)
   const selectedModel = models.find((model) => model.id === modelId)!
 
   return (
@@ -104,7 +148,9 @@ export function ModelSelect({
       >
         <ComboboxTrigger>
           <ComboboxValue>
-            {(value: ModelOption) => <ModelRow model={value} />}
+            {(value: ModelOption) => (
+              <ModelRow model={value} formatScoreLabel={formatScoreLabel} />
+            )}
           </ComboboxValue>
         </ComboboxTrigger>
         <ComboboxContent className="w-(--anchor-width) max-w-(--anchor-width) min-w-(--anchor-width)">
@@ -142,6 +188,9 @@ export function ModelSelect({
                   <DropdownMenuRadioItem value="latency">
                     Latency
                   </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="score">
+                    {scoreLabel}
+                  </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -150,7 +199,7 @@ export function ModelSelect({
           <ComboboxList className="pt-0 min-h-80">
             {(model: ModelOption) => (
               <ComboboxItem key={model.id} value={model}>
-                <ModelRow model={model} />
+                <ModelRow model={model} formatScoreLabel={formatScoreLabel} />
               </ComboboxItem>
             )}
           </ComboboxList>

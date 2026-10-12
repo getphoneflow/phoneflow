@@ -9,6 +9,7 @@ export type ModelOption = {
   providerName: string
   usdPerMinute: number
   latencyMs: number
+  score: number
 }
 
 export type VoiceGender = "male" | "female"
@@ -50,6 +51,7 @@ export function getModel(
     providerName: provider.name,
     usdPerMinute: model.usdPerMinute,
     latencyMs: model.latencyMs,
+    score: model.score,
   }
 }
 
@@ -83,6 +85,7 @@ export function getModels(kind: ModelKind): ModelOption[] {
         providerName: provider.name,
         usdPerMinute: model.usdPerMinute,
         latencyMs: model.latencyMs,
+        score: model.score,
       }))
   )
 }

@@ -11,6 +11,7 @@ export type CatalogModel<Field extends string> = {
   languages?: readonly string[]
   usdPerMinute: number
   latencyMs: number
+  score: number
   turnTaking?: boolean
   fields?: readonly Field[]
 }

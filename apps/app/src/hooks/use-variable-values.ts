@@ -27,6 +27,31 @@ function collectVariableKeys(config: AgentConfig) {
     }
   }
 
+  for (const tool of config.tools) {
+    if (tool.type === "webhook") {
+      const known = new Set(keys)
+      extractKeys(tool.description, keys)
+      for (const parameter of tool.parameters) {
+        extractKeys(parameter.description, keys)
+      }
+      extractKeys(tool.url, keys)
+      for (const header of tool.headers) {
+        extractKeys(header.key, keys)
+        extractKeys(header.value, keys)
+      }
+      for (const parameter of tool.queryParameters) {
+        extractKeys(parameter.key, keys)
+        extractKeys(parameter.value, keys)
+      }
+      extractKeys(tool.body, keys)
+      for (const parameter of tool.parameters) {
+        if (!known.has(parameter.name)) {
+          keys.delete(parameter.name)
+        }
+      }
+    }
+  }
+
   for (const edge of config.edges) {
     const condition = edge.data.condition
     if (condition.type === "prompt") {

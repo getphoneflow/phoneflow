@@ -16,6 +16,7 @@ import {
 } from "@workspace/ui/components/select"
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
 import { Textarea } from "@workspace/ui/components/textarea"
+import { ConversationTools } from "@/components/flow/tools/conversation-tools"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "../base"
 
@@ -183,22 +184,21 @@ export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
                     ))}
                   </SelectContent>
                 </Select>
-                {!readOnly && (
-                  <Button
-                    variant="ghost"
-                    className="text-destructive!"
-                    size="icon-sm"
-                    onClick={() =>
-                      updateVariables(
-                        extractVariables.filter(
-                          (_, entryIndex) => entryIndex !== index
-                        )
+                <Button
+                  variant="ghost"
+                  className="text-destructive!"
+                  size="icon-sm"
+                  disabled={readOnly}
+                  onClick={() =>
+                    updateVariables(
+                      extractVariables.filter(
+                        (_, entryIndex) => entryIndex !== index
                       )
-                    }
-                  >
-                    <Trash2 />
-                  </Button>
-                )}
+                    )
+                  }
+                >
+                  <Trash2 />
+                </Button>
               </div>
               <Textarea
                 rows={2}
@@ -228,6 +228,7 @@ export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
             Add variable
           </Button>
         </Field>
+        <ConversationTools node={node} />
       </FieldGroup>
     </FlowSidePanelBase>
   )

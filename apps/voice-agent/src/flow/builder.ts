@@ -25,6 +25,10 @@ export function buildFlowGraph(config: AgentConfig) {
         flowNode.extractVariables = node.data.extractVariables
       }
 
+      if (node.data.toolIds) {
+        flowNode.toolIds = node.data.toolIds
+      }
+
       if (node.data.startSpeaker) {
         flowNode.startSpeaker = node.data.startSpeaker
       }
@@ -62,5 +66,6 @@ export function buildFlowGraph(config: AgentConfig) {
   return {
     globalPrompt: config.globalPrompt,
     startNode,
+    tools: config.tools,
   } as FlowGraph
 }

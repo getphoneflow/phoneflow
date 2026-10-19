@@ -2,6 +2,7 @@ import type { z } from "zod"
 
 import type {
   agentConfigSchema,
+  agentToolSchema,
   backgroundAudioSchema,
   expressionConditionSchema,
   expressionOperatorSchema,
@@ -10,9 +11,15 @@ import type {
   flowEdgeConfigSchema,
   flowNodeConfigSchema,
   flowNodeInstructionsSchema,
+  webhookToolSchema,
 } from "./schemas"
 
 export type AgentConfig = z.infer<typeof agentConfigSchema>
+export type AgentTool = z.infer<typeof agentToolSchema>
+export type WebhookTool = z.infer<typeof webhookToolSchema>
+export type ToolParameter = WebhookTool["parameters"][number]
+export type ToolKeyValue = WebhookTool["headers"][number]
+export type ResponseVariable = WebhookTool["responseVariables"][number]
 export type BackgroundAudio = z.infer<typeof backgroundAudioSchema>
 export type FlowNodeInstructions = z.infer<typeof flowNodeInstructionsSchema>
 export type ExtractVariable = z.infer<typeof extractVariableSchema>

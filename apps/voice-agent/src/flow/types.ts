@@ -1,4 +1,5 @@
 import type {
+  AgentTool,
   ExtractVariable,
   FlowEdgeCondition,
   FlowNodeInstructions,
@@ -12,6 +13,7 @@ export interface FlowConversationNode {
   startSpeaker?: "agent" | "user"
   instructions: FlowNodeInstructions
   extractVariables?: ExtractVariable[]
+  toolIds?: string[]
   outgoingEdges: FlowEdge[]
 }
 
@@ -30,4 +32,5 @@ export interface FlowEdge {
 export interface FlowGraph {
   globalPrompt: string
   startNode: FlowConversationNode
+  tools: AgentTool[]
 }

@@ -148,10 +148,72 @@ export const extractVariableSchema = z
       /^[a-z0-9_]+$/,
       "Variable key must be lowercase letters, numbers, or underscores"
     ),
-    description: z.string().trim(),
     type: z.enum(["string", "number", "boolean"]),
+    description: z.string().trim(),
   })
   .strict()
+
+const toolParameterSchema = z
+  .object({
+    name: requiredString("Parameter name is required").regex(
+      /^[a-z0-9_]+$/,
+      "Use lowercase letters, numbers, or underscores"
+    ),
+    type: z.enum(["string", "number", "boolean"]),
+    description: z.string(),
+    required: z.boolean(),
+  })
+  .strict()
+
+const toolKeyValueSchema = z
+  .object({
+    key: requiredString("Key is required"),
+    value: requiredString("Value is required"),
+  })
+  .strict()
+
+const responseVariableSchema = z
+  .object({
+    name: requiredString("Variable name is required").regex(
+      /^[a-z0-9_]+$/,
+      "Use lowercase letters, numbers, or underscores"
+    ),
+    path: requiredString("Response path is required"),
+  })
+  .strict()
+
+export const webhookToolSchema = z
+  .object({
+    id: z.string().trim().min(1),
+    type: z.literal("webhook"),
+    name: requiredString("Tool name is required")
+      .regex(/^[a-z0-9_]+$/, "Use lowercase letters, numbers, or underscores")
+      .refine(
+        (name) =>
+          name !== "extract_variables" && !name.startsWith("notify_condition_"),
+        "Tool name is reserved"
+      ),
+    description: requiredString("Tool description is required"),
+    parameters: z.array(toolParameterSchema),
+    method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]),
+    url: requiredString("URL is required"),
+    timeoutMs: z.number().int().min(1000).max(600_000),
+    maxRetries: z.number().int().min(0).max(5),
+    headers: z.array(toolKeyValueSchema),
+    queryParameters: z.array(toolKeyValueSchema),
+    body: z.string().refine((value) => {
+      try {
+        if (value.trim()) JSON.parse(value)
+        return true
+      } catch {
+        return false
+      }
+    }, "Body must be JSON"),
+    responseVariables: z.array(responseVariableSchema),
+  })
+  .strict()
+
+export const agentToolSchema = z.discriminatedUnion("type", [webhookToolSchema])
 
 export const flowNodeConfigSchema = z.discriminatedUnion("type", [
   z.object({
@@ -165,6 +227,7 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
         startSpeaker: z.enum(["agent", "user"]).optional(),
         instructions: flowNodeInstructionsSchema,
         extractVariables: z.array(extractVariableSchema).optional(),
+        toolIds: z.array(z.string().trim().min(1)).optional(),
       })
       .strict(),
   }),
@@ -253,10 +316,62 @@ export const agentConfigSchema = z
     call: callSettingsSchema,
     globalPrompt: z.string(),
     timezone: z.string(),
+    tools: z.array(agentToolSchema),
     nodes: z.array(flowNodeConfigSchema).min(1, "Add at least one node"),
     edges: z.array(flowEdgeConfigSchema),
   })
   .superRefine((config, ctx) => {
+    const toolIds = new Set<string>()
+    const toolNames = new Set<string>()
+
+    config.tools.forEach((tool, index) => {
+      if (toolIds.has(tool.id)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["tools", index, "id"],
+          message: "Duplicate tool",
+        })
+      }
+      toolIds.add(tool.id)
+
+      if (toolNames.has(tool.name)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["tools", index, "name"],
+          message: "Duplicate tool name",
+        })
+      }
+      toolNames.add(tool.name)
+
+      if (tool.type !== "webhook") {
+        return
+      }
+
+      const parameterNames = new Set<string>()
+      tool.parameters.forEach((parameter, parameterIndex) => {
+        if (parameterNames.has(parameter.name)) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["tools", index, "parameters", parameterIndex, "name"],
+            message: "Duplicate parameter name",
+          })
+        }
+        parameterNames.add(parameter.name)
+      })
+
+      const responseNames = new Set<string>()
+      tool.responseVariables.forEach((variable, variableIndex) => {
+        if (responseNames.has(variable.name)) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["tools", index, "responseVariables", variableIndex, "name"],
+            message: "Duplicate response variable",
+          })
+        }
+        responseNames.add(variable.name)
+      })
+    })
+
     const nodeIds = new Set<string>()
     let startCount = 0
 
@@ -272,6 +387,27 @@ export const agentConfigSchema = z
 
       if (node.type === "conversation" && node.data.isStart === true) {
         startCount += 1
+      }
+
+      if (node.type === "conversation" && node.data.toolIds) {
+        const seenToolIds = new Set<string>()
+        node.data.toolIds.forEach((toolId, toolIndex) => {
+          if (!toolIds.has(toolId)) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["nodes", index, "data", "toolIds", toolIndex],
+              message: "Unknown tool",
+            })
+          }
+          if (seenToolIds.has(toolId)) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["nodes", index, "data", "toolIds", toolIndex],
+              message: "Duplicate tool",
+            })
+          }
+          seenToolIds.add(toolId)
+        })
       }
     })
 

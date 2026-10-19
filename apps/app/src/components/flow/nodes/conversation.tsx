@@ -2,6 +2,7 @@ import { Handle, type Node, type NodeProps, Position } from "@xyflow/react"
 import { Phone, Play } from "lucide-react"
 
 import type { FlowConversationNode } from "@workspace/shared/api/agent-config/types"
+import { useAgentStore } from "@/stores/agent"
 import { FlowNodeBase } from "./base"
 
 type ConversationNodeType = Node<FlowConversationNode["data"], "conversation">
@@ -12,6 +13,7 @@ export function ConversationNode({
   selected,
 }: NodeProps<ConversationNodeType>) {
   const isStart = data.isStart
+  const tools = useAgentStore((state) => state.config.tools)
 
   return (
     <FlowNodeBase id={id} selected={selected}>
@@ -47,6 +49,16 @@ export function ConversationNode({
           <div className="p-3 pt-1 text-xs text-muted-foreground">
             {data.extractVariables
               .map((variable) => `{{${variable.key}}}`)
+              .join(", ")}
+          </div>
+        </>
+      )}
+      {data.toolIds && (
+        <>
+          <div className="px-3 text-xs text-foreground">Tools:</div>
+          <div className="p-3 pt-1 text-xs text-muted-foreground">
+            {data.toolIds
+              .map((toolId) => tools.find((tool) => tool.id === toolId)?.name)
               .join(", ")}
           </div>
         </>

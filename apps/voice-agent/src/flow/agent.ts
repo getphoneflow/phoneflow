@@ -14,6 +14,7 @@ import {
   PLATFORM_INSTRUCTIONS,
   TRANSITION_INSTRUCTIONS,
 } from "@/flow/prompts"
+import { createWebhookTool } from "@/flow/tools/webhook"
 import type { FlowConversationNode, FlowGraph, FlowNode } from "@/flow/types"
 import type { Variables } from "@/flow/variables"
 import { endCall } from "@/lib/end-call"
@@ -81,6 +82,13 @@ export class FlowAgent extends Agent {
 
     if (node.extractVariables) {
       tools.push(this.buildExtractTool(node, node.extractVariables))
+    }
+
+    for (const toolId of node.toolIds ?? []) {
+      const definition = this.graph.tools.find((entry) => entry.id === toolId)
+      if (definition?.type === "webhook") {
+        tools.push(createWebhookTool(definition, this.variables))
+      }
     }
 
     return tools

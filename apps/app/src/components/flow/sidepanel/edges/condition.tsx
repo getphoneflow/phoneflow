@@ -51,7 +51,7 @@ function emptyRow(): ExpressionCondition {
 function defaultCondition(type: FlowEdgeCondition["type"]): FlowEdgeCondition {
   switch (type) {
     case "prompt":
-      return { type: "prompt", prompt: "" }
+      return { type: "prompt", prompt: "Transition condition" }
     case "expression":
       return { type: "expression", match: "all", conditions: [emptyRow()] }
     case "always":
@@ -118,6 +118,7 @@ export function EdgePanel({ edge }: EdgePanelProps) {
           <Field>
             <FieldLabel>Prompt</FieldLabel>
             <Input
+              placeholder="Transition condition"
               value={condition.prompt}
               readOnly={readOnly}
               onChange={(event) =>
@@ -166,22 +167,21 @@ export function EdgePanel({ edge }: EdgePanelProps) {
                       updateRow(index, { variable: event.target.value })
                     }
                   />
-                  {!readOnly && (
-                    <Button
-                      variant="ghost"
-                      className="text-destructive!"
-                      size="icon-sm"
-                      onClick={() =>
-                        updateRows(
-                          condition.conditions.filter(
-                            (_, entryIndex) => entryIndex !== index
-                          )
+                  <Button
+                    variant="ghost"
+                    className="text-destructive!"
+                    size="icon-sm"
+                    disabled={readOnly}
+                    onClick={() =>
+                      updateRows(
+                        condition.conditions.filter(
+                          (_, entryIndex) => entryIndex !== index
                         )
-                      }
-                    >
-                      <Trash2 />
-                    </Button>
-                  )}
+                      )
+                    }
+                  >
+                    <Trash2 />
+                  </Button>
                 </div>
                 <div className="flex items-center gap-2">
                   <Select

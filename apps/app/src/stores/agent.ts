@@ -11,6 +11,7 @@ import { create } from "zustand"
 import { createDefaultAgentConfig } from "@workspace/shared/agents/templates/defaults"
 import type {
   AgentConfig,
+  AgentTool,
   FlowEdgeConfig,
   FlowNodeConfig,
 } from "@workspace/shared/api/agent-config/types"
@@ -60,6 +61,9 @@ type AgentEditorStore = AgentEditorState & {
   ) => void
   setNode: (node: FlowNodeConfig) => void
   setEdge: (edge: FlowEdgeConfig) => void
+  createTool: (tool: AgentTool, nodeId: string) => void
+  editTool: (tool: AgentTool) => void
+  removeTool: (nodeId: string, toolId: string) => void
   addNode: (node: FlowNodeConfig) => void
   onNodesChange: (changes: NodeChange<EditorFlowNode>[]) => void
   onEdgesChange: (changes: EdgeChange<EditorFlowEdge>[]) => void
@@ -118,6 +122,26 @@ function applyFlowSelection(
       selected: edge.id === selectedEdgeId,
     })),
   }
+}
+
+function commitTools(
+  state: AgentEditorState,
+  tools: AgentTool[],
+  nodes: EditorAgentConfig["nodes"]
+) {
+  const config = { ...state.config, tools, nodes }
+  let sidePanel = state.sidePanel
+  if (sidePanel.kind === "node") {
+    const nodeId = sidePanel.node.id
+    const node = nodes.find((entry) => entry.id === nodeId)
+    sidePanel = node ? { kind: "node", node } : closedSidePanel
+  }
+
+  return commitEditorConfig(
+    state,
+    applyFlowSelection(config, flowSelectionFromSidePanel(sidePanel)),
+    { sidePanel }
+  )
 }
 
 function commitEditorConfig(
@@ -277,6 +301,66 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
         { sidePanel: { kind: "edge", edge } }
       )
     ),
+  createTool: (tool, nodeId) =>
+    set((state) => {
+      const nodes = state.config.nodes.map((node) => {
+        if (
+          node.id !== nodeId ||
+          node.type !== "conversation" ||
+          node.data.toolIds?.includes(tool.id)
+        ) {
+          return node
+        }
+
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            toolIds: [...(node.data.toolIds ?? []), tool.id],
+          },
+        }
+      })
+
+      return commitTools(state, [...state.config.tools, tool], nodes)
+    }),
+  editTool: (tool) =>
+    set((state) =>
+      commitTools(
+        state,
+        state.config.tools.map((entry) =>
+          entry.id === tool.id ? tool : entry
+        ),
+        state.config.nodes
+      )
+    ),
+  removeTool: (nodeId, toolId) =>
+    set((state) => {
+      const nodes = state.config.nodes.map((node) => {
+        if (node.id !== nodeId || node.type !== "conversation") {
+          return node
+        }
+        const toolIds = node.data.toolIds?.filter((id) => id !== toolId)
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            toolIds: toolIds && toolIds.length > 0 ? toolIds : undefined,
+          },
+        }
+      })
+      const referenced = nodes.some(
+        (node) =>
+          node.type === "conversation" && node.data.toolIds?.includes(toolId)
+      )
+
+      return commitTools(
+        state,
+        referenced
+          ? state.config.tools
+          : state.config.tools.filter((tool) => tool.id !== toolId),
+        nodes
+      )
+    }),
   addNode: (node) =>
     set((state) =>
       commitEditorConfig(

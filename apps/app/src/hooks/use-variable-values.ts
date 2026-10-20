@@ -24,6 +24,16 @@ function collectVariableKeys(config: AgentConfig) {
   for (const node of config.nodes) {
     if (node.type === "conversation") {
       extractKeys(node.data.instructions.text, keys)
+
+      if (node.data.endCall) {
+        extractKeys(node.data.endCall.description, keys)
+      }
+
+      if (node.data.extractVariables) {
+        for (const variable of node.data.extractVariables.variables) {
+          extractKeys(variable.description, keys)
+        }
+      }
     }
   }
 

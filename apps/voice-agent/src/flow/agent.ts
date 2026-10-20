@@ -7,7 +7,7 @@ import {
 } from "@livekit/agents"
 import { z } from "zod"
 
-import type { ExtractVariable } from "@workspace/shared/api/agent-config/types"
+import type { ExtractVariablesTool } from "@workspace/shared/api/agent-config/types"
 import { evaluateExpression } from "@/flow/expression"
 import {
   EXTRACT_INSTRUCTIONS,
@@ -80,6 +80,20 @@ export class FlowAgent extends Agent {
       )
     }
 
+    if (node.endCall) {
+      const description = this.variables.replace(node.endCall.description)
+      tools.push(
+        tool({
+          name: "end_call",
+          description,
+          execute: async (_args, { ctx }) => {
+            await ctx.waitForPlayout()
+            await endCall()
+          },
+        })
+      )
+    }
+
     if (node.extractVariables) {
       tools.push(this.buildExtractTool(node, node.extractVariables))
     }
@@ -96,11 +110,11 @@ export class FlowAgent extends Agent {
 
   private buildExtractTool(
     node: FlowConversationNode,
-    extractVariables: ExtractVariable[]
+    extractVariables: ExtractVariablesTool
   ) {
     const shape: Record<string, z.ZodType> = {}
 
-    for (const variable of extractVariables) {
+    for (const variable of extractVariables.variables) {
       let field: z.ZodType =
         variable.type === "number"
           ? z.number()

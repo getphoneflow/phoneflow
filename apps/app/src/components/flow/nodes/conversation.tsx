@@ -14,6 +14,13 @@ export function ConversationNode({
 }: NodeProps<ConversationNodeType>) {
   const isStart = data.isStart
   const tools = useAgentStore((state) => state.config.tools)
+  const toolNames = [
+    ...(data.endCall ? ["End call"] : []),
+    ...(data.extractVariables ? ["Extract variables"] : []),
+    ...(data.toolIds ?? []).map(
+      (id) => tools.find((tool) => tool.id === id)?.name
+    ),
+  ].filter(Boolean)
 
   return (
     <FlowNodeBase id={id} selected={selected}>
@@ -43,23 +50,11 @@ export function ConversationNode({
           {data.instructions.text}
         </div>
       </div>
-      {data.extractVariables && (
-        <>
-          <div className="px-3 text-xs text-foreground">Extracting:</div>
-          <div className="p-3 pt-1 text-xs text-muted-foreground">
-            {data.extractVariables
-              .map((variable) => `{{${variable.key}}}`)
-              .join(", ")}
-          </div>
-        </>
-      )}
-      {data.toolIds && (
+      {toolNames.length > 0 && (
         <>
           <div className="px-3 text-xs text-foreground">Tools:</div>
           <div className="p-3 pt-1 text-xs text-muted-foreground">
-            {data.toolIds
-              .map((toolId) => tools.find((tool) => tool.id === toolId)?.name)
-              .join(", ")}
+            {toolNames.join(", ")}
           </div>
         </>
       )}

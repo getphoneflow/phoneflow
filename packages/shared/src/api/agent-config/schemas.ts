@@ -153,6 +153,33 @@ export const extractVariableSchema = z
   })
   .strict()
 
+export const endCallToolSchema = z
+  .object({
+    description: requiredString("Description is required"),
+  })
+  .strict()
+
+export const extractVariablesToolSchema = z
+  .object({
+    variables: z
+      .array(extractVariableSchema)
+      .min(1, "Add at least one variable"),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    const keys = new Set<string>()
+    value.variables.forEach((variable, index) => {
+      if (keys.has(variable.key)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["variables", index, "key"],
+          message: "Duplicate variable key",
+        })
+      }
+      keys.add(variable.key)
+    })
+  })
+
 const toolParameterSchema = z
   .object({
     name: requiredString("Parameter name is required").regex(
@@ -182,6 +209,8 @@ const responseVariableSchema = z
   })
   .strict()
 
+const reservedToolNames = new Set(["end_call", "extract_variables"])
+
 export const webhookToolSchema = z
   .object({
     id: z.string().trim().min(1),
@@ -190,7 +219,7 @@ export const webhookToolSchema = z
       .regex(/^[a-z0-9_]+$/, "Use lowercase letters, numbers, or underscores")
       .refine(
         (name) =>
-          name !== "extract_variables" && !name.startsWith("notify_condition_"),
+          !reservedToolNames.has(name) && !name.startsWith("notify_condition_"),
         "Tool name is reserved"
       ),
     description: requiredString("Tool description is required"),
@@ -226,7 +255,8 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
         isStart: z.literal(true).optional(),
         startSpeaker: z.enum(["agent", "user"]).optional(),
         instructions: flowNodeInstructionsSchema,
-        extractVariables: z.array(extractVariableSchema).optional(),
+        endCall: endCallToolSchema.optional(),
+        extractVariables: extractVariablesToolSchema.optional(),
         toolIds: z.array(z.string().trim().min(1)).optional(),
       })
       .strict(),

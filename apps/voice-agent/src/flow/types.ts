@@ -1,6 +1,7 @@
 import type {
   AgentTool,
-  ExtractVariable,
+  EndCallTool,
+  ExtractVariablesTool,
   FlowEdgeCondition,
   FlowNodeInstructions,
 } from "@workspace/shared/api/agent-config/types"
@@ -12,7 +13,8 @@ export interface FlowConversationNode {
   isStart?: true
   startSpeaker?: "agent" | "user"
   instructions: FlowNodeInstructions
-  extractVariables?: ExtractVariable[]
+  endCall?: EndCallTool
+  extractVariables?: ExtractVariablesTool
   toolIds?: string[]
   outgoingEdges: FlowEdge[]
 }

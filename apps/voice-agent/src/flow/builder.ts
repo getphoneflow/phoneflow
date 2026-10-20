@@ -21,6 +21,10 @@ export function buildFlowGraph(config: AgentConfig) {
         outgoingEdges: [],
       }
 
+      if (node.data.endCall) {
+        flowNode.endCall = node.data.endCall
+      }
+
       if (node.data.extractVariables) {
         flowNode.extractVariables = node.data.extractVariables
       }

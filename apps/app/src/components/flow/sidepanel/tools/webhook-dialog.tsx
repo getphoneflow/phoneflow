@@ -9,6 +9,7 @@ import { Checkbox } from "@workspace/ui/components/checkbox"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -70,14 +71,12 @@ export function createWebhookToolDraft(): WebhookTool {
 export function WebhookToolDialog({
   open,
   tool,
-  mode,
   readOnly,
   onOpenChange,
   onSave,
 }: {
   open: boolean
   tool: WebhookTool
-  mode: "create" | "edit"
   readOnly: boolean
   onOpenChange: (open: boolean) => void
   onSave: (tool: WebhookTool) => void
@@ -100,9 +99,10 @@ export function WebhookToolDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="flex max-h-[calc(100vh-4rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-xl">
         <DialogHeader className="px-6 pt-6 pr-14 pb-4">
-          <DialogTitle>
-            {mode === "create" ? "New webhook tool" : "Edit webhook tool"}
-          </DialogTitle>
+          <DialogTitle>Webhook</DialogTitle>
+          <DialogDescription>
+            Call any external API during the conversation
+          </DialogDescription>
         </DialogHeader>
         <form
           className="flex min-h-0 flex-1 flex-col"

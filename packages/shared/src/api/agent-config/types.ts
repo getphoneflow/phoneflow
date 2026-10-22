@@ -13,6 +13,7 @@ import type {
   flowEdgeConfigSchema,
   flowNodeConfigSchema,
   flowNodeInstructionsSchema,
+  ivrNavigationToolSchema,
   transferCallToolSchema,
   webhookToolSchema,
 } from "./schemas"
@@ -26,6 +27,7 @@ export type ResponseVariable = WebhookTool["responseVariables"][number]
 export type BackgroundAudio = z.infer<typeof backgroundAudioSchema>
 export type FlowNodeInstructions = z.infer<typeof flowNodeInstructionsSchema>
 export type EndCallTool = z.infer<typeof endCallToolSchema>
+export type IvrNavigationTool = z.infer<typeof ivrNavigationToolSchema>
 export type ExtractVariable = z.infer<typeof extractVariableSchema>
 export type ExtractVariablesTool = z.infer<typeof extractVariablesToolSchema>
 export type TransferCallTool = z.infer<typeof transferCallToolSchema>

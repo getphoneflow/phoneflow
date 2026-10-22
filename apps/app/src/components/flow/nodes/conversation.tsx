@@ -17,6 +17,7 @@ export function ConversationNode({
   const toolNames = [
     ...(data.endCall ? ["End call"] : []),
     ...(data.extractVariables ? ["Extract variables"] : []),
+    ...(data.ivrNavigation ? ["IVR navigation"] : []),
     ...(data.transferCall ? ["Transfer call"] : []),
     ...(data.toolIds ?? []).map(
       (id) => tools.find((tool) => tool.id === id)?.name

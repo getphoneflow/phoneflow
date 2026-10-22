@@ -29,6 +29,10 @@ export function buildFlowGraph(config: AgentConfig) {
         flowNode.extractVariables = node.data.extractVariables
       }
 
+      if (node.data.ivrNavigation) {
+        flowNode.ivrNavigation = node.data.ivrNavigation
+      }
+
       if (node.data.transferCall) {
         flowNode.transferCall = node.data.transferCall
       }

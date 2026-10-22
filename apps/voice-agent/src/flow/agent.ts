@@ -15,6 +15,7 @@ import {
   PLATFORM_INSTRUCTIONS,
   TRANSITION_INSTRUCTIONS,
 } from "@/flow/prompts"
+import { createSendDtmfTool } from "@/flow/tools/dtmf"
 import { createTransferCallTool } from "@/flow/tools/transfer-call"
 import { createWebhookTool } from "@/flow/tools/webhook"
 import type { FlowConversationNode, FlowGraph, FlowNode } from "@/flow/types"
@@ -103,6 +104,10 @@ export class FlowAgent extends Agent {
           },
         })
       )
+    }
+
+    if (node.ivrNavigation) {
+      tools.push(createSendDtmfTool(node.ivrNavigation, this.variables))
     }
 
     if (node.extractVariables) {

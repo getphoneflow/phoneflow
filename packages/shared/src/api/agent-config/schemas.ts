@@ -159,6 +159,12 @@ export const endCallToolSchema = z
   })
   .strict()
 
+export const ivrNavigationToolSchema = z
+  .object({
+    description: requiredString("Description is required"),
+  })
+  .strict()
+
 export const extractVariablesToolSchema = z
   .object({
     variables: z
@@ -240,6 +246,7 @@ const responseVariableSchema = z
 const reservedToolNames = new Set([
   "end_call",
   "extract_variables",
+  "send_dtmf",
   "transfer_call",
 ])
 
@@ -289,6 +296,7 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
         instructions: flowNodeInstructionsSchema,
         endCall: endCallToolSchema.optional(),
         extractVariables: extractVariablesToolSchema.optional(),
+        ivrNavigation: ivrNavigationToolSchema.optional(),
         transferCall: transferCallToolSchema.optional(),
         toolIds: z.array(z.string().trim().min(1)).optional(),
       })

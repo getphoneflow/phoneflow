@@ -29,6 +29,10 @@ function collectVariableKeys(config: AgentConfig) {
         extractKeys(node.data.endCall.description, keys)
       }
 
+      if (node.data.ivrNavigation) {
+        extractKeys(node.data.ivrNavigation.description, keys)
+      }
+
       if (node.data.extractVariables) {
         for (const variable of node.data.extractVariables.variables) {
           extractKeys(variable.description, keys)

@@ -1,5 +1,6 @@
 import {
   Braces,
+  Keyboard,
   type LucideIcon,
   PhoneForwarded,
   PhoneOff,
@@ -14,6 +15,7 @@ import type {
   EndCallTool,
   ExtractVariablesTool,
   FlowConversationNode,
+  IvrNavigationTool,
   TransferCallTool,
   WebhookTool,
 } from "@workspace/shared/api/agent-config/types"
@@ -35,6 +37,10 @@ import {
   createExtractVariablesDraft,
   ExtractVariablesDialog,
 } from "./extract-variables-dialog"
+import {
+  createIvrNavigationDraft,
+  IvrNavigationDialog,
+} from "./ivr-navigation-dialog"
 import { ToolPickerItem, ToolRow } from "./tool-row"
 import {
   createTransferCallDraft,
@@ -42,7 +48,11 @@ import {
 } from "./transfer-call-dialog"
 import { createWebhookToolDraft, WebhookToolDialog } from "./webhook-dialog"
 
-type BuiltInKind = "endCall" | "extractVariables" | "transferCall"
+type BuiltInKind =
+  | "endCall"
+  | "extractVariables"
+  | "ivrNavigation"
+  | "transferCall"
 
 const builtInTools: {
   kind: BuiltInKind
@@ -67,6 +77,13 @@ const builtInTools: {
       node.data.extractVariables?.variables
         .map((variable) => `{{${variable.key}}}`)
         .join(", "),
+  },
+  {
+    kind: "ivrNavigation",
+    label: "IVR navigation",
+    description: "Send keypad tones to navigate a phone menu",
+    icon: Keyboard,
+    summary: (node) => node.data.ivrNavigation?.description,
   },
   {
     kind: "transferCall",
@@ -125,6 +142,8 @@ export function ConversationTools({ node }: ConversationToolsProps) {
   const [endCallDialog, setEndCallDialog] = useState<EndCallTool | null>(null)
   const [extractVariablesDialog, setExtractVariablesDialog] =
     useState<ExtractVariablesTool | null>(null)
+  const [ivrNavigationDialog, setIvrNavigationDialog] =
+    useState<IvrNavigationTool | null>(null)
   const [transferCallDialog, setTransferCallDialog] =
     useState<TransferCallTool | null>(null)
   const [webhookDialog, setWebhookDialog] = useState<{
@@ -162,6 +181,12 @@ export function ConversationTools({ node }: ConversationToolsProps) {
     if (kind === "extractVariables") {
       setExtractVariablesDialog(
         node.data.extractVariables ?? createExtractVariablesDraft()
+      )
+      return
+    }
+    if (kind === "ivrNavigation") {
+      setIvrNavigationDialog(
+        node.data.ivrNavigation ?? createIvrNavigationDraft()
       )
       return
     }
@@ -359,6 +384,23 @@ export function ConversationTools({ node }: ConversationToolsProps) {
           onSave={(tool) => {
             updateData({ ...node.data, extractVariables: tool })
             setExtractVariablesDialog(null)
+          }}
+        />
+      ) : null}
+
+      {ivrNavigationDialog ? (
+        <IvrNavigationDialog
+          open
+          tool={ivrNavigationDialog}
+          readOnly={readOnly}
+          onOpenChange={(open) => {
+            if (!open) {
+              setIvrNavigationDialog(null)
+            }
+          }}
+          onSave={(tool) => {
+            updateData({ ...node.data, ivrNavigation: tool })
+            setIvrNavigationDialog(null)
           }}
         />
       ) : null}

@@ -4,6 +4,7 @@ import type {
   ExtractVariablesTool,
   FlowEdgeCondition,
   FlowNodeInstructions,
+  TransferCallTool,
 } from "@workspace/shared/api/agent-config/types"
 
 // Runtime flow
@@ -15,6 +16,7 @@ export interface FlowConversationNode {
   instructions: FlowNodeInstructions
   endCall?: EndCallTool
   extractVariables?: ExtractVariablesTool
+  transferCall?: TransferCallTool
   toolIds?: string[]
   outgoingEdges: FlowEdge[]
 }

@@ -58,7 +58,7 @@ export default defineAgent({
       }
     }
 
-    const { callId, config } = await startCall(
+    const { callId, config, sip } = await startCall(
       participant.attributes,
       metadata,
       livekitRoomName
@@ -121,7 +121,7 @@ export default defineAgent({
     })
 
     await session.start({
-      agent: new FlowAgent(flowGraph, variables),
+      agent: new FlowAgent(flowGraph, variables, sip, callId),
       room: ctx.room,
       record: false,
     })

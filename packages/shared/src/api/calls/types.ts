@@ -48,9 +48,17 @@ export type TriggerOutboundCallRequest = z.infer<
 export type UnansweredCallRequest = z.infer<typeof unansweredCallRequestSchema>
 export type CompleteCallRequest = z.infer<typeof completeCallRequestSchema>
 
+export type CallSipConnection = {
+  number: string
+  address: string
+  username: string
+  password: string
+}
+
 export type StartCallResponse = {
   callId: string
   config: AgentConfig
+  sip: CallSipConnection | null
 }
 
 export type UnansweredCallResponse = {

@@ -180,6 +180,34 @@ export const extractVariablesToolSchema = z
     })
   })
 
+export const transferCallDestinationSchema = z
+  .object({
+    number: z.e164(),
+    condition: requiredString("Condition is required"),
+  })
+  .strict()
+
+export const transferCallToolSchema = z
+  .object({
+    destinations: z
+      .array(transferCallDestinationSchema)
+      .min(1, "Add at least one destination"),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    const numbers = new Set<string>()
+    value.destinations.forEach((destination, index) => {
+      if (numbers.has(destination.number)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["destinations", index, "number"],
+          message: "Duplicate phone number",
+        })
+      }
+      numbers.add(destination.number)
+    })
+  })
+
 const toolParameterSchema = z
   .object({
     name: requiredString("Parameter name is required").regex(
@@ -209,7 +237,11 @@ const responseVariableSchema = z
   })
   .strict()
 
-const reservedToolNames = new Set(["end_call", "extract_variables"])
+const reservedToolNames = new Set([
+  "end_call",
+  "extract_variables",
+  "transfer_call",
+])
 
 export const webhookToolSchema = z
   .object({
@@ -257,6 +289,7 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
         instructions: flowNodeInstructionsSchema,
         endCall: endCallToolSchema.optional(),
         extractVariables: extractVariablesToolSchema.optional(),
+        transferCall: transferCallToolSchema.optional(),
         toolIds: z.array(z.string().trim().min(1)).optional(),
       })
       .strict(),

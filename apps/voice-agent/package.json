@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@livekit/agents": "1.9.0",
+    "@livekit/protocol": "^1.50.4",
     "@livekit/agents-plugin-anthropic": "1.9.0",
     "@livekit/agents-plugin-assemblyai": "1.9.0",
     "@livekit/agents-plugin-cartesia": "1.9.0",

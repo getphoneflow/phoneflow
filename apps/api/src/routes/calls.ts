@@ -22,6 +22,7 @@ import type {
   CallDetailResponse,
   CallDownloadResponse,
   CallListResponse,
+  CallSipConnection,
   CompleteCallResponse,
   EndCallResponse,
   JoinCallResponse,
@@ -108,6 +109,28 @@ async function resolveAgentConfig(
   }
 }
 
+function sipConnection(phoneNumber: {
+  number: string
+  sipAddress: string | null
+  sipUsername: string | null
+  sipPassword: string | null
+}): CallSipConnection | null {
+  if (
+    !phoneNumber.sipAddress ||
+    !phoneNumber.sipUsername ||
+    !phoneNumber.sipPassword
+  ) {
+    return null
+  }
+
+  return {
+    number: phoneNumber.number,
+    address: phoneNumber.sipAddress,
+    username: phoneNumber.sipUsername,
+    password: phoneNumber.sipPassword,
+  }
+}
+
 callRoutes.post(
   "/start/web",
   requireAuthToken,
@@ -156,6 +179,7 @@ callRoutes.post(
         {
           callId: call.id,
           config: resolved.config,
+          sip: null,
         } satisfies StartCallResponse,
         201
       )
@@ -178,9 +202,13 @@ callRoutes.post(
           number: payload.toNumber,
         },
         columns: {
+          number: true,
           organizationId: true,
           agentId: true,
           agentVersionId: true,
+          sipAddress: true,
+          sipUsername: true,
+          sipPassword: true,
         },
       })
 
@@ -238,6 +266,7 @@ callRoutes.post(
         {
           callId: call.id,
           config: resolved.config,
+          sip: sipConnection(phoneNumber),
         } satisfies StartCallResponse,
         201
       )
@@ -263,6 +292,19 @@ callRoutes.post(
       if (!resolved) {
         return c.json({ error: "Agent not found" }, 404)
       }
+
+      const phoneNumber = await db.query.phoneNumbersTable.findFirst({
+        where: {
+          number: payload.fromNumber,
+          organizationId: resolved.organizationId,
+        },
+        columns: {
+          number: true,
+          sipAddress: true,
+          sipUsername: true,
+          sipPassword: true,
+        },
+      })
 
       if (
         env.IS_CLOUD &&
@@ -306,6 +348,7 @@ callRoutes.post(
         {
           callId: call.id,
           config: resolved.config,
+          sip: phoneNumber ? sipConnection(phoneNumber) : null,
         } satisfies StartCallResponse,
         201
       )

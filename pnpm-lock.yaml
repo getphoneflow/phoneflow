@@ -310,6 +310,9 @@ importers:
       '@livekit/agents-plugin-xai':
         specifier: 1.9.0
         version: 1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents-plugin-openai@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3))(@livekit/agents@1.9.0(@aws-sdk/credential-provider-node@3.972.81)(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(@types/node@26.2.0)(typescript@7.0.2)(zod@4.4.3))(@livekit/rtc-node@0.13.35)(@smithy/signature-v4@5.7.3)(zod@4.4.3)
+      '@livekit/protocol':
+        specifier: ^1.50.4
+        version: 1.50.4
       '@workspace/shared':
         specifier: workspace:*
         version: link:../../packages/shared

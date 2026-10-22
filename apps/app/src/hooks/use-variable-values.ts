@@ -34,6 +34,12 @@ function collectVariableKeys(config: AgentConfig) {
           extractKeys(variable.description, keys)
         }
       }
+
+      if (node.data.transferCall) {
+        for (const destination of node.data.transferCall.destinations) {
+          extractKeys(destination.condition, keys)
+        }
+      }
     }
   }
 

@@ -13,6 +13,7 @@ import type {
   flowEdgeConfigSchema,
   flowNodeConfigSchema,
   flowNodeInstructionsSchema,
+  transferCallToolSchema,
   webhookToolSchema,
 } from "./schemas"
 
@@ -27,6 +28,7 @@ export type FlowNodeInstructions = z.infer<typeof flowNodeInstructionsSchema>
 export type EndCallTool = z.infer<typeof endCallToolSchema>
 export type ExtractVariable = z.infer<typeof extractVariableSchema>
 export type ExtractVariablesTool = z.infer<typeof extractVariablesToolSchema>
+export type TransferCallTool = z.infer<typeof transferCallToolSchema>
 export type FlowNodeConfig = z.infer<typeof flowNodeConfigSchema>
 export type FlowConversationNode = Extract<
   FlowNodeConfig,

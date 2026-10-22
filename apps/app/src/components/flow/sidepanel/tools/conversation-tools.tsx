@@ -1,6 +1,7 @@
 import {
   Braces,
   type LucideIcon,
+  PhoneForwarded,
   PhoneOff,
   Plus,
   Search,
@@ -13,6 +14,7 @@ import type {
   EndCallTool,
   ExtractVariablesTool,
   FlowConversationNode,
+  TransferCallTool,
   WebhookTool,
 } from "@workspace/shared/api/agent-config/types"
 import { Button } from "@workspace/ui/components/button"
@@ -34,9 +36,13 @@ import {
   ExtractVariablesDialog,
 } from "./extract-variables-dialog"
 import { ToolPickerItem, ToolRow } from "./tool-row"
+import {
+  createTransferCallDraft,
+  TransferCallDialog,
+} from "./transfer-call-dialog"
 import { createWebhookToolDraft, WebhookToolDialog } from "./webhook-dialog"
 
-type BuiltInKind = "endCall" | "extractVariables"
+type BuiltInKind = "endCall" | "extractVariables" | "transferCall"
 
 const builtInTools: {
   kind: BuiltInKind
@@ -60,6 +66,16 @@ const builtInTools: {
     summary: (node) =>
       node.data.extractVariables?.variables
         .map((variable) => `{{${variable.key}}}`)
+        .join(", "),
+  },
+  {
+    kind: "transferCall",
+    label: "Transfer call",
+    description: "Forward the call to a phone number",
+    icon: PhoneForwarded,
+    summary: (node) =>
+      node.data.transferCall?.destinations
+        .map((destination) => destination.number)
         .join(", "),
   },
 ]
@@ -109,6 +125,8 @@ export function ConversationTools({ node }: ConversationToolsProps) {
   const [endCallDialog, setEndCallDialog] = useState<EndCallTool | null>(null)
   const [extractVariablesDialog, setExtractVariablesDialog] =
     useState<ExtractVariablesTool | null>(null)
+  const [transferCallDialog, setTransferCallDialog] =
+    useState<TransferCallTool | null>(null)
   const [webhookDialog, setWebhookDialog] = useState<{
     tool: WebhookTool
     mode: "create" | "edit"
@@ -141,9 +159,13 @@ export function ConversationTools({ node }: ConversationToolsProps) {
       setEndCallDialog(node.data.endCall ?? createEndCallDraft())
       return
     }
-    setExtractVariablesDialog(
-      node.data.extractVariables ?? createExtractVariablesDraft()
-    )
+    if (kind === "extractVariables") {
+      setExtractVariablesDialog(
+        node.data.extractVariables ?? createExtractVariablesDraft()
+      )
+      return
+    }
+    setTransferCallDialog(node.data.transferCall ?? createTransferCallDraft())
   }
 
   return (
@@ -337,6 +359,23 @@ export function ConversationTools({ node }: ConversationToolsProps) {
           onSave={(tool) => {
             updateData({ ...node.data, extractVariables: tool })
             setExtractVariablesDialog(null)
+          }}
+        />
+      ) : null}
+
+      {transferCallDialog ? (
+        <TransferCallDialog
+          open
+          tool={transferCallDialog}
+          readOnly={readOnly}
+          onOpenChange={(open) => {
+            if (!open) {
+              setTransferCallDialog(null)
+            }
+          }}
+          onSave={(tool) => {
+            updateData({ ...node.data, transferCall: tool })
+            setTransferCallDialog(null)
           }}
         />
       ) : null}

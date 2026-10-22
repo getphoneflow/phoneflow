@@ -8,12 +8,14 @@ import {
 import { z } from "zod"
 
 import type { ExtractVariablesTool } from "@workspace/shared/api/agent-config/types"
+import type { CallSipConnection } from "@workspace/shared/api/calls/types"
 import { evaluateExpression } from "@/flow/expression"
 import {
   EXTRACT_INSTRUCTIONS,
   PLATFORM_INSTRUCTIONS,
   TRANSITION_INSTRUCTIONS,
 } from "@/flow/prompts"
+import { createTransferCallTool } from "@/flow/tools/transfer-call"
 import { createWebhookTool } from "@/flow/tools/webhook"
 import type { FlowConversationNode, FlowGraph, FlowNode } from "@/flow/types"
 import type { Variables } from "@/flow/variables"
@@ -48,14 +50,23 @@ function buildNodeInstructions(
 export class FlowAgent extends Agent {
   private readonly graph: FlowGraph
   private readonly variables: Variables
+  private readonly sip: CallSipConnection | null
+  private readonly callId: string
 
-  constructor(graph: FlowGraph, variables: Variables) {
+  constructor(
+    graph: FlowGraph,
+    variables: Variables,
+    sip: CallSipConnection | null,
+    callId: string
+  ) {
     super({
       instructions: buildNodeInstructions(graph, graph.startNode, variables),
     })
 
     this.graph = graph
     this.variables = variables
+    this.sip = sip
+    this.callId = callId
   }
 
   private buildNodeTools(node: FlowConversationNode) {
@@ -96,6 +107,17 @@ export class FlowAgent extends Agent {
 
     if (node.extractVariables) {
       tools.push(this.buildExtractTool(node, node.extractVariables))
+    }
+
+    if (node.transferCall && this.sip) {
+      tools.push(
+        createTransferCallTool(
+          node.transferCall,
+          this.variables,
+          this.sip,
+          this.callId
+        )
+      )
     }
 
     for (const toolId of node.toolIds ?? []) {

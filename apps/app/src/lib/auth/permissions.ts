@@ -1,17 +1,18 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 
 import { organization } from "@/lib/auth/client"
-import { activeMemberQueryOptions } from "@/lib/auth/organization"
 
-type PermissionCheck = Parameters<
-  typeof organization.checkRolePermission
->[0]["permissions"]
+type PermissionCheck = Record<string, string[]>
 
 export function useCheckPermission(permissions: PermissionCheck) {
-  const { data: activeMember } = useSuspenseQuery(activeMemberQueryOptions())
-
-  return organization.checkRolePermission({
-    permissions,
-    role: activeMember.role,
+  const { data } = useSuspenseQuery({
+    queryKey: ["has-permission", permissions],
+    queryFn: async () => {
+      const { data } = await organization.hasPermission({ permissions })
+      return data?.success ?? false
+    },
+    staleTime: 1000 * 60,
   })
+
+  return data
 }

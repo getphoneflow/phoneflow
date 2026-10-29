@@ -20,26 +20,15 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { SelectRole } from "@/components/settings/members/select-role"
 import { captureEvent } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
-import {
-  assignableRoleSchema,
-  assignableRoles,
-  roleLabels,
-} from "@/lib/auth/roles"
 
 const inviteMemberFormSchema = z.object({
   email: z.email("Enter a valid email address"),
-  role: assignableRoleSchema,
+  role: z.string().min(1),
 })
 
 type InviteMemberFormValues = z.infer<typeof inviteMemberFormSchema>
@@ -139,24 +128,15 @@ export function InviteMemberDialog({
               name="role"
               control={form.control}
               render={({ field }) => (
-                <Field className="w-28 shrink-0">
+                <Field className="w-36 shrink-0">
                   <FieldLabel htmlFor={field.name}>Role</FieldLabel>
-                  <Select
+                  <SelectRole
+                    id={field.name}
                     value={field.value}
                     onValueChange={field.onChange}
                     disabled={inviteMemberMutation.isPending}
-                  >
-                    <SelectTrigger id={field.name} className="w-full">
-                      <SelectValue>{roleLabels[field.value]}</SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {assignableRoles.map((role) => (
-                        <SelectItem key={role} value={role}>
-                          {roleLabels[role]}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    ariaLabel="Role"
+                  />
                 </Field>
               )}
             />

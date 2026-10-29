@@ -17,45 +17,45 @@ import {
   activeMemberQueryOptions,
   type OrganizationInvitation,
   type OrganizationMember,
+  organizationRolesQueryOptions,
 } from "@/lib/auth/organization"
 import { useCheckPermission } from "@/lib/auth/permissions"
-import {
-  type AssignableRole,
-  assignableRoles,
-  roleLabels,
-  toAssignableRole,
-} from "@/lib/auth/roles"
 
 type SelectRoleProps = {
-  value: AssignableRole
+  id?: string
+  value: string
   disabled?: boolean
   ariaLabel: string
-  onValueChange: (role: AssignableRole) => void
+  onValueChange: (role: string) => void
 }
 
-function SelectRole({
+export function SelectRole({
+  id,
   value,
   disabled,
   ariaLabel,
   onValueChange,
 }: SelectRoleProps) {
+  const { data: roles } = useSuspenseQuery(organizationRolesQueryOptions())
+  const selected = roles.find((role) => role.role === value)
+
   return (
     <Select
       value={value}
       onValueChange={(nextValue) => {
         if (nextValue) {
-          onValueChange(nextValue as AssignableRole)
+          onValueChange(nextValue)
         }
       }}
       disabled={disabled}
     >
-      <SelectTrigger className="w-28" aria-label={ariaLabel}>
-        <SelectValue>{roleLabels[value]}</SelectValue>
+      <SelectTrigger id={id} className="w-36" aria-label={ariaLabel}>
+        <SelectValue>{selected!.displayName}</SelectValue>
       </SelectTrigger>
       <SelectContent>
-        {assignableRoles.map((role) => (
-          <SelectItem key={role} value={role}>
-            {roleLabels[role]}
+        {roles.map((role) => (
+          <SelectItem key={role.id} value={role.role}>
+            {role.displayName}
           </SelectItem>
         ))}
       </SelectContent>
@@ -69,12 +69,13 @@ type MemberRoleSelectProps = {
 
 export function MemberRoleSelect({ member }: MemberRoleSelectProps) {
   const queryClient = useQueryClient()
+  const { data: roles } = useSuspenseQuery(organizationRolesQueryOptions())
   const { data: activeMember } = useSuspenseQuery(activeMemberQueryOptions())
   const canUpdate = useCheckPermission({ member: ["update"] })
   const isCurrentUser = member.userId === activeMember.userId
 
   const updateRoleMutation = useMutation({
-    mutationFn: async (nextRole: AssignableRole) => {
+    mutationFn: async (nextRole: string) => {
       const result = await organization.updateMemberRole({
         memberId: member.id,
         role: nextRole,
@@ -84,21 +85,25 @@ export function MemberRoleSelect({ member }: MemberRoleSelectProps) {
       }
     },
     onSuccess: (_data, nextRole) => {
-      toast.success(`${member.user.name} is now ${roleLabels[nextRole]}`)
+      const displayName = roles.find(
+        (role) => role.role === nextRole
+      )!.displayName
+      toast.success(`${member.user.name} is now ${displayName}`)
       queryClient.invalidateQueries({ queryKey: ["organization-members"] })
+      queryClient.invalidateQueries({ queryKey: ["has-permission"] })
     },
     onError: (error) => {
       toast.error(error.message)
     },
   })
 
-  if (member.role.includes("owner")) {
-    return <span>{roleLabels.owner}</span>
+  if (member.role === "owner") {
+    return <span>Owner</span>
   }
 
   return (
     <SelectRole
-      value={toAssignableRole(member.role)}
+      value={member.role}
       ariaLabel={`Role for ${member.user.name}`}
       disabled={!canUpdate || isCurrentUser || updateRoleMutation.isPending}
       onValueChange={(role) => updateRoleMutation.mutate(role)}
@@ -114,13 +119,14 @@ export function InvitationRoleSelect({
   invitation,
 }: InvitationRoleSelectProps) {
   const queryClient = useQueryClient()
+  const { data: roles } = useSuspenseQuery(organizationRolesQueryOptions())
   const canCreate = useCheckPermission({ invitation: ["create"] })
   const canCancel = useCheckPermission({ invitation: ["cancel"] })
   const canUpdateRole = canCreate && canCancel
-  const role = toAssignableRole(invitation.role)
+  const role = invitation.role
 
   const updateRoleMutation = useMutation({
-    mutationFn: async (nextRole: AssignableRole) => {
+    mutationFn: async (nextRole: string) => {
       if (nextRole === role) {
         return
       }
@@ -141,7 +147,10 @@ export function InvitationRoleSelect({
       }
     },
     onSuccess: (_data, nextRole) => {
-      toast.success(`Invitation role updated to ${roleLabels[nextRole]}`)
+      const displayName = roles.find(
+        (role) => role.role === nextRole
+      )!.displayName
+      toast.success(`Invitation role updated to ${displayName}`)
       queryClient.invalidateQueries({ queryKey: ["organization-invitations"] })
     },
     onError: (error) => {

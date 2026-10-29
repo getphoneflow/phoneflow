@@ -8,7 +8,7 @@ import {
   twoFactorClient,
 } from "better-auth/client/plugins"
 
-import { ac, admin, member, owner } from "@workspace/shared/auth/roles"
+import { ac, owner } from "@workspace/shared/auth/roles"
 import { env } from "@/lib/env"
 
 export const authClient = createAuthClient({
@@ -21,8 +21,19 @@ export const authClient = createAuthClient({
       ac,
       roles: {
         owner,
-        admin,
-        member,
+      },
+      schema: {
+        organizationRole: {
+          additionalFields: {
+            displayName: {
+              type: "string",
+              required: true,
+            },
+          },
+        },
+      },
+      dynamicAccessControl: {
+        enabled: true,
       },
     }),
     ...(env.IS_CLOUD ? [stripeClient()] : []),

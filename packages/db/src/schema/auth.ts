@@ -163,6 +163,27 @@ export const member = pgTable(
   ]
 )
 
+export const organizationRole = pgTable(
+  "organization_role",
+  {
+    id: text("id").primaryKey(),
+    organizationId: text("organization_id")
+      .notNull()
+      .references(() => organization.id, { onDelete: "cascade" }),
+    role: text("role").notNull(),
+    displayName: text("display_name").notNull(),
+    permission: text("permission").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
+  },
+  (table) => [
+    uniqueIndex("organization_role_organization_id_role_uidx").on(
+      table.organizationId,
+      table.role
+    ),
+  ]
+)
+
 export const invitation = pgTable(
   "invitation",
   {

@@ -19,29 +19,15 @@ import {
   InputGroup,
   InputGroupInput,
 } from "@workspace/ui/components/input-group"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { SelectRole } from "@/components/settings/members/select-role"
 import { captureEvent } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
 import { fullOrganizationQueryOptions } from "@/lib/auth/organization"
-import {
-  type AssignableRole,
-  assignableRoleSchema,
-  assignableRoles,
-  roleLabels,
-} from "@/lib/auth/roles"
 
-type InviteRole = AssignableRole
-
-async function inviteMember(email: string, role: InviteRole) {
+async function inviteMember(email: string, role: string) {
   const result = await organization.inviteMember({ email, role })
   if (result.error) {
     toast.error(`${email}: ${result.error.message}`)
@@ -85,7 +71,7 @@ function InviteMembersContent() {
       .array(
         z.object({
           address: z.email("Enter a valid email address"),
-          role: assignableRoleSchema,
+          role: z.string().min(1),
         })
       )
       .min(1, "Add at least one email address.")
@@ -161,29 +147,14 @@ function InviteMembersContent() {
                         name={`emails.${index}.role`}
                         control={form.control}
                         render={({ field }) => (
-                          <Field className="w-28 shrink-0">
-                            <Select
+                          <Field className="w-36 shrink-0">
+                            <SelectRole
+                              id={field.name}
                               value={field.value}
                               onValueChange={field.onChange}
                               disabled={form.formState.isSubmitting}
-                            >
-                              <SelectTrigger
-                                id={field.name}
-                                className="w-full"
-                                aria-label={`Role for email ${index + 1}`}
-                              >
-                                <SelectValue>
-                                  {roleLabels[field.value]}
-                                </SelectValue>
-                              </SelectTrigger>
-                              <SelectContent>
-                                {assignableRoles.map((role) => (
-                                  <SelectItem key={role} value={role}>
-                                    {roleLabels[role]}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                              ariaLabel={`Role for email ${index + 1}`}
+                            />
                           </Field>
                         )}
                       />

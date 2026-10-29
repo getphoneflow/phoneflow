@@ -174,7 +174,7 @@ export function MemberRowActions({ member }: MemberRowActionsProps) {
           {isCurrentUser && (
             <DropdownMenuItem
               variant="destructive"
-              disabled={member.role.includes("owner")}
+              disabled={member.role === "owner"}
               onClick={() => setLeaveOpen(true)}
             >
               <LogOutIcon />

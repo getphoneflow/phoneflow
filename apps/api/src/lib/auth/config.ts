@@ -11,12 +11,13 @@ import {
 
 import { db } from "@workspace/db/client"
 import * as schema from "@workspace/db/schema/auth"
-import { ac, admin, member, owner } from "@workspace/shared/auth/roles"
+import { ac, owner } from "@workspace/shared/auth/roles"
 import type {
   SendOrganizationInvitationPayload,
   SendResetPasswordPayload,
   SendVerificationOtpPayload,
 } from "@workspace/shared/jobs/emails/types"
+import { seedOrganizationRoles } from "@/lib/auth/organization-roles"
 import { handleStripeEvent } from "@/lib/credits"
 import { env } from "@/lib/env"
 import { emailsQueue } from "@/lib/queues"
@@ -85,10 +86,22 @@ export const auth = betterAuth({
     }),
     organization({
       ac,
+      creatorRole: "owner",
       roles: {
         owner,
-        admin,
-        member,
+      },
+      schema: {
+        organizationRole: {
+          additionalFields: {
+            displayName: {
+              type: "string",
+              required: true,
+            },
+          },
+        },
+      },
+      dynamicAccessControl: {
+        enabled: true,
       },
       async sendInvitationEmail(data) {
         const inviteLink = `${env.FRONTEND_URL}/join-organization?invitationId=${data.id}&email=${encodeURIComponent(data.email)}`
@@ -115,6 +128,9 @@ export const auth = betterAuth({
               stripeCustomerId: stripeCustomer.id,
             },
           }
+        },
+        async afterCreateOrganization({ organization: org }) {
+          await seedOrganizationRoles(org.id)
         },
       },
     }),

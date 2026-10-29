@@ -4,10 +4,11 @@ export type ParsedCsvRecipient = BatchCallRecipientInput
 
 const E164_REGEX = /^\+[1-9]\d{1,14}$/
 
-const CSV_TEMPLATE = `phone_number,first_name,company
-+14155551234,Ada,Acme
-+14155555678,Grace,Example Co
-`
+export function csvTemplate(keys: string[]) {
+  const columns = ["phone_number", ...keys]
+  const sample = ["+14155551234", ...keys.map(() => "")]
+  return `${columns.join(",")}\n${sample.join(",")}\n`
+}
 
 function parseCsvCell(cell: string) {
   return cell.trim().replace(/^"|"$/g, "")
@@ -47,7 +48,10 @@ function buildRecipientVariables(
   return variables
 }
 
-export function parseRecipientsCsv(text: string): {
+export function parseRecipientsCsv(
+  text: string,
+  keys: string[]
+): {
   columns: string[]
   recipients: ParsedCsvRecipient[]
 } {
@@ -65,6 +69,16 @@ export function parseRecipientsCsv(text: string): {
 
   if (phoneNumberIndex === -1) {
     throw new Error('CSV must include a "phone_number" column')
+  }
+
+  const allowed = new Set(keys)
+  for (const column of columns) {
+    if (!column || column.toLowerCase() === "phone_number") {
+      continue
+    }
+    if (!allowed.has(column)) {
+      throw new Error(`Unknown variable column "${column}"`)
+    }
   }
 
   const recipients: ParsedCsvRecipient[] = []
@@ -92,8 +106,8 @@ export function parseRecipientsCsv(text: string): {
   return { columns, recipients }
 }
 
-export function downloadCsvTemplate() {
-  const blob = new Blob([CSV_TEMPLATE], { type: "text/csv;charset=utf-8" })
+export function downloadCsvTemplate(keys: string[]) {
+  const blob = new Blob([csvTemplate(keys)], { type: "text/csv;charset=utf-8" })
   const url = URL.createObjectURL(blob)
   const anchor = document.createElement("a")
 

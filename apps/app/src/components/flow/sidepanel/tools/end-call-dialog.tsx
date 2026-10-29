@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@workspace/ui/components/dialog"
 import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field"
-import { Textarea } from "@workspace/ui/components/textarea"
+import { VariableTextField } from "@/components/flow/variables/variable-text-field"
 
 export function createEndCallDraft(): EndCallTool {
   return { description: "" }
@@ -65,12 +65,16 @@ export function EndCallDialog({
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel>Description</FieldLabel>
-                <Textarea
-                  {...field}
+                <VariableTextField
+                  name={field.name}
+                  value={field.value}
+                  onBlur={field.onBlur}
+                  multiline
                   rows={4}
                   placeholder="Describe when to end the call"
                   readOnly={readOnly}
                   aria-invalid={fieldState.invalid}
+                  onChange={field.onChange}
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />

@@ -2,6 +2,15 @@ import { z } from "zod"
 
 import { BACKGROUND_AUDIO_IDS } from "@workspace/shared/constants/background-audio"
 
+const reservedVariableKeys = new Set([
+  "date",
+  "time",
+  "timezone",
+  "direction",
+  "phone_number",
+  "agent_number",
+])
+
 function requiredString(message: string) {
   return z.string().trim().min(1, message)
 }
@@ -142,12 +151,23 @@ export const flowNodeInstructionsSchema = z.object({
   text: requiredString("Conversation instructions are required"),
 })
 
+const variableKeySchema = requiredString("Variable key is required")
+  .regex(
+    /^[a-z0-9_]+$/,
+    "Variable key must be lowercase letters, numbers, or underscores"
+  )
+  .refine((key) => !reservedVariableKeys.has(key), "Variable key is reserved")
+
+export const dynamicVariableSchema = z
+  .object({
+    key: variableKeySchema,
+    defaultValue: z.string().exactOptional(),
+  })
+  .strict()
+
 export const extractVariableSchema = z
   .object({
-    key: requiredString("Variable key is required").regex(
-      /^[a-z0-9_]+$/,
-      "Variable key must be lowercase letters, numbers, or underscores"
-    ),
+    key: variableKeySchema,
     type: z.enum(["string", "number", "boolean"]),
     description: z.string().trim(),
   })
@@ -235,10 +255,12 @@ const toolKeyValueSchema = z
 
 const responseVariableSchema = z
   .object({
-    name: requiredString("Variable name is required").regex(
-      /^[a-z0-9_]+$/,
-      "Use lowercase letters, numbers, or underscores"
-    ),
+    name: requiredString("Variable name is required")
+      .regex(/^[a-z0-9_]+$/, "Use lowercase letters, numbers, or underscores")
+      .refine(
+        (name) => !reservedVariableKeys.has(name),
+        "Variable name is reserved"
+      ),
     path: requiredString("Response path is required"),
   })
   .strict()
@@ -387,6 +409,7 @@ export const agentConfigSchema = z
     call: callSettingsSchema,
     globalPrompt: z.string(),
     timezone: z.string(),
+    dynamicVariables: z.array(dynamicVariableSchema),
     tools: z.array(agentToolSchema),
     nodes: z.array(flowNodeConfigSchema).min(1, "Add at least one node"),
     edges: z.array(flowEdgeConfigSchema),
@@ -546,4 +569,116 @@ export const agentConfigSchema = z
         })
       }
     })
+
+    const knownVariables = new Set<string>(reservedVariableKeys)
+    const dynamicKeys = new Set<string>()
+    config.dynamicVariables.forEach((variable, index) => {
+      if (dynamicKeys.has(variable.key)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["dynamicVariables", index, "key"],
+          message: "Duplicate variable key",
+        })
+      }
+      dynamicKeys.add(variable.key)
+      knownVariables.add(variable.key)
+    })
+
+    const texts = [config.globalPrompt]
+    const expressionKeys: string[] = []
+    const webhookRequests: { parameters: string[]; texts: string[] }[] = []
+
+    for (const node of config.nodes) {
+      if (node.type !== "conversation") {
+        continue
+      }
+      const data = node.data
+      texts.push(data.instructions.text)
+      if (data.endCall) {
+        texts.push(data.endCall.description)
+      }
+      if (data.ivrNavigation) {
+        texts.push(data.ivrNavigation.description)
+      }
+      for (const variable of data.extractVariables?.variables ?? []) {
+        knownVariables.add(variable.key)
+        texts.push(variable.description)
+      }
+      for (const destination of data.transferCall?.destinations ?? []) {
+        texts.push(destination.condition)
+      }
+    }
+    for (const edge of config.edges) {
+      const condition = edge.data.condition
+      if (condition.type === "prompt") {
+        texts.push(condition.prompt)
+      }
+      if (condition.type === "expression") {
+        expressionKeys.push(
+          ...condition.conditions.map((entry) => entry.variable)
+        )
+      }
+    }
+    for (const tool of config.tools) {
+      if (tool.type !== "webhook") {
+        continue
+      }
+      for (const variable of tool.responseVariables) {
+        knownVariables.add(variable.name)
+      }
+      texts.push(
+        tool.description,
+        ...tool.parameters.map((parameter) => parameter.description)
+      )
+      webhookRequests.push({
+        parameters: tool.parameters.map((parameter) => parameter.name),
+        texts: [
+          tool.url,
+          tool.body,
+          ...tool.headers.flatMap((header) => [header.key, header.value]),
+          ...tool.queryParameters.flatMap((parameter) => [
+            parameter.key,
+            parameter.value,
+          ]),
+        ],
+      })
+    }
+
+    const reported = new Set<string>()
+    const reportUnknown = (text: string, keys: Set<string>) => {
+      for (const match of text.matchAll(/\{\{\s*([a-z0-9_]+)\s*\}\}/g)) {
+        const key = match[1]
+        if (!key || keys.has(key) || reported.has(key)) {
+          continue
+        }
+        reported.add(key)
+        ctx.addIssue({
+          code: "custom",
+          message: `Unknown variable "{{${key}}}"`,
+        })
+      }
+    }
+
+    for (const text of texts) {
+      reportUnknown(text, knownVariables)
+    }
+    for (const key of expressionKeys) {
+      const name = key.trim()
+      if (!name || knownVariables.has(name) || reported.has(name)) {
+        continue
+      }
+      reported.add(name)
+      ctx.addIssue({
+        code: "custom",
+        message: /^[a-z0-9_]+$/.test(name)
+          ? `Unknown variable "{{${name}}}"`
+          : "Variable key must be lowercase letters, numbers, or underscores",
+      })
+    }
+    for (const request of webhookRequests) {
+      const keys = new Set([...knownVariables, ...request.parameters])
+      for (const text of request.texts) {
+        reportUnknown(text, keys)
+      }
+    }
   })

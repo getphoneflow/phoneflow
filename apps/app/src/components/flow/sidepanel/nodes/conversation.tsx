@@ -2,8 +2,8 @@ import type { FlowConversationNode } from "@workspace/shared/api/agent-config/ty
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
-import { Textarea } from "@workspace/ui/components/textarea"
 import { ConversationTools } from "@/components/flow/sidepanel/tools/conversation-tools"
+import { VariableTextField } from "@/components/flow/variables/variable-text-field"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "../base"
 
@@ -83,18 +83,19 @@ export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
             </TabsList>
           </Tabs>
 
-          <Textarea
+          <VariableTextField
+            multiline
             rows={8}
             value={node.data.instructions.text}
             readOnly={readOnly}
-            onChange={(event) =>
+            onChange={(text) =>
               setNode({
                 ...node,
                 data: {
                   ...node.data,
                   instructions: {
                     ...node.data.instructions,
-                    text: event.target.value,
+                    text,
                   },
                 },
               })

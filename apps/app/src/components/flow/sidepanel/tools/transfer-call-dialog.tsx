@@ -20,7 +20,7 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
-import { Textarea } from "@workspace/ui/components/textarea"
+import { VariableTextField } from "@/components/flow/variables/variable-text-field"
 
 export function createTransferCallDraft(): TransferCallTool {
   return {
@@ -114,12 +114,16 @@ export function TransferCallDialog({
                   render={({ field: conditionField, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel>Condition</FieldLabel>
-                      <Textarea
-                        {...conditionField}
+                      <VariableTextField
+                        name={conditionField.name}
+                        value={conditionField.value}
+                        onBlur={conditionField.onBlur}
+                        multiline
                         rows={2}
                         placeholder="The caller asks to speak with a representative"
                         readOnly={readOnly}
                         aria-invalid={fieldState.invalid}
+                        onChange={conditionField.onChange}
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />

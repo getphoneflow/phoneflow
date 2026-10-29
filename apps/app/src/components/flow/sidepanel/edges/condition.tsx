@@ -21,6 +21,8 @@ import {
   operatorLabels,
   operatorNeedsValue,
 } from "@/components/flow/edges/condition-format"
+import { VariableSelect } from "@/components/flow/variables/variable-select"
+import { VariableTextField } from "@/components/flow/variables/variable-text-field"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "../base"
 
@@ -117,13 +119,11 @@ export function EdgePanel({ edge }: EdgePanelProps) {
         {condition.type === "prompt" && (
           <Field>
             <FieldLabel>Prompt</FieldLabel>
-            <Input
+            <VariableTextField
               placeholder="Transition condition"
               value={condition.prompt}
               readOnly={readOnly}
-              onChange={(event) =>
-                updateCondition({ ...condition, prompt: event.target.value })
-              }
+              onChange={(prompt) => updateCondition({ ...condition, prompt })}
             />
           </Field>
         )}
@@ -158,15 +158,13 @@ export function EdgePanel({ edge }: EdgePanelProps) {
                 className="flex flex-col gap-2 rounded-md border border-border p-3"
               >
                 <div className="flex items-center gap-2">
-                  <Input
-                    className="flex-1"
-                    placeholder="variable_name"
-                    value={row.variable}
-                    readOnly={readOnly}
-                    onChange={(event) =>
-                      updateRow(index, { variable: event.target.value })
-                    }
-                  />
+                  <div className="min-w-0 flex-1">
+                    <VariableSelect
+                      value={row.variable}
+                      readOnly={readOnly}
+                      onChange={(variable) => updateRow(index, { variable })}
+                    />
+                  </div>
                   <Button
                     variant="ghost"
                     className="text-destructive!"

@@ -12,6 +12,7 @@ import type {
 } from "@workspace/shared/api/agents/types"
 import { triggerOutboundCallRequestSchema } from "@workspace/shared/api/calls/schemas"
 import type {
+  CallVariableValues,
   TriggerOutboundCallRequest,
   TriggerOutboundCallResponse,
 } from "@workspace/shared/api/calls/types"
@@ -45,8 +46,10 @@ import {
   AGENT_VERSION_DRAFT_LABEL,
   formatAgentVersionLabel,
 } from "@/components/helpers"
-import { VariableValuesFields } from "@/components/variable-values-fields"
-import { useVariableValues } from "@/hooks/use-variable-values"
+import {
+  callVariableRecord,
+  VariableValuesFields,
+} from "@/components/variable-values-fields"
 import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
@@ -120,7 +123,8 @@ export function TestCallButton() {
       (!selectedVersionId || selectedVersionNumber !== undefined),
   })
 
-  const variables = useVariableValues(config)
+  const dynamicVariables = config?.dynamicVariables ?? []
+  const [variableValues, setVariableValues] = useState<CallVariableValues>({})
 
   const callMutation = useMutation({
     mutationFn: (values: TriggerOutboundCallRequest) =>
@@ -138,7 +142,7 @@ export function TestCallButton() {
       toast.success("Outbound call started")
       form.reset()
       setOpen(false)
-      variables.reset()
+      setVariableValues({})
     },
     onError: (error) => {
       toast.error(error.message)
@@ -148,7 +152,7 @@ export function TestCallButton() {
   const onSubmit = (formValues: OutboundFormValues) => {
     callMutation.mutate({
       ...formValues,
-      variables: variables.toRecord(),
+      variables: callVariableRecord(dynamicVariables, variableValues),
     })
   }
 
@@ -160,7 +164,7 @@ export function TestCallButton() {
       onOpenChange={(nextOpen) => {
         setOpen(nextOpen)
         form.reset()
-        variables.reset()
+        setVariableValues({})
         callMutation.reset()
       }}
     >
@@ -326,7 +330,14 @@ export function TestCallButton() {
                 )}
               />
 
-              <VariableValuesFields variables={variables} readOnly={readOnly} />
+              <VariableValuesFields
+                variables={dynamicVariables}
+                values={variableValues}
+                onValueChange={(key, value) =>
+                  setVariableValues((current) => ({ ...current, [key]: value }))
+                }
+                readOnly={readOnly}
+              />
             </FieldGroup>
           </div>
 

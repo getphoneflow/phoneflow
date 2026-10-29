@@ -1,8 +1,29 @@
-import type { CallVariableValues } from "@workspace/shared/api/calls/types"
+import type {
+  CallDirection,
+  CallVariableValues,
+} from "@workspace/shared/api/calls/types"
 import { parseJsonObject } from "@/lib/json"
 
 const VARIABLE_PATTERN = /\{\{\s*([a-z0-9_]+)\s*\}\}/g
-const SYSTEM_VARIABLES = new Set(["date", "time", "phone_number"])
+const SYSTEM_VARIABLE_KEYS = new Set([
+  "date",
+  "time",
+  "timezone",
+  "direction",
+  "phone_number",
+  "agent_number",
+])
+
+type CreateVariablesInput = {
+  timezone: string
+  direction?: CallDirection
+  fromNumber?: string
+  toNumber?: string
+  sipPhoneNumber?: string
+  trunkPhoneNumber?: string
+  variableValues?: string
+  defaults?: { key: string; defaultValue?: string }[]
+}
 
 function parseCallValues(raw: string | undefined) {
   const values: CallVariableValues = {}
@@ -17,15 +38,45 @@ function parseCallValues(raw: string | undefined) {
   return values
 }
 
-export function createVariables(
-  attributes: CallVariableValues,
-  timezone: string
-) {
-  const values = parseCallValues(attributes.variable_values)
+export function createVariables({
+  timezone,
+  direction,
+  fromNumber,
+  toNumber,
+  sipPhoneNumber,
+  trunkPhoneNumber,
+  variableValues,
+  defaults = [],
+}: CreateVariablesInput) {
+  const values = parseCallValues(variableValues)
+  const callDirection = direction ?? "web"
+  const phoneNumber =
+    sipPhoneNumber || (direction === "outbound" ? toNumber : undefined)
+  const agentNumber =
+    direction === "outbound"
+      ? fromNumber
+      : direction === "inbound"
+        ? trunkPhoneNumber
+        : undefined
 
-  const phoneNumber = attributes["sip.phoneNumber"]
+  for (const variable of defaults) {
+    if (
+      SYSTEM_VARIABLE_KEYS.has(variable.key) ||
+      values[variable.key] !== undefined ||
+      variable.defaultValue === undefined
+    ) {
+      continue
+    }
+    values[variable.key] = variable.defaultValue
+  }
+
+  values.timezone = timezone
+  values.direction = callDirection
   if (phoneNumber) {
     values.phone_number = phoneNumber
+  }
+  if (agentNumber) {
+    values.agent_number = agentNumber
   }
 
   return {
@@ -58,7 +109,7 @@ export function createVariables(
     snapshot() {
       const variables: CallVariableValues = {}
       for (const [key, value] of Object.entries(values)) {
-        if (!SYSTEM_VARIABLES.has(key)) {
+        if (!SYSTEM_VARIABLE_KEYS.has(key)) {
           variables[key] = value
         }
       }

@@ -7,7 +7,9 @@ import { Controller, useForm } from "react-hook-form"
 import { z } from "zod"
 
 import type {
+  AgentConfigResponse,
   AgentsListResponse,
+  AgentVersionConfigResponse,
   AgentVersionsListResponse,
 } from "@workspace/shared/api/agents/types"
 import type {
@@ -81,15 +83,40 @@ function hasSipConnection(phoneNumber: PhoneNumberListResponse[number]) {
   )
 }
 
+type ParsedRecipients = {
+  columns: string[]
+  recipients: ParsedCsvRecipient[]
+  error: string | null
+}
+
+const emptyRecipients: ParsedRecipients = {
+  columns: [],
+  recipients: [],
+  error: null,
+}
+
+function readRecipients(text: string, keys: string[]): ParsedRecipients {
+  try {
+    const parsed = parseRecipientsCsv(text, keys)
+    return { ...parsed, error: null }
+  } catch (error) {
+    return {
+      ...emptyRecipients,
+      error: error instanceof Error ? error.message : "Invalid CSV",
+    }
+  }
+}
+
 export function CreateBatchCallForm() {
   const canCreate = useCheckPermission({ calls: ["create"] })
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const userTimeZone = useUserTimeZone()
 
-  const [file, setFile] = useState<File | null>(null)
-  const [columns, setColumns] = useState<string[]>([])
-  const [recipients, setRecipients] = useState<ParsedCsvRecipient[]>([])
+  const [csvFile, setCsvFile] = useState<{
+    file: File
+    text: string | null
+  } | null>(null)
   const [scheduleDate, setScheduleDate] = useState<Date | undefined>(new Date())
   const [datePickerOpen, setDatePickerOpen] = useState(false)
 
@@ -107,6 +134,7 @@ export function CreateBatchCallForm() {
   })
 
   const selectedAgentId = form.watch("agentId") || undefined
+  const selectedVersionId = form.watch("agentVersionId") || undefined
   const selectedTimezone = form.watch("timezone") || userTimeZone
 
   const { data: phoneNumbers = [] } = useQuery({
@@ -133,6 +161,35 @@ export function CreateBatchCallForm() {
     enabled: canCreate && Boolean(selectedAgentId),
   })
 
+  const selectedVersionNumber = selectedVersionId
+    ? agentVersions.find((version) => version.id === selectedVersionId)?.number
+    : undefined
+
+  const { data: agentConfig } = useQuery({
+    queryKey: ["agent-config", selectedAgentId, selectedVersionId ?? "draft"],
+    queryFn: () =>
+      selectedVersionId
+        ? api.get<AgentVersionConfigResponse>(
+            `/agents/${selectedAgentId}/versions/${selectedVersionNumber}/config`
+          )
+        : api.get<AgentConfigResponse>(`/agents/${selectedAgentId}/config`),
+    enabled:
+      canCreate &&
+      Boolean(selectedAgentId) &&
+      (!selectedVersionId || selectedVersionNumber !== undefined),
+  })
+
+  const variableKeys = useMemo(
+    () => agentConfig?.dynamicVariables.map((variable) => variable.key) ?? [],
+    [agentConfig]
+  )
+  const parsedRecipients = useMemo(() => {
+    if (!csvFile?.text || (selectedAgentId && !agentConfig)) {
+      return emptyRecipients
+    }
+    return readRecipients(csvFile.text, variableKeys)
+  }, [agentConfig, csvFile?.text, selectedAgentId, variableKeys])
+
   const createMutation = useMutation({
     mutationFn: (body: CreateBatchCallRequest) =>
       api.post<CreateBatchCallResponse, CreateBatchCallRequest>(
@@ -151,24 +208,20 @@ export function CreateBatchCallForm() {
   })
 
   const onFileChange = async (nextFile: File | null) => {
-    setFile(nextFile)
-    setColumns([])
-    setRecipients([])
-
-    if (!nextFile) return
-
-    try {
-      const parsed = parseRecipientsCsv(await nextFile.text())
-      setColumns(parsed.columns)
-      setRecipients(parsed.recipients)
-    } catch (error) {
-      setFile(null)
-      toast.error(error instanceof Error ? error.message : "Invalid CSV")
+    if (!nextFile) {
+      setCsvFile(null)
+      return
     }
+
+    setCsvFile({ file: nextFile, text: null })
+    const text = await nextFile.text()
+    setCsvFile((current) =>
+      current?.file === nextFile ? { file: nextFile, text } : current
+    )
   }
 
   const onSubmit = form.handleSubmit((values) => {
-    if (recipients.length === 0) {
+    if (parsedRecipients.recipients.length === 0) {
       toast.error("Upload a CSV with at least one recipient")
       return
     }
@@ -198,7 +251,7 @@ export function CreateBatchCallForm() {
       phoneNumberId: values.phoneNumberId,
       agentId: values.agentId,
       agentVersionId: values.agentVersionId ?? null,
-      recipients,
+      recipients: parsedRecipients.recipients,
       scheduledAt,
     })
   })
@@ -206,7 +259,7 @@ export function CreateBatchCallForm() {
   const readOnly = !canCreate || createMutation.isPending
   const canSubmit =
     canCreate &&
-    recipients.length > 0 &&
+    parsedRecipients.recipients.length > 0 &&
     Boolean(form.watch("name")) &&
     Boolean(form.watch("phoneNumberId")) &&
     Boolean(form.watch("agentId"))
@@ -283,7 +336,7 @@ export function CreateBatchCallForm() {
                 variant="link"
                 size="sm"
                 className="h-auto px-0"
-                onClick={downloadCsvTemplate}
+                onClick={() => downloadCsvTemplate(variableKeys)}
               >
                 <DownloadIcon />
                 Download template
@@ -291,11 +344,14 @@ export function CreateBatchCallForm() {
             </div>
             <Dropzone
               accept=".csv,text/csv"
-              value={file}
+              value={csvFile?.file ?? null}
               onValueChange={onFileChange}
               disabled={readOnly}
               className="h-40"
             />
+            {parsedRecipients.error ? (
+              <FieldError>{parsedRecipients.error}</FieldError>
+            ) : null}
           </Field>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -525,7 +581,10 @@ export function CreateBatchCallForm() {
         </Button>
       </form>
 
-      <RecipientsPreview columns={columns} recipients={recipients} />
+      <RecipientsPreview
+        columns={parsedRecipients.columns}
+        recipients={parsedRecipients.recipients}
+      />
     </div>
   )
 }

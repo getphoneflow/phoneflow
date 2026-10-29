@@ -5,6 +5,7 @@ import { GlobalPromptPanel } from "./global-prompt"
 import { ConversationNodePanel } from "./nodes/conversation"
 import { EndNodePanel } from "./nodes/end"
 import { TestPanel } from "./test"
+import { VariablesPanel } from "./variables"
 
 export function FlowSidePanel() {
   const sidePanel = useAgentStore((state) => state.sidePanel)
@@ -16,6 +17,8 @@ export function FlowSidePanel() {
       return <TestPanel />
     case "global-prompt":
       return <GlobalPromptPanel />
+    case "variables":
+      return <VariablesPanel />
     case "config":
       return <ConfigPanel />
     case "node":

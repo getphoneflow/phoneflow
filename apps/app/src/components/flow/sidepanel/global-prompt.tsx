@@ -1,5 +1,5 @@
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
-import { Textarea } from "@workspace/ui/components/textarea"
+import { VariableTextField } from "@/components/flow/variables/variable-text-field"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "./base"
 
@@ -13,16 +13,12 @@ export function GlobalPromptPanel() {
       <FieldGroup>
         <Field>
           <FieldLabel>Global prompt</FieldLabel>
-          <Textarea
+          <VariableTextField
+            multiline
             rows={12}
             value={config.globalPrompt}
             readOnly={readOnly}
-            onChange={(event) =>
-              setConfig({
-                ...config,
-                globalPrompt: event.target.value,
-              })
-            }
+            onChange={(globalPrompt) => setConfig({ ...config, globalPrompt })}
             placeholder="You are a helpful assistant"
           />
         </Field>

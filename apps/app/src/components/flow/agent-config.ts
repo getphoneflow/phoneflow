@@ -70,14 +70,18 @@ export function validateAgentConfig(
     if (root === "nodes" && typeof index === "number") {
       const nodeId = config.nodes[index]?.id
       if (nodeId) {
-        ;(byNodeId[nodeId] ??= []).push(issue.message)
+        const messages = byNodeId[nodeId] ?? []
+        messages.push(issue.message)
+        byNodeId[nodeId] = messages
         continue
       }
     }
     if (root === "edges" && typeof index === "number") {
       const edgeId = config.edges[index]?.id
       if (edgeId) {
-        ;(byEdgeId[edgeId] ??= []).push(issue.message)
+        const messages = byEdgeId[edgeId] ?? []
+        messages.push(issue.message)
+        byEdgeId[edgeId] = messages
         continue
       }
     }

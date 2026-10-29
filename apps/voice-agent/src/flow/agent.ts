@@ -150,7 +150,7 @@ export class FlowAgent extends Agent {
             : z.string()
 
       if (variable.description) {
-        field = field.describe(variable.description)
+        field = field.describe(this.variables.replace(variable.description))
       }
 
       shape[variable.key] = field.optional()

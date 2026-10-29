@@ -22,6 +22,7 @@ export function createDefaultAgentConfig(): AgentConfig {
     },
     globalPrompt: "You are a helpful assistant",
     timezone: "America/New_York",
+    dynamicVariables: [],
     tools: [],
     nodes: [
       {

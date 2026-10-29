@@ -4,6 +4,7 @@ import type {
   agentConfigSchema,
   agentToolSchema,
   backgroundAudioSchema,
+  dynamicVariableSchema,
   endCallToolSchema,
   expressionConditionSchema,
   expressionOperatorSchema,
@@ -19,6 +20,7 @@ import type {
 } from "./schemas"
 
 export type AgentConfig = z.infer<typeof agentConfigSchema>
+export type DynamicVariable = z.infer<typeof dynamicVariableSchema>
 export type AgentTool = z.infer<typeof agentToolSchema>
 export type WebhookTool = z.infer<typeof webhookToolSchema>
 export type ToolParameter = WebhookTool["parameters"][number]

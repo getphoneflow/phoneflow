@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select"
-import { Textarea } from "@workspace/ui/components/textarea"
+import { VariableTextField } from "@/components/flow/variables/variable-text-field"
 
 const methods: WebhookTool["method"][] = [
   "GET",
@@ -87,6 +87,10 @@ export function WebhookToolDialog({
     values: tool,
   })
   const method = form.watch("method")
+  const parameterNames = form
+    .watch("parameters")
+    .map((parameter) => parameter.name)
+    .filter((name) => name.length > 0)
 
   function handleOpenChange(next: boolean) {
     if (!next) {
@@ -135,12 +139,16 @@ export function WebhookToolDialog({
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel>Description</FieldLabel>
-                    <Textarea
-                      {...field}
-                      placeholder="Describe what this tool does"
+                    <VariableTextField
+                      name={field.name}
+                      value={field.value}
+                      onBlur={field.onBlur}
+                      multiline
                       rows={3}
+                      placeholder="Describe what this tool does"
                       readOnly={readOnly}
                       aria-invalid={fieldState.invalid}
+                      onChange={field.onChange}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -191,11 +199,15 @@ export function WebhookToolDialog({
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel>URL</FieldLabel>
-                      <Input
-                        {...field}
+                      <VariableTextField
+                        name={field.name}
+                        value={field.value}
+                        onBlur={field.onBlur}
                         placeholder="https://api.example.com/users/{{user_id}}"
                         readOnly={readOnly}
                         aria-invalid={fieldState.invalid}
+                        extraKeys={parameterNames}
+                        onChange={field.onChange}
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -267,6 +279,7 @@ export function WebhookToolDialog({
                 keyPlaceholder="Key, e.g. Authorization"
                 valuePlaceholder="Value, e.g. Bearer {{api_key}}"
                 readOnly={readOnly}
+                extraKeys={parameterNames}
               />
               <KeyValueFields
                 control={form.control}
@@ -275,6 +288,7 @@ export function WebhookToolDialog({
                 keyPlaceholder="Key, e.g. user_id"
                 valuePlaceholder="Value, e.g. {{user_id}}"
                 readOnly={readOnly}
+                extraKeys={parameterNames}
               />
               {bodyMethods.has(method) ? (
                 <Controller
@@ -283,13 +297,18 @@ export function WebhookToolDialog({
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel>Request body</FieldLabel>
-                      <Textarea
-                        {...field}
+                      <VariableTextField
+                        name={field.name}
+                        value={field.value}
+                        onBlur={field.onBlur}
+                        multiline
                         rows={6}
                         className="font-mono"
                         placeholder={'{\n  "user_id": "{{user_id}}"\n}'}
                         readOnly={readOnly}
                         aria-invalid={fieldState.invalid}
+                        extraKeys={parameterNames}
+                        onChange={field.onChange}
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -329,6 +348,7 @@ function KeyValueFields({
   keyPlaceholder,
   valuePlaceholder,
   readOnly,
+  extraKeys,
 }: {
   control: ReturnType<typeof useForm<WebhookTool>>["control"]
   name: "headers" | "queryParameters"
@@ -336,6 +356,7 @@ function KeyValueFields({
   keyPlaceholder: string
   valuePlaceholder: string
   readOnly: boolean
+  extraKeys: string[]
 }) {
   const { fields, append, remove } = useFieldArray({ control, name })
 
@@ -349,11 +370,15 @@ function KeyValueFields({
             control={control}
             render={({ field, fieldState }) => (
               <div className="flex flex-1 flex-col gap-1">
-                <Input
-                  {...field}
+                <VariableTextField
+                  name={field.name}
+                  value={field.value}
+                  onBlur={field.onBlur}
                   placeholder={keyPlaceholder}
                   readOnly={readOnly}
                   aria-invalid={fieldState.invalid}
+                  extraKeys={extraKeys}
+                  onChange={field.onChange}
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -366,11 +391,15 @@ function KeyValueFields({
             control={control}
             render={({ field, fieldState }) => (
               <div className="flex flex-1 flex-col gap-1">
-                <Input
-                  {...field}
+                <VariableTextField
+                  name={field.name}
+                  value={field.value}
+                  onBlur={field.onBlur}
                   placeholder={valuePlaceholder}
                   readOnly={readOnly}
                   aria-invalid={fieldState.invalid}
+                  extraKeys={extraKeys}
+                  onChange={field.onChange}
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -497,11 +526,15 @@ function ParameterFields({
             name={`parameters.${index}.description`}
             control={control}
             render={({ field }) => (
-              <Textarea
-                {...field}
+              <VariableTextField
+                name={field.name}
+                value={field.value}
+                onBlur={field.onBlur}
+                multiline
                 rows={2}
                 placeholder="Description (optional), e.g. The id of {{user_name}}"
                 readOnly={readOnly}
+                onChange={field.onChange}
               />
             )}
           />

@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select"
-import { Textarea } from "@workspace/ui/components/textarea"
+import { VariableTextField } from "@/components/flow/variables/variable-text-field"
 
 const variableTypes: { value: ExtractVariable["type"]; label: string }[] = [
   { value: "string", label: "Text" },
@@ -161,11 +161,15 @@ export function ExtractVariablesDialog({
                   name={`variables.${index}.description`}
                   control={form.control}
                   render={({ field: descriptionField }) => (
-                    <Textarea
-                      {...descriptionField}
+                    <VariableTextField
+                      name={descriptionField.name}
+                      value={descriptionField.value}
+                      onBlur={descriptionField.onBlur}
+                      multiline
                       rows={2}
                       placeholder="Describe what to extract (optional)"
                       readOnly={readOnly}
+                      onChange={descriptionField.onChange}
                     />
                   )}
                 />

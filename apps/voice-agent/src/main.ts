@@ -65,7 +65,16 @@ export default defineAgent({
     )
 
     const flowGraph = buildFlowGraph(config)
-    const variables = createVariables(participant.attributes, config.timezone)
+    const variables = createVariables({
+      timezone: config.timezone,
+      direction: metadata.direction,
+      fromNumber: metadata.fromNumber,
+      toNumber: metadata.toNumber,
+      sipPhoneNumber: participant.attributes["sip.phoneNumber"],
+      trunkPhoneNumber: participant.attributes["sip.trunkPhoneNumber"],
+      variableValues: participant.attributes.variable_values,
+      defaults: config.dynamicVariables,
+    })
 
     const turn = config.turnHandling
     const session = new voice.AgentSession({

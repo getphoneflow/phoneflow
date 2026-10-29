@@ -70,7 +70,7 @@ export function CallTab() {
 
       <EnumField
         label="Timezone"
-        description="Used for {{date}} and {{time}} variables"
+        description="Used for {{date}}, {{time}}, and {{timezone}}"
         value={config.timezone}
         options={TIMEZONE_OPTIONS}
         readOnly={readOnly}

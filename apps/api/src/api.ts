@@ -10,6 +10,7 @@ import { billingRoutes } from "@/routes/billing"
 import { callRoutes } from "@/routes/calls"
 import { contactRoutes } from "@/routes/contacts"
 import { phoneNumberRoutes } from "@/routes/phone-numbers"
+import { ssoRoutes } from "@/routes/sso"
 import { tokenRoutes } from "@/routes/token"
 import { userRoutes } from "@/routes/user"
 
@@ -36,6 +37,7 @@ api.route("/api/batch-calls", batchCallRoutes)
 api.route("/api/calls", callRoutes)
 api.route("/api/contacts", contactRoutes)
 api.route("/api/phone-numbers", phoneNumberRoutes)
+api.route("/api/sso", ssoRoutes)
 api.route("/api/token", tokenRoutes)
 api.route("/api/user", userRoutes)
 if (env.IS_CLOUD) {

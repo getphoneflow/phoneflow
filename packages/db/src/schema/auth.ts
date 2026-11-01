@@ -184,6 +184,31 @@ export const organizationRole = pgTable(
   ]
 )
 
+export const ssoProvider = pgTable(
+  "sso_provider",
+  {
+    id: text("id").primaryKey(),
+    issuer: text("issuer").notNull(),
+    domain: text("domain").notNull(),
+    oidcConfig: text("oidc_config"),
+    samlConfig: text("saml_config"),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    providerId: text("provider_id").notNull(),
+    organizationId: text("organization_id").references(() => organization.id, {
+      onDelete: "cascade",
+    }),
+    domainVerified: boolean("domain_verified").default(false).notNull(),
+    ssoEnforced: boolean("sso_enforced").default(false).notNull(),
+  },
+  (table) => [
+    uniqueIndex("ssoProvider_providerId_uidx").on(table.providerId),
+    index("ssoProvider_organizationId_idx").on(table.organizationId),
+    index("ssoProvider_userId_idx").on(table.userId),
+  ]
+)
+
 export const invitation = pgTable(
   "invitation",
   {

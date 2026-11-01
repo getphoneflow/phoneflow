@@ -250,6 +250,13 @@ function Page() {
                   {signUpMutation.isPending ? <Spinner /> : "Sign up"}
                 </Button>
 
+                <Button
+                  variant="outline"
+                  render={<Link to="/signin/sso" search={{ redirect }} />}
+                >
+                  Sign in with SSO
+                </Button>
+
                 <FieldSeparator>Or continue with</FieldSeparator>
 
                 <Button

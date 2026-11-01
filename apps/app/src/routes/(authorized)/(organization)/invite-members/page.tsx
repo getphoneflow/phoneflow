@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
-import { XIcon } from "lucide-react"
+import { PlusIcon, XIcon } from "lucide-react"
 import { Suspense } from "react"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -183,6 +183,7 @@ function InviteMembersContent() {
                       onClick={() => append({ address: "", role: "member" })}
                       disabled={form.formState.isSubmitting}
                     >
+                      <PlusIcon />
                       Add email address
                     </Button>
                   )}

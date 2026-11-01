@@ -1,3 +1,4 @@
+import { sso } from "@better-auth/sso"
 import { stripe } from "@better-auth/stripe"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
@@ -18,6 +19,7 @@ import type {
   SendVerificationOtpPayload,
 } from "@workspace/shared/jobs/emails/types"
 import { seedOrganizationRoles } from "@/lib/auth/organization-roles"
+import { trustedOrigins } from "@/lib/auth/sso"
 import { handleStripeEvent } from "@/lib/credits"
 import { env } from "@/lib/env"
 import { emailsQueue } from "@/lib/queues"
@@ -150,6 +152,23 @@ export const auth = betterAuth({
           }),
         ]
       : []),
+    sso({
+      domainVerification: {
+        enabled: true,
+        tokenPrefix: "phoneflow",
+      },
+      organizationProvisioning: {
+        disabled: false,
+        defaultRole: "member",
+      },
+      saml: {
+        requireTimestamps: true,
+        idpInitiatedCallbackUrl: env.FRONTEND_URL,
+        algorithms: {
+          onDeprecated: "reject",
+        },
+      },
+    }),
   ],
   rateLimit: {
     window: 60,
@@ -159,6 +178,6 @@ export const auth = betterAuth({
     enabled: false,
   },
   baseURL: env.API_URL,
-  trustedOrigins: [env.FRONTEND_URL],
+  trustedOrigins,
   secret: env.BETTER_AUTH_SECRET,
 })

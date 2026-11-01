@@ -25,6 +25,7 @@ import { Route as unauthorizedTwoFactorPageRouteImport } from './routes/(unautho
 import { Route as authorizedorganizationsidebarPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/page'
 import { Route as authorizedorganizationsidebarSettingsLayoutRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/layout'
 import { Route as authorizedorganizationInviteMembersPageRouteImport } from './routes/(authorized)/(organization)/invite-members/page'
+import { Route as unauthorizedSigninSsoPageRouteImport } from './routes/(unauthorized)/signin/sso/page'
 import { Route as authorizedorganizationsidebarSplatPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/$/page'
 import { Route as authorizedorganizationsidebarAgentsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/agents/page'
 import { Route as authorizedorganizationsidebarBatchCallsPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/batch-calls/page'
@@ -39,6 +40,7 @@ import { Route as authorizedorganizationsidebarSettingsBillingPageRouteImport } 
 import { Route as authorizedorganizationsidebarSettingsMembersPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/members/page'
 import { Route as authorizedorganizationsidebarSettingsOrganizationPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/organization/page'
 import { Route as authorizedorganizationsidebarSettingsRolesPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/roles/page'
+import { Route as authorizedorganizationsidebarSettingsSsoPageRouteImport } from './routes/(authorized)/(organization)/(sidebar)/settings/sso/page'
 
 const authorizedLayoutRoute = authorizedLayoutRouteImport.update({
   id: '/(authorized)',
@@ -128,6 +130,12 @@ const authorizedorganizationInviteMembersPageRoute =
     path: '/invite-members/',
     getParentRoute: () => authorizedorganizationLayoutRoute,
   } as any)
+const unauthorizedSigninSsoPageRoute =
+  unauthorizedSigninSsoPageRouteImport.update({
+    id: '/signin/sso/',
+    path: '/signin/sso/',
+    getParentRoute: () => unauthorizedLayoutRoute,
+  } as any)
 const authorizedorganizationsidebarSplatPageRoute =
   authorizedorganizationsidebarSplatPageRouteImport.update({
     id: '/$/',
@@ -212,6 +220,12 @@ const authorizedorganizationsidebarSettingsRolesPageRoute =
     path: '/roles/',
     getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
   } as any)
+const authorizedorganizationsidebarSettingsSsoPageRoute =
+  authorizedorganizationsidebarSettingsSsoPageRouteImport.update({
+    id: '/sso/',
+    path: '/sso/',
+    getParentRoute: () => authorizedorganizationsidebarSettingsLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/create-organization/': typeof authorizedCreateOrganizationPageRoute
@@ -226,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof authorizedorganizationsidebarSettingsLayoutRouteWithChildren
   '/': typeof authorizedorganizationsidebarPageRoute
   '/invite-members/': typeof authorizedorganizationInviteMembersPageRoute
+  '/signin/sso/': typeof unauthorizedSigninSsoPageRoute
   '/$/': typeof authorizedorganizationsidebarSplatPageRoute
   '/agents/': typeof authorizedorganizationsidebarAgentsPageRoute
   '/batch-calls/': typeof authorizedorganizationsidebarBatchCallsPageRoute
@@ -240,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/settings/members/': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/settings/organization/': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
   '/settings/roles/': typeof authorizedorganizationsidebarSettingsRolesPageRoute
+  '/settings/sso/': typeof authorizedorganizationsidebarSettingsSsoPageRoute
 }
 export interface FileRoutesByTo {
   '/create-organization': typeof authorizedCreateOrganizationPageRoute
@@ -253,6 +269,7 @@ export interface FileRoutesByTo {
   '/two-factor': typeof unauthorizedTwoFactorPageRoute
   '/': typeof authorizedorganizationsidebarPageRoute
   '/invite-members': typeof authorizedorganizationInviteMembersPageRoute
+  '/signin/sso': typeof unauthorizedSigninSsoPageRoute
   '/$': typeof authorizedorganizationsidebarSplatPageRoute
   '/agents': typeof authorizedorganizationsidebarAgentsPageRoute
   '/batch-calls': typeof authorizedorganizationsidebarBatchCallsPageRoute
@@ -267,6 +284,7 @@ export interface FileRoutesByTo {
   '/settings/members': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/settings/organization': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
   '/settings/roles': typeof authorizedorganizationsidebarSettingsRolesPageRoute
+  '/settings/sso': typeof authorizedorganizationsidebarSettingsSsoPageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -286,6 +304,7 @@ export interface FileRoutesById {
   '/(authorized)/(organization)/(sidebar)/settings': typeof authorizedorganizationsidebarSettingsLayoutRouteWithChildren
   '/(authorized)/(organization)/(sidebar)/': typeof authorizedorganizationsidebarPageRoute
   '/(authorized)/(organization)/invite-members/': typeof authorizedorganizationInviteMembersPageRoute
+  '/(unauthorized)/signin/sso/': typeof unauthorizedSigninSsoPageRoute
   '/(authorized)/(organization)/(sidebar)/$/': typeof authorizedorganizationsidebarSplatPageRoute
   '/(authorized)/(organization)/(sidebar)/agents/': typeof authorizedorganizationsidebarAgentsPageRoute
   '/(authorized)/(organization)/(sidebar)/batch-calls/': typeof authorizedorganizationsidebarBatchCallsPageRoute
@@ -300,6 +319,7 @@ export interface FileRoutesById {
   '/(authorized)/(organization)/(sidebar)/settings/members/': typeof authorizedorganizationsidebarSettingsMembersPageRoute
   '/(authorized)/(organization)/(sidebar)/settings/organization/': typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
   '/(authorized)/(organization)/(sidebar)/settings/roles/': typeof authorizedorganizationsidebarSettingsRolesPageRoute
+  '/(authorized)/(organization)/(sidebar)/settings/sso/': typeof authorizedorganizationsidebarSettingsSsoPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -316,6 +336,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/'
     | '/invite-members/'
+    | '/signin/sso/'
     | '/$/'
     | '/agents/'
     | '/batch-calls/'
@@ -330,6 +351,7 @@ export interface FileRouteTypes {
     | '/settings/members/'
     | '/settings/organization/'
     | '/settings/roles/'
+    | '/settings/sso/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/create-organization'
@@ -343,6 +365,7 @@ export interface FileRouteTypes {
     | '/two-factor'
     | '/'
     | '/invite-members'
+    | '/signin/sso'
     | '/$'
     | '/agents'
     | '/batch-calls'
@@ -357,6 +380,7 @@ export interface FileRouteTypes {
     | '/settings/members'
     | '/settings/organization'
     | '/settings/roles'
+    | '/settings/sso'
   id:
     | '__root__'
     | '/(authorized)'
@@ -375,6 +399,7 @@ export interface FileRouteTypes {
     | '/(authorized)/(organization)/(sidebar)/settings'
     | '/(authorized)/(organization)/(sidebar)/'
     | '/(authorized)/(organization)/invite-members/'
+    | '/(unauthorized)/signin/sso/'
     | '/(authorized)/(organization)/(sidebar)/$/'
     | '/(authorized)/(organization)/(sidebar)/agents/'
     | '/(authorized)/(organization)/(sidebar)/batch-calls/'
@@ -389,6 +414,7 @@ export interface FileRouteTypes {
     | '/(authorized)/(organization)/(sidebar)/settings/members/'
     | '/(authorized)/(organization)/(sidebar)/settings/organization/'
     | '/(authorized)/(organization)/(sidebar)/settings/roles/'
+    | '/(authorized)/(organization)/(sidebar)/settings/sso/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -510,6 +536,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationInviteMembersPageRouteImport
       parentRoute: typeof authorizedorganizationLayoutRoute
     }
+    '/(unauthorized)/signin/sso/': {
+      id: '/(unauthorized)/signin/sso/'
+      path: '/signin/sso'
+      fullPath: '/signin/sso/'
+      preLoaderRoute: typeof unauthorizedSigninSsoPageRouteImport
+      parentRoute: typeof unauthorizedLayoutRoute
+    }
     '/(authorized)/(organization)/(sidebar)/$/': {
       id: '/(authorized)/(organization)/(sidebar)/$/'
       path: '/$'
@@ -608,6 +641,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authorizedorganizationsidebarSettingsRolesPageRouteImport
       parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
     }
+    '/(authorized)/(organization)/(sidebar)/settings/sso/': {
+      id: '/(authorized)/(organization)/(sidebar)/settings/sso/'
+      path: '/sso'
+      fullPath: '/settings/sso/'
+      preLoaderRoute: typeof authorizedorganizationsidebarSettingsSsoPageRouteImport
+      parentRoute: typeof authorizedorganizationsidebarSettingsLayoutRoute
+    }
   }
 }
 
@@ -618,6 +658,7 @@ interface authorizedorganizationsidebarSettingsLayoutRouteChildren {
   authorizedorganizationsidebarSettingsMembersPageRoute: typeof authorizedorganizationsidebarSettingsMembersPageRoute
   authorizedorganizationsidebarSettingsOrganizationPageRoute: typeof authorizedorganizationsidebarSettingsOrganizationPageRoute
   authorizedorganizationsidebarSettingsRolesPageRoute: typeof authorizedorganizationsidebarSettingsRolesPageRoute
+  authorizedorganizationsidebarSettingsSsoPageRoute: typeof authorizedorganizationsidebarSettingsSsoPageRoute
 }
 
 const authorizedorganizationsidebarSettingsLayoutRouteChildren: authorizedorganizationsidebarSettingsLayoutRouteChildren =
@@ -634,6 +675,8 @@ const authorizedorganizationsidebarSettingsLayoutRouteChildren: authorizedorgani
       authorizedorganizationsidebarSettingsOrganizationPageRoute,
     authorizedorganizationsidebarSettingsRolesPageRoute:
       authorizedorganizationsidebarSettingsRolesPageRoute,
+    authorizedorganizationsidebarSettingsSsoPageRoute:
+      authorizedorganizationsidebarSettingsSsoPageRoute,
   }
 
 const authorizedorganizationsidebarSettingsLayoutRouteWithChildren =
@@ -726,6 +769,7 @@ interface unauthorizedLayoutRouteChildren {
   unauthorizedSigninPageRoute: typeof unauthorizedSigninPageRoute
   unauthorizedSignupPageRoute: typeof unauthorizedSignupPageRoute
   unauthorizedTwoFactorPageRoute: typeof unauthorizedTwoFactorPageRoute
+  unauthorizedSigninSsoPageRoute: typeof unauthorizedSigninSsoPageRoute
 }
 
 const unauthorizedLayoutRouteChildren: unauthorizedLayoutRouteChildren = {
@@ -736,6 +780,7 @@ const unauthorizedLayoutRouteChildren: unauthorizedLayoutRouteChildren = {
   unauthorizedSigninPageRoute: unauthorizedSigninPageRoute,
   unauthorizedSignupPageRoute: unauthorizedSignupPageRoute,
   unauthorizedTwoFactorPageRoute: unauthorizedTwoFactorPageRoute,
+  unauthorizedSigninSsoPageRoute: unauthorizedSigninSsoPageRoute,
 }
 
 const unauthorizedLayoutRouteWithChildren =

@@ -54,6 +54,10 @@ const settingsNavItems = [
     title: "Roles",
     to: "/settings/roles",
   },
+  {
+    title: "Single sign-on",
+    to: "/settings/sso",
+  },
 ]
 
 function SettingsContentSkeleton() {

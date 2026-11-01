@@ -227,6 +227,22 @@ function Page() {
                   )}
                 </Button>
 
+                <Button
+                  variant="outline"
+                  render={<Link to="/signin/sso" search={{ redirect }} />}
+                  className="relative"
+                >
+                  Sign in with SSO
+                  {lastLoginMethod?.startsWith("sso-") && (
+                    <Badge
+                      variant="secondary"
+                      className="absolute -top-2 right-2"
+                    >
+                      Last used
+                    </Badge>
+                  )}
+                </Button>
+
                 <FieldSeparator>Or continue with</FieldSeparator>
 
                 <Button

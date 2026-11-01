@@ -1,27 +1,13 @@
-import { CheckIcon, CopyIcon, DownloadIcon } from "lucide-react"
-import { useState } from "react"
+import { DownloadIcon } from "lucide-react"
 
 import { Button } from "@workspace/ui/components/button"
-import { toast } from "@workspace/ui/components/sonner"
+import { CopyButton } from "@/components/copy-button"
 
 type BackupCodesListProps = {
   codes: string[]
 }
 
 export function BackupCodesList({ codes }: BackupCodesListProps) {
-  const [copied, setCopied] = useState(false)
-
-  async function handleCopy() {
-    try {
-      await navigator.clipboard.writeText(codes.join("\n"))
-      setCopied(true)
-      toast.success("Backup codes copied")
-      window.setTimeout(() => setCopied(false), 2000)
-    } catch {
-      toast.error("Failed to copy backup codes")
-    }
-  }
-
   function handleDownload() {
     const blob = new Blob([codes.join("\n")], { type: "text/plain" })
     const url = URL.createObjectURL(blob)
@@ -42,10 +28,7 @@ export function BackupCodesList({ codes }: BackupCodesListProps) {
         ))}
       </ul>
       <div className="flex gap-2">
-        <Button type="button" variant="outline" size="sm" onClick={handleCopy}>
-          {copied ? <CheckIcon /> : <CopyIcon />}
-          Copy
-        </Button>
+        <CopyButton value={codes.join("\n")} />
         <Button
           type="button"
           variant="outline"

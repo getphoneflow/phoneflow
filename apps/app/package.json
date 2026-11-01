@@ -11,6 +11,7 @@
     "format": "biome check --write --linter-enabled=false ."
   },
   "dependencies": {
+    "@better-auth/sso": "catalog:",
     "@better-auth/stripe": "catalog:",
     "@hookform/resolvers": "5.8.0",
     "@livekit/components-react": "catalog:",

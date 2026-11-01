@@ -1,3 +1,4 @@
+import { ssoClient } from "@better-auth/sso/client"
 import { stripeClient } from "@better-auth/stripe/client"
 import { createAuthClient } from "better-auth/client"
 import {
@@ -33,6 +34,11 @@ export const authClient = createAuthClient({
         },
       },
       dynamicAccessControl: {
+        enabled: true,
+      },
+    }),
+    ssoClient({
+      domainVerification: {
         enabled: true,
       },
     }),

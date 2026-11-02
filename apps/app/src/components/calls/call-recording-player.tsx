@@ -20,7 +20,13 @@ function formatTick(seconds: number) {
   return `${Math.floor(time / 60)}:${String(time % 60).padStart(2, "0")}`
 }
 
-export function CallRecordingPlayer({ callId }: { callId: string }) {
+export function CallRecordingPlayer({
+  callId,
+  position,
+}: {
+  callId: string
+  position?: number
+}) {
   const containerRef = useRef<HTMLDivElement>(null)
   const fetchParams = useRef({ credentials: "include" as const }).current
   const [playbackRate, setPlaybackRate] = useState(1)
@@ -38,6 +44,11 @@ export function CallRecordingPlayer({ callId }: { callId: string }) {
     dragToSeek: true,
     splitChannels: SPLIT_CHANNELS,
   })
+
+  useEffect(() => {
+    if (!wavesurfer || !isReady || position == null) return
+    wavesurfer.setTime(position)
+  }, [wavesurfer, isReady, position])
 
   useEffect(() => {
     if (!wavesurfer) return

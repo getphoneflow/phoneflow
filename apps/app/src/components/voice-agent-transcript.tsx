@@ -11,5 +11,16 @@ export function VoiceAgentTranscript() {
   const session = useSessionContext()
   const { messages } = useSessionMessages(session)
 
-  return <AgentChatTranscript agentState={state} messages={messages} />
+  const startedAt =
+    messages.length === 0
+      ? 0
+      : Math.min(...messages.map((message) => message.timestamp))
+
+  return (
+    <AgentChatTranscript
+      agentState={state}
+      messages={messages}
+      startedAt={startedAt}
+    />
+  )
 }

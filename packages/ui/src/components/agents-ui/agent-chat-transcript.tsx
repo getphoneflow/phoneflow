@@ -1,7 +1,4 @@
-import {
-  type AgentState,
-  type ReceivedMessage,
-} from "@livekit/components-react"
+import type { AgentState, ReceivedMessage } from "@livekit/components-react"
 import { cn } from "cn"
 import { ArrowDownIcon } from "lucide-react"
 import { AnimatePresence } from "motion/react"
@@ -22,6 +19,13 @@ function messageOrigin(message: ReceivedMessage): "user" | "assistant" {
   return "assistant"
 }
 
+function formatElapsed(timestamp: number, startedAt: number) {
+  const total = Math.max(0, Math.floor((timestamp - startedAt) / 1000))
+  const minutes = String(Math.floor(total / 60)).padStart(2, "0")
+  const seconds = String(total % 60).padStart(2, "0")
+  return `${minutes}:${seconds}`
+}
+
 function messageSpacing(
   index: number,
   origin: "user" | "assistant",
@@ -37,9 +41,13 @@ function messageSpacing(
 function TranscriptMessages({
   agentState,
   messages,
+  startedAt,
+  onMessageClick,
 }: {
   agentState?: AgentState
   messages: ReceivedMessage[]
+  startedAt: number
+  onMessageClick?: (timestamp: number) => void
 }) {
   const { scrollRef, contentRef } = useStickToBottomContext()
 
@@ -48,15 +56,11 @@ function TranscriptMessages({
       <div ref={contentRef} className="flex flex-col px-4 py-4">
         {messages.map((msg, index) => {
           const origin = messageOrigin(msg)
-
-          return (
+          const content = (
             <div
               key={msg.id}
-              title={new Date(msg.timestamp).toLocaleTimeString(undefined, {
-                timeStyle: "full",
-              })}
               className={cn(
-                "flex flex-col",
+                "flex flex-col gap-1",
                 origin === "user" ? "items-end" : "items-start",
                 messageSpacing(index, origin, messages)
               )}
@@ -70,7 +74,21 @@ function TranscriptMessages({
               >
                 {msg.message}
               </div>
+              <span className="text-[10px] leading-none tabular-nums text-muted-foreground">
+                {formatElapsed(msg.timestamp, startedAt)}
+              </span>
             </div>
+          )
+
+          if (!onMessageClick) return content
+
+          return (
+            <button
+              onClick={() => onMessageClick(msg.timestamp)}
+              className="text-left"
+            >
+              {content}
+            </button>
           )
         })}
         <AnimatePresence>
@@ -106,6 +124,8 @@ export interface AgentChatTranscriptProps extends ComponentProps<"div"> {
   agentState?: AgentState
   messages?: ReceivedMessage[]
   initial?: ComponentProps<typeof StickToBottom>["initial"]
+  startedAt: number
+  onMessageClick?: (timestamp: number) => void
 }
 
 export function AgentChatTranscript({
@@ -113,6 +133,8 @@ export function AgentChatTranscript({
   messages = [],
   className,
   initial = "smooth",
+  startedAt,
+  onMessageClick,
   ...props
 }: AgentChatTranscriptProps) {
   return (
@@ -126,7 +148,12 @@ export function AgentChatTranscript({
       role="log"
       {...props}
     >
-      <TranscriptMessages agentState={agentState} messages={messages} />
+      <TranscriptMessages
+        agentState={agentState}
+        messages={messages}
+        startedAt={startedAt}
+        onMessageClick={onMessageClick}
+      />
       <ScrollToBottomButton />
     </StickToBottom>
   )

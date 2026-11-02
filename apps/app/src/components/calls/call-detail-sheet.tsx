@@ -1,6 +1,6 @@
 import type { ReceivedMessage } from "@livekit/components-react"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
 
 import type { CallDetailResponse } from "@workspace/shared/api/calls/types"
 import { AgentChatTranscript } from "@workspace/ui/components/agents-ui/agent-chat-transcript"
@@ -30,6 +30,13 @@ function CallDetailBody({ callId }: { callId: string }) {
     queryKey: ["calls", callId],
     queryFn: () => api.get<CallDetailResponse>(`/calls/${callId}`),
   })
+
+  const [position, setPosition] = useState<number>()
+  const startedAt = new Date(call.startedAt).getTime()
+
+  function onMessageClick(timestamp: number) {
+    setPosition((timestamp - startedAt) / 1000)
+  }
 
   const messages = (call.transcript ?? []).map(
     (item) =>
@@ -84,7 +91,7 @@ function CallDetailBody({ callId }: { callId: string }) {
           </p>
         )}
         <div className="mt-2">
-          <CallRecordingPlayer callId={callId} />
+          <CallRecordingPlayer callId={callId} position={position} />
         </div>
       </SheetHeader>
 
@@ -110,7 +117,12 @@ function CallDetailBody({ callId }: { callId: string }) {
               </p>
             </div>
           ) : (
-            <AgentChatTranscript messages={messages} initial={false} />
+            <AgentChatTranscript
+              messages={messages}
+              initial={false}
+              startedAt={startedAt}
+              onMessageClick={onMessageClick}
+            />
           )}
         </TabsContent>
         <TabsContent

@@ -10,6 +10,7 @@ import type {
 
 // Runtime flow
 export interface FlowConversationNode {
+  id: string
   type: "conversation"
   name: string
   isStart?: true
@@ -24,6 +25,7 @@ export interface FlowConversationNode {
 }
 
 export interface FlowEndNode {
+  id: string
   type: "end"
   name: string
 }

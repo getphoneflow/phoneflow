@@ -50,6 +50,7 @@ type AgentEditorState = {
   activeVersionNumber: number | null
   activeVersionId: string | null
   sidePanel: FlowSidePanelState
+  activeNodeId: string | null
 }
 
 type AgentEditorStore = AgentEditorState & {
@@ -75,6 +76,7 @@ type AgentEditorStore = AgentEditorState & {
   undo: () => void
   redo: () => void
   markSaved: (savedConfig: AgentConfig) => void
+  setActiveNodeId: (activeNodeId: string | null) => void
 }
 
 const closedSidePanel: FlowSidePanelState = { kind: "closed" }
@@ -248,6 +250,7 @@ const initialState: AgentEditorState = {
   activeVersionNumber: null,
   activeVersionId: null,
   sidePanel: closedSidePanel,
+  activeNodeId: null,
 }
 
 export const useAgentStore = create<AgentEditorStore>((set) => ({
@@ -528,4 +531,5 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
       }
     }),
   markSaved: (savedConfig) => set({ savedConfig }),
+  setActiveNodeId: (activeNodeId) => set({ activeNodeId }),
 }))

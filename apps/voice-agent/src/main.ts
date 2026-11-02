@@ -130,7 +130,7 @@ export default defineAgent({
     })
 
     await session.start({
-      agent: new FlowAgent(flowGraph, variables, sip, callId),
+      agent: new FlowAgent(flowGraph, variables, sip, callId, ctx.room),
       room: ctx.room,
       record: false,
     })

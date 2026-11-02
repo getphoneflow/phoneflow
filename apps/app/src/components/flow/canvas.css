@@ -8,3 +8,21 @@
 .react-flow.dark {
   --xy-background-color: #191919;
 }
+
+.active-node {
+  animation: node-ring 1.6s ease-out infinite;
+}
+
+@keyframes node-ring {
+  0% {
+    box-shadow:
+      var(--tw-ring-shadow),
+      0 0 0 4px color-mix(in srgb, var(--color-blue-400) 45%, transparent);
+  }
+
+  100% {
+    box-shadow:
+      var(--tw-ring-shadow),
+      0 0 0 9px color-mix(in srgb, var(--color-blue-400) 0%, transparent);
+  }
+}

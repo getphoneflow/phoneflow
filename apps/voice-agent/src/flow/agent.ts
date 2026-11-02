@@ -1,6 +1,7 @@
 import {
   Agent,
   ChatContext,
+  type JobContext,
   type ModelSettings,
   type ToolContext,
   tool,
@@ -53,12 +54,14 @@ export class FlowAgent extends Agent {
   private readonly variables: Variables
   private readonly sip: CallSipConnection | null
   private readonly callId: string
+  private readonly room: JobContext["room"]
 
   constructor(
     graph: FlowGraph,
     variables: Variables,
     sip: CallSipConnection | null,
-    callId: string
+    callId: string,
+    room: JobContext["room"]
   ) {
     super({
       instructions: buildNodeInstructions(graph, graph.startNode, variables),
@@ -68,6 +71,15 @@ export class FlowAgent extends Agent {
     this.variables = variables
     this.sip = sip
     this.callId = callId
+    this.room = room
+  }
+
+  private async publishActiveNode(node: FlowNode) {
+    if (this.variables.get("direction") !== "web") return
+
+    await this.room.localParticipant?.setAttributes({
+      active_node_id: node.id,
+    })
   }
 
   private buildNodeTools(node: FlowConversationNode) {
@@ -185,6 +197,8 @@ export class FlowAgent extends Agent {
   }
 
   private async transitionTo(node: FlowNode) {
+    await this.publishActiveNode(node)
+
     if (node.type === "end") {
       await endCall()
       return
@@ -212,6 +226,7 @@ export class FlowAgent extends Agent {
 
   override async onEnter() {
     const startNode = this.graph.startNode
+    await this.publishActiveNode(startNode)
     await this.updateTools(this.buildNodeTools(startNode))
 
     if (startNode.startSpeaker === "agent") {

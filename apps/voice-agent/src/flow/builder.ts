@@ -15,6 +15,7 @@ export function buildFlowGraph(config: AgentConfig) {
 
     if (node.type === "conversation") {
       flowNode = {
+        id: node.id,
         type: node.type,
         name: node.data.name,
         instructions: node.data.instructions,
@@ -51,6 +52,7 @@ export function buildFlowGraph(config: AgentConfig) {
       }
     } else if (node.type === "end") {
       flowNode = {
+        id: node.id,
         type: node.type,
         name: node.data.name,
       }

@@ -93,7 +93,7 @@ function Page() {
           <CardHeader>
             <CardTitle className="text-xl">Sign in with SSO</CardTitle>
             <CardDescription>
-              Enter your work email to continue with your identity provider.
+              Enter your work email to continue with your identity provider
             </CardDescription>
           </CardHeader>
           <CardContent>

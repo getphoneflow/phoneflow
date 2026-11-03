@@ -34,6 +34,7 @@ import { GoogleIcon } from "@/components/logos/google"
 import { PhoneflowIcon } from "@/components/logos/phoneflow"
 import { captureEvent, identifyUser } from "@/lib/analytics"
 import { signIn, signUp } from "@/lib/auth/client"
+import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from "@/lib/constants"
 import { env } from "@/lib/env"
 import { TIME_ZONES } from "@/lib/time"
 
@@ -284,6 +285,27 @@ function Page() {
             </form>
           </CardContent>
         </Card>
+
+        <p className="text-center text-xs text-muted-foreground max-w-75">
+          By signing up you agree with our{" "}
+          <a
+            href={TERMS_OF_SERVICE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline text-primary"
+          >
+            Terms of Service
+          </a>{" "}
+          and acknowledge our{" "}
+          <a
+            href={PRIVACY_POLICY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline text-primary"
+          >
+            Privacy Policy
+          </a>
+        </p>
       </div>
     </>
   )

@@ -15,6 +15,7 @@ allowBuilds:
 catalog:
   '@biomejs/biome': 2.5.8
   '@livekit/components-react': 2.9.24
+  '@livekit/protocol': 1.53.1
   '@tailwindcss/vite': 4.3.3
   '@tanstack/react-table': 9.2.4
   '@types/node': 26.2.0
@@ -30,6 +31,7 @@ catalog:
   '@opentelemetry/sdk-metrics': 3.0.0
   '@opentelemetry/sdk-node': 0.300.0
   '@opentelemetry/sdk-trace': 3.0.0
+  '@opentelemetry/sdk-trace-node': 2.10.0
   better-auth: 1.7.14
   bullmq: 6.1.0
   bullmq-otel: 2.0.1

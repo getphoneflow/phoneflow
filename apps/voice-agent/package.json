@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@livekit/agents": "1.9.0",
-    "@livekit/protocol": "^1.50.4",
     "@livekit/agents-plugin-anthropic": "1.9.0",
     "@livekit/agents-plugin-assemblyai": "1.9.0",
     "@livekit/agents-plugin-cartesia": "1.9.0",
@@ -29,6 +28,10 @@
     "@livekit/agents-plugin-silero": "1.9.0",
     "@livekit/agents-plugin-soniox": "1.9.0",
     "@livekit/agents-plugin-xai": "1.9.0",
+    "@livekit/protocol": "catalog:",
+    "@opentelemetry/api": "catalog:",
+    "@opentelemetry/exporter-trace-otlp-http": "catalog:",
+    "@opentelemetry/sdk-trace-node": "catalog:",
     "@workspace/shared": "workspace:*",
     "dotenv": "catalog:",
     "livekit-server-sdk": "catalog:",

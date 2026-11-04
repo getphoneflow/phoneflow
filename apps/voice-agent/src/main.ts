@@ -22,6 +22,7 @@ import {
 } from "@/lib/calls"
 import { endCall } from "@/lib/end-call"
 import { env } from "@/lib/env"
+import { setupTracing } from "@/lib/tracing"
 import { buildCallTranscript } from "@/lib/transcript"
 import { LLM } from "@/providers/llm"
 import { STT } from "@/providers/stt"
@@ -63,6 +64,16 @@ export default defineAgent({
       metadata,
       livekitRoomName
     )
+
+    const traceProvider = setupTracing({
+      "gen_ai.conversation.id": callId,
+    })
+
+    if (traceProvider) {
+      ctx.addShutdownCallback(async () => {
+        await traceProvider.shutdown()
+      })
+    }
 
     const flowGraph = buildFlowGraph(config)
     const variables = createVariables({

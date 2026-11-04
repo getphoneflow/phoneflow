@@ -1,3 +1,6 @@
+// biome-ignore-all assist/source/organizeImports: The SDK import must stay first so instrumentation is installed before BullMQ and Redis load.
+import { sdk } from "./instrumentation"
+
 import { batchCallsWorker } from "@/batch-calls/worker"
 import { emailsWorker } from "@/emails/worker"
 import { connection } from "@/lib/redis"
@@ -8,23 +11,12 @@ for (const worker of workers) {
   worker.on("ready", () => {
     console.log(`[${worker.name}] ready`)
   })
-
-  worker.on("completed", (job) => {
-    console.log(`[${worker.name}] completed ${job.name} ${job.id}`)
-  })
-
-  worker.on("failed", (job, err) => {
-    console.error(`[${worker.name}] failed ${job?.name} ${job?.id}`, err)
-  })
-
-  worker.on("error", (err) => {
-    console.error(`[${worker.name}] error`, err)
-  })
 }
 
 async function handleShutdown() {
   await Promise.all(workers.map((worker) => worker.close()))
   await connection.quit()
+  await sdk.shutdown()
   process.exit(0)
 }
 

@@ -1,7 +1,17 @@
 import { Queue } from "bullmq"
+import { BullMQOtel } from "bullmq-otel"
 
 import { connection } from "@/lib/redis"
 
-export const emailsQueue = new Queue("emails", { connection })
+const telemetry = new BullMQOtel({
+  tracerName: "api",
+  meterName: "api",
+  enableMetrics: true,
+})
 
-export const batchCallsQueue = new Queue("batch-calls", { connection })
+export const emailsQueue = new Queue("emails", { connection, telemetry })
+
+export const batchCallsQueue = new Queue("batch-calls", {
+  connection,
+  telemetry,
+})

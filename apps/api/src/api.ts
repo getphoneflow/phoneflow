@@ -1,6 +1,6 @@
+import { httpInstrumentationMiddleware } from "@hono/otel"
 import { Hono } from "hono"
 import { cors } from "hono/cors"
-import { logger } from "hono/logger"
 
 import { auth } from "@/lib/auth/config"
 import { env } from "@/lib/env"
@@ -19,15 +19,22 @@ const api = new Hono()
 
 api.use(
   "*",
+  httpInstrumentationMiddleware({
+    serviceName: "api",
+    getUrlFull: (c) => {
+      const url = new URL(c.req.url)
+      return `${url.origin}${url.pathname}`
+    },
+  })
+)
+
+api.use(
+  "*",
   cors({
     origin: [env.FRONTEND_URL],
     credentials: true,
   })
 )
-
-if (env.NODE_ENV !== "production") {
-  api.use(logger())
-}
 
 api.use("*", localeMiddleware)
 

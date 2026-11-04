@@ -1,4 +1,5 @@
 import { Worker } from "bullmq"
+import { BullMQOtel } from "bullmq-otel"
 
 import { connection } from "@/lib/redis"
 import { sendDownloadCalls } from "./jobs/send-download-calls"
@@ -6,6 +7,12 @@ import { sendDownloadContacts } from "./jobs/send-download-contacts"
 import { sendOrganizationInvitation } from "./jobs/send-organization-invitation"
 import { sendResetPassword } from "./jobs/send-reset-password"
 import { sendVerificationOtp } from "./jobs/send-verification-otp"
+
+const telemetry = new BullMQOtel({
+  tracerName: "worker",
+  meterName: "worker",
+  enableMetrics: true,
+})
 
 export const emailsWorker = new Worker(
   "emails",
@@ -25,5 +32,5 @@ export const emailsWorker = new Worker(
         throw new Error(`Unknown job: ${job.name}`)
     }
   },
-  { connection }
+  { connection, telemetry }
 )

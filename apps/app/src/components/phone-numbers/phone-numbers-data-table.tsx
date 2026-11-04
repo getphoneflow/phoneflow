@@ -51,6 +51,7 @@ import { formatAgentVersionLabel } from "@/components/helpers"
 import { PhoneNumberRowActions } from "@/components/phone-numbers/phone-number-row-actions"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
+import { type TFunction, useTranslation } from "@/lib/i18n"
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -68,44 +69,59 @@ type PhoneNumber = PhoneNumberListResponse[number]
 
 const columnHelper = createColumnHelper<typeof features, PhoneNumber>()
 
-const columns = columnHelper.columns([
-  columnHelper.accessor("number", {
-    header: "Number",
-    cell: ({ row }) => row.original.number,
-  }),
-  columnHelper.display({
-    id: "agent",
-    header: "Agent",
-    cell: ({ row }) =>
-      row.original.agentId ? (
-        <AgentReferenceLink
-          agentId={row.original.agentId}
-          agent={row.original.agent}
-          agentVersionId={row.original.agentVersionId}
-        />
-      ) : null,
-  }),
-  columnHelper.display({
-    id: "version",
-    header: "Version",
-    cell: ({ row }) => {
-      if (!row.original.agent) {
-        return null
-      }
+function getColumns(t: TFunction) {
+  return columnHelper.columns([
+    columnHelper.accessor("number", {
+      header: t(
+        "components.phone_numbers.phone_numbers_data_table.columns.number"
+      ),
+      cell: ({ row }) => row.original.number,
+    }),
+    columnHelper.display({
+      id: "agent",
+      header: t(
+        "components.phone_numbers.phone_numbers_data_table.columns.agent"
+      ),
+      cell: ({ row }) =>
+        row.original.agentId ? (
+          <AgentReferenceLink
+            agentId={row.original.agentId}
+            agent={row.original.agent}
+            agentVersionId={row.original.agentVersionId}
+          />
+        ) : null,
+    }),
+    columnHelper.display({
+      id: "version",
+      header: t(
+        "components.phone_numbers.phone_numbers_data_table.columns.version"
+      ),
+      cell: ({ row }) => {
+        if (!row.original.agent) {
+          return null
+        }
 
-      return formatAgentVersionLabel(row.original.agentVersion)
-    },
-  }),
-  columnHelper.accessor("updatedAt", {
-    header: ({ column }) => <SortableHeader column={column} title="Updated" />,
-    cell: ({ row }) => <UserDateTime value={row.original.updatedAt} />,
-  }),
-  columnHelper.display({
-    id: "actions",
-    header: "",
-    cell: ({ row }) => <PhoneNumberRowActions phoneNumber={row.original} />,
-  }),
-])
+        return formatAgentVersionLabel(row.original.agentVersion, t)
+      },
+    }),
+    columnHelper.accessor("updatedAt", {
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t(
+            "components.phone_numbers.phone_numbers_data_table.columns.updated"
+          )}
+        />
+      ),
+      cell: ({ row }) => <UserDateTime value={row.original.updatedAt} />,
+    }),
+    columnHelper.display({
+      id: "actions",
+      header: "",
+      cell: ({ row }) => <PhoneNumberRowActions phoneNumber={row.original} />,
+    }),
+  ])
+}
 
 export function PhoneNumbersDataTable({
   data,
@@ -114,6 +130,8 @@ export function PhoneNumbersDataTable({
   data: PhoneNumberListResponse
   onPhoneNumberSelect: (phoneNumberId: string) => void
 }) {
+  const { t } = useTranslation()
+  const columns = getColumns(t)
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
 
@@ -138,7 +156,9 @@ export function PhoneNumbersDataTable({
           onChange={(event) =>
             table.getColumn("number")?.setFilterValue(event.target.value)
           }
-          placeholder="Search phone numbers..."
+          placeholder={t(
+            "components.phone_numbers.phone_numbers_data_table.search_placeholder"
+          )}
         />
         <InputGroupAddon>
           <Search />
@@ -195,7 +215,7 @@ export function PhoneNumbersDataTable({
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No results
+                  {t("common.table.no_results")}
                 </TableCell>
               </TableRow>
             )}
@@ -219,12 +239,16 @@ export function PhoneNumbersDataTable({
               ))}
             </SelectContent>
           </Select>
-          <span className="text-sm font-medium">Rows per page</span>
+          <span className="text-sm font-medium">
+            {t("common.table.rows_per_page")}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.state.pagination.pageIndex + 1} of{" "}
-            {table.getPageCount() || 1}
+            {t("common.table.page", {
+              page: table.state.pagination.pageIndex + 1,
+              total: table.getPageCount() || 1,
+            })}
           </span>
           <Button
             variant="outline"

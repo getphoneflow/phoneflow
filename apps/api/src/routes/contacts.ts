@@ -18,19 +18,21 @@ import type { SendDownloadContactsPayload } from "@workspace/shared/jobs/emails/
 import { auth } from "@/lib/auth/config"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requireAuthToken } from "@/lib/auth/token"
+import { t } from "@/lib/i18n"
 import { emailsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
 
 export const contactRoutes = new Hono()
 
 contactRoutes.post("/download", requireOrganization, async (c) => {
+  const locale = c.get("locale")
   const organizationId = c.get("organizationId")
 
   try {
     const session = await auth.api.getSession({ headers: c.req.raw.headers })
 
     if (!session?.user.email) {
-      return c.json({ error: "User email not found" }, 400)
+      return c.json({ error: t(locale, "contacts.user_email_not_found") }, 400)
     }
 
     const organization = await db.query.organization.findFirst({
@@ -43,18 +45,22 @@ contactRoutes.post("/download", requireOrganization, async (c) => {
     })
 
     if (!organization) {
-      return c.json({ error: "Organization not found" }, 404)
+      return c.json(
+        { error: t(locale, "contacts.organization_not_found") },
+        404
+      )
     }
 
     await emailsQueue.add("send-download-contacts", {
       to: session.user.email,
       organizationId,
       organizationName: organization.name,
+      locale: locale,
     } satisfies SendDownloadContactsPayload)
 
     return c.json({ ok: true } satisfies RequestContactDownloadResponse)
   } catch {
-    return c.json({ error: "Failed to request contacts download" }, 500)
+    return c.json({ error: t(locale, "contacts.request_download_failed") }, 500)
   }
 })
 
@@ -78,6 +84,7 @@ contactRoutes.get("/export/:organizationId", requireAuthToken, async (c) => {
 })
 
 contactRoutes.get("/:contactId", requireOrganization, async (c) => {
+  const locale = c.get("locale")
   const organizationId = c.get("organizationId")
   const contactId = c.req.param("contactId")
 
@@ -90,7 +97,7 @@ contactRoutes.get("/:contactId", requireOrganization, async (c) => {
     })
 
     if (!contact) {
-      return c.json({ error: "Contact not found" }, 404)
+      return c.json({ error: t(locale, "contacts.not_found") }, 404)
     }
 
     const calls = await db.query.callsTable.findMany({
@@ -124,7 +131,7 @@ contactRoutes.get("/:contactId", requireOrganization, async (c) => {
       calls,
     } satisfies ContactDetailResponse)
   } catch {
-    return c.json({ error: "Failed to fetch contact" }, 500)
+    return c.json({ error: t(locale, "contacts.load_failed") }, 500)
   }
 })
 
@@ -134,6 +141,7 @@ contactRoutes.get(
   validator("query", contactListQuerySchema),
   async (c) => {
     const organizationId = c.get("organizationId")
+    const locale = c.get("locale")
     const query = c.req.valid("query")
 
     try {
@@ -243,7 +251,7 @@ contactRoutes.get(
         pageSize: query.pageSize,
       } satisfies ContactListResponse)
     } catch {
-      return c.json({ error: "Failed to load contacts" }, 500)
+      return c.json({ error: t(locale, "contacts.list_failed") }, 500)
     }
   }
 )

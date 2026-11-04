@@ -6,12 +6,14 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/app/package.json ./apps/app/package.json
 COPY packages/ui/package.json ./packages/ui/package.json
+COPY packages/i18n/package.json ./packages/i18n/package.json
 COPY packages/shared/package.json ./packages/shared/package.json
 
 RUN pnpm install --frozen-lockfile
 
 COPY apps/app ./apps/app
 COPY packages/ui ./packages/ui
+COPY packages/i18n ./packages/i18n
 COPY packages/shared ./packages/shared
 
 ARG VITE_FRONTEND_URL

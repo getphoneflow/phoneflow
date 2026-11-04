@@ -13,6 +13,7 @@ import { LiveCallMonitor } from "@/components/calls/live-call-monitor"
 import { SheetSkeleton } from "@/components/sheet-skeleton"
 import { UserDateTime } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
 
 function LiveCallBody({
   callId,
@@ -21,15 +22,21 @@ function LiveCallBody({
   callId: string
   onClose: () => void
 }) {
+  const { t } = useTranslation()
   const { data: call } = useSuspenseQuery({
     queryKey: ["calls", callId],
     queryFn: () => api.get<CallDetailResponse>(`/calls/${callId}`),
   })
 
-  const channelLabel = call.channel === "phone_call" ? "Phone call" : "Web call"
+  const channelLabel =
+    call.channel === "phone_call"
+      ? t("components.calls.live_call_sheet.channel.phone_call")
+      : t("components.calls.live_call_sheet.channel.web_call")
   const versionLabel = call.agentVersion
-    ? `V${call.agentVersion.number}`
-    : "Latest"
+    ? t("components.calls.live_call_sheet.version", {
+        number: call.agentVersion.number,
+      })
+    : t("components.calls.live_call_sheet.latest_version")
 
   return (
     <>
@@ -38,7 +45,9 @@ function LiveCallBody({
           <UserDateTime value={call.startedAt} /> {channelLabel}
         </SheetTitle>
         <div className="flex items-center gap-1 text-sm">
-          <span className="text-muted-foreground">Agent: </span>
+          <span className="text-muted-foreground">
+            {t("components.calls.live_call_sheet.agent")}{" "}
+          </span>
           <AgentReferenceLink
             agentId={call.agentId}
             agent={call.agent}
@@ -47,7 +56,9 @@ function LiveCallBody({
           />
           <span className="text-muted-foreground">· {versionLabel}</span>
         </div>
-        <p className="text-sm text-muted-foreground">Live call</p>
+        <p className="text-sm text-muted-foreground">
+          {t("components.calls.live_call_sheet.live_call")}
+        </p>
       </SheetHeader>
 
       <LiveCallMonitor

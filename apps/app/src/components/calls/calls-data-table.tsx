@@ -61,6 +61,7 @@ import { formatAgentName } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
 import { env } from "@/lib/env"
+import { type TFunction, useTranslation } from "@/lib/i18n"
 import { formatDurationMs } from "@/lib/time"
 
 const features = tableFeatures({
@@ -70,6 +71,7 @@ const features = tableFeatures({
 })
 
 function CostCell({ call }: { call: CallListItem }) {
+  const { t } = useTranslation()
   const totalCost = parseCallCost(call.totalCost)
 
   if (totalCost === null) {
@@ -93,7 +95,7 @@ function CostCell({ call }: { call: CallListItem }) {
             className="flex items-center justify-between gap-3"
           >
             <div>
-              <span className="text-xs">{item.label}</span>
+              <span className="text-xs">{t(item.label)}</span>
               {item.model ? (
                 <div className="truncate text-xs text-muted-foreground">
                   {item.model}
@@ -110,110 +112,139 @@ function CostCell({ call }: { call: CallListItem }) {
 
 const columnHelper = createColumnHelper<typeof features, CallListItem>()
 
-const columns = columnHelper.columns([
-  columnHelper.accessor("startedAt", {
-    header: ({ column }) => <SortableHeader column={column} title="Started" />,
-    cell: ({ row }) => <UserDateTime value={row.original.startedAt} />,
-  }),
-  columnHelper.accessor((row) => row.durationMs, {
-    id: "duration",
-    header: ({ column }) => <SortableHeader column={column} title="Duration" />,
-    cell: ({ row }) =>
-      row.original.durationMs === null
-        ? null
-        : formatDurationMs(row.original.durationMs),
-  }),
-  columnHelper.accessor((row) => parseCallCost(row.totalCost), {
-    id: "cost",
-    header: ({ column }) => <SortableHeader column={column} title="Cost" />,
-    cell: ({ row }) => <CostCell call={row.original} />,
-  }),
-  columnHelper.accessor("channel", {
-    header: "Channel",
-    cell: ({ row }) => {
-      const isPhone = row.original.channel === "phone_call"
-      return (
-        <Tooltip>
-          <TooltipTrigger render={<div className="flex justify-center" />}>
-            {isPhone ? (
-              <Phone className="size-4" />
-            ) : (
-              <Globe className="size-4" />
-            )}
-          </TooltipTrigger>
-          <TooltipContent sideOffset={8}>
-            {isPhone ? "Phone" : "Web"}
-          </TooltipContent>
-        </Tooltip>
-      )
-    },
-  }),
-  columnHelper.accessor("direction", {
-    header: "Direction",
-    cell: ({ row }) => {
-      const isInbound = row.original.direction === "inbound"
-      return (
-        <Tooltip>
-          <TooltipTrigger render={<div className="flex justify-center" />}>
-            {isInbound ? (
-              <ArrowDownRight className="size-4" />
-            ) : (
-              <ArrowUpRight className="size-4" />
-            )}
-          </TooltipTrigger>
-          <TooltipContent sideOffset={8}>
-            {isInbound ? "Inbound" : "Outbound"}
-          </TooltipContent>
-        </Tooltip>
-      )
-    },
-  }),
-  columnHelper.display({
-    id: "from",
-    header: "From",
-    cell: ({ row }) => row.original.fromNumber,
-  }),
-  columnHelper.display({
-    id: "to",
-    header: "To",
-    cell: ({ row }) => row.original.toNumber,
-  }),
-  columnHelper.accessor((row) => formatAgentName(row.agent), {
-    id: "agent",
-    header: "Agent",
-    cell: ({ row }) => (
-      <AgentReferenceLink
-        agentId={row.original.agentId}
-        agent={row.original.agent}
-        agentVersionId={row.original.agentVersionId}
-      />
-    ),
-  }),
-  columnHelper.display({
-    id: "version",
-    header: "Version",
-    cell: ({ row }) =>
-      row.original.agentVersion
-        ? `V${row.original.agentVersion.number}`
-        : "Latest",
-  }),
-  columnHelper.display({
-    id: "variables",
-    header: "Variables",
-    cell: ({ row }) => Object.keys(row.original.variables ?? {}).length,
-  }),
-  columnHelper.accessor("status", {
-    header: "Status",
-    cell: ({ row }) =>
-      row.original.status === "in_progress" ? (
-        <Badge variant="outline">In progress</Badge>
-      ) : row.original.status === "no_answer" ? (
-        <Badge variant="outline">No answer</Badge>
-      ) : (
-        <Badge variant="secondary">Completed</Badge>
+function getColumns(t: TFunction) {
+  return columnHelper.columns([
+    columnHelper.accessor("startedAt", {
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t("components.calls.calls_data_table.columns.started")}
+        />
       ),
-  }),
-])
+      cell: ({ row }) => <UserDateTime value={row.original.startedAt} />,
+    }),
+    columnHelper.accessor((row) => row.durationMs, {
+      id: "duration",
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t("components.calls.calls_data_table.columns.duration")}
+        />
+      ),
+      cell: ({ row }) =>
+        row.original.durationMs === null
+          ? null
+          : formatDurationMs(row.original.durationMs),
+    }),
+    columnHelper.accessor((row) => parseCallCost(row.totalCost), {
+      id: "cost",
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t("components.calls.calls_data_table.columns.cost")}
+        />
+      ),
+      cell: ({ row }) => <CostCell call={row.original} />,
+    }),
+    columnHelper.accessor("channel", {
+      header: t("components.calls.calls_data_table.columns.channel"),
+      cell: ({ row }) => {
+        const isPhone = row.original.channel === "phone_call"
+        return (
+          <Tooltip>
+            <TooltipTrigger render={<div className="flex justify-center" />}>
+              {isPhone ? (
+                <Phone className="size-4" />
+              ) : (
+                <Globe className="size-4" />
+              )}
+            </TooltipTrigger>
+            <TooltipContent sideOffset={8}>
+              {isPhone
+                ? t("components.calls.calls_data_table.channel.phone")
+                : t("components.calls.calls_data_table.channel.web")}
+            </TooltipContent>
+          </Tooltip>
+        )
+      },
+    }),
+    columnHelper.accessor("direction", {
+      header: t("components.calls.calls_data_table.columns.direction"),
+      cell: ({ row }) => {
+        const isInbound = row.original.direction === "inbound"
+        return (
+          <Tooltip>
+            <TooltipTrigger render={<div className="flex justify-center" />}>
+              {isInbound ? (
+                <ArrowDownRight className="size-4" />
+              ) : (
+                <ArrowUpRight className="size-4" />
+              )}
+            </TooltipTrigger>
+            <TooltipContent sideOffset={8}>
+              {isInbound
+                ? t("components.calls.calls_data_table.direction.inbound")
+                : t("components.calls.calls_data_table.direction.outbound")}
+            </TooltipContent>
+          </Tooltip>
+        )
+      },
+    }),
+    columnHelper.display({
+      id: "from",
+      header: t("components.calls.calls_data_table.columns.from"),
+      cell: ({ row }) => row.original.fromNumber,
+    }),
+    columnHelper.display({
+      id: "to",
+      header: t("components.calls.calls_data_table.columns.to"),
+      cell: ({ row }) => row.original.toNumber,
+    }),
+    columnHelper.accessor((row) => formatAgentName(row.agent, t), {
+      id: "agent",
+      header: t("components.calls.calls_data_table.columns.agent"),
+      cell: ({ row }) => (
+        <AgentReferenceLink
+          agentId={row.original.agentId}
+          agent={row.original.agent}
+          agentVersionId={row.original.agentVersionId}
+        />
+      ),
+    }),
+    columnHelper.display({
+      id: "version",
+      header: t("components.calls.calls_data_table.columns.version"),
+      cell: ({ row }) =>
+        row.original.agentVersion
+          ? t("components.calls.calls_data_table.version", {
+              number: row.original.agentVersion.number,
+            })
+          : t("components.calls.calls_data_table.latest_version"),
+    }),
+    columnHelper.display({
+      id: "variables",
+      header: t("components.calls.calls_data_table.columns.variables"),
+      cell: ({ row }) => Object.keys(row.original.variables ?? {}).length,
+    }),
+    columnHelper.accessor("status", {
+      header: t("components.calls.calls_data_table.columns.status"),
+      cell: ({ row }) =>
+        row.original.status === "in_progress" ? (
+          <Badge variant="outline">
+            {t("components.calls.calls_data_table.status.in_progress")}
+          </Badge>
+        ) : row.original.status === "no_answer" ? (
+          <Badge variant="outline">
+            {t("components.calls.calls_data_table.status.no_answer")}
+          </Badge>
+        ) : (
+          <Badge variant="secondary">
+            {t("components.calls.calls_data_table.status.completed")}
+          </Badge>
+        ),
+    }),
+  ])
+}
 
 type CallsDataTableProps = {
   items: CallListItem[]
@@ -245,6 +276,8 @@ export function CallsDataTable({
   onPageChange,
   onPageSizeChange,
 }: CallsDataTableProps) {
+  const { t } = useTranslation()
+  const columns = getColumns(t)
   const sorting: SortingState = [{ id: sortBy, desc: sortDir === "desc" }]
 
   const table = useTable({
@@ -326,7 +359,7 @@ export function CallsDataTable({
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No results
+                  {t("common.table.no_results")}
                 </TableCell>
               </TableRow>
             )}
@@ -350,11 +383,16 @@ export function CallsDataTable({
               ))}
             </SelectContent>
           </Select>
-          <span className="text-sm font-medium">Rows per page</span>
+          <span className="text-sm font-medium">
+            {t("common.table.rows_per_page")}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {page} of {table.getPageCount() || 1}
+            {t("common.table.page", {
+              page,
+              total: table.getPageCount() || 1,
+            })}
           </span>
           <Button
             variant="outline"

@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -17,6 +16,8 @@ import { Textarea } from "@workspace/ui/components/textarea"
 import { CopyButton } from "@/components/copy-button"
 import { authClient } from "@/lib/auth/client"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 import { DomainList, domainListSchema } from "./domain-list"
 
 const samlSchema = z.object({
@@ -24,8 +25,8 @@ const samlSchema = z.object({
   metadata: z
     .string()
     .trim()
-    .min(1, "Paste the identity provider metadata")
-    .max(100_000, "Metadata is too large"),
+    .min(1, "components.settings.sso.saml_form.metadata.required")
+    .max(100_000, "components.settings.sso.saml_form.metadata.max"),
 })
 
 type SamlValues = z.infer<typeof samlSchema>
@@ -43,11 +44,12 @@ export function SamlForm({
   providerId,
   onCreated,
 }: SamlFormProps) {
+  const { t } = useTranslation()
   const acsUrl = `${env.API_URL}/api/auth/sso/saml2/sp/acs/${providerId}`
   const entityId = `${env.API_URL}/api/auth/sso/saml2/sp/${providerId}`
 
   const form = useForm<SamlValues>({
-    resolver: zodResolver(samlSchema),
+    resolver: zodResolverI18n(samlSchema),
     defaultValues: { domains: [{ value: "" }], metadata: "" },
   })
 
@@ -77,7 +79,7 @@ export function SamlForm({
       }
     },
     onSuccess: () => {
-      toast.success("Provider connected")
+      toast.success(t("components.settings.sso.saml_form.toasts.connected"))
       onCreated()
     },
     onError: (error) => {
@@ -95,14 +97,18 @@ export function SamlForm({
     >
       <FieldGroup>
         <Field>
-          <FieldLabel>ACS URL</FieldLabel>
+          <FieldLabel>
+            {t("components.settings.sso.saml_form.acs_url")}
+          </FieldLabel>
           <div className="flex gap-2">
             <Input readOnly value={acsUrl} />
             <CopyButton value={acsUrl} />
           </div>
         </Field>
         <Field>
-          <FieldLabel>Entity ID</FieldLabel>
+          <FieldLabel>
+            {t("components.settings.sso.saml_form.entity_id")}
+          </FieldLabel>
           <div className="flex gap-2">
             <Input readOnly value={entityId} />
             <CopyButton value={entityId} />
@@ -115,7 +121,7 @@ export function SamlForm({
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>
-                Identity provider metadata
+                {t("components.settings.sso.saml_form.metadata.label")}
               </FieldLabel>
               <Textarea
                 {...field}
@@ -129,7 +135,11 @@ export function SamlForm({
           )}
         />
         <Button type="submit" disabled={disabled}>
-          {registerMutation.isPending ? <Spinner /> : "Connect provider"}
+          {registerMutation.isPending ? (
+            <Spinner />
+          ) : (
+            t("components.settings.sso.saml_form.submit")
+          )}
         </Button>
       </FieldGroup>
     </form>

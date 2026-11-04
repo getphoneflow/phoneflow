@@ -15,44 +15,45 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar"
+import { useTranslation } from "@/lib/i18n"
 
 const nav = {
   top: [
     {
-      title: "Build",
+      title: "components.sidebar.nav_main.sections.build",
       items: [
         {
-          title: "Agents",
+          title: "components.sidebar.nav_main.items.agents",
           url: "/agents",
           icon: <WorkflowIcon />,
         },
       ],
     },
     {
-      title: "Deploy",
+      title: "components.sidebar.nav_main.sections.deploy",
       items: [
         {
-          title: "Phone numbers",
+          title: "components.sidebar.nav_main.items.phone_numbers",
           url: "/phone-numbers",
           icon: <PhoneIcon />,
         },
         {
-          title: "Batch calls",
+          title: "components.sidebar.nav_main.items.batch_calls",
           url: "/batch-calls",
           icon: <PhoneOutgoingIcon />,
         },
       ],
     },
     {
-      title: "Monitor",
+      title: "components.sidebar.nav_main.sections.monitor",
       items: [
         {
-          title: "Calls",
+          title: "components.sidebar.nav_main.items.calls",
           url: "/calls",
           icon: <HistoryIcon />,
         },
         {
-          title: "Contacts",
+          title: "components.sidebar.nav_main.items.contacts",
           url: "/contacts",
           icon: <UsersIcon />,
         },
@@ -61,10 +62,10 @@ const nav = {
   ],
   bottom: [
     {
-      title: "Platform",
+      title: "components.sidebar.nav_main.sections.platform",
       items: [
         {
-          title: "Settings",
+          title: "components.sidebar.nav_main.items.settings",
           url: "/settings",
           icon: <SettingsIcon />,
         },
@@ -74,6 +75,7 @@ const nav = {
 }
 
 export function NavMain() {
+  const { t } = useTranslation()
   const matchRoute = useMatchRoute()
 
   return (
@@ -82,19 +84,19 @@ export function NavMain() {
         <div key={index} className={index ? "mt-auto" : undefined}>
           {sections.map((section) => (
             <SidebarGroup key={section.title}>
-              <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
+              <SidebarGroupLabel>{t(section.title)}</SidebarGroupLabel>
               <SidebarMenu>
                 {section.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
-                      tooltip={item.title}
+                      tooltip={t(item.title)}
                       isActive={
                         !!matchRoute({ to: item.url, fuzzy: item.url !== "/" })
                       }
                       render={<Link to={item.url} />}
                     >
                       {item.icon}
-                      <span>{item.title}</span>
+                      <span>{t(item.title)}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

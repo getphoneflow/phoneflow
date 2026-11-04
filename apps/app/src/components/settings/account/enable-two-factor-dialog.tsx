@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
@@ -34,9 +33,16 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { BackupCodesList } from "@/components/settings/account/backup-codes-list"
 import { twoFactor } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const passwordSchema = z.object({
-  password: z.string().min(1, "Password is required"),
+  password: z
+    .string()
+    .min(
+      1,
+      "components.settings.account.enable_two_factor_dialog.password.required"
+    ),
 })
 
 type PasswordValues = z.infer<typeof passwordSchema>
@@ -44,6 +50,7 @@ type PasswordValues = z.infer<typeof passwordSchema>
 type EnableStep = "password" | "setup" | "backup-codes"
 
 export function EnableTwoFactorDialog() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState<EnableStep>("password")
@@ -52,7 +59,7 @@ export function EnableTwoFactorDialog() {
   const [verifyCode, setVerifyCode] = useState("")
 
   const passwordForm = useForm<PasswordValues>({
-    resolver: zodResolver(passwordSchema),
+    resolver: zodResolverI18n(passwordSchema),
     defaultValues: { password: "" },
   })
 
@@ -84,8 +91,12 @@ export function EnableTwoFactorDialog() {
       if (result.error) {
         throw new Error(result.error.message)
       }
-      if (!result.data) {
-        throw new Error("Failed to enable two-factor authentication")
+      if (!result.data || !("totpURI" in result.data)) {
+        throw new Error(
+          t(
+            "components.settings.account.enable_two_factor_dialog.errors.enable_failed"
+          )
+        )
       }
       return result.data
     },
@@ -107,7 +118,9 @@ export function EnableTwoFactorDialog() {
       }
     },
     onSuccess: () => {
-      toast.success("Two-factor authentication enabled")
+      toast.success(
+        t("components.settings.account.enable_two_factor_dialog.toasts.enabled")
+      )
       setStep("backup-codes")
     },
     onError: (error) => {
@@ -123,7 +136,7 @@ export function EnableTwoFactorDialog() {
       <DialogTrigger
         render={
           <Button type="button" variant="outline">
-            Enable
+            {t("components.settings.account.enable_two_factor_dialog.trigger")}
           </Button>
         }
       />
@@ -132,9 +145,15 @@ export function EnableTwoFactorDialog() {
         {step === "password" ? (
           <>
             <DialogHeader>
-              <DialogTitle>Enable two-factor authentication</DialogTitle>
+              <DialogTitle>
+                {t(
+                  "components.settings.account.enable_two_factor_dialog.title"
+                )}
+              </DialogTitle>
               <DialogDescription>
-                Enter your password to continue
+                {t(
+                  "components.settings.account.enable_two_factor_dialog.password_description"
+                )}
               </DialogDescription>
             </DialogHeader>
 
@@ -150,7 +169,11 @@ export function EnableTwoFactorDialog() {
                   control={passwordForm.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>
+                        {t(
+                          "components.settings.account.enable_two_factor_dialog.password.label"
+                        )}
+                      </FieldLabel>
                       <PasswordInput
                         {...field}
                         id={field.name}
@@ -168,14 +191,14 @@ export function EnableTwoFactorDialog() {
               <DialogFooter className="mt-8">
                 <DialogClose>
                   <Button variant="outline" disabled={isPending}>
-                    Cancel
+                    {t("common.actions.cancel")}
                   </Button>
                 </DialogClose>
                 <Button type="submit" disabled={isPending}>
                   {enableMutation.isPending ? (
                     <Spinner className="mx-8" />
                   ) : (
-                    "Continue"
+                    t("common.actions.continue")
                   )}
                 </Button>
               </DialogFooter>
@@ -186,9 +209,15 @@ export function EnableTwoFactorDialog() {
         {step === "setup" ? (
           <>
             <DialogHeader>
-              <DialogTitle>Enable two-factor authentication</DialogTitle>
+              <DialogTitle>
+                {t(
+                  "components.settings.account.enable_two_factor_dialog.title"
+                )}
+              </DialogTitle>
               <DialogDescription>
-                Scan the QR code with your preferred authenticator app
+                {t(
+                  "components.settings.account.enable_two_factor_dialog.setup_description"
+                )}
               </DialogDescription>
             </DialogHeader>
 
@@ -201,8 +230,9 @@ export function EnableTwoFactorDialog() {
 
               <Field>
                 <FieldDescription>
-                  Enter the code from your authenticator app to finish enabling
-                  two-factor authentication
+                  {t(
+                    "components.settings.account.enable_two_factor_dialog.code_description"
+                  )}
                 </FieldDescription>
                 <InputOTP
                   maxLength={6}
@@ -231,7 +261,7 @@ export function EnableTwoFactorDialog() {
               <DialogFooter className="mt-6">
                 <DialogClose>
                   <Button variant="outline" disabled={isPending}>
-                    Cancel
+                    {t("common.actions.cancel")}
                   </Button>
                 </DialogClose>
                 <Button
@@ -242,7 +272,9 @@ export function EnableTwoFactorDialog() {
                   {verifyMutation.isPending ? (
                     <Spinner className="mx-7" />
                   ) : (
-                    "Enable"
+                    t(
+                      "components.settings.account.enable_two_factor_dialog.submit"
+                    )
                   )}
                 </Button>
               </DialogFooter>
@@ -253,10 +285,15 @@ export function EnableTwoFactorDialog() {
         {step === "backup-codes" ? (
           <>
             <DialogHeader>
-              <DialogTitle>Save your backup codes</DialogTitle>
+              <DialogTitle>
+                {t(
+                  "components.settings.account.enable_two_factor_dialog.backup_codes.title"
+                )}
+              </DialogTitle>
               <DialogDescription>
-                Save these backup codes in a secure place. Each code can be used
-                once if you lose access to your authenticator app
+                {t(
+                  "components.settings.account.enable_two_factor_dialog.backup_codes.description"
+                )}
               </DialogDescription>
             </DialogHeader>
 
@@ -264,7 +301,9 @@ export function EnableTwoFactorDialog() {
               <BackupCodesList codes={backupCodes} />
               <DialogFooter>
                 <Button type="button" onClick={() => handleOpenChange(false)}>
-                  I saved my codes
+                  {t(
+                    "components.settings.account.enable_two_factor_dialog.backup_codes.confirm"
+                  )}
                 </Button>
               </DialogFooter>
             </FieldGroup>

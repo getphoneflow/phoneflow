@@ -16,15 +16,19 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
 
 export function DownloadCallsDialog() {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
   const downloadMutation = useMutation({
     mutationFn: () =>
       api.post<RequestCallDownloadResponse, never>("/calls/download", {}),
     onSuccess: () => {
-      toast.success("The calls will be sent to your email shortly")
+      toast.success(
+        t("components.calls.download_calls_dialog.toasts.requested")
+      )
       setOpen(false)
     },
     onError: (error) => {
@@ -36,7 +40,7 @@ export function DownloadCallsDialog() {
     <>
       <Button variant="outline" onClick={() => setOpen(true)}>
         <DownloadIcon />
-        Download
+        {t("common.actions.download")}
       </Button>
       <Dialog
         open={open}
@@ -47,16 +51,18 @@ export function DownloadCallsDialog() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Download calls</DialogTitle>
+            <DialogTitle>
+              {t("components.calls.download_calls_dialog.title")}
+            </DialogTitle>
             <DialogDescription>
-              You will receive an email with all calls
+              {t("components.calls.download_calls_dialog.description")}
             </DialogDescription>
           </DialogHeader>
 
           <DialogFooter className="mt-8">
             <DialogClose>
               <Button variant="outline" disabled={downloadMutation.isPending}>
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button
@@ -66,7 +72,7 @@ export function DownloadCallsDialog() {
               {downloadMutation.isPending ? (
                 <Spinner className="mx-8" />
               ) : (
-                "Send email"
+                t("components.calls.download_calls_dialog.submit")
               )}
             </Button>
           </DialogFooter>

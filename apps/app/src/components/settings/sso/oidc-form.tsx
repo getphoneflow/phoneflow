@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -16,12 +15,20 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { CopyButton } from "@/components/copy-button"
 import { authClient } from "@/lib/auth/client"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 import { DomainList, domainListSchema } from "./domain-list"
 
 const oidcSchema = z.object({
-  issuer: z.url("Enter the identity provider issuer URL"),
-  clientId: z.string().trim().min(1, "Client ID is required"),
-  clientSecret: z.string().trim().min(1, "Client secret is required"),
+  issuer: z.url("components.settings.sso.oidc_form.issuer.invalid"),
+  clientId: z
+    .string()
+    .trim()
+    .min(1, "components.settings.sso.oidc_form.client_id.required"),
+  clientSecret: z
+    .string()
+    .trim()
+    .min(1, "components.settings.sso.oidc_form.client_secret.required"),
   domains: domainListSchema,
 })
 
@@ -40,10 +47,11 @@ export function OidcForm({
   providerId,
   onCreated,
 }: OidcFormProps) {
+  const { t } = useTranslation()
   const redirectUrl = `${env.API_URL}/api/auth/sso/callback/${providerId}`
 
   const form = useForm<OidcValues>({
-    resolver: zodResolver(oidcSchema),
+    resolver: zodResolverI18n(oidcSchema),
     defaultValues: {
       issuer: "",
       clientId: "",
@@ -69,7 +77,7 @@ export function OidcForm({
       }
     },
     onSuccess: () => {
-      toast.success("Provider connected")
+      toast.success(t("components.settings.sso.oidc_form.toasts.connected"))
       onCreated()
     },
     onError: (error) => {
@@ -87,7 +95,9 @@ export function OidcForm({
     >
       <FieldGroup>
         <Field>
-          <FieldLabel>Redirect URL</FieldLabel>
+          <FieldLabel>
+            {t("components.settings.sso.oidc_form.redirect_url")}
+          </FieldLabel>
           <div className="flex gap-2">
             <Input readOnly value={redirectUrl} />
             <CopyButton value={redirectUrl} />
@@ -98,7 +108,9 @@ export function OidcForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Issuer</FieldLabel>
+              <FieldLabel htmlFor={field.name}>
+                {t("components.settings.sso.oidc_form.issuer.label")}
+              </FieldLabel>
               <Input
                 {...field}
                 id={field.name}
@@ -115,7 +127,9 @@ export function OidcForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Client ID</FieldLabel>
+              <FieldLabel htmlFor={field.name}>
+                {t("components.settings.sso.oidc_form.client_id.label")}
+              </FieldLabel>
               <Input
                 {...field}
                 id={field.name}
@@ -131,7 +145,9 @@ export function OidcForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Client secret</FieldLabel>
+              <FieldLabel htmlFor={field.name}>
+                {t("components.settings.sso.oidc_form.client_secret.label")}
+              </FieldLabel>
               <Input
                 {...field}
                 id={field.name}
@@ -146,7 +162,11 @@ export function OidcForm({
         />
         <DomainList control={form.control} disabled={disabled} />
         <Button type="submit" disabled={disabled}>
-          {registerMutation.isPending ? <Spinner /> : "Connect provider"}
+          {registerMutation.isPending ? (
+            <Spinner />
+          ) : (
+            t("components.settings.sso.oidc_form.submit")
+          )}
         </Button>
       </FieldGroup>
     </form>

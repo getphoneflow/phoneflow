@@ -3,6 +3,7 @@ import { Label, Pie, PieChart, Sector } from "recharts"
 import type { PieSectorShapeProps } from "recharts/types/polar/Pie"
 
 import type { CallListItem } from "@workspace/shared/api/calls/types"
+import { useTranslation } from "@/lib/i18n"
 
 export const segmentColor = {
   stt: "#22c55e",
@@ -35,35 +36,35 @@ type CallCostFields = Pick<
 const costItems = [
   {
     key: "stt",
-    label: "STT",
+    label: "components.calls.call_cost_breakdown.items.stt",
     modelKey: "sttModel",
     costKey: "sttCost",
     color: segmentColor.stt,
   },
   {
     key: "llm",
-    label: "LLM",
+    label: "components.calls.call_cost_breakdown.items.llm",
     modelKey: "llmModel",
     costKey: "llmCost",
     color: segmentColor.llm,
   },
   {
     key: "tts",
-    label: "TTS",
+    label: "components.calls.call_cost_breakdown.items.tts",
     modelKey: "ttsModel",
     costKey: "ttsCost",
     color: segmentColor.tts,
   },
   {
     key: "telephony",
-    label: "Telephony",
+    label: "components.calls.call_cost_breakdown.items.telephony",
     modelKey: null,
     costKey: "telephonyCost",
     color: segmentColor.telephony,
   },
   {
     key: "platform",
-    label: "Platform",
+    label: "components.calls.call_cost_breakdown.items.platform",
     modelKey: null,
     costKey: "platformCost",
     color: segmentColor.platform,
@@ -87,6 +88,7 @@ export function parseCallCost(value: string | null) {
   return parseCost(value)
 }
 
+/** `label` is a translation key: render it with `t(item.label)`. */
 export function getCallCostBreakdown(call: CallCostFields) {
   return costItems
     .map((item) => ({
@@ -100,6 +102,7 @@ export function getCallCostBreakdown(call: CallCostFields) {
 }
 
 export function CallCostBreakdown({ call }: { call: CallCostFields }) {
+  const { t } = useTranslation()
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const totalCost = parseCost(call.totalCost)
   const breakdown = getCallCostBreakdown(call)
@@ -107,7 +110,9 @@ export function CallCostBreakdown({ call }: { call: CallCostFields }) {
   if (totalCost === null || breakdown.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <p className="text-muted-foreground">No cost data available</p>
+        <p className="text-muted-foreground">
+          {t("components.calls.call_cost_breakdown.empty")}
+        </p>
       </div>
     )
   }
@@ -175,7 +180,9 @@ export function CallCostBreakdown({ call }: { call: CallCostFields }) {
                       y={(viewBox.cy || 0) + 18}
                       className="fill-muted-foreground text-xs"
                     >
-                      {activeItem?.label ?? "Total"}
+                      {activeItem
+                        ? t(activeItem.label)
+                        : t("components.calls.call_cost_breakdown.total")}
                     </tspan>
                   </text>
                 )
@@ -197,7 +204,7 @@ export function CallCostBreakdown({ call }: { call: CallCostFields }) {
               style={{ backgroundColor: item.color }}
             />
             <div className="flex-1 self-center">
-              <div className="text-sm">{item.label}</div>
+              <div className="text-sm">{t(item.label)}</div>
               {item.model ? (
                 <div className="truncate text-xs text-muted-foreground">
                   {item.model}
@@ -215,7 +222,9 @@ export function CallCostBreakdown({ call }: { call: CallCostFields }) {
           </div>
         ))}
         <div className="flex items-center justify-between gap-2 pl-3 py-2">
-          <span className="text-sm font-medium">Total</span>
+          <span className="text-sm font-medium">
+            {t("components.calls.call_cost_breakdown.total")}
+          </span>
           <span className="text-sm font-medium tabular-nums">
             {formatCallCost(totalCost)}
           </span>

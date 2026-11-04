@@ -27,6 +27,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { VoiceAgentTranscript } from "@/components/voice-agent-transcript"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
 
 type LiveCallMonitorProps = {
   callId: string
@@ -39,6 +40,7 @@ export function LiveCallMonitor({
   livekitRoomName,
   onEnded,
 }: LiveCallMonitorProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [audioEnabled, setAudioEnabled] = useState(false)
   const [endDialogOpen, setEndDialogOpen] = useState(false)
@@ -81,7 +83,7 @@ export function LiveCallMonitor({
     onSuccess: async () => {
       setEndDialogOpen(false)
       await session.end()
-      toast.success("Call ended")
+      toast.success(t("components.calls.live_call_monitor.toasts.ended"))
       queryClient.invalidateQueries({ queryKey: ["calls"] })
       onEnded()
     },
@@ -103,7 +105,9 @@ export function LiveCallMonitor({
         ) : (
           <div className="flex flex-1 items-center justify-center">
             <p className="text-sm text-muted-foreground">
-              {isConnecting ? "Joining call..." : "Disconnected"}
+              {isConnecting
+                ? t("components.calls.live_call_monitor.joining")
+                : t("components.calls.live_call_monitor.disconnected")}
             </p>
           </div>
         )}
@@ -115,7 +119,9 @@ export function LiveCallMonitor({
             onClick={() => setAudioEnabled((enabled) => !enabled)}
           >
             {audioEnabled ? <VolumeXIcon /> : <Volume2Icon />}
-            {audioEnabled ? "Stop listening" : "Listen"}
+            {audioEnabled
+              ? t("components.calls.live_call_monitor.stop_listening")
+              : t("components.calls.live_call_monitor.listen")}
           </Button>
           <Button
             variant="destructive"
@@ -123,7 +129,7 @@ export function LiveCallMonitor({
             onClick={() => setEndDialogOpen(true)}
           >
             <PhoneOffIcon />
-            End call
+            {t("components.calls.live_call_monitor.end_call")}
           </Button>
         </div>
       </div>
@@ -139,14 +145,16 @@ export function LiveCallMonitor({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>End call</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("components.calls.live_call_monitor.end_dialog.title")}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This will disconnect everyone and end the live call
+              {t("components.calls.live_call_monitor.end_dialog.description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={endCallMutation.isPending}>
-              Cancel
+              {t("common.actions.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
@@ -156,7 +164,7 @@ export function LiveCallMonitor({
               {endCallMutation.isPending ? (
                 <Spinner className="mx-4" />
               ) : (
-                "End call"
+                t("components.calls.live_call_monitor.end_dialog.confirm")
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

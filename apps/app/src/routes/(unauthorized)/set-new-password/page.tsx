@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import {
   createFileRoute,
@@ -28,35 +27,40 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { PhoneflowIcon } from "@/components/logos/phoneflow"
 import { resetPassword } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export const Route = createFileRoute("/(unauthorized)/set-new-password/")({
   component: Page,
 })
 
+const setNewPasswordFormSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, "routes.set_new_password.password.min_length")
+      .regex(/[A-Z]/, "routes.set_new_password.password.uppercase")
+      .regex(/[a-z]/, "routes.set_new_password.password.lowercase")
+      .regex(/[0-9]/, "routes.set_new_password.password.number"),
+    confirmPassword: z
+      .string()
+      .min(1, "routes.set_new_password.confirm_password.required"),
+  })
+  .refine((values) => values.password === values.confirmPassword, {
+    message: "routes.set_new_password.confirm_password.mismatch",
+    path: ["confirmPassword"],
+  })
+
+type SetNewPasswordFormValues = z.infer<typeof setNewPasswordFormSchema>
+
 function Page() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
   const token = new URLSearchParams(location.searchStr).get("token")
 
-  const setNewPasswordFormSchema = z
-    .object({
-      password: z
-        .string()
-        .min(8, "Password must be at least 8 characters")
-        .regex(/[A-Z]/, "Password must include at least one uppercase letter")
-        .regex(/[a-z]/, "Password must include at least one lowercase letter")
-        .regex(/[0-9]/, "Password must include at least one number"),
-      confirmPassword: z.string().min(1, "Please confirm your password"),
-    })
-    .refine((values) => values.password === values.confirmPassword, {
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
-    })
-
-  type SetNewPasswordFormValues = z.infer<typeof setNewPasswordFormSchema>
-
   const form = useForm<SetNewPasswordFormValues>({
-    resolver: zodResolver(setNewPasswordFormSchema),
+    resolver: zodResolverI18n(setNewPasswordFormSchema),
     defaultValues: {
       password: "",
       confirmPassword: "",
@@ -66,7 +70,7 @@ function Page() {
   const setNewPasswordMutation = useMutation({
     mutationFn: async (values: SetNewPasswordFormValues) => {
       if (!token) {
-        throw new Error("Invalid or missing reset token")
+        throw new Error(t("routes.set_new_password.invalid_token"))
       }
 
       const result = await resetPassword({
@@ -79,7 +83,7 @@ function Page() {
       }
     },
     onSuccess: () => {
-      toast.success("New password set")
+      toast.success(t("routes.set_new_password.toasts.success"))
       navigate({ to: "/signin" })
     },
     onError: (error) => {
@@ -93,7 +97,7 @@ function Page() {
 
   return (
     <>
-      <title>Set new password - Phoneflow</title>
+      <title>{t("routes.set_new_password.page_title")}</title>
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 py-8">
         <div className="flex items-center gap-2">
           <PhoneflowIcon className="size-6" />
@@ -101,8 +105,12 @@ function Page() {
         </div>
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Set new password</CardTitle>
-            <CardDescription>Enter your new password below</CardDescription>
+            <CardTitle className="text-xl">
+              {t("routes.set_new_password.title")}
+            </CardTitle>
+            <CardDescription>
+              {t("routes.set_new_password.description")}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form
@@ -117,7 +125,9 @@ function Page() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor={field.name}>New Password</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("routes.set_new_password.password.label")}
+                      </FieldLabel>
                       <PasswordInput
                         {...field}
                         id={field.name}
@@ -138,7 +148,7 @@ function Page() {
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel htmlFor={field.name}>
-                        Confirm Password
+                        {t("routes.set_new_password.confirm_password.label")}
                       </FieldLabel>
                       <PasswordInput
                         {...field}
@@ -161,16 +171,16 @@ function Page() {
                   {setNewPasswordMutation.isPending ? (
                     <Spinner className="mx-12" />
                   ) : (
-                    "Set new password"
+                    t("routes.set_new_password.submit")
                   )}
                 </Button>
 
                 <div className="text-center text-sm">
                   <span className="text-muted-foreground">
-                    Already remember it?{" "}
+                    {t("routes.set_new_password.remember_password")}{" "}
                   </span>
                   <Link to="/signin" className="underline">
-                    Sign in
+                    {t("routes.set_new_password.sign_in_link")}
                   </Link>
                 </div>
               </FieldGroup>

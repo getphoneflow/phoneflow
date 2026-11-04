@@ -15,8 +15,10 @@ import {
   createInputVariable,
   type VariableSuggestion,
   type VariableSuggestionGroup,
+  variableGroupLabelKeys,
   variableSuggestions,
 } from "@/components/flow/variables/suggestions"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 export function VariableSelect({
@@ -28,6 +30,7 @@ export function VariableSelect({
   onChange: (key: string) => void
   readOnly?: boolean
 }) {
+  const { t } = useTranslation()
   const config = useAgentStore((state) => state.config)
   const [query, setQuery] = useState("")
   const suggestions = variableSuggestions(
@@ -41,7 +44,9 @@ export function VariableSelect({
       items: [
         {
           key: suggestions.createKey,
-          label: `Create ${suggestions.createKey}`,
+          label: t("components.flow.variables.variable_select.create", {
+            key: suggestions.createKey,
+          }),
           create: true,
         },
       ],
@@ -74,12 +79,18 @@ export function VariableSelect({
     >
       <ComboboxInput placeholder="variable_name" className="w-full" />
       <ComboboxContent>
-        <ComboboxEmpty>No variables</ComboboxEmpty>
+        <ComboboxEmpty>
+          {t("components.flow.variables.variable_select.empty")}
+        </ComboboxEmpty>
         <ComboboxList>
           {(group: VariableSuggestionGroup) => (
             <ComboboxGroup key={group.label || "create"} items={group.items}>
               {group.label ? (
-                <ComboboxLabel>{group.label}</ComboboxLabel>
+                <ComboboxLabel>
+                  {variableGroupLabelKeys[group.label]
+                    ? t(variableGroupLabelKeys[group.label])
+                    : group.label}
+                </ComboboxLabel>
               ) : null}
               <ComboboxCollection>
                 {(item: VariableSuggestion) => (

@@ -32,12 +32,14 @@ import {
   type OrganizationMember,
 } from "@/lib/auth/organization"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 
 type MemberRowActionsProps = {
   member: OrganizationMember
 }
 
 export function MemberRowActions({ member }: MemberRowActionsProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [removeOpen, setRemoveOpen] = useState(false)
@@ -58,7 +60,11 @@ export function MemberRowActions({ member }: MemberRowActionsProps) {
       }
     },
     onSuccess: () => {
-      toast.success(`${member.user.name} removed`)
+      toast.success(
+        t("components.settings.members.member_row_actions.toasts.removed", {
+          name: member.user.name,
+        })
+      )
       setRemoveOpen(false)
       queryClient.invalidateQueries({ queryKey: ["organization-members"] })
     },
@@ -77,7 +83,9 @@ export function MemberRowActions({ member }: MemberRowActionsProps) {
       }
     },
     onSuccess: async () => {
-      toast.success("You left the organization")
+      toast.success(
+        t("components.settings.members.member_row_actions.toasts.left")
+      )
       setLeaveOpen(false)
       await queryClient.refetchQueries()
       navigate({ to: "/select-organization" })
@@ -92,14 +100,21 @@ export function MemberRowActions({ member }: MemberRowActionsProps) {
       <AlertDialog open={removeOpen} onOpenChange={setRemoveOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove member</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t(
+                "components.settings.members.member_row_actions.remove_dialog.title"
+              )}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove {member.user.name} from this organization
+              {t(
+                "components.settings.members.member_row_actions.remove_dialog.description",
+                { name: member.user.name }
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={removeMemberMutation.isPending}>
-              Cancel
+              {t("common.actions.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
@@ -112,7 +127,9 @@ export function MemberRowActions({ member }: MemberRowActionsProps) {
               {removeMemberMutation.isPending ? (
                 <Spinner className="mx-3 size-4" />
               ) : (
-                "Remove"
+                t(
+                  "components.settings.members.member_row_actions.remove_dialog.confirm"
+                )
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -122,14 +139,20 @@ export function MemberRowActions({ member }: MemberRowActionsProps) {
       <AlertDialog open={leaveOpen} onOpenChange={setLeaveOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Leave organization</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t(
+                "components.settings.members.member_row_actions.leave_dialog.title"
+              )}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              You will lose access to this organization
+              {t(
+                "components.settings.members.member_row_actions.leave_dialog.description"
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={leaveOrganizationMutation.isPending}>
-              Cancel
+              {t("common.actions.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
@@ -142,7 +165,9 @@ export function MemberRowActions({ member }: MemberRowActionsProps) {
               {leaveOrganizationMutation.isPending ? (
                 <Spinner className="mx-3 size-4" />
               ) : (
-                "Leave"
+                t(
+                  "components.settings.members.member_row_actions.leave_dialog.confirm"
+                )
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -154,12 +179,17 @@ export function MemberRowActions({ member }: MemberRowActionsProps) {
           <Button
             variant="ghost"
             size="icon-sm"
-            aria-label={`Open actions for ${member.user.name}`}
+            aria-label={t(
+              "components.settings.members.member_row_actions.open_actions",
+              {
+                name: member.user.name,
+              }
+            )}
           >
             <MoreHorizontalIcon />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" sideOffset={4}>
+        <DropdownMenuContent className="w-48" align="end" sideOffset={4}>
           {!isCurrentUser && (
             <DropdownMenuItem
               variant="destructive"
@@ -167,7 +197,7 @@ export function MemberRowActions({ member }: MemberRowActionsProps) {
               onClick={() => setRemoveOpen(true)}
             >
               <Trash2Icon />
-              Remove member
+              {t("components.settings.members.member_row_actions.remove")}
             </DropdownMenuItem>
           )}
 
@@ -178,7 +208,7 @@ export function MemberRowActions({ member }: MemberRowActionsProps) {
               onClick={() => setLeaveOpen(true)}
             >
               <LogOutIcon />
-              Leave organization
+              {t("components.settings.members.member_row_actions.leave")}
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

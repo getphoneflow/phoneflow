@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { Plus, Trash2 } from "lucide-react"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 
@@ -30,6 +29,8 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select"
 import { VariableTextField } from "@/components/flow/variables/variable-text-field"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const methods: WebhookTool["method"][] = [
   "GET",
@@ -43,9 +44,21 @@ const parameterTypes: {
   value: WebhookTool["parameters"][number]["type"]
   label: string
 }[] = [
-  { value: "string", label: "Text" },
-  { value: "number", label: "Number" },
-  { value: "boolean", label: "Boolean" },
+  {
+    value: "string",
+    label:
+      "components.flow.sidepanel.tools.webhook_dialog.parameters.types.string",
+  },
+  {
+    value: "number",
+    label:
+      "components.flow.sidepanel.tools.webhook_dialog.parameters.types.number",
+  },
+  {
+    value: "boolean",
+    label:
+      "components.flow.sidepanel.tools.webhook_dialog.parameters.types.boolean",
+  },
 ]
 
 const bodyMethods = new Set<WebhookTool["method"]>(["POST", "PUT", "PATCH"])
@@ -81,8 +94,9 @@ export function WebhookToolDialog({
   onOpenChange: (open: boolean) => void
   onSave: (tool: WebhookTool) => void
 }) {
+  const { t } = useTranslation()
   const form = useForm<WebhookTool>({
-    resolver: zodResolver(webhookToolSchema),
+    resolver: zodResolverI18n(webhookToolSchema),
     defaultValues: tool,
     values: tool,
   })
@@ -103,9 +117,11 @@ export function WebhookToolDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="flex max-h-[calc(100vh-4rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-xl">
         <DialogHeader className="px-6 pt-6 pr-14 pb-4">
-          <DialogTitle>Webhook</DialogTitle>
+          <DialogTitle>
+            {t("components.flow.sidepanel.tools.webhook_dialog.title")}
+          </DialogTitle>
           <DialogDescription>
-            Call any external API during the conversation
+            {t("components.flow.sidepanel.tools.webhook_dialog.description")}
           </DialogDescription>
         </DialogHeader>
         <form
@@ -120,10 +136,16 @@ export function WebhookToolDialog({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Name</FieldLabel>
+                    <FieldLabel>
+                      {t(
+                        "components.flow.sidepanel.tools.webhook_dialog.name.label"
+                      )}
+                    </FieldLabel>
                     <Input
                       {...field}
-                      placeholder="tool_name"
+                      placeholder={t(
+                        "components.flow.sidepanel.tools.webhook_dialog.name.placeholder"
+                      )}
                       readOnly={readOnly}
                       aria-invalid={fieldState.invalid}
                     />
@@ -138,14 +160,20 @@ export function WebhookToolDialog({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Description</FieldLabel>
+                    <FieldLabel>
+                      {t(
+                        "components.flow.sidepanel.tools.webhook_dialog.tool_description.label"
+                      )}
+                    </FieldLabel>
                     <VariableTextField
                       name={field.name}
                       value={field.value}
                       onBlur={field.onBlur}
                       multiline
                       rows={3}
-                      placeholder="Describe what this tool does"
+                      placeholder={t(
+                        "components.flow.sidepanel.tools.webhook_dialog.tool_description.placeholder"
+                      )}
                       readOnly={readOnly}
                       aria-invalid={fieldState.invalid}
                       onChange={field.onChange}
@@ -163,7 +191,11 @@ export function WebhookToolDialog({
                   control={form.control}
                   render={({ field }) => (
                     <Field className="w-32">
-                      <FieldLabel>Method</FieldLabel>
+                      <FieldLabel>
+                        {t(
+                          "components.flow.sidepanel.tools.webhook_dialog.method.label"
+                        )}
+                      </FieldLabel>
                       <Select
                         value={field.value}
                         readOnly={readOnly}
@@ -198,7 +230,11 @@ export function WebhookToolDialog({
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel>URL</FieldLabel>
+                      <FieldLabel>
+                        {t(
+                          "components.flow.sidepanel.tools.webhook_dialog.url.label"
+                        )}
+                      </FieldLabel>
                       <VariableTextField
                         name={field.name}
                         value={field.value}
@@ -222,7 +258,11 @@ export function WebhookToolDialog({
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel>Timeout (s)</FieldLabel>
+                      <FieldLabel>
+                        {t(
+                          "components.flow.sidepanel.tools.webhook_dialog.timeout.label"
+                        )}
+                      </FieldLabel>
                       <Input
                         type="number"
                         min={1}
@@ -250,7 +290,11 @@ export function WebhookToolDialog({
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel>Max retries</FieldLabel>
+                      <FieldLabel>
+                        {t(
+                          "components.flow.sidepanel.tools.webhook_dialog.max_retries.label"
+                        )}
+                      </FieldLabel>
                       <Input
                         type="number"
                         min={0}
@@ -275,18 +319,36 @@ export function WebhookToolDialog({
               <KeyValueFields
                 control={form.control}
                 name="headers"
-                label="Headers"
-                keyPlaceholder="Key, e.g. Authorization"
-                valuePlaceholder="Value, e.g. Bearer {{api_key}}"
+                label={t(
+                  "components.flow.sidepanel.tools.webhook_dialog.headers.label"
+                )}
+                keyPlaceholder={t(
+                  "components.flow.sidepanel.tools.webhook_dialog.headers.key_placeholder"
+                )}
+                valuePlaceholder={t(
+                  "components.flow.sidepanel.tools.webhook_dialog.headers.value_placeholder",
+                  {
+                    api_key: "{{api_key}}",
+                  }
+                )}
                 readOnly={readOnly}
                 extraKeys={parameterNames}
               />
               <KeyValueFields
                 control={form.control}
                 name="queryParameters"
-                label="Query parameters"
-                keyPlaceholder="Key, e.g. user_id"
-                valuePlaceholder="Value, e.g. {{user_id}}"
+                label={t(
+                  "components.flow.sidepanel.tools.webhook_dialog.query_parameters.label"
+                )}
+                keyPlaceholder={t(
+                  "components.flow.sidepanel.tools.webhook_dialog.query_parameters.key_placeholder"
+                )}
+                valuePlaceholder={t(
+                  "components.flow.sidepanel.tools.webhook_dialog.query_parameters.value_placeholder",
+                  {
+                    user_id: "{{user_id}}",
+                  }
+                )}
                 readOnly={readOnly}
                 extraKeys={parameterNames}
               />
@@ -296,7 +358,11 @@ export function WebhookToolDialog({
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel>Request body</FieldLabel>
+                      <FieldLabel>
+                        {t(
+                          "components.flow.sidepanel.tools.webhook_dialog.body.label"
+                        )}
+                      </FieldLabel>
                       <VariableTextField
                         name={field.name}
                         value={field.value}
@@ -329,10 +395,10 @@ export function WebhookToolDialog({
               variant="outline"
               onClick={() => handleOpenChange(false)}
             >
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
             <Button type="submit" disabled={readOnly}>
-              Save
+              {t("common.actions.save")}
             </Button>
           </DialogFooter>
         </form>
@@ -358,6 +424,7 @@ function KeyValueFields({
   readOnly: boolean
   extraKeys: string[]
 }) {
+  const { t } = useTranslation()
   const { fields, append, remove } = useFieldArray({ control, name })
 
   return (
@@ -427,7 +494,7 @@ function KeyValueFields({
         onClick={() => append({ key: "", value: "" })}
       >
         <Plus />
-        Add
+        {t("common.actions.add")}
       </Button>
     </Field>
   )
@@ -440,6 +507,7 @@ function ParameterFields({
   control: ReturnType<typeof useForm<WebhookTool>>["control"]
   readOnly: boolean
 }) {
+  const { t } = useTranslation()
   const { fields, append, remove } = useFieldArray({
     control,
     name: "parameters",
@@ -447,10 +515,14 @@ function ParameterFields({
 
   return (
     <Field>
-      <FieldLabel>Parameters</FieldLabel>
+      <FieldLabel>
+        {t("components.flow.sidepanel.tools.webhook_dialog.parameters.label")}
+      </FieldLabel>
       <FieldDescription className="nth-last-2:mt-0! text-wrap!">
-        Values the agent provides when calling this tool. Use {"{{user_id}}"} in
-        the URL, headers, query parameters, or body
+        {t(
+          "components.flow.sidepanel.tools.webhook_dialog.parameters.description",
+          { user_id: "{{user_id}}" }
+        )}
       </FieldDescription>
       {fields.map((row, index) => (
         <div
@@ -465,7 +537,9 @@ function ParameterFields({
                 <div className="flex flex-1 flex-col gap-1">
                   <Input
                     {...field}
-                    placeholder="Parameter name, e.g. user_id"
+                    placeholder={t(
+                      "components.flow.sidepanel.tools.webhook_dialog.parameters.name_placeholder"
+                    )}
                     readOnly={readOnly}
                     aria-invalid={fieldState.invalid}
                   />
@@ -494,17 +568,17 @@ function ParameterFields({
                 >
                   <SelectTrigger className="w-28">
                     <SelectValue>
-                      {
+                      {t(
                         parameterTypes.find(
                           (entry) => entry.value === field.value
-                        )?.label
-                      }
+                        )?.label ?? parameterTypes[0].label
+                      )}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {parameterTypes.map(({ value, label }) => (
                       <SelectItem key={value} value={value}>
-                        {label}
+                        {t(label)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -532,7 +606,12 @@ function ParameterFields({
                 onBlur={field.onBlur}
                 multiline
                 rows={2}
-                placeholder="Description (optional), e.g. The id of {{user_name}}"
+                placeholder={t(
+                  "components.flow.sidepanel.tools.webhook_dialog.parameters.description_placeholder",
+                  {
+                    user_name: "{{user_name}}",
+                  }
+                )}
                 readOnly={readOnly}
                 onChange={field.onChange}
               />
@@ -550,7 +629,9 @@ function ParameterFields({
                   onCheckedChange={(checked) => field.onChange(checked)}
                 />
                 <FieldLabel htmlFor={`webhook-parameter-${index}-required`}>
-                  Required
+                  {t(
+                    "components.flow.sidepanel.tools.webhook_dialog.parameters.required"
+                  )}
                 </FieldLabel>
               </Field>
             )}
@@ -572,7 +653,7 @@ function ParameterFields({
         }
       >
         <Plus />
-        Add parameter
+        {t("components.flow.sidepanel.tools.webhook_dialog.parameters.add")}
       </Button>
     </Field>
   )
@@ -585,6 +666,7 @@ function ResponseVariableFields({
   control: ReturnType<typeof useForm<WebhookTool>>["control"]
   readOnly: boolean
 }) {
+  const { t } = useTranslation()
   const { fields, append, remove } = useFieldArray({
     control,
     name: "responseVariables",
@@ -592,9 +674,15 @@ function ResponseVariableFields({
 
   return (
     <Field>
-      <FieldLabel>Store in variables</FieldLabel>
+      <FieldLabel>
+        {t(
+          "components.flow.sidepanel.tools.webhook_dialog.response_variables.label"
+        )}
+      </FieldLabel>
       <FieldDescription>
-        Extract values from the response and store them in variables
+        {t(
+          "components.flow.sidepanel.tools.webhook_dialog.response_variables.description"
+        )}
       </FieldDescription>
       {fields.map((row, index) => (
         <div key={row.id} className="flex gap-2">
@@ -605,7 +693,9 @@ function ResponseVariableFields({
               <div className="flex flex-1 flex-col gap-1">
                 <Input
                   {...field}
-                  placeholder="Variable name, e.g. user_name"
+                  placeholder={t(
+                    "components.flow.sidepanel.tools.webhook_dialog.response_variables.name_placeholder"
+                  )}
                   readOnly={readOnly}
                   aria-invalid={fieldState.invalid}
                 />
@@ -622,7 +712,9 @@ function ResponseVariableFields({
               <div className="flex flex-1 flex-col gap-1">
                 <Input
                   {...field}
-                  placeholder="Response path, e.g. user.name"
+                  placeholder={t(
+                    "components.flow.sidepanel.tools.webhook_dialog.response_variables.path_placeholder"
+                  )}
                   readOnly={readOnly}
                   aria-invalid={fieldState.invalid}
                 />
@@ -652,7 +744,9 @@ function ResponseVariableFields({
         onClick={() => append({ name: "", path: "" })}
       >
         <Plus />
-        Add variable
+        {t(
+          "components.flow.sidepanel.tools.webhook_dialog.response_variables.add"
+        )}
       </Button>
     </Field>
   )

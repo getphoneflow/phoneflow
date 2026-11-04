@@ -22,6 +22,7 @@ import {
 } from "@workspace/ui/components/sidebar"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
 
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/settings"
@@ -31,31 +32,31 @@ export const Route = createFileRoute(
 
 const settingsNavItems = [
   {
-    title: "Account",
+    title: "routes.settings.layout.nav.account",
     to: "/settings/account",
   },
   {
-    title: "Organization",
+    title: "routes.settings.layout.nav.organization",
     to: "/settings/organization",
   },
   ...(env.IS_CLOUD
     ? [
         {
-          title: "Billing",
+          title: "routes.settings.layout.nav.billing",
           to: "/settings/billing",
         },
       ]
     : []),
   {
-    title: "Members",
+    title: "routes.settings.layout.nav.members",
     to: "/settings/members",
   },
   {
-    title: "Roles",
+    title: "routes.settings.layout.nav.roles",
     to: "/settings/roles",
   },
   {
-    title: "Single sign-on",
+    title: "routes.settings.layout.nav.sso",
     to: "/settings/sso",
   },
 ]
@@ -70,6 +71,7 @@ function SettingsContentSkeleton() {
 }
 
 function SettingsPageHeader() {
+  const { t } = useTranslation()
   const matchRoute = useMatchRoute()
   const activeItem = settingsNavItems.find((item) =>
     Boolean(matchRoute({ to: item.to }))
@@ -84,12 +86,14 @@ function SettingsPageHeader() {
       />
       <Breadcrumb>
         <BreadcrumbList>
-          <BreadcrumbItem className="hidden md:block">Settings</BreadcrumbItem>
+          <BreadcrumbItem className="hidden md:block">
+            {t("routes.settings.layout.breadcrumb")}
+          </BreadcrumbItem>
           {activeItem ? (
             <>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>{activeItem.title}</BreadcrumbPage>
+                <BreadcrumbPage>{t(activeItem.title)}</BreadcrumbPage>
               </BreadcrumbItem>
             </>
           ) : null}
@@ -100,6 +104,7 @@ function SettingsPageHeader() {
 }
 
 function SettingsNav() {
+  const { t } = useTranslation()
   const matchRoute = useMatchRoute()
 
   return (
@@ -113,7 +118,7 @@ function SettingsNav() {
               isActive={isActive}
               render={<Link to={item.to} />}
             >
-              {item.title}
+              {t(item.title)}
             </SidebarMenuButton>
           </SidebarMenuItem>
         )

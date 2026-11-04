@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useState } from "react"
@@ -33,13 +32,15 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { PhoneflowIcon } from "@/components/logos/phoneflow"
 import { captureEvent } from "@/lib/analytics"
 import { twoFactor } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export const Route = createFileRoute("/(unauthorized)/two-factor/")({
   component: Page,
 })
 
 const backupCodeSchema = z.object({
-  code: z.string().trim().min(1, "Backup code is required"),
+  code: z.string().trim().min(1, "routes.two_factor.backup_code.required"),
 })
 
 type BackupCodeValues = z.infer<typeof backupCodeSchema>
@@ -47,6 +48,7 @@ type BackupCodeValues = z.infer<typeof backupCodeSchema>
 type VerificationMethod = "totp" | "backup-code"
 
 function Page() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { redirect: redirectTo } = Route.useSearch()
@@ -55,7 +57,7 @@ function Page() {
   const [trustDevice, setTrustDevice] = useState(false)
 
   const backupForm = useForm<BackupCodeValues>({
-    resolver: zodResolver(backupCodeSchema),
+    resolver: zodResolverI18n(backupCodeSchema),
     defaultValues: { code: "" },
   })
 
@@ -116,7 +118,7 @@ function Page() {
 
   return (
     <>
-      <title>Two-factor authentication - Phoneflow</title>
+      <title>{t("routes.two_factor.page_title")}</title>
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 py-8">
         <div className="flex items-center gap-2">
           <PhoneflowIcon className="size-6" />
@@ -124,11 +126,13 @@ function Page() {
         </div>
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Two-factor authentication</CardTitle>
+            <CardTitle className="text-xl">
+              {t("routes.two_factor.title")}
+            </CardTitle>
             <CardDescription>
               {method === "backup-code"
-                ? "Enter one of your backup codes"
-                : "Enter the code from your authenticator app"}
+                ? t("routes.two_factor.description_backup_code")
+                : t("routes.two_factor.description_totp")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -147,7 +151,7 @@ function Page() {
                       render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
                           <FieldLabel htmlFor={field.name}>
-                            Backup code
+                            {t("routes.two_factor.backup_code.label")}
                           </FieldLabel>
                           <Input
                             {...field}
@@ -164,7 +168,7 @@ function Page() {
                       )}
                     />
                     <Button type="submit" disabled={isPending}>
-                      {isPending ? <Spinner /> : "Verify"}
+                      {isPending ? <Spinner /> : t("routes.two_factor.verify")}
                     </Button>
                   </FieldGroup>
                 </form>
@@ -201,7 +205,7 @@ function Page() {
                   disabled={isPending}
                 />
                 <FieldLabel htmlFor="trust-device">
-                  Trust this device for 30 days
+                  {t("routes.two_factor.trust_device")}
                 </FieldLabel>
               </Field>
 
@@ -215,8 +219,8 @@ function Page() {
                   }
                 >
                   {method === "backup-code"
-                    ? "Use authenticator app"
-                    : "Use a backup code"}
+                    ? t("routes.two_factor.use_authenticator")
+                    : t("routes.two_factor.use_backup_code")}
                 </button>
               </FieldDescription>
             </FieldGroup>

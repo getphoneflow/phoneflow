@@ -21,6 +21,7 @@ import {
 } from "@/components/flow/sidepanel/config/fields"
 import { ModelSelect } from "@/components/flow/sidepanel/model-select"
 import { VoiceSelect } from "@/components/flow/sidepanel/voice-select"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 type TurnHandling = AgentConfig["turnHandling"]
@@ -35,6 +36,7 @@ function ttsValue<K extends keyof typeof TTS_DEFAULTS>(
 }
 
 export function VoiceTab() {
+  const { t } = useTranslation()
   const readOnly = useAgentStore((state) => state.readOnly)
   const config = useAgentStore((state) => state.config)
   const setConfig = useAgentStore((state) => state.setConfig)
@@ -64,7 +66,7 @@ export function VoiceTab() {
     <ConfigSection>
       <ModelSelect
         kind="tts"
-        label="Model"
+        label={t("components.flow.sidepanel.config.voice_tab.model.label")}
         modelId={tts.model}
         readOnly={readOnly}
         onModelChange={(model) => setConfig(withTtsModel(config, model))}
@@ -88,8 +90,10 @@ export function VoiceTab() {
 
       {fields?.has("speed") ? (
         <NumberField
-          label="Speed"
-          description="Speaking rate multiplier. 1 is normal pace"
+          label={t("components.flow.sidepanel.config.voice_tab.speed.label")}
+          description={t(
+            "components.flow.sidepanel.config.voice_tab.speed.description"
+          )}
           value={ttsValue(tts, "speed")}
           min={0.1}
           max={3}
@@ -101,14 +105,33 @@ export function VoiceTab() {
 
       {fields?.has("latencyMode") ? (
         <EnumField
-          label="Latency mode"
-          description="Normal is highest quality, low is fastest"
+          label={t(
+            "components.flow.sidepanel.config.voice_tab.latency_mode.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.voice_tab.latency_mode.description"
+          )}
           value={ttsValue(tts, "latencyMode")}
           readOnly={readOnly}
           options={[
-            { value: "normal", label: "Normal" },
-            { value: "balanced", label: "Balanced" },
-            { value: "low", label: "Low" },
+            {
+              value: "normal",
+              label: t(
+                "components.flow.sidepanel.config.voice_tab.latency_mode.options.normal"
+              ),
+            },
+            {
+              value: "balanced",
+              label: t(
+                "components.flow.sidepanel.config.voice_tab.latency_mode.options.balanced"
+              ),
+            },
+            {
+              value: "low",
+              label: t(
+                "components.flow.sidepanel.config.voice_tab.latency_mode.options.low"
+              ),
+            },
           ]}
           onChange={(latencyMode) => patchTts({ latencyMode })}
         />
@@ -137,7 +160,9 @@ export function VoiceTab() {
           />
         </div>
         <Field className="col-span-2">
-          <FieldLabel>Volume</FieldLabel>
+          <FieldLabel>
+            {t("components.flow.sidepanel.config.voice_tab.volume.label")}
+          </FieldLabel>
           <Input
             type="number"
             min={0}
@@ -161,8 +186,12 @@ export function VoiceTab() {
       </div>
 
       <SwitchField
-        label="Interruptions"
-        description="Stop the agent when the user starts speaking"
+        label={t(
+          "components.flow.sidepanel.config.voice_tab.interruptions.label"
+        )}
+        description={t(
+          "components.flow.sidepanel.config.voice_tab.interruptions.description"
+        )}
         checked={interruption.enabled}
         readOnly={readOnly}
         onCheckedChange={(enabled) =>
@@ -174,8 +203,12 @@ export function VoiceTab() {
         {interruption.enabled ? (
           <>
             <SwitchField
-              label="Discard uninterruptible audio"
-              description="Drop buffered audio while the agent is speaking and cannot be interrupted"
+              label={t(
+                "components.flow.sidepanel.config.voice_tab.discard_uninterruptible_audio.label"
+              )}
+              description={t(
+                "components.flow.sidepanel.config.voice_tab.discard_uninterruptible_audio.description"
+              )}
               checked={interruption.discardAudioIfUninterruptible}
               readOnly={readOnly}
               onCheckedChange={(discardAudioIfUninterruptible) =>
@@ -186,8 +219,12 @@ export function VoiceTab() {
               }
             />
             <NumberField
-              label="Min interruption duration (ms)"
-              description="How long the user must speak before the agent stops talking"
+              label={t(
+                "components.flow.sidepanel.config.voice_tab.min_interruption_duration.label"
+              )}
+              description={t(
+                "components.flow.sidepanel.config.voice_tab.min_interruption_duration.description"
+              )}
               value={interruption.minDuration}
               min={0}
               step={50}
@@ -197,8 +234,12 @@ export function VoiceTab() {
               }
             />
             <NumberField
-              label="Min interruption words"
-              description="How many words the user must say before the agent stops talking"
+              label={t(
+                "components.flow.sidepanel.config.voice_tab.min_interruption_words.label"
+              )}
+              description={t(
+                "components.flow.sidepanel.config.voice_tab.min_interruption_words.description"
+              )}
               value={interruption.minWords}
               min={0}
               step={1}
@@ -208,8 +249,12 @@ export function VoiceTab() {
               }
             />
             <NumberField
-              label="False interruption timeout (ms)"
-              description="How long to wait with no transcript before an interruption counts as false"
+              label={t(
+                "components.flow.sidepanel.config.voice_tab.false_interruption_timeout.label"
+              )}
+              description={t(
+                "components.flow.sidepanel.config.voice_tab.false_interruption_timeout.description"
+              )}
               value={interruption.falseInterruptionTimeout}
               min={0}
               step={50}
@@ -219,8 +264,12 @@ export function VoiceTab() {
               }
             />
             <SwitchField
-              label="Resume after false interruption"
-              description="Resume the agent's speech from where it left off after a false interruption"
+              label={t(
+                "components.flow.sidepanel.config.voice_tab.resume_after_false_interruption.label"
+              )}
+              description={t(
+                "components.flow.sidepanel.config.voice_tab.resume_after_false_interruption.description"
+              )}
               checked={interruption.resumeFalseInterruption}
               readOnly={readOnly}
               onCheckedChange={(resumeFalseInterruption) =>
@@ -232,8 +281,12 @@ export function VoiceTab() {
 
         {fields?.has("volume") ? (
           <NumberField
-            label="TTS volume"
-            description="Loudness adjustment in decibels. 0 leaves the voice unchanged"
+            label={t(
+              "components.flow.sidepanel.config.voice_tab.tts_volume.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.voice_tab.tts_volume.description"
+            )}
             value={ttsValue(tts, "volume")}
             step={0.1}
             readOnly={readOnly}
@@ -243,8 +296,12 @@ export function VoiceTab() {
 
         {fields?.has("emotion") ? (
           <MultilineListField
-            label="Emotion"
-            description="Emotional tone of the speech, one tag per line"
+            label={t(
+              "components.flow.sidepanel.config.voice_tab.emotion.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.voice_tab.emotion.description"
+            )}
             value={ttsValue(tts, "emotion")}
             readOnly={readOnly}
             placeholder="happiness:0.5"
@@ -254,8 +311,12 @@ export function VoiceTab() {
 
         {fields?.has("mipOptOut") ? (
           <SwitchField
-            label="MIP opt-out"
-            description="Opt out of using this audio to improve the provider's models"
+            label={t(
+              "components.flow.sidepanel.config.voice_tab.mip_opt_out.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.voice_tab.mip_opt_out.description"
+            )}
             checked={ttsValue(tts, "mipOptOut")}
             readOnly={readOnly}
             onCheckedChange={(mipOptOut) => patchTts({ mipOptOut })}

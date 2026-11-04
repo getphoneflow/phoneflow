@@ -1,0 +1,17 @@
+{
+  "name": "@workspace/i18n",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "biome lint .",
+    "format": "biome check --write --linter-enabled=false ."
+  },
+  "exports": {
+    "./*": "./src/*.ts",
+    "./locales/*/*.json": "./locales/*/*.json"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}

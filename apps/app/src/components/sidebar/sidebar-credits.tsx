@@ -4,6 +4,7 @@ import { Suspense } from "react"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { AddCreditsButton } from "@/components/billing/add-credits-button"
 import { billingCreditsQueryOptions, formatCredits } from "@/lib/billing"
+import { useTranslation } from "@/lib/i18n"
 
 function SidebarCreditsSkeleton() {
   return (
@@ -14,13 +15,14 @@ function SidebarCreditsSkeleton() {
 }
 
 function SidebarCreditsCard() {
+  const { t } = useTranslation()
   const { data: billing } = useSuspenseQuery(billingCreditsQueryOptions())
 
   return (
     <div className="overflow-hidden group-data-[collapsible=icon]:hidden">
       <div className="w-full min-w-59 h-22 flex flex-col justify-between rounded-lg border border-sidebar-border p-3">
         <p className="text-sm text-muted-foreground">
-          Credit balance:{" "}
+          {t("components.sidebar.sidebar_credits.balance")}{" "}
           <span className="font-semibold text-foreground tabular-nums">
             {formatCredits(billing.balance)}
           </span>

@@ -17,6 +17,7 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
+import { useTranslation } from "@/lib/i18n"
 
 export const domainListSchema = z
   .array(
@@ -24,11 +25,14 @@ export const domainListSchema = z
       value: z
         .string()
         .trim()
-        .min(1, "Enter a domain")
-        .refine((value) => !value.includes(" "), "Enter a domain"),
+        .min(1, "components.settings.sso.domain_list.domain.required")
+        .refine(
+          (value) => !value.includes(" "),
+          "components.settings.sso.domain_list.domain.required"
+        ),
     })
   )
-  .min(1, "Add at least one domain")
+  .min(1, "components.settings.sso.domain_list.domains.min")
 
 export function DomainList<T extends FieldValues>({
   control,
@@ -37,6 +41,7 @@ export function DomainList<T extends FieldValues>({
   control: Control<T>
   disabled?: boolean
 }) {
+  const { t } = useTranslation()
   const { fields, append, remove } = useFieldArray({
     control,
     name: "domains" as FieldArrayPath<T>,
@@ -44,7 +49,7 @@ export function DomainList<T extends FieldValues>({
 
   return (
     <FieldGroup className="gap-4">
-      <FieldLabel>Email domains</FieldLabel>
+      <FieldLabel>{t("components.settings.sso.domain_list.label")}</FieldLabel>
       {fields.map((field, index) => (
         <div key={field.id} className="flex gap-2">
           <Controller
@@ -58,7 +63,9 @@ export function DomainList<T extends FieldValues>({
                 <Input
                   {...input}
                   id={input.name}
-                  placeholder="company.com"
+                  placeholder={t(
+                    "components.settings.sso.domain_list.domain.placeholder"
+                  )}
                   aria-invalid={fieldState.invalid}
                   disabled={disabled}
                 />
@@ -76,7 +83,9 @@ export function DomainList<T extends FieldValues>({
               className="mt-0.5 shrink-0"
               onClick={() => remove(index)}
               disabled={disabled}
-              aria-label={`Remove domain ${index + 1}`}
+              aria-label={t("components.settings.sso.domain_list.remove", {
+                index: index + 1,
+              })}
             >
               <XIcon />
             </Button>
@@ -91,7 +100,7 @@ export function DomainList<T extends FieldValues>({
         disabled={disabled}
       >
         <PlusIcon />
-        Add domain
+        {t("components.settings.sso.domain_list.add")}
       </Button>
     </FieldGroup>
   )

@@ -59,6 +59,7 @@ import {
 } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
+import { type TFunction, useTranslation } from "@/lib/i18n"
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -72,70 +73,89 @@ const features = tableFeatures({
   sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
 })
 
-const statusLabel: Record<BatchCallStatus, string> = {
-  scheduled: "Scheduled",
-  triggered: "Triggered",
-}
-
 const columnHelper = createColumnHelper<typeof features, BatchCallListItem>()
 
-const columns = columnHelper.columns([
-  columnHelper.accessor("name", {
-    header: "Name",
-    cell: ({ row }) => row.original.name,
-  }),
-  columnHelper.accessor("status", {
-    header: "Status",
-    cell: ({ row }) => (
-      <Badge variant="secondary">{statusLabel[row.original.status]}</Badge>
+function getColumns(t: TFunction) {
+  const statusLabel: Record<BatchCallStatus, string> = {
+    scheduled: t(
+      "components.batch_calls.batch_calls_data_table.status.scheduled"
     ),
-  }),
-  columnHelper.display({
-    id: "recipients",
-    header: "Recipients",
-    cell: ({ row }) => row.original.totalCount,
-  }),
-  columnHelper.display({
-    id: "from",
-    header: "From",
-    cell: ({ row }) => (
-      <span
-        className={
-          row.original.phoneNumber ? undefined : "text-muted-foreground"
-        }
-      >
-        {formatPhoneNumber(row.original.phoneNumber)}
-      </span>
+    triggered: t(
+      "components.batch_calls.batch_calls_data_table.status.triggered"
     ),
-  }),
-  columnHelper.display({
-    id: "agent",
-    header: "Agent",
-    cell: ({ row }) => (
-      <AgentReferenceLink
-        agentId={row.original.agentId}
-        agent={row.original.agent}
-        agentVersionId={row.original.agentVersionId}
-      />
-    ),
-  }),
-  columnHelper.display({
-    id: "version",
-    header: "Version",
-    cell: ({ row }) => formatAgentVersionLabel(row.original.agentVersion),
-  }),
-  columnHelper.accessor((row) => row.scheduledAt ?? row.createdAt, {
-    id: "when",
-    header: ({ column }) => <SortableHeader column={column} title="When" />,
-    cell: ({ row }) => (
-      <UserDateTime
-        value={row.original.scheduledAt ?? row.original.createdAt}
-      />
-    ),
-  }),
-])
+  }
+
+  return columnHelper.columns([
+    columnHelper.accessor("name", {
+      header: t("components.batch_calls.batch_calls_data_table.columns.name"),
+      cell: ({ row }) => row.original.name,
+    }),
+    columnHelper.accessor("status", {
+      header: t("components.batch_calls.batch_calls_data_table.columns.status"),
+      cell: ({ row }) => (
+        <Badge variant="secondary">{statusLabel[row.original.status]}</Badge>
+      ),
+    }),
+    columnHelper.display({
+      id: "recipients",
+      header: t(
+        "components.batch_calls.batch_calls_data_table.columns.recipients"
+      ),
+      cell: ({ row }) => row.original.totalCount,
+    }),
+    columnHelper.display({
+      id: "from",
+      header: t("components.batch_calls.batch_calls_data_table.columns.from"),
+      cell: ({ row }) => (
+        <span
+          className={
+            row.original.phoneNumber ? undefined : "text-muted-foreground"
+          }
+        >
+          {formatPhoneNumber(row.original.phoneNumber, t)}
+        </span>
+      ),
+    }),
+    columnHelper.display({
+      id: "agent",
+      header: t("components.batch_calls.batch_calls_data_table.columns.agent"),
+      cell: ({ row }) => (
+        <AgentReferenceLink
+          agentId={row.original.agentId}
+          agent={row.original.agent}
+          agentVersionId={row.original.agentVersionId}
+        />
+      ),
+    }),
+    columnHelper.display({
+      id: "version",
+      header: t(
+        "components.batch_calls.batch_calls_data_table.columns.version"
+      ),
+      cell: ({ row }) => formatAgentVersionLabel(row.original.agentVersion, t),
+    }),
+    columnHelper.accessor((row) => row.scheduledAt ?? row.createdAt, {
+      id: "when",
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t(
+            "components.batch_calls.batch_calls_data_table.columns.when"
+          )}
+        />
+      ),
+      cell: ({ row }) => (
+        <UserDateTime
+          value={row.original.scheduledAt ?? row.original.createdAt}
+        />
+      ),
+    }),
+  ])
+}
 
 export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
+  const { t } = useTranslation()
+  const columns = getColumns(t)
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
   const navigate = useNavigate()
@@ -161,7 +181,9 @@ export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          placeholder="Search batch calls..."
+          placeholder={t(
+            "components.batch_calls.batch_calls_data_table.search_placeholder"
+          )}
         />
         <InputGroupAddon>
           <Search />
@@ -208,7 +230,7 @@ export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No results
+                  {t("common.table.no_results")}
                 </TableCell>
               </TableRow>
             )}
@@ -232,12 +254,16 @@ export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
               ))}
             </SelectContent>
           </Select>
-          <span className="text-sm font-medium">Rows per page</span>
+          <span className="text-sm font-medium">
+            {t("common.table.rows_per_page")}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.state.pagination.pageIndex + 1} of{" "}
-            {table.getPageCount() || 1}
+            {t("common.table.page", {
+              page: table.state.pagination.pageIndex + 1,
+              total: table.getPageCount() || 1,
+            })}
           </span>
           <Button
             variant="outline"

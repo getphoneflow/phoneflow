@@ -1,0 +1,1977 @@
+{
+  "languages": {
+    "label": "Idioma",
+    "name": "Español"
+  },
+  "common": {
+    "actions": {
+      "add": "Añadir",
+      "back": "Atrás",
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "confirm": "Confirmar",
+      "continue": "Continuar",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "create": "Crear",
+      "delete": "Eliminar",
+      "download": "Descargar",
+      "duplicate": "Duplicar",
+      "edit": "Editar",
+      "remove": "Quitar",
+      "rename": "Renombrar",
+      "retry": "Reintentar",
+      "save": "Guardar",
+      "save_changes": "Guardar cambios",
+      "search": "Buscar",
+      "submit": "Enviar",
+      "update": "Actualizar",
+      "upload": "Subir"
+    },
+    "states": {
+      "loading": "Cargando..."
+    },
+    "errors": {
+      "generic": "Algo salió mal"
+    },
+    "table": {
+      "no_results": "No hay resultados",
+      "rows_per_page": "Filas por página",
+      "page": "Página {{page}} de {{total}}"
+    }
+  },
+  "routes": {
+    "agents": {
+      "breadcrumb": "Agentes",
+      "page_title": "Agentes - Phoneflow"
+    },
+    "agents_detail": {
+      "page_title": "{{name}} - Phoneflow",
+      "breadcrumb_parent": "Agentes"
+    },
+    "calls": {
+      "page_title": "Llamadas - Phoneflow",
+      "breadcrumb": "Llamadas"
+    },
+    "contacts": {
+      "page_title": "Contactos - Phoneflow",
+      "breadcrumb": "Contactos"
+    },
+    "batch_calls": {
+      "page_title": "Llamadas por lotes - Phoneflow",
+      "create_batch_call": "Crear llamada por lotes",
+      "breadcrumb": "Llamadas por lotes"
+    },
+    "batch_calls_create": {
+      "breadcrumb_parent": "Llamadas por lotes",
+      "breadcrumb": "Crear",
+      "page_title": "Crear llamada por lotes - Phoneflow"
+    },
+    "phone_numbers": {
+      "page_title": "Números de teléfono - Phoneflow",
+      "breadcrumb": "Números de teléfono"
+    },
+    "settings": {
+      "layout": {
+        "nav": {
+          "account": "Cuenta",
+          "organization": "Organización",
+          "billing": "Facturación",
+          "members": "Miembros",
+          "roles": "Roles",
+          "sso": "Inicio de sesión único"
+        },
+        "breadcrumb": "Configuración"
+      },
+      "account": {
+        "page_title": "Configuración de la cuenta - Phoneflow"
+      },
+      "billing": {
+        "toasts": {
+          "credits_added": "Créditos añadidos a tu saldo",
+          "checkout_canceled": "Pago cancelado"
+        },
+        "history": "Historial de facturación",
+        "page_title": "Configuración de facturación - Phoneflow"
+      },
+      "members": {
+        "pending_invitations": "Invitaciones pendientes",
+        "page_title": "Configuración de miembros - Phoneflow"
+      },
+      "organization": {
+        "page_title": "Configuración de la organización - Phoneflow"
+      },
+      "sso": {
+        "page_title": "Inicio de sesión único - Phoneflow"
+      },
+      "roles": {
+        "page_title": "Configuración de roles - Phoneflow"
+      }
+    },
+    "signin": {
+      "page_title": "Iniciar sesión - Phoneflow",
+      "title": "Iniciar sesión",
+      "description": "Introduce tu correo y contraseña para iniciar sesión",
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "nombre@ejemplo.com",
+        "invalid": "Introduce una dirección de correo válida"
+      },
+      "password": {
+        "label": "Contraseña",
+        "min_length": "La contraseña debe tener al menos 8 caracteres"
+      },
+      "forgot_password": "¿Olvidaste tu contraseña?",
+      "submit": "Iniciar sesión",
+      "or_continue_with": "O continuar con",
+      "google": "Iniciar sesión con Google",
+      "last_used": "Último uso",
+      "no_account": "¿No tienes una cuenta?",
+      "sign_up_link": "Registrarse",
+      "sso_button": "Iniciar sesión con SSO"
+    },
+    "signin_sso": {
+      "page_title": "Iniciar sesión con SSO - Phoneflow",
+      "title": "Iniciar sesión con SSO",
+      "description": "Introduce tu correo del trabajo para continuar con tu proveedor de identidad",
+      "email": {
+        "label": "Correo del trabajo",
+        "placeholder": "nombre@empresa.com",
+        "invalid": "Introduce una dirección de correo válida"
+      },
+      "submit": "Iniciar sesión con SSO",
+      "last_used": "Último uso",
+      "back_to_sign_in": "Volver a iniciar sesión"
+    },
+    "signup": {
+      "page_title": "Registrarse - Phoneflow",
+      "title": "Registrarse",
+      "description": "Introduce tus datos para crear una cuenta",
+      "name": {
+        "label": "Nombre",
+        "placeholder": "Juan Pérez",
+        "required": "El nombre es obligatorio"
+      },
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "nombre@ejemplo.com",
+        "invalid": "Introduce una dirección de correo válida"
+      },
+      "password": {
+        "label": "Contraseña",
+        "min_length": "La contraseña debe tener al menos 8 caracteres",
+        "uppercase": "La contraseña debe incluir al menos una letra mayúscula",
+        "lowercase": "La contraseña debe incluir al menos una letra minúscula",
+        "number": "La contraseña debe incluir al menos un número"
+      },
+      "confirm_password": {
+        "label": "Confirmar contraseña",
+        "required": "Confirma tu contraseña",
+        "mismatch": "Las contraseñas no coinciden"
+      },
+      "submit": "Registrarse",
+      "sso_button": "Iniciar sesión con SSO",
+      "or_continue_with": "O continuar con",
+      "google": "Registrarse con Google",
+      "has_account": "¿Ya tienes una cuenta?",
+      "sign_in_link": "Iniciar sesión",
+      "legal": "Al registrarte aceptas nuestros <terms>Términos del servicio</terms> y reconoces nuestra <privacy>Política de privacidad</privacy>"
+    },
+    "reset_password": {
+      "page_title": "Restablecer contraseña - Phoneflow",
+      "title": "Restablecer contraseña",
+      "description": "Introduce tu correo para recibir un enlace de restablecimiento",
+      "email": {
+        "label": "Correo electrónico",
+        "placeholder": "nombre@ejemplo.com",
+        "invalid": "Introduce una dirección de correo válida"
+      },
+      "submit": "Enviar enlace",
+      "success": "Si existe una cuenta con este correo, se ha enviado un enlace de restablecimiento",
+      "remember_password": "¿Ya la recuerdas?",
+      "sign_in_link": "Iniciar sesión"
+    },
+    "set_new_password": {
+      "page_title": "Nueva contraseña - Phoneflow",
+      "title": "Establecer nueva contraseña",
+      "description": "Introduce tu nueva contraseña",
+      "password": {
+        "label": "Nueva contraseña",
+        "min_length": "La contraseña debe tener al menos 8 caracteres",
+        "uppercase": "La contraseña debe incluir al menos una letra mayúscula",
+        "lowercase": "La contraseña debe incluir al menos una letra minúscula",
+        "number": "La contraseña debe incluir al menos un número"
+      },
+      "confirm_password": {
+        "label": "Confirmar contraseña",
+        "required": "Confirma tu contraseña",
+        "mismatch": "Las contraseñas no coinciden"
+      },
+      "submit": "Establecer contraseña",
+      "invalid_token": "El token de restablecimiento no es válido o falta",
+      "toasts": {
+        "success": "Nueva contraseña establecida"
+      },
+      "remember_password": "¿Ya la recuerdas?",
+      "sign_in_link": "Iniciar sesión"
+    },
+    "email_verification": {
+      "page_title": "Verifica tu correo - Phoneflow",
+      "title": "Verifica tu correo",
+      "description": "Introduce el código de verificación que te hemos enviado por correo",
+      "no_email": "¿No has recibido el correo?",
+      "resend": "Reenviar",
+      "toasts": {
+        "code_sent": "Te hemos enviado un nuevo código de verificación"
+      }
+    },
+    "two_factor": {
+      "page_title": "Autenticación en dos pasos - Phoneflow",
+      "title": "Autenticación en dos pasos",
+      "description_backup_code": "Introduce uno de tus códigos de respaldo",
+      "description_totp": "Introduce el código de tu app de autenticación",
+      "backup_code": {
+        "label": "Código de respaldo",
+        "required": "El código de respaldo es obligatorio"
+      },
+      "verify": "Verificar",
+      "trust_device": "Confiar en este dispositivo durante 30 días",
+      "use_authenticator": "Usar app de autenticación",
+      "use_backup_code": "Usar un código de respaldo"
+    },
+    "create_organization": {
+      "page_title": "Crear organización - Phoneflow",
+      "title": "Crear organización",
+      "description": "Crea una organización",
+      "name": {
+        "label": "Nombre de la organización",
+        "placeholder": "Acme Inc",
+        "required": "El nombre de la organización es obligatorio",
+        "default_value": "Organización de {{name}}"
+      },
+      "submit": "Crear organización",
+      "toasts": {
+        "created": "Organización creada"
+      }
+    },
+    "join_organization": {
+      "toasts": {
+        "joined": "Te has unido a la organización"
+      }
+    },
+    "select_organization": {
+      "page_title": "Seleccionar organización - Phoneflow",
+      "title": "Seleccionar organización",
+      "description": "Elige una organización para continuar",
+      "create_organization": "Crear organización"
+    },
+    "invite_members": {
+      "page_title": "Invitar miembros - Phoneflow",
+      "title": "Invitar miembros",
+      "description": "Envía invitaciones por correo para unirse a {{organization}}",
+      "email": {
+        "placeholder": "nombre@ejemplo.com",
+        "invalid": "Introduce una dirección de correo válida"
+      },
+      "emails": {
+        "min": "Añade al menos una dirección de correo.",
+        "max": "Puedes añadir hasta 5 direcciones de correo."
+      },
+      "role_aria_label": "Rol para el correo {{index}}",
+      "remove_aria_label": "Quitar correo {{index}}",
+      "add_email": "Añadir dirección de correo",
+      "submit": "Invitar miembros",
+      "skip": "Omitir por ahora",
+      "toasts": {
+        "invited": "Invitación enviada a {{email}}",
+        "invite_failed": "{{email}}: {{message}}"
+      }
+    },
+    "not_found": {
+      "page_title": "Página no encontrada - Phoneflow",
+      "title": "Página no encontrada",
+      "description": "La página que buscas no existe o se ha movido",
+      "return_home": "Volver al inicio"
+    }
+  },
+  "components": {
+    "agents": {
+      "add_node_button": {
+        "trigger": "Añadir nodo",
+        "start": "Inicio",
+        "conversation": "Conversación",
+        "end": "Final"
+      },
+      "agent_auto_save": {
+        "saving": "Guardando",
+        "saved": "Guardado automáticamente",
+        "fix_error": "Corrige el error"
+      },
+      "agent_config_button": {
+        "trigger": "Configuración"
+      },
+      "agent_editor_actions": {
+        "open_actions": "Abrir acciones de {{name}}",
+        "view_calls": "Ver llamadas",
+        "toasts": {
+          "duplicated": "Agente duplicado"
+        }
+      },
+      "agent_name_field": {
+        "placeholder": "Agente sin título"
+      },
+      "agent_row_actions": {
+        "open_actions": "Abrir acciones de {{name}}",
+        "edit_name": "Editar nombre",
+        "view_calls": "Ver llamadas",
+        "toasts": {
+          "duplicated": "Agente duplicado"
+        }
+      },
+      "agent_version_selector": {
+        "version": "V{{number}}",
+        "version_draft": "V{{number}} (borrador)",
+        "updated": "Actualizado",
+        "published": "Publicado"
+      },
+      "agents_data_table": {
+        "columns": {
+          "name": "Nombre",
+          "phone_number": "Número de teléfono",
+          "updated": "Actualizado"
+        },
+        "search": {
+          "placeholder": "Buscar agentes..."
+        },
+        "page": "Página {{page}} de {{count}}"
+      },
+      "create_agent_form": {
+        "trigger": "Nuevo agente",
+        "title": "Crear agente",
+        "description": "Crea un nuevo agente",
+        "name": {
+          "label": "Nombre",
+          "placeholder": "Nombre del agente"
+        },
+        "submit": "Crear agente"
+      },
+      "delete_agent_dialog": {
+        "title": "Eliminar agente",
+        "description": "Se eliminará \"{{name}}\" de forma permanente",
+        "toasts": {
+          "deleted": "{{name}} eliminado"
+        }
+      },
+      "download_agent_dialog": {
+        "title": "Descargar agente",
+        "description": "Descargar \"{{name}}\"",
+        "version": {
+          "label": "Versión"
+        },
+        "errors": {
+          "version_not_found": "No se ha encontrado la versión"
+        }
+      },
+      "edit_agent_name_dialog": {
+        "title": "Editar nombre",
+        "description": "Cambia el nombre del agente",
+        "name": {
+          "label": "Nombre",
+          "placeholder": "Nombre del agente"
+        },
+        "toasts": {
+          "updated": "Nombre del agente actualizado"
+        }
+      },
+      "flow_config_buttons": {
+        "global_prompt": "Prompt global",
+        "variables": "Variables"
+      },
+      "import_agent_form": {
+        "trigger": "Importar",
+        "title": "Importar agente",
+        "description": "Crea un nuevo agente a partir de un archivo de configuración JSON",
+        "placeholder": "Haz clic o arrastra un archivo",
+        "submit": "Importar agente",
+        "errors": {
+          "no_file": "No has seleccionado ningún archivo"
+        }
+      },
+      "publish_agent_form": {
+        "trigger": "Publicar",
+        "title": "Publicar V{{number}}",
+        "description": "Publica una nueva versión del agente",
+        "name": {
+          "label": "Nombre",
+          "placeholder": "Nombre de la versión (opcional)"
+        },
+        "version_description": {
+          "label": "Descripción",
+          "placeholder": "Descripción de la versión (opcional)"
+        },
+        "submit": "Publicar",
+        "toasts": {
+          "published": "V{{number}} publicada"
+        }
+      },
+      "test_agent_button": {
+        "trigger": "Probar"
+      }
+    },
+    "flow": {
+      "toolbar": {
+        "undo": "Deshacer",
+        "redo": "Rehacer",
+        "zoom_out": "Alejar",
+        "zoom_in": "Acercar",
+        "zoom_reset": "Zoom al 100%",
+        "fit_view": "Ajustar vista"
+      },
+      "nodes": {
+        "conversation": {
+          "instruction_types": {
+            "prompt": "prompt:",
+            "say": "decir:"
+          },
+          "tools": "Herramientas:",
+          "tool_names": {
+            "end_call": "Finalizar llamada",
+            "extract_variables": "Extraer variables",
+            "ivr_navigation": "Navegación IVR",
+            "transfer_call": "Transferir llamada"
+          }
+        }
+      },
+      "edges": {
+        "condition_format": {
+          "operators": {
+            "greater_than": ">",
+            "greater_or_equal": ">=",
+            "less_than": "<",
+            "less_or_equal": "<=",
+            "equals": "=",
+            "not_equals": "!=",
+            "contains": "contiene",
+            "not_contains": "no contiene",
+            "exists": "existe",
+            "not_exists": "no existe"
+          },
+          "match": {
+            "all": " Y ",
+            "any": " O "
+          },
+          "always": "Siempre"
+        }
+      },
+      "variables": {
+        "suggestions": {
+          "groups": {
+            "inputs": "Entradas",
+            "extracted": "Extraídas",
+            "system": "Sistema",
+            "parameters": "Parámetros"
+          }
+        },
+        "variable_select": {
+          "create": "Crear {{key}}",
+          "empty": "No hay variables"
+        },
+        "variable_text_field": {
+          "create": "Crear {{key}}",
+          "empty": "No hay variables"
+        }
+      },
+      "sidepanel": {
+        "config": {
+          "call_tab": {
+            "max_call_duration": {
+              "label": "Duración máxima de la llamada (s)",
+              "description": "Cuelga cuando la llamada alcance esta duración"
+            },
+            "idle_timeout": {
+              "label": "Tiempo de inactividad (s)",
+              "description": "Cuánto esperar cuando el usuario se queda en silencio antes de que el agente compruebe si sigue ahí"
+            },
+            "max_idle_messages": {
+              "label": "Máximo de mensajes de inactividad",
+              "description": "Número máximo de veces que el agente puede comprobar si el usuario sigue ahí durante la llamada"
+            },
+            "silence_timeout": {
+              "label": "Tiempo de silencio (s)",
+              "description": "Finaliza la llamada si el usuario permanece en silencio más tiempo que esta duración"
+            },
+            "timezone": {
+              "label": "Zona horaria",
+              "description": "Se usa para {{date}}, {{time}} y {{timezone}}"
+            }
+          },
+          "model_tab": {
+            "model": {
+              "label": "Modelo"
+            },
+            "temperature": {
+              "label": "Temperatura",
+              "description": "Controla la aleatoriedad. Los valores bajos son más deterministas y los altos, más creativos"
+            },
+            "reasoning_effort": {
+              "label": "Esfuerzo de razonamiento",
+              "description": "Cuánto piensa el modelo antes de responder",
+              "options": {
+                "none": "Ninguno",
+                "minimal": "Mínimo",
+                "low": "Bajo",
+                "medium": "Medio",
+                "high": "Alto"
+              }
+            },
+            "max_tokens": {
+              "label": "Máximo de tokens",
+              "description": "Máximo de tokens que el agente puede generar en cada turno de la conversación"
+            },
+            "tool_choice": {
+              "label": "Elección de herramienta",
+              "description": "Auto decide, Ninguna desactiva las herramientas, Obligatoria siempre llama a una",
+              "options": {
+                "auto": "Auto",
+                "none": "Ninguna",
+                "required": "Obligatoria"
+              }
+            },
+            "preemptive_generation": {
+              "label": "Generación anticipada",
+              "description": "Empieza a generar una respuesta antes de que se confirme el turno del usuario"
+            },
+            "preemptive_tts": {
+              "label": "TTS anticipado",
+              "description": "Sintetiza también la voz antes de que se confirme el turno"
+            },
+            "max_speech_duration": {
+              "label": "Duración máxima del habla (ms)",
+              "description": "Omite la generación anticipada si el usuario lleva hablando más tiempo que esto"
+            },
+            "max_retries": {
+              "label": "Máximo de reintentos",
+              "description": "Número máximo de intentos de generación anticipada por turno"
+            }
+          },
+          "transcriber_tab": {
+            "model": {
+              "label": "Modelo"
+            },
+            "keyterms": {
+              "label": "Términos clave",
+              "description": "Mejora el reconocimiento de nombres, jerga y términos de producto"
+            },
+            "mode": {
+              "label": "Modo",
+              "description": "Equilibrio entre velocidad y precisión",
+              "options": {
+                "min_latency": "Latencia mínima",
+                "balanced": "Equilibrado",
+                "max_accuracy": "Precisión máxima"
+              }
+            },
+            "intelligent_turn_taking": {
+              "label": "Toma de turno inteligente",
+              "description": "Activado, el transcriptor decide cuándo ha terminado el usuario. Desactivado, el agente espera un silencio fijo"
+            },
+            "min_end_of_turn_wait": {
+              "label": "Espera mínima de fin de turno (ms)",
+              "description": "Cuánto esperar después de que el usuario deje de hablar antes de que el agente pueda responder"
+            },
+            "max_end_of_turn_wait": {
+              "label": "Espera máxima de fin de turno (ms)",
+              "description": "Lo máximo que espera el agente después de que el usuario deje de hablar antes de terminar el turno"
+            },
+            "endpointing_mode": {
+              "label": "Modo de endpointing",
+              "description": "Fijo usa los retardos mínimo y máximo; dinámico se adapta dentro de ese rango según las estadísticas de pausas",
+              "options": {
+                "fixed": "Fijo",
+                "dynamic": "Dinámico"
+              }
+            },
+            "endpointing_alpha": {
+              "label": "Alfa de endpointing",
+              "description": "Peso de las pausas anteriores en el endpointing dinámico. Cuanto más alto, más lenta es la adaptación"
+            },
+            "silence_timeout": {
+              "label": "Tiempo de silencio (ms)",
+              "description": "Silencio tras el cual este transcriptor da el turno por completado"
+            },
+            "vad_threshold": {
+              "label": "Umbral de VAD",
+              "description": "Sensibilidad de la detección de voz. Cuanto más alto, más ruido de fondo ignora"
+            },
+            "eager_end_of_turn_threshold": {
+              "label": "Umbral de fin de turno anticipado",
+              "description": "Confianza necesaria para señalar un fin de turno anticipado"
+            },
+            "end_of_turn_threshold": {
+              "label": "Umbral de fin de turno",
+              "description": "Confianza necesaria antes de que el transcriptor cierre el turno del usuario"
+            },
+            "end_of_turn_timeout": {
+              "label": "Tiempo límite de fin de turno (ms)",
+              "description": "Silencio que termina el turno aunque la confianza siga siendo baja"
+            },
+            "min_turn_silence": {
+              "label": "Silencio mínimo de turno (ms)",
+              "description": "Silencio tras el cual el modelo comprueba si el turno ha terminado"
+            },
+            "max_turn_silence": {
+              "label": "Silencio máximo de turno (ms)",
+              "description": "Silencio que fuerza el fin del turno"
+            },
+            "end_of_turn_confidence": {
+              "label": "Confianza de fin de turno",
+              "description": "Qué seguridad debe tener el transcriptor de que el usuario ha terminado"
+            },
+            "endpoint_latency_level": {
+              "label": "Nivel de latencia de endpointing",
+              "description": "0 es el endpointing semántico por defecto, 3 es el más agresivo"
+            },
+            "min_eot_silence_when_confident": {
+              "label": "Silencio mínimo de EOT con confianza (ms)",
+              "description": "Silencio más corto necesario para terminar un turno cuando el modelo ya tiene confianza"
+            },
+            "smart_turn": {
+              "label": "Smart turn",
+              "description": "Confianza necesaria antes de que la detección de turno inteligente termine el turno del usuario"
+            },
+            "smart_turn_timeout": {
+              "label": "Tiempo límite de smart turn (ms)",
+              "description": "Cuánto espera la detección de turno inteligente antes de terminar el turno"
+            },
+            "voice_focus": {
+              "label": "Enfoque de voz",
+              "description": "Ajusta el reconocimiento para un micrófono cercano o lejano",
+              "options": {
+                "near_field": "Campo cercano",
+                "far_field": "Campo lejano"
+              }
+            },
+            "voice_focus_threshold": {
+              "label": "Umbral de enfoque de voz",
+              "description": "Con qué intensidad se suprime el audio de fondo. Cuanto más alto, más fuerte"
+            },
+            "voice_profile": {
+              "label": "Perfil de voz",
+              "description": "Orienta el reconocimiento hacia un perfil de hablante guardado"
+            },
+            "voice_profile_top_n": {
+              "label": "Top N de perfiles de voz",
+              "description": "Con cuántos perfiles de hablante comparar"
+            },
+            "diarization": {
+              "label": "Diarización",
+              "description": "Etiqueta los distintos hablantes en la transcripción"
+            },
+            "strict_language": {
+              "label": "Idioma estricto",
+              "description": "Prioriza la transcripción en el idioma seleccionado"
+            },
+            "agent_context_carryover": {
+              "label": "Arrastre de contexto del agente",
+              "description": "Orienta la siguiente transcripción con lo que el agente acaba de decir"
+            },
+            "mip_opt_out": {
+              "label": "Exclusión de MIP",
+              "description": "No permitir que este audio se use para mejorar los modelos del proveedor"
+            },
+            "language": {
+              "description": "El reconocimiento está optimizado para este idioma"
+            }
+          },
+          "voice_tab": {
+            "model": {
+              "label": "Modelo"
+            },
+            "speed": {
+              "label": "Velocidad",
+              "description": "Multiplicador de la velocidad del habla. 1 es el ritmo normal"
+            },
+            "latency_mode": {
+              "label": "Modo de latencia",
+              "description": "Normal ofrece la máxima calidad, bajo es el más rápido",
+              "options": {
+                "normal": "Normal",
+                "balanced": "Equilibrado",
+                "low": "Bajo"
+              }
+            },
+            "interruptions": {
+              "label": "Interrupciones",
+              "description": "Detiene al agente cuando el usuario empieza a hablar"
+            },
+            "discard_uninterruptible_audio": {
+              "label": "Descartar audio no interrumpible",
+              "description": "Descarta el audio en búfer mientras el agente habla y no se le puede interrumpir"
+            },
+            "min_interruption_duration": {
+              "label": "Duración mínima de interrupción (ms)",
+              "description": "Cuánto tiempo debe hablar el usuario antes de que el agente deje de hablar"
+            },
+            "min_interruption_words": {
+              "label": "Palabras mínimas de interrupción",
+              "description": "Cuántas palabras debe decir el usuario antes de que el agente deje de hablar"
+            },
+            "false_interruption_timeout": {
+              "label": "Tiempo de falsa interrupción (ms)",
+              "description": "Cuánto esperar sin transcripción antes de considerar una interrupción como falsa"
+            },
+            "resume_after_false_interruption": {
+              "label": "Reanudar tras una falsa interrupción",
+              "description": "Reanuda el habla del agente desde donde se quedó tras una falsa interrupción"
+            },
+            "tts_volume": {
+              "label": "Volumen de TTS",
+              "description": "Ajuste de volumen en decibelios. 0 deja la voz sin cambios"
+            },
+            "emotion": {
+              "label": "Emoción",
+              "description": "Tono emocional del habla, una etiqueta por línea"
+            },
+            "mip_opt_out": {
+              "label": "Exclusión de MIP",
+              "description": "No permitir que este audio se use para mejorar los modelos del proveedor"
+            },
+            "volume": {
+              "label": "Volumen"
+            }
+          },
+          "title": "Configuración del agente",
+          "tabs": {
+            "transcriber": "Transcriptor",
+            "model": "Modelo",
+            "voice": "Voz",
+            "call": "Llamada"
+          },
+          "fields": {
+            "advanced": "Avanzado",
+            "language": {
+              "label": "Idioma"
+            },
+            "string_list": {
+              "placeholder": "término1, término2"
+            }
+          },
+          "cost_latency": {
+            "part": "{{name}}: {{value}}",
+            "parts": {
+              "stt": "Transcriptor",
+              "llm": "Modelo",
+              "tts": "Voz",
+              "platform": "Plataforma"
+            },
+            "cost": "Coste",
+            "latency": "Latencia"
+          }
+        },
+        "base": {
+          "close": "Cerrar panel lateral"
+        },
+        "global_prompt": {
+          "title": "Prompt global",
+          "prompt": {
+            "label": "Prompt global",
+            "placeholder": "Eres un asistente útil"
+          }
+        },
+        "test": {
+          "title": "Probar agente"
+        },
+        "voice_select": {
+          "label": "Voz",
+          "search": "Buscar voces...",
+          "empty": "No se han encontrado voces",
+          "play": "Reproducir",
+          "pause": "Pausar"
+        },
+        "background_audio_select": {
+          "label": "Audio de fondo",
+          "none": "Ninguno",
+          "search": "Buscar audio de fondo...",
+          "empty": "No se ha encontrado audio de fondo",
+          "play": "Reproducir",
+          "pause": "Pausar"
+        },
+        "model_select": {
+          "search": {
+            "stt": "Buscar modelos de transcripción...",
+            "llm": "Buscar modelos de lenguaje...",
+            "tts": "Buscar modelos de voz..."
+          },
+          "score": {
+            "wer_label": "WER",
+            "wer_value": "{{score}} % WER",
+            "label": "Puntuación",
+            "value": "{{score}} %"
+          },
+          "sort": {
+            "label": "Ordenar modelos",
+            "default": "Predeterminado",
+            "price": "Precio",
+            "latency": "Latencia"
+          },
+          "empty": "No se han encontrado modelos"
+        },
+        "variables": {
+          "title": "Variables",
+          "inputs": {
+            "label": "Entradas",
+            "description": "Valores que se pasan al iniciar la llamada",
+            "key_placeholder": "nombre_variable",
+            "default_value_placeholder": "Valor por defecto",
+            "add": "Añadir variable"
+          },
+          "extracted": {
+            "label": "Extraídas",
+            "description": "Valores que se rellenan durante la llamada"
+          },
+          "system": {
+            "label": "Sistema",
+            "description": "Variables integradas siempre disponibles",
+            "direction": "web, entrante o saliente",
+            "phone_number": "El número del usuario",
+            "agent_number": "El número del agente"
+          }
+        },
+        "nodes": {
+          "conversation": {
+            "title": "Nodo de conversación",
+            "title_start": "Nodo de inicio",
+            "name": {
+              "label": "Nombre"
+            },
+            "first_speaker": {
+              "label": "Primero en hablar",
+              "agent": "Agente",
+              "user": "Usuario"
+            },
+            "instructions": {
+              "prompt": "Prompt",
+              "say": "Decir"
+            }
+          },
+          "end": {
+            "title": "Nodo final",
+            "name": {
+              "label": "Nombre"
+            }
+          }
+        },
+        "edges": {
+          "condition": {
+            "title": "Transición",
+            "condition_type": {
+              "label": "Tipo de condición",
+              "prompt": "Prompt",
+              "expression": "Expresión",
+              "always": "Siempre"
+            },
+            "prompt": {
+              "label": "Prompt",
+              "placeholder": "Condición de transición"
+            },
+            "match": {
+              "label": "Coincidencia",
+              "all": "Todas",
+              "any": "Cualquiera"
+            },
+            "value": {
+              "placeholder": "valor"
+            },
+            "add_condition": "Añadir condición",
+            "always_description": "Siempre pasa al siguiente nodo en el turno siguiente. Debe ser la única transición del nodo."
+          }
+        },
+        "tools": {
+          "end_call_dialog": {
+            "title": "Finalizar llamada",
+            "description": "Permite que el agente finalice la llamada",
+            "prompt": {
+              "label": "Descripción",
+              "placeholder": "Describe cuándo finalizar la llamada"
+            }
+          },
+          "ivr_navigation_dialog": {
+            "title": "Navegación IVR",
+            "description": "Envía tonos del teclado para navegar por un menú telefónico",
+            "prompt": {
+              "label": "Descripción",
+              "placeholder": "Describe qué menú telefónico hay que superar"
+            }
+          },
+          "extract_variables_dialog": {
+            "title": "Extraer variables",
+            "description": "Extrae variables de la conversación",
+            "key": {
+              "placeholder": "nombre_variable"
+            },
+            "types": {
+              "string": "Texto",
+              "number": "Número",
+              "boolean": "Booleano"
+            },
+            "variable_description": {
+              "placeholder": "Describe qué extraer (opcional)"
+            },
+            "add_variable": "Añadir variable"
+          },
+          "transfer_call_dialog": {
+            "title": "Transferir llamada",
+            "description": "Transfiere la llamada a otro número de teléfono",
+            "number": {
+              "label": "Número"
+            },
+            "condition": {
+              "label": "Condición",
+              "placeholder": "La persona que llama pide hablar con un agente humano"
+            },
+            "add_destination": "Añadir destino"
+          },
+          "webhook_dialog": {
+            "title": "Webhook",
+            "description": "Llama a cualquier API externa durante la conversación",
+            "name": {
+              "label": "Nombre",
+              "placeholder": "nombre_herramienta"
+            },
+            "tool_description": {
+              "label": "Descripción",
+              "placeholder": "Describe qué hace esta herramienta"
+            },
+            "method": {
+              "label": "Método"
+            },
+            "url": {
+              "label": "URL"
+            },
+            "timeout": {
+              "label": "Tiempo de espera (s)"
+            },
+            "max_retries": {
+              "label": "Máximo de reintentos"
+            },
+            "headers": {
+              "label": "Cabeceras",
+              "key_placeholder": "Clave, p. ej. Authorization",
+              "value_placeholder": "Valor, p. ej. Bearer {{api_key}}"
+            },
+            "query_parameters": {
+              "label": "Parámetros de consulta",
+              "key_placeholder": "Clave, p. ej. user_id",
+              "value_placeholder": "Valor, p. ej. {{user_id}}"
+            },
+            "body": {
+              "label": "Cuerpo de la petición"
+            },
+            "parameters": {
+              "label": "Parámetros",
+              "description": "Valores que proporciona el agente al llamar a esta herramienta. Usa {{user_id}} en la URL, las cabeceras, los parámetros de consulta o el cuerpo",
+              "name_placeholder": "Nombre del parámetro, p. ej. user_id",
+              "types": {
+                "string": "Texto",
+                "number": "Número",
+                "boolean": "Booleano"
+              },
+              "description_placeholder": "Descripción (opcional), p. ej. El id de {{user_name}}",
+              "required": "Obligatorio",
+              "add": "Añadir parámetro"
+            },
+            "response_variables": {
+              "label": "Guardar en variables",
+              "description": "Extrae valores de la respuesta y guárdalos en variables",
+              "name_placeholder": "Nombre de la variable, p. ej. user_name",
+              "path_placeholder": "Ruta en la respuesta, p. ej. user.name",
+              "add": "Añadir variable"
+            }
+          },
+          "conversation_tools": {
+            "built_in": {
+              "label": "Herramientas integradas",
+              "edit": "Editar {{tool}}",
+              "remove": "Quitar {{tool}}",
+              "end_call": {
+                "label": "Finalizar llamada",
+                "description": "Permite que el agente finalice la llamada"
+              },
+              "extract_variables": {
+                "label": "Extraer variables",
+                "description": "Extrae variables de la conversación"
+              },
+              "ivr_navigation": {
+                "label": "Navegación IVR",
+                "description": "Envía tonos del teclado para navegar por un menú telefónico"
+              },
+              "transfer_call": {
+                "label": "Transferir llamada",
+                "description": "Desvía la llamada a un número de teléfono"
+              }
+            },
+            "add_tool": "Añadir herramienta",
+            "additional": {
+              "label": "Herramientas adicionales",
+              "edit": "Editar herramienta",
+              "remove": "Quitar del nodo",
+              "search": "Buscar herramientas...",
+              "no_matches": "No hay herramientas que coincidan",
+              "all_attached": "Todas las herramientas ya están en este nodo",
+              "new_webhook": "Nueva herramienta de webhook"
+            }
+          }
+        }
+      }
+    },
+    "batch_calls": {
+      "recipients_csv": {
+        "errors": {
+          "missing_rows": "El CSV debe incluir una cabecera y al menos un destinatario",
+          "missing_phone_number_column": "El CSV debe incluir una columna \"phone_number\"",
+          "unknown_column": "Columna de variable desconocida \"{{column}}\"",
+          "invalid_phone_number": "Fila {{row}}: phone_number debe estar en formato E.164 (p. ej. +14155551234)"
+        }
+      },
+      "recipients_preview": {
+        "empty": "Primero sube los destinatarios"
+      },
+      "batch_calls_data_table": {
+        "status": {
+          "scheduled": "Programada",
+          "triggered": "Iniciada"
+        },
+        "columns": {
+          "name": "Nombre",
+          "status": "Estado",
+          "recipients": "Destinatarios",
+          "from": "De",
+          "agent": "Agente",
+          "version": "Versión",
+          "when": "Cuándo"
+        },
+        "search_placeholder": "Buscar llamadas por lotes..."
+      },
+      "create_batch_call_form": {
+        "errors": {
+          "invalid_csv": "CSV no válido",
+          "no_recipients": "Sube un CSV con al menos un destinatario",
+          "schedule_required": "Elige una fecha, una hora y una zona horaria",
+          "schedule_in_past": "La hora programada debe ser en el futuro"
+        },
+        "toasts": {
+          "created": "Llamada por lotes iniciada"
+        },
+        "name": {
+          "label": "Nombre de la llamada por lotes",
+          "placeholder": "Nombre de la llamada por lotes"
+        },
+        "phone_number": {
+          "label": "Llamar desde",
+          "placeholder": "Selecciona un número de teléfono"
+        },
+        "recipients": {
+          "label": "Subir destinatarios",
+          "download_template": "Descargar plantilla",
+          "placeholder": "Haz clic o arrastra un archivo"
+        },
+        "agent": {
+          "label": "Agente",
+          "placeholder": "Seleccionar"
+        },
+        "version": {
+          "label": "Versión",
+          "select_agent_first": "Primero selecciona un agente"
+        },
+        "trigger": {
+          "label": "Cuándo iniciar",
+          "now": "Ahora",
+          "schedule": "Programar"
+        },
+        "schedule": {
+          "date": {
+            "label": "Fecha",
+            "placeholder": "Selecciona una fecha"
+          },
+          "time": {
+            "label": "Hora"
+          },
+          "timezone": {
+            "label": "Zona horaria",
+            "placeholder": "Zona horaria"
+          }
+        },
+        "submit": "Crear llamada por lotes"
+      }
+    },
+    "billing": {
+      "add_credits_button": {
+        "title": "Añadir créditos",
+        "description": "Añade más créditos al saldo de esta organización",
+        "amount": {
+          "label": "Cantidad de créditos"
+        },
+        "tax_notice": "Es posible que se añadan al cargo el IVA u otros impuestos indirectos según la normativa local.",
+        "submit": "Añadir créditos",
+        "trigger": "Añadir créditos"
+      },
+      "auto_reload_button": {
+        "toasts": {
+          "enabled": "Recarga automática activada",
+          "saved": "Configuración de recarga automática guardada"
+        },
+        "title": "Recarga automática",
+        "enabled": {
+          "label": "Activar recarga automática",
+          "description": "Compra créditos automáticamente cuando el saldo sea bajo"
+        },
+        "amount": {
+          "label": "Cantidad a recargar",
+          "description": "Cuántos créditos añadir cada vez que se ejecute la recarga automática"
+        },
+        "threshold": {
+          "label": "Cuando se alcance el umbral",
+          "description": "Recarga cuando tu saldo baje a esta cantidad"
+        },
+        "trigger": "Recarga automática",
+        "status": {
+          "on": "Activada",
+          "off": "Desactivada"
+        }
+      },
+      "manage_billing_button": {
+        "label": "Gestionar información de facturación"
+      }
+    },
+    "calls": {
+      "download_calls_dialog": {
+        "title": "Descargar llamadas",
+        "description": "Recibirás un correo electrónico con todas las llamadas",
+        "submit": "Enviar correo",
+        "toasts": {
+          "requested": "Las llamadas se enviarán a tu correo en breve"
+        }
+      },
+      "live_call_sheet": {
+        "channel": {
+          "phone_call": "Llamada telefónica",
+          "web_call": "Llamada web"
+        },
+        "version": "V{{number}}",
+        "latest_version": "Última",
+        "agent": "Agente:",
+        "live_call": "Llamada en directo"
+      },
+      "call_detail_sheet": {
+        "channel": {
+          "phone_call": "Llamada telefónica",
+          "web_call": "Llamada web"
+        },
+        "version": "V{{number}}",
+        "latest_version": "Última",
+        "from": "De:",
+        "to": "A:",
+        "agent": "Agente:",
+        "duration": "Duración: {{duration}}",
+        "tabs": {
+          "transcript": "Transcripción",
+          "data": "Datos",
+          "cost": "Coste"
+        },
+        "no_transcript": "No hay transcripción disponible",
+        "no_variables": "No hay variables",
+        "dynamic_variables": "Variables dinámicas"
+      },
+      "call_recording_player": {
+        "play": "Reproducir",
+        "pause": "Pausar",
+        "playback_rate": "Velocidad de reproducción",
+        "download_audio": "Audio"
+      },
+      "call_cost_breakdown": {
+        "items": {
+          "stt": "STT",
+          "llm": "LLM",
+          "tts": "TTS",
+          "telephony": "Telefonía",
+          "platform": "Plataforma"
+        },
+        "empty": "No hay datos de coste disponibles",
+        "total": "Total"
+      },
+      "live_call_monitor": {
+        "toasts": {
+          "ended": "Llamada finalizada"
+        },
+        "joining": "Uniéndote a la llamada...",
+        "disconnected": "Desconectado",
+        "listen": "Escuchar",
+        "stop_listening": "Dejar de escuchar",
+        "end_call": "Finalizar llamada",
+        "end_dialog": {
+          "title": "Finalizar llamada",
+          "description": "Se desconectará a todos y se finalizará la llamada en directo",
+          "confirm": "Finalizar llamada"
+        }
+      },
+      "calls_data_table": {
+        "columns": {
+          "started": "Inicio",
+          "duration": "Duración",
+          "cost": "Coste",
+          "channel": "Canal",
+          "direction": "Dirección",
+          "from": "De",
+          "to": "A",
+          "agent": "Agente",
+          "version": "Versión",
+          "variables": "Variables",
+          "status": "Estado"
+        },
+        "channel": {
+          "phone": "Teléfono",
+          "web": "Web"
+        },
+        "direction": {
+          "inbound": "Entrante",
+          "outbound": "Saliente"
+        },
+        "version": "V{{number}}",
+        "latest_version": "Última",
+        "status": {
+          "in_progress": "En curso",
+          "no_answer": "Sin respuesta",
+          "completed": "Completada"
+        }
+      },
+      "calls_filters": {
+        "date": {
+          "label": "Fecha"
+        },
+        "agent": {
+          "label": "Agente",
+          "placeholder": "Todos los agentes"
+        },
+        "from": {
+          "label": "De",
+          "placeholder": "Todos los números"
+        },
+        "to": {
+          "label": "A",
+          "placeholder": "Todos los números"
+        },
+        "batch": {
+          "label": "Lote",
+          "placeholder": "Todos los lotes",
+          "empty": "No se han encontrado lotes"
+        },
+        "duration": {
+          "label": "Duración",
+          "placeholder": "Duración"
+        },
+        "cost": {
+          "label": "Coste",
+          "placeholder": "Coste"
+        },
+        "channel": {
+          "label": "Canal",
+          "all": "Todos los canales",
+          "phone_call": "Teléfono",
+          "web_call": "Web"
+        },
+        "direction": {
+          "label": "Dirección",
+          "all": "Todas las direcciones",
+          "inbound": "Entrante",
+          "outbound": "Saliente"
+        },
+        "status": {
+          "label": "Estado",
+          "all": "Todos los estados",
+          "completed": "Completada",
+          "in_progress": "En curso",
+          "no_answer": "Sin respuesta"
+        }
+      }
+    },
+    "contacts": {
+      "contacts_filters": {
+        "search": {
+          "label": "Buscar",
+          "placeholder": "Teléfono, nombre, apellidos, ID externo…"
+        },
+        "calls": {
+          "label": "Llamadas",
+          "placeholder": "Llamadas"
+        },
+        "total_time": {
+          "label": "Tiempo total",
+          "placeholder": "Tiempo total"
+        },
+        "first_call": {
+          "label": "Primera llamada"
+        },
+        "last_call": {
+          "label": "Última llamada"
+        }
+      },
+      "contacts_data_table": {
+        "columns": {
+          "phone": "Teléfono",
+          "first_name": "Nombre",
+          "last_name": "Apellidos",
+          "calls": "Llamadas",
+          "total_time": "Tiempo total",
+          "first_call": "Primera llamada",
+          "last_call": "Última llamada"
+        }
+      },
+      "download_contacts_dialog": {
+        "title": "Descargar contactos",
+        "description": "Recibirás un correo electrónico con todos los contactos",
+        "submit": "Enviar correo",
+        "toasts": {
+          "requested": "Los contactos se enviarán a tu correo en breve"
+        }
+      },
+      "contact_detail_sheet": {
+        "unknown": "Desconocido",
+        "status": {
+          "in_progress": "En curso",
+          "no_answer": "Sin respuesta",
+          "completed": "Completada"
+        },
+        "version": "V{{number}}",
+        "latest_version": "Última",
+        "stats": {
+          "total_time": "Tiempo total",
+          "average_per_call": "Media / llamada",
+          "first_call": "Primera llamada",
+          "last_call": "Última llamada"
+        },
+        "fields": {
+          "phone": "Teléfono",
+          "first_name": "Nombre",
+          "last_name": "Apellidos",
+          "external_id": "ID externo"
+        },
+        "calls": "Llamadas ({{total}})",
+        "no_calls": "Todavía no hay llamadas"
+      }
+    },
+    "phone_numbers": {
+      "phone_numbers_data_table": {
+        "columns": {
+          "number": "Número",
+          "agent": "Agente",
+          "version": "Versión",
+          "updated": "Actualizado"
+        },
+        "search_placeholder": "Buscar números de teléfono..."
+      },
+      "phone_number_row_actions": {
+        "toasts": {
+          "deleted": "{{number}} eliminado"
+        },
+        "open_actions": "Abrir acciones de {{number}}",
+        "delete_dialog": {
+          "title": "Eliminar número de teléfono",
+          "description": "Se eliminará \"{{number}}\" de forma permanente"
+        }
+      },
+      "add_phone_number_form": {
+        "trigger": "Añadir número de teléfono",
+        "title": "Añadir número de teléfono",
+        "description": "Añade un nuevo número de teléfono",
+        "number": {
+          "label": "Número de teléfono"
+        },
+        "sip_address": {
+          "label": "Dirección SIP"
+        },
+        "sip_username": {
+          "label": "Usuario SIP",
+          "placeholder": "usuario"
+        },
+        "sip_password": {
+          "label": "Contraseña SIP"
+        },
+        "submit": "Añadir número de teléfono"
+      },
+      "edit_phone_number_form": {
+        "title": "Editar número de teléfono",
+        "description": "Edita el número de teléfono y su conexión SIP",
+        "number": {
+          "label": "Número de teléfono"
+        },
+        "sip_address": {
+          "label": "Dirección SIP"
+        },
+        "sip_username": {
+          "label": "Usuario SIP",
+          "placeholder": "usuario"
+        },
+        "sip_password": {
+          "label": "Contraseña SIP"
+        }
+      },
+      "phone_number_sheet": {
+        "title": "Llamadas entrantes",
+        "agent": {
+          "label": "Agente de respuesta",
+          "none": "Sin agente"
+        },
+        "version": {
+          "label": "Versión",
+          "none": "Sin versión"
+        }
+      },
+      "test_call_button": {
+        "toasts": {
+          "started": "Llamada saliente iniciada"
+        },
+        "trigger": "Llamada de prueba",
+        "title": "Llamada de prueba",
+        "phone_number": {
+          "label": "Llamar desde",
+          "placeholder": "Selecciona un número de teléfono"
+        },
+        "to_number": {
+          "label": "Llamar a"
+        },
+        "agent": {
+          "label": "Agente",
+          "placeholder": "Selecciona un agente"
+        },
+        "version": {
+          "label": "Versión",
+          "none": "Sin versión"
+        },
+        "submit": "Iniciar llamada"
+      }
+    },
+    "settings": {
+      "billing": {
+        "billing_history": {
+          "status": {
+            "draft": "Borrador",
+            "open": "Abierta",
+            "paid": "Pagada",
+            "uncollectible": "Incobrable",
+            "void": "Anulada"
+          },
+          "empty": {
+            "title": "Aún no hay facturas",
+            "description": "Las facturas aparecerán aquí cuando compres créditos"
+          },
+          "columns": {
+            "created": "Fecha",
+            "amount": "Importe",
+            "status": "Estado",
+            "invoice": "Factura"
+          },
+          "view": "Ver"
+        },
+        "credit_balance": {
+          "title": "Saldo de créditos",
+          "empty": "Compra créditos para hacer o recibir llamadas"
+        }
+      },
+      "account": {
+        "delete_account": {
+          "email": {
+            "invalid": "Introduce un correo electrónico válido",
+            "mismatch": "El correo electrónico no coincide con el de tu cuenta",
+            "label": "Correo electrónico"
+          },
+          "toasts": {
+            "deleted": "Cuenta eliminada"
+          },
+          "danger_zone": "Zona de peligro",
+          "title": "Eliminar cuenta",
+          "description": "Elimina tu cuenta de forma permanente",
+          "trigger": "Eliminar cuenta",
+          "dialog": {
+            "title": "Eliminar cuenta",
+            "description": "Introduce tu correo electrónico para confirmar",
+            "confirm": "Eliminar cuenta"
+          }
+        },
+        "disable_two_factor_dialog": {
+          "password": {
+            "required": "La contraseña es obligatoria",
+            "label": "Contraseña"
+          },
+          "toasts": {
+            "disabled": "Autenticación en dos pasos desactivada"
+          },
+          "trigger": "Desactivar",
+          "title": "Desactivar la autenticación en dos pasos",
+          "description": "Introduce tu contraseña para desactivar la autenticación en dos pasos",
+          "submit": "Desactivar"
+        },
+        "enable_two_factor_dialog": {
+          "password": {
+            "required": "La contraseña es obligatoria",
+            "label": "Contraseña"
+          },
+          "errors": {
+            "enable_failed": "No se ha podido activar la autenticación en dos pasos"
+          },
+          "toasts": {
+            "enabled": "Autenticación en dos pasos activada"
+          },
+          "trigger": "Activar",
+          "title": "Activar la autenticación en dos pasos",
+          "password_description": "Introduce tu contraseña para continuar",
+          "setup_description": "Escanea el código QR con tu app de autenticación preferida",
+          "code_description": "Introduce el código de tu app de autenticación para terminar de activar la autenticación en dos pasos",
+          "submit": "Activar",
+          "backup_codes": {
+            "title": "Guarda tus códigos de respaldo",
+            "description": "Guarda estos códigos de respaldo en un lugar seguro. Cada código se puede usar una vez si pierdes el acceso a tu app de autenticación",
+            "confirm": "He guardado mis códigos"
+          }
+        },
+        "profile_picture": {
+          "errors": {
+            "upload_failed": "No se ha podido subir la imagen"
+          },
+          "toasts": {
+            "updated": "Foto de perfil actualizada",
+            "removed": "Foto de perfil eliminada"
+          },
+          "remove": "Eliminar foto de perfil"
+        },
+        "regenerate_backup_codes_dialog": {
+          "password": {
+            "required": "La contraseña es obligatoria",
+            "label": "Contraseña"
+          },
+          "errors": {
+            "generate_failed": "No se han podido generar los códigos de respaldo"
+          },
+          "toasts": {
+            "generated": "Nuevos códigos de respaldo generados"
+          },
+          "trigger": "Regenerar códigos",
+          "title": "Regenerar códigos de respaldo",
+          "description": "Introduce tu contraseña para regenerar los códigos de respaldo",
+          "submit": "Regenerar códigos",
+          "backup_codes": {
+            "title": "Guarda tus códigos de respaldo",
+            "description": "Guarda estos códigos de respaldo en un lugar seguro. Los códigos anteriores dejarán de funcionar",
+            "confirm": "He guardado mis códigos"
+          }
+        },
+        "set_new_password": {
+          "current_password": {
+            "required": "La contraseña actual es obligatoria",
+            "label": "Contraseña actual"
+          },
+          "password": {
+            "min": "La contraseña debe tener al menos 8 caracteres",
+            "uppercase": "La contraseña debe incluir al menos una letra mayúscula",
+            "lowercase": "La contraseña debe incluir al menos una letra minúscula",
+            "number": "La contraseña debe incluir al menos un número",
+            "label": "Nueva contraseña"
+          },
+          "confirm_password": {
+            "required": "Confirma tu contraseña",
+            "mismatch": "Las contraseñas no coinciden",
+            "label": "Confirmar contraseña"
+          },
+          "toasts": {
+            "updated": "Nueva contraseña establecida"
+          },
+          "title": "Contraseña",
+          "description": "Establece una nueva contraseña",
+          "trigger": "Establecer nueva contraseña",
+          "dialog": {
+            "title": "Establecer nueva contraseña",
+            "description": "Introduce tu contraseña actual y la nueva contraseña",
+            "submit": "Establecer nueva contraseña"
+          }
+        },
+        "two_factor_auth": {
+          "title": "Autenticación en dos pasos",
+          "enabled": "La app de autenticación está activada",
+          "disabled": "Añade una app de autenticación para proteger más tu cuenta"
+        },
+        "user_information": {
+          "name": {
+            "required": "El nombre es obligatorio",
+            "label": "Nombre"
+          },
+          "email": {
+            "label": "Correo electrónico"
+          },
+          "timezone": {
+            "label": "Zona horaria",
+            "placeholder": "Zona horaria"
+          },
+          "toasts": {
+            "updated": "Información de la cuenta actualizada"
+          },
+          "title": "Información de la cuenta",
+          "description": "Actualiza la información de tu cuenta",
+          "profile_picture": "Foto de perfil"
+        }
+      },
+      "organization": {
+        "delete_organization": {
+          "name": {
+            "required": "El nombre es obligatorio",
+            "mismatch": "El nombre no coincide con el de esta organización",
+            "label": "Nombre"
+          },
+          "toasts": {
+            "deleted": "Organización eliminada"
+          },
+          "danger_zone": "Zona de peligro",
+          "title": "Eliminar organización",
+          "description": "Elimina esta organización de forma permanente",
+          "trigger": "Eliminar organización",
+          "dialog": {
+            "title": "Eliminar organización",
+            "description": "Introduce el nombre de la organización para confirmar",
+            "confirm": "Eliminar organización"
+          }
+        },
+        "organization_information": {
+          "name": {
+            "required": "El nombre es obligatorio",
+            "label": "Nombre"
+          },
+          "slug": {
+            "required": "El slug es obligatorio",
+            "format": "El slug solo puede contener letras minúsculas, números y guiones",
+            "label": "Slug"
+          },
+          "toasts": {
+            "updated": "Información de la organización actualizada"
+          },
+          "title": "Información de la organización",
+          "description": "Actualiza la información de tu organización"
+        }
+      },
+      "sso": {
+        "disconnect_sso_provider": {
+          "toasts": {
+            "disconnected": "Proveedor desconectado"
+          },
+          "danger_zone": "Zona de peligro",
+          "title": "Desconectar proveedor",
+          "description": "Elimina esta conexión de forma permanente",
+          "trigger": "Desconectar proveedor",
+          "dialog": {
+            "title": "Desconectar proveedor",
+            "description": "Elimina esta conexión de forma permanente",
+            "confirm": "Desconectar proveedor"
+          }
+        },
+        "domain_list": {
+          "domain": {
+            "required": "Introduce un dominio",
+            "placeholder": "empresa.com"
+          },
+          "domains": {
+            "min": "Añade al menos un dominio"
+          },
+          "label": "Dominios de correo electrónico",
+          "remove": "Eliminar dominio {{index}}",
+          "add": "Añadir dominio"
+        },
+        "oidc_form": {
+          "issuer": {
+            "invalid": "Introduce la URL del emisor (issuer) del proveedor de identidad",
+            "label": "Issuer"
+          },
+          "client_id": {
+            "required": "El Client ID es obligatorio",
+            "label": "Client ID"
+          },
+          "client_secret": {
+            "required": "El client secret es obligatorio",
+            "label": "Client secret"
+          },
+          "toasts": {
+            "connected": "Proveedor conectado"
+          },
+          "redirect_url": "URL de redirección",
+          "submit": "Conectar proveedor"
+        },
+        "saml_form": {
+          "metadata": {
+            "required": "Pega los metadatos del proveedor de identidad",
+            "max": "Los metadatos son demasiado grandes",
+            "label": "Metadatos del proveedor de identidad"
+          },
+          "toasts": {
+            "connected": "Proveedor conectado"
+          },
+          "acs_url": "URL de ACS",
+          "entity_id": "Entity ID",
+          "submit": "Conectar proveedor"
+        },
+        "sso_settings": {
+          "title": "Inicio de sesión único",
+          "description_connected": "Gestiona tu proveedor {{type}}",
+          "description": "Conecta un proveedor de identidad a esta organización",
+          "status": {
+            "verified": "Verificado",
+            "pending": "Pendiente de verificación"
+          },
+          "redirect_url": "URL de redirección",
+          "acs_url": "URL de ACS",
+          "entity_id": "Entity ID",
+          "download_metadata": "Descargar metadatos del SP"
+        },
+        "update_provider_form": {
+          "toasts": {
+            "updated": "Proveedor actualizado"
+          }
+        },
+        "verify_domains": {
+          "toasts": {
+            "verified": "Dominio verificado"
+          },
+          "description": "Añade este registro TXT en cada dominio",
+          "name": "Nombre",
+          "content": "Contenido",
+          "submit": "Verificar"
+        }
+      },
+      "members": {
+        "invitation_row_actions": {
+          "toasts": {
+            "canceled": "Invitación a {{email}} cancelada"
+          },
+          "cancel_dialog": {
+            "title": "Cancelar invitación",
+            "description": "Se revocará la invitación enviada a {{email}}",
+            "keep": "Mantener",
+            "confirm": "Cancelar invitación"
+          },
+          "open_actions": "Abrir acciones de {{email}}",
+          "cancel": "Cancelar invitación"
+        },
+        "invitations_table": {
+          "columns": {
+            "email": "Correo electrónico",
+            "role": "Rol",
+            "invited_on": "Fecha de invitación"
+          }
+        },
+        "invite_member_dialog": {
+          "email": {
+            "invalid": "Introduce un correo electrónico válido",
+            "label": "Correo electrónico",
+            "placeholder": "nombre@ejemplo.com"
+          },
+          "role": {
+            "label": "Rol"
+          },
+          "toasts": {
+            "sent": "Invitación enviada a {{email}}"
+          },
+          "title": "Invitar miembro",
+          "description": "Envía una invitación por correo electrónico para unirse a esta organización",
+          "submit": "Enviar invitación"
+        },
+        "member_row_actions": {
+          "toasts": {
+            "removed": "{{name}} eliminado",
+            "left": "Has salido de la organización"
+          },
+          "remove_dialog": {
+            "title": "Eliminar miembro",
+            "description": "Se eliminará a {{name}} de esta organización",
+            "confirm": "Eliminar"
+          },
+          "leave_dialog": {
+            "title": "Salir de la organización",
+            "description": "Perderás el acceso a esta organización",
+            "confirm": "Salir"
+          },
+          "open_actions": "Abrir acciones de {{name}}",
+          "remove": "Eliminar miembro",
+          "leave": "Salir de la organización"
+        },
+        "members_table": {
+          "current_user": "{{name}} (tú)",
+          "columns": {
+            "name": "Nombre",
+            "email": "Correo electrónico",
+            "role": "Rol",
+            "member_since": "Miembro desde"
+          },
+          "search": {
+            "placeholder": "Buscar miembros..."
+          },
+          "invite": "Invitar miembro"
+        },
+        "select_role": {
+          "toasts": {
+            "member_updated": "{{name}} ahora es {{role}}",
+            "invitation_updated": "Rol de la invitación actualizado a {{role}}"
+          },
+          "owner": "Propietario",
+          "aria_label": "Rol de {{name}}"
+        }
+      },
+      "roles": {
+        "role_dialog": {
+          "resources": {
+            "organization": "Organización",
+            "member": "Miembros",
+            "invitation": "Invitaciones",
+            "team": "Equipos",
+            "ac": "Roles",
+            "agent": "Agentes",
+            "phone_number": "Números de teléfono",
+            "calls": "Llamadas",
+            "billing": "Facturación"
+          },
+          "actions": {
+            "create": "crear",
+            "read": "ver",
+            "update": "editar",
+            "delete": "eliminar",
+            "cancel": "cancelar",
+            "purchase": "comprar"
+          },
+          "toasts": {
+            "updated": "{{name}} actualizado",
+            "created": "{{name}} creado"
+          },
+          "edit_title": "Editar rol",
+          "create_title": "Crear rol",
+          "edit_description": "Actualiza lo que puede hacer \"{{name}}\"",
+          "create_description": "Elige un nombre y los permisos que debe tener este rol",
+          "name": {
+            "required": "El nombre es obligatorio",
+            "owner_exists": "El rol Propietario ya existe",
+            "label": "Nombre",
+            "placeholder": "Soporte"
+          },
+          "create_submit": "Crear rol"
+        },
+        "role_row_actions": {
+          "toasts": {
+            "deleted": "{{name}} eliminado"
+          },
+          "delete_dialog": {
+            "title": "Eliminar rol",
+            "description": "Se eliminará \"{{name}}\" de forma permanente. Los miembros que tengan este rol perderán sus permisos."
+          },
+          "open_actions": "Abrir acciones de {{name}}",
+          "edit": "Editar rol",
+          "delete": "Eliminar rol"
+        },
+        "roles_table": {
+          "permission_summary": "{{resource}} ({{actions}})",
+          "no_permissions": "Sin permisos",
+          "owner": {
+            "name": "Propietario",
+            "permissions": "Acceso completo. Este rol no se puede modificar."
+          },
+          "columns": {
+            "role": "Rol",
+            "permissions": "Permisos"
+          },
+          "search": {
+            "placeholder": "Buscar roles..."
+          },
+          "create": "Crear rol"
+        }
+      }
+    },
+    "sidebar": {
+      "nav_main": {
+        "sections": {
+          "build": "Construir",
+          "deploy": "Desplegar",
+          "monitor": "Supervisar",
+          "platform": "Plataforma"
+        },
+        "items": {
+          "agents": "Agentes",
+          "phone_numbers": "Números de teléfono",
+          "batch_calls": "Llamadas por lotes",
+          "calls": "Llamadas",
+          "contacts": "Contactos",
+          "settings": "Configuración"
+        }
+      },
+      "sidebar_credits": {
+        "balance": "Saldo de créditos:"
+      },
+      "nav_user": {
+        "theme": {
+          "label": "Tema",
+          "light": "Claro",
+          "dark": "Oscuro",
+          "system": "Sistema"
+        },
+        "sign_out": "Cerrar sesión"
+      },
+      "create_organization_dialog": {
+        "title": "Crear organización",
+        "description": "Crea una organización",
+        "name": {
+          "label": "Nombre de la organización",
+          "placeholder": "Acme Inc",
+          "required": "El nombre de la organización es obligatorio"
+        },
+        "submit": "Crear organización",
+        "toasts": {
+          "created": "Organización creada"
+        }
+      },
+      "organization_switcher": {
+        "organizations": "Organizaciones",
+        "add_organization": "Añadir organización"
+      }
+    },
+    "filters": {
+      "date_range_filter": {
+        "all_dates": "Todas las fechas"
+      },
+      "filter_multi_select": {
+        "empty": "No se han encontrado elementos",
+        "search_placeholder": "Buscar..."
+      },
+      "filter_single_select": {
+        "empty": "No se han encontrado elementos"
+      },
+      "numeric_filter": {
+        "operators": {
+          "eq": "es igual a",
+          "between": "está entre",
+          "gte": "es mayor o igual que",
+          "lte": "es menor o igual que"
+        },
+        "and": "y"
+      }
+    },
+    "copy_button": {
+      "toasts": {
+        "copy_failed": "No se ha podido copiar"
+      }
+    },
+    "variable_values_fields": {
+      "placeholder": "Valor para {{variable}}"
+    },
+    "voice_agent_client": {
+      "start_call": "Iniciar llamada",
+      "calling": "Llamando...",
+      "end_call": "Finalizar llamada"
+    },
+    "helpers": {
+      "deleted_agent": "Agente eliminado",
+      "deleted_phone_number": "Número de teléfono eliminado",
+      "agent_version_draft": "Última (borrador)"
+    }
+  }
+}

@@ -10,6 +10,7 @@ import {
   organizationInvitationsQueryOptions,
   organizationMembersQueryOptions,
 } from "@/lib/auth/organization"
+import { useTranslation } from "@/lib/i18n"
 
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/settings/members/"
@@ -33,9 +34,10 @@ function MembersSettingsSkeleton() {
 }
 
 function Page() {
+  const { t } = useTranslation()
   return (
     <>
-      <title>Members settings - Phoneflow</title>
+      <title>{t("routes.settings.members.page_title")}</title>
       <Suspense fallback={<MembersSettingsSkeleton />}>
         <MembersSettings />
       </Suspense>
@@ -44,6 +46,7 @@ function Page() {
 }
 
 function MembersSettings() {
+  const { t } = useTranslation()
   const { data: members } = useSuspenseQuery(organizationMembersQueryOptions())
   const { data: invitations } = useSuspenseQuery(
     organizationInvitationsQueryOptions()
@@ -54,7 +57,9 @@ function MembersSettings() {
       <MembersTable data={members} />
       <div>
         <FieldSet>
-          <FieldLegend>Pending invitations</FieldLegend>
+          <FieldLegend>
+            {t("routes.settings.members.pending_invitations")}
+          </FieldLegend>
         </FieldSet>
         <InvitationsTable data={invitations} />
       </div>

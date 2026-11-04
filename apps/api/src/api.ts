@@ -4,6 +4,7 @@ import { logger } from "hono/logger"
 
 import { auth } from "@/lib/auth/config"
 import { env } from "@/lib/env"
+import { localeMiddleware } from "@/lib/i18n"
 import { agentRoutes } from "@/routes/agents"
 import { batchCallRoutes } from "@/routes/batch-calls"
 import { billingRoutes } from "@/routes/billing"
@@ -27,6 +28,8 @@ api.use(
 if (env.NODE_ENV !== "production") {
   api.use(logger())
 }
+
+api.use("*", localeMiddleware)
 
 api.on(["POST", "GET"], "/api/auth/*", (c) => {
   return auth.handler(c.req.raw)

@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import {
   useMutation,
   useQueryClient,
@@ -39,6 +38,8 @@ import { Textarea } from "@workspace/ui/components/textarea"
 import { areAgentConfigsEqual } from "@/components/flow/agent-config"
 import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 import { useAgentStore } from "@/stores/agent"
 
 const AgentConfigDiff = lazy(() =>
@@ -70,6 +71,7 @@ function PublishAgentConfigDiff({
 export function PublishAgentForm() {
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
   const agent = useAgentStore((state) => state.agent)
   const savedConfig = useAgentStore((state) => state.savedConfig)
   const canPublish = useAgentStore(
@@ -82,7 +84,7 @@ export function PublishAgentForm() {
   const nextVersionNumber = (latestVersion?.number ?? 0) + 1
 
   const form = useForm<PublishAgentRequest>({
-    resolver: zodResolver(publishAgentRequestSchema),
+    resolver: zodResolverI18n(publishAgentRequestSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -101,7 +103,11 @@ export function PublishAgentForm() {
         agent_version_id: publishedVersion.id,
         version_number: publishedVersion.number,
       })
-      toast.success(`V${publishedVersion.number} published`)
+      toast.success(
+        t("components.agents.publish_agent_form.toasts.published", {
+          number: publishedVersion.number,
+        })
+      )
       form.reset()
       setOpen(false)
       queryClient.invalidateQueries({
@@ -126,12 +132,18 @@ export function PublishAgentForm() {
     >
       <Button disabled={!canPublish} onClick={() => setOpen(true)}>
         <UploadIcon />
-        Publish
+        {t("components.agents.publish_agent_form.trigger")}
       </Button>
       <DialogContent className="sm:max-w-6xl">
         <DialogHeader>
-          <DialogTitle>Publish V{nextVersionNumber}</DialogTitle>
-          <DialogDescription>Publish a new agent version</DialogDescription>
+          <DialogTitle>
+            {t("components.agents.publish_agent_form.title", {
+              number: nextVersionNumber,
+            })}
+          </DialogTitle>
+          <DialogDescription>
+            {t("components.agents.publish_agent_form.description")}
+          </DialogDescription>
         </DialogHeader>
 
         <form
@@ -146,13 +158,17 @@ export function PublishAgentForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t("components.agents.publish_agent_form.name.label")}
+                  </FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
                     value={field.value ?? ""}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Version name (optional)"
+                    placeholder={t(
+                      "components.agents.publish_agent_form.name.placeholder"
+                    )}
                     autoComplete="off"
                     disabled={publishAgentMutation.isPending}
                   />
@@ -168,13 +184,19 @@ export function PublishAgentForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Description</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.agents.publish_agent_form.version_description.label"
+                    )}
+                  </FieldLabel>
                   <Textarea
                     {...field}
                     id={field.name}
                     value={field.value ?? ""}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Version description (optional)"
+                    placeholder={t(
+                      "components.agents.publish_agent_form.version_description.placeholder"
+                    )}
                     disabled={publishAgentMutation.isPending}
                   />
                   {fieldState.invalid && (
@@ -206,14 +228,14 @@ export function PublishAgentForm() {
                 variant="outline"
                 disabled={publishAgentMutation.isPending}
               >
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button type="submit" disabled={publishAgentMutation.isPending}>
               {publishAgentMutation.isPending ? (
                 <Spinner className="mx-5" />
               ) : (
-                "Publish"
+                t("components.agents.publish_agent_form.submit")
               )}
             </Button>
           </DialogFooter>

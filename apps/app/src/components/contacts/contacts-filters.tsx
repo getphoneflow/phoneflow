@@ -10,6 +10,7 @@ import {
 } from "@workspace/ui/components/input-group"
 import { DateRangeFilter } from "@/components/filters/date-range-filter"
 import { NumericFilter } from "@/components/filters/numeric-filter"
+import { useTranslation } from "@/lib/i18n"
 
 type ContactListFilters = Omit<
   ContactListQuery,
@@ -25,6 +26,7 @@ export function ContactsFilters({
   filters,
   onFiltersChange,
 }: ContactsFiltersProps) {
+  const { t } = useTranslation()
   const [search, setSearch] = useState(filters.q ?? "")
   const filtersRef = useRef(filters)
   const onFiltersChangeRef = useRef(onFiltersChange)
@@ -53,11 +55,15 @@ export function ContactsFilters({
   return (
     <div className="mb-5 flex flex-wrap items-end gap-3">
       <Field className="w-85 gap-1.5">
-        <FieldLabel htmlFor="contacts-search">Search</FieldLabel>
+        <FieldLabel htmlFor="contacts-search">
+          {t("components.contacts.contacts_filters.search.label")}
+        </FieldLabel>
         <InputGroup>
           <InputGroupInput
             id="contacts-search"
-            placeholder="Phone, first name, last name, external ID…"
+            placeholder={t(
+              "components.contacts.contacts_filters.search.placeholder"
+            )}
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
@@ -68,8 +74,10 @@ export function ContactsFilters({
       </Field>
 
       <NumericFilter
-        label="Calls"
-        placeholder="Calls"
+        label={t("components.contacts.contacts_filters.calls.label")}
+        placeholder={t(
+          "components.contacts.contacts_filters.calls.placeholder"
+        )}
         operator={filters.callCountOp}
         value={filters.callCount}
         valueMax={filters.callCountMax}
@@ -84,8 +92,10 @@ export function ContactsFilters({
       />
 
       <NumericFilter
-        label="Total time"
-        placeholder="Total time"
+        label={t("components.contacts.contacts_filters.total_time.label")}
+        placeholder={t(
+          "components.contacts.contacts_filters.total_time.placeholder"
+        )}
         unitAfter="s"
         operator={filters.durationOp}
         value={filters.duration}
@@ -102,7 +112,7 @@ export function ContactsFilters({
 
       <DateRangeFilter
         id="contacts-first-call"
-        label="First call"
+        label={t("components.contacts.contacts_filters.first_call.label")}
         from={filters.firstCallFrom}
         to={filters.firstCallTo}
         onChange={({ from, to }) =>
@@ -116,7 +126,7 @@ export function ContactsFilters({
 
       <DateRangeFilter
         id="contacts-last-call"
-        label="Last call"
+        label={t("components.contacts.contacts_filters.last_call.label")}
         from={filters.latestCallFrom}
         to={filters.latestCallTo}
         onChange={({ from, to }) =>

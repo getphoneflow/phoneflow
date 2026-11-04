@@ -3,8 +3,10 @@ import { useState } from "react"
 
 import { Button } from "@workspace/ui/components/button"
 import { toast } from "@workspace/ui/components/sonner"
+import { useTranslation } from "@/lib/i18n"
 
 export function CopyButton({ value }: { value: string }) {
+  const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
 
   async function handleCopy() {
@@ -13,7 +15,7 @@ export function CopyButton({ value }: { value: string }) {
       setCopied(true)
       window.setTimeout(() => setCopied(false), 1000)
     } catch {
-      toast.error("Couldn't copy")
+      toast.error(t("components.copy_button.toasts.copy_failed"))
     }
   }
 
@@ -22,7 +24,7 @@ export function CopyButton({ value }: { value: string }) {
       type="button"
       variant="outline"
       size="icon"
-      aria-label="Copy"
+      aria-label={t("common.actions.copy")}
       onClick={handleCopy}
     >
       {copied ? <CheckIcon /> : <CopyIcon />}

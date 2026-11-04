@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { PlusIcon } from "lucide-react"
 import { type ComponentProps, useState } from "react"
@@ -39,6 +38,8 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 type AddCreditsButtonProps = {
   size?: ComponentProps<typeof Button>["size"]
@@ -49,10 +50,11 @@ export function AddCreditsButton({
   size = "default",
   className,
 }: AddCreditsButtonProps) {
+  const { t } = useTranslation()
   const canPurchase = useCheckPermission({ billing: ["purchase"] })
   const [open, setOpen] = useState(false)
   const form = useForm<CreateCheckoutRequest>({
-    resolver: zodResolver(createCheckoutRequestSchema),
+    resolver: zodResolverI18n(createCheckoutRequestSchema),
     defaultValues: {
       amount: DEFAULT_CREDIT_PURCHASE_AMOUNT,
     },
@@ -88,9 +90,11 @@ export function AddCreditsButton({
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add credits</DialogTitle>
+            <DialogTitle>
+              {t("components.billing.add_credits_button.title")}
+            </DialogTitle>
             <DialogDescription>
-              Add more credits to this organization balance
+              {t("components.billing.add_credits_button.description")}
             </DialogDescription>
           </DialogHeader>
 
@@ -107,7 +111,9 @@ export function AddCreditsButton({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Credit amount</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t("components.billing.add_credits_button.amount.label")}
+                    </FieldLabel>
                     <InputGroup>
                       <InputGroupAddon>$</InputGroupAddon>
                       <InputGroupInput
@@ -134,15 +140,14 @@ export function AddCreditsButton({
             </FieldGroup>
 
             <p className="mt-6 text-xs text-muted-foreground">
-              Sales tax, VAT, or other indirect taxes may be added to the charge
-              according to your local regulations.
+              {t("components.billing.add_credits_button.tax_notice")}
             </p>
           </form>
 
           <DialogFooter>
             <DialogClose>
               <Button type="button" variant="outline">
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button
@@ -153,7 +158,7 @@ export function AddCreditsButton({
               {checkoutMutation.isPending ? (
                 <Spinner className="mx-8" />
               ) : (
-                "Add credits"
+                t("components.billing.add_credits_button.submit")
               )}
             </Button>
           </DialogFooter>
@@ -171,7 +176,7 @@ export function AddCreditsButton({
         }}
       >
         <PlusIcon className={size === "sm" ? "size-3.5" : undefined} />
-        Add credits
+        {t("components.billing.add_credits_button.trigger")}
       </Button>
     </>
   )

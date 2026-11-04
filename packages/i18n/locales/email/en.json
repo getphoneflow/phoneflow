@@ -1,0 +1,30 @@
+{
+  "reset_password": {
+    "subject": "Reset Password",
+    "preview": "Reset your password",
+    "greeting": "Hi {{name}},",
+    "body": "We received a request to reset your password. If this was you, you can set a new password here:",
+    "cta": "Set new password",
+    "ignore": "If you didn't make this request, you can safely ignore this email."
+  },
+  "verification_otp": {
+    "subject": "Verify your email",
+    "preview": "Verify your email address",
+    "body": "Thanks for signing up. Use this code to verify your email address:",
+    "ignore": "If you didn't create an account, you can safely ignore this email."
+  },
+  "accept_organization_invitation": {
+    "subject": "Accept invitation to join {{organization_name}}",
+    "preview": "Accept invitation to join {{organization_name}}",
+    "body": "You have been invited to join {{organization_name}}. Click the button below to accept the invitation:",
+    "cta": "Accept invitation"
+  },
+  "download_calls": {
+    "subject": "Download calls from {{organization_name}}",
+    "body": "Download calls"
+  },
+  "download_contacts": {
+    "subject": "Download contacts from {{organization_name}}",
+    "body": "Download contacts"
+  }
+}

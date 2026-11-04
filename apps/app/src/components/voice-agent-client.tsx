@@ -11,6 +11,7 @@ import type { CallVariableValues } from "@workspace/shared/api/calls/types"
 import { Button } from "@workspace/ui/components/button"
 import { captureEvent } from "@/lib/analytics"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
 
 const tokenSource = TokenSource.endpoint(`${env.API_URL}/api/token`, {
   credentials: "include",
@@ -31,6 +32,7 @@ export function VoiceAgentClient({
   preCallContent,
   children,
 }: VoiceAgentClientProps) {
+  const { t } = useTranslation()
   const session = useSession(tokenSource, {
     agentName: env.LIVEKIT_AGENT_NAME,
     participantAttributes: {
@@ -65,7 +67,7 @@ export function VoiceAgentClient({
           <div className="pb-8 pt-4 mx-auto">
             <Button variant="destructive" onClick={handleDisconnect}>
               <PhoneOffIcon />
-              End call
+              {t("components.voice_agent_client.end_call")}
             </Button>
           </div>
         </div>
@@ -75,7 +77,9 @@ export function VoiceAgentClient({
           <div className="flex flex-1 items-center justify-center">
             <Button onClick={handleConnect} disabled={isConnecting}>
               <PhoneIcon />
-              {isConnecting ? "Calling..." : "Start call"}
+              {isConnecting
+                ? t("components.voice_agent_client.calling")
+                : t("components.voice_agent_client.start_call")}
             </Button>
           </div>
         </div>

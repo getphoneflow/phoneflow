@@ -7,10 +7,12 @@ import {
 } from "@/components/variable-values-fields"
 import { VoiceAgentClient } from "@/components/voice-agent-client"
 import { VoiceAgentTranscript } from "@/components/voice-agent-transcript"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "./base"
 
 export function TestPanel() {
+  const { t } = useTranslation()
   const agent = useAgentStore((state) => state.agent)
   const dynamicVariables = useAgentStore(
     (state) => state.config.dynamicVariables
@@ -19,7 +21,10 @@ export function TestPanel() {
   const [values, setValues] = useState<CallVariableValues>({})
 
   return (
-    <FlowSidePanelBase title="Test agent" contentClassName="p-0">
+    <FlowSidePanelBase
+      title={t("components.flow.sidepanel.test.title")}
+      contentClassName="p-0"
+    >
       <VoiceAgentClient
         agentId={agent.id}
         agentVersionId={activeVersionId ?? undefined}

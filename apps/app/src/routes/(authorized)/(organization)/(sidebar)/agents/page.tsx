@@ -14,6 +14,7 @@ import { AgentsDataTable } from "@/components/agents/agents-data-table"
 import { CreateAgentForm } from "@/components/agents/create-agent-form"
 import { ImportAgentForm } from "@/components/agents/import-agent-form"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
 
 function queryOptions() {
   return {
@@ -29,6 +30,8 @@ export const Route = createFileRoute(
 })
 
 function Header() {
+  const { t } = useTranslation()
+
   return (
     <header className="flex h-18 items-center gap-2 px-5">
       <SidebarTrigger className="-ml-1" />
@@ -39,7 +42,7 @@ function Header() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbPage>Agents</BreadcrumbPage>
+            <BreadcrumbPage>{t("routes.agents.breadcrumb")}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -52,11 +55,12 @@ function Header() {
 }
 
 function Page() {
+  const { t } = useTranslation()
   const { data: agents } = useSuspenseQuery(queryOptions())
 
   return (
     <>
-      <title>Agents - Phoneflow</title>
+      <title>{t("routes.agents.page_title")}</title>
       <Header />
       <div className="p-5 pt-0">
         <AgentsDataTable data={agents} />

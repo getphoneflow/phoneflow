@@ -8,6 +8,7 @@ import {
 import { cn } from "cn"
 
 import type { FlowEdgeConfig } from "@workspace/shared/api/agent-config/types"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 import { FlowEdgeActions } from "./actions"
 import { formatConditionLabel } from "./condition-format"
@@ -32,6 +33,7 @@ export function ConditionEdge({
     targetY,
   })
 
+  const { t } = useTranslation()
   const selectEdge = useAgentStore((state) => state.selectEdge)
   const errors = useAgentStore((state) => {
     const messages = state.flowErrors.byEdgeId[id]
@@ -58,7 +60,7 @@ export function ConditionEdge({
             )}
             onClick={() => selectEdge({ id, source, target, data: data! })}
           >
-            {data ? formatConditionLabel(data.condition) : ""}
+            {data ? formatConditionLabel(data.condition, t) : ""}
           </div>
           {selected && <FlowEdgeActions id={id} />}
           {hasError && (

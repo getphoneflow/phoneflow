@@ -17,6 +17,7 @@ import {
 } from "@workspace/ui/components/input-otp"
 import { toast } from "@workspace/ui/components/sonner"
 import { emailOtp } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
 
 export const Route = createFileRoute("/(unauthorized)/email-verification/")({
   beforeLoad: ({ search }) => {
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/(unauthorized)/email-verification/")({
 })
 
 function Page() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { email, redirect: redirectTo } = Route.useSearch()
@@ -73,7 +75,7 @@ function Page() {
       }
     },
     onSuccess: () => {
-      toast.success("A new verification code was sent")
+      toast.success(t("routes.email_verification.toasts.code_sent"))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -85,13 +87,15 @@ function Page() {
 
   return (
     <>
-      <title>Verify your email - Phoneflow</title>
+      <title>{t("routes.email_verification.page_title")}</title>
       <div className="flex h-screen w-full items-center justify-center p-6">
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Verify your email</CardTitle>
+            <CardTitle className="text-xl">
+              {t("routes.email_verification.title")}
+            </CardTitle>
             <CardDescription>
-              Enter the verification code sent to your email
+              {t("routes.email_verification.description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -119,14 +123,14 @@ function Page() {
             </InputOTP>
             <div className="text-center text-sm">
               <span className="text-muted-foreground">
-                Didn't receive an email?{" "}
+                {t("routes.email_verification.no_email")}{" "}
               </span>
               <button
                 className="underline disabled:opacity-50"
                 disabled={isPending}
                 onClick={() => sendVerificationOtpMutation.mutate()}
               >
-                Resend
+                {t("routes.email_verification.resend")}
               </button>
             </div>
           </CardContent>

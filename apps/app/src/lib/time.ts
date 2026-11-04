@@ -1,3 +1,5 @@
+import i18n from "@/lib/i18n"
+
 export const TIME_ZONES = Intl.supportedValuesOf("timeZone")
 
 type Instant = string | Date | number
@@ -46,7 +48,7 @@ function toUtcInstant(wallClockUtc: number, timeZone: string) {
 }
 
 export function formatDateTime(value: Instant, timeZone: string) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat(i18n.language, {
     dateStyle: "medium",
     timeStyle: "short",
     timeZone,
@@ -54,7 +56,7 @@ export function formatDateTime(value: Instant, timeZone: string) {
 }
 
 export function formatDate(value: Instant, timeZone: string) {
-  return new Intl.DateTimeFormat("en", {
+  return new Intl.DateTimeFormat(i18n.language, {
     month: "short",
     day: "numeric",
     year: "numeric",

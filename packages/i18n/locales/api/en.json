@@ -1,0 +1,93 @@
+{
+  "auth": {
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "no_active_organization": "No active organization"
+  },
+  "validator": {
+    "failed": "Validation failed"
+  },
+  "agents": {
+    "list_failed": "Failed to load agents",
+    "create_failed": "Failed to create agent",
+    "not_found": "Agent not found",
+    "duplicate_failed": "Failed to duplicate agent",
+    "load_failed": "Failed to load agent",
+    "load_config_failed": "Failed to load agent config",
+    "update_name_failed": "Failed to update agent name",
+    "update_config_failed": "Failed to update agent config",
+    "delete_failed": "Failed to delete agent",
+    "list_versions_failed": "Failed to load agent versions",
+    "version_not_found": "Agent version not found",
+    "load_version_config_failed": "Failed to load agent version config",
+    "publish_failed": "Failed to publish agent version"
+  },
+  "batch_calls": {
+    "list_failed": "Failed to load batch calls",
+    "phone_number_not_found": "Phone number not found",
+    "phone_number_without_sip": "Phone number has no SIP connection",
+    "agent_not_found": "Agent not found",
+    "insufficient_credits": "Insufficient credits",
+    "agent_version_not_found": "Agent version not found",
+    "scheduled_at_in_past": "Scheduled time must be in the future",
+    "create_failed": "Failed to create batch call"
+  },
+  "billing": {
+    "load_failed": "Failed to load billing",
+    "list_invoices_failed": "Failed to load invoices",
+    "not_configured": "Billing is not configured",
+    "stripe_customer_not_found": "Stripe customer not found for this organization",
+    "create_checkout_session_failed": "Failed to create checkout session",
+    "start_checkout_failed": "Failed to start checkout",
+    "checkout_session_not_found": "Checkout session not found",
+    "confirm_checkout_failed": "Failed to confirm checkout",
+    "organization_not_found": "Organization not found",
+    "load_auto_reload_failed": "Failed to load auto reload settings",
+    "payment_method_required": "Add a payment method in Manage billing information before enabling auto reload",
+    "update_auto_reload_failed": "Failed to update auto reload settings",
+    "open_portal_failed": "Failed to open billing portal",
+    "minimum_purchase": "Minimum purchase is ${{amount}}"
+  },
+  "calls": {
+    "not_found": "Call not found",
+    "user_email_not_found": "User email not found",
+    "organization_not_found": "Organization not found",
+    "request_download_failed": "Failed to request calls download",
+    "load_recording_failed": "Failed to fetch recording",
+    "not_in_progress": "Call is not in progress",
+    "join_failed": "Failed to join call",
+    "end_failed": "Failed to end call",
+    "load_failed": "Failed to fetch call",
+    "list_failed": "Failed to load calls",
+    "phone_number_not_found": "Phone number not found",
+    "phone_number_without_sip": "Phone number has no SIP connection",
+    "agent_not_found": "Agent not found",
+    "insufficient_credits": "Insufficient credits",
+    "agent_version_not_found": "Agent version not found",
+    "start_outbound_failed": "Failed to start outbound call"
+  },
+  "contacts": {
+    "user_email_not_found": "User email not found",
+    "organization_not_found": "Organization not found",
+    "request_download_failed": "Failed to request contacts download",
+    "not_found": "Contact not found",
+    "load_failed": "Failed to fetch contact",
+    "list_failed": "Failed to load contacts"
+  },
+  "phone_numbers": {
+    "list_failed": "Failed to load phone numbers",
+    "agent_not_found": "Agent not found",
+    "provision_failed": "Failed to provision inbound SIP",
+    "create_failed": "Failed to create phone number",
+    "not_found": "Phone number not found",
+    "update_failed": "Failed to update phone number",
+    "delete_failed": "Failed to delete phone number"
+  },
+  "user": {
+    "storage_not_configured": "File storage is not configured",
+    "image_required": "Image file is required",
+    "image_type_invalid": "Image must be JPEG, PNG, WebP, or GIF",
+    "image_too_large": "Image must be 2MB or smaller",
+    "upload_image_failed": "Failed to upload image"
+  }
+}

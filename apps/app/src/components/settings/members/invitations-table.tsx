@@ -40,6 +40,7 @@ import { InvitationRoleSelect } from "@/components/settings/members/select-role"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
 import type { OrganizationInvitation } from "@/lib/auth/organization"
+import { useTranslation } from "@/lib/i18n"
 
 const features = tableFeatures({
   columnVisibilityFeature,
@@ -55,6 +56,7 @@ type InvitationsTableProps = {
 }
 
 export function InvitationsTable({ data }: InvitationsTableProps) {
+  const { t } = useTranslation()
   const [sorting, setSorting] = useState<SortingState>([])
 
   const pendingInvitations = useMemo(
@@ -69,16 +71,29 @@ export function InvitationsTable({ data }: InvitationsTableProps) {
 
   const columns = columnHelper.columns([
     columnHelper.accessor("email", {
-      header: ({ column }) => <SortableHeader column={column} title="Email" />,
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t(
+            "components.settings.members.invitations_table.columns.email"
+          )}
+        />
+      ),
       cell: ({ row }) => row.original.email,
     }),
     columnHelper.accessor("role", {
-      header: "Role",
+      header: () =>
+        t("components.settings.members.invitations_table.columns.role"),
       cell: ({ row }) => <InvitationRoleSelect invitation={row.original} />,
     }),
     columnHelper.accessor("createdAt", {
       header: ({ column }) => (
-        <SortableHeader column={column} title="Invited on" />
+        <SortableHeader
+          column={column}
+          title={t(
+            "components.settings.members.invitations_table.columns.invited_on"
+          )}
+        />
       ),
       cell: ({ row }) => <UserDateTime value={row.original.createdAt} />,
     }),
@@ -144,7 +159,7 @@ export function InvitationsTable({ data }: InvitationsTableProps) {
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No results
+                  {t("common.table.no_results")}
                 </TableCell>
               </TableRow>
             )}
@@ -168,12 +183,16 @@ export function InvitationsTable({ data }: InvitationsTableProps) {
               ))}
             </SelectContent>
           </Select>
-          <span className="text-sm font-medium">Rows per page</span>
+          <span className="text-sm font-medium">
+            {t("common.table.rows_per_page")}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.state.pagination.pageIndex + 1} of{" "}
-            {table.getPageCount() || 1}
+            {t("common.table.page", {
+              page: table.state.pagination.pageIndex + 1,
+              total: table.getPageCount() || 1,
+            })}
           </span>
           <Button
             variant="outline"

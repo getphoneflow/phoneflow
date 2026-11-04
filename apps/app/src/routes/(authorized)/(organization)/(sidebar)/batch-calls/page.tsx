@@ -15,6 +15,7 @@ import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { BatchCallsDataTable } from "@/components/batch-calls/batch-calls-data-table"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 
 function batchCallsQueryOptions() {
   return {
@@ -30,6 +31,7 @@ export const Route = createFileRoute(
 })
 
 function Header() {
+  const { t } = useTranslation()
   const canCreate = useCheckPermission({ calls: ["create"] })
 
   return (
@@ -42,7 +44,9 @@ function Header() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbPage>Batch calls</BreadcrumbPage>
+            <BreadcrumbPage>
+              {t("routes.batch_calls.breadcrumb")}
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -52,7 +56,7 @@ function Header() {
           disabled={!canCreate}
         >
           <PlusIcon />
-          Create batch call
+          {t("routes.batch_calls.create_batch_call")}
         </Button>
       </div>
     </header>
@@ -60,11 +64,12 @@ function Header() {
 }
 
 function Page() {
+  const { t } = useTranslation()
   const { data: batchCalls } = useSuspenseQuery(batchCallsQueryOptions())
 
   return (
     <>
-      <title>Batch calls - Phoneflow</title>
+      <title>{t("routes.batch_calls.page_title")}</title>
       <Header />
       <div className="p-5 pt-0">
         <BatchCallsDataTable data={batchCalls} />

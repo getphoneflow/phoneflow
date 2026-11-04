@@ -1,11 +1,15 @@
 /** @jsxRuntime automatic */
 import { Body, Html, Text } from "react-email"
 
-export default function DownloadCallsEmail() {
+import { useTranslation } from "@workspace/email/i18n"
+
+export default function DownloadCallsEmail({ locale }: { locale: string }) {
+  const t = useTranslation(locale)
+
   return (
     <Html>
       <Body>
-        <Text>Download calls from Phoneflow</Text>
+        <Text>{t("download_calls.body")}</Text>
       </Body>
     </Html>
   )

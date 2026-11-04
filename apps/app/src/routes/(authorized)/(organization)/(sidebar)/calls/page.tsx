@@ -23,6 +23,7 @@ import { CallsFilters } from "@/components/calls/calls-filters"
 import { DownloadCallsDialog } from "@/components/calls/download-calls-dialog"
 import { LiveCallSheet } from "@/components/calls/live-call-sheet"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
 
 const callsPageSearchSchema = callListQuerySchema.extend({
   callId: z.uuid().optional(),
@@ -129,6 +130,8 @@ export const Route = createFileRoute(
 })
 
 function Header() {
+  const { t } = useTranslation()
+
   return (
     <header className="flex h-18 items-center gap-2 px-5">
       <SidebarTrigger className="-ml-1" />
@@ -139,7 +142,7 @@ function Header() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbPage>Calls</BreadcrumbPage>
+            <BreadcrumbPage>{t("routes.calls.breadcrumb")}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -151,12 +154,13 @@ function Header() {
 }
 
 function Page() {
+  const { t } = useTranslation()
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
 
   return (
     <>
-      <title>Calls - Phoneflow</title>
+      <title>{t("routes.calls.page_title")}</title>
       <Header />
       <div className="p-5 pt-0">
         <CallsFilters

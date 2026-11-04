@@ -24,6 +24,7 @@ import { ContactsDataTable } from "@/components/contacts/contacts-data-table"
 import { ContactsFilters } from "@/components/contacts/contacts-filters"
 import { DownloadContactsDialog } from "@/components/contacts/download-contacts-dialog"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
 
 const contactsPageSearchSchema = contactListQuerySchema.extend({
   contactId: z.uuid().optional(),
@@ -100,6 +101,8 @@ export const Route = createFileRoute(
 })
 
 function Header() {
+  const { t } = useTranslation()
+
   return (
     <header className="flex h-18 items-center gap-2 px-5">
       <SidebarTrigger className="-ml-1" />
@@ -110,7 +113,7 @@ function Header() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbPage>Contacts</BreadcrumbPage>
+            <BreadcrumbPage>{t("routes.contacts.breadcrumb")}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -122,12 +125,13 @@ function Header() {
 }
 
 function Page() {
+  const { t } = useTranslation()
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
 
   return (
     <>
-      <title>Contacts - Phoneflow</title>
+      <title>{t("routes.contacts.page_title")}</title>
       <Header />
       <div className="p-5 pt-0">
         <ContactsFilters

@@ -6,6 +6,7 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/package.json
 COPY packages/db/package.json ./packages/db/package.json
+COPY packages/i18n/package.json ./packages/i18n/package.json
 COPY packages/shared/package.json ./packages/shared/package.json
 
 FROM base AS build-deps
@@ -20,6 +21,7 @@ FROM build-deps AS build
 
 COPY apps/api ./apps/api
 COPY packages/db ./packages/db
+COPY packages/i18n ./packages/i18n
 COPY packages/shared ./packages/shared
 
 RUN pnpm --filter api build

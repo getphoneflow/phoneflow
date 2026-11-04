@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from "@workspace/ui/components/popover"
 import { useUserTimeZone } from "@/components/user-timezone-provider"
+import { useTranslation } from "@/lib/i18n"
 import { formatDate, zonedDayBounds } from "@/lib/time"
 
 export function DateRangeFilter({
@@ -25,6 +26,7 @@ export function DateRangeFilter({
   to?: string
   onChange: (next: { from?: string; to?: string }) => void
 }) {
+  const { t } = useTranslation()
   const timeZone = useUserTimeZone()
   const selectedDateRange = from
     ? {
@@ -60,7 +62,7 @@ export function DateRangeFilter({
               formatDate(selectedDateRange.from, timeZone)
             )
           ) : (
-            <span>All dates</span>
+            <span>{t("components.filters.date_range_filter.all_dates")}</span>
           )}
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">

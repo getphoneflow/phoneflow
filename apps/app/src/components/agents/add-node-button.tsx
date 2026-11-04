@@ -13,6 +13,7 @@ import {
   getNextNodePosition,
   SIDE_PANEL_OFFSET_PX,
 } from "@/components/flow/node-position"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 export function AddNodeButton() {
@@ -20,6 +21,7 @@ export function AddNodeButton() {
   const addNode = useAgentStore((state) => state.addNode)
   const nodes = useAgentStore((state) => state.config.nodes)
   const flow = useReactFlow()
+  const { t } = useTranslation()
 
   function handleAdd(type: "start" | "conversation" | "end") {
     const id = `${type}-${Date.now()}`
@@ -73,7 +75,7 @@ export function AddNodeButton() {
       <DropdownMenuTrigger disabled={readOnly} className="w-fit">
         <Button disabled={readOnly}>
           <Plus />
-          Add node
+          {t("components.agents.add_node_button.trigger")}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48 font-medium" sideOffset={8}>
@@ -81,19 +83,19 @@ export function AddNodeButton() {
           <span className="flex h-6 w-6 items-center justify-center rounded border border-border">
             <Play className="h-4 w-4 text-green-600" />
           </span>
-          Start
+          {t("components.agents.add_node_button.start")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleAdd("conversation")}>
           <span className="flex h-6 w-6 items-center justify-center rounded border border-border">
             <Phone className="h-4 w-4 text-blue-600" />
           </span>
-          Conversation
+          {t("components.agents.add_node_button.conversation")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleAdd("end")}>
           <span className="flex h-6 w-6 items-center justify-center rounded border border-border">
             <PhoneOff className="h-4 w-4 text-red-600" />
           </span>
-          End
+          {t("components.agents.add_node_button.end")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

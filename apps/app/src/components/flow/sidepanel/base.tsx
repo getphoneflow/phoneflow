@@ -2,6 +2,7 @@ import { cn } from "cn"
 import { XIcon } from "lucide-react"
 
 import { Button } from "@workspace/ui/components/button"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 type FlowSidePanelBaseProps = {
@@ -15,6 +16,7 @@ export function FlowSidePanelBase({
   children,
   contentClassName,
 }: FlowSidePanelBaseProps) {
+  const { t } = useTranslation()
   const setSidePanel = useAgentStore((state) => state.setSidePanel)
 
   return (
@@ -39,7 +41,9 @@ export function FlowSidePanelBase({
         onClick={() => setSidePanel({ kind: "closed" })}
       >
         <XIcon />
-        <span className="sr-only">Close side panel</span>
+        <span className="sr-only">
+          {t("components.flow.sidepanel.base.close")}
+        </span>
       </Button>
     </aside>
   )

@@ -12,6 +12,7 @@ import "@workspace/ui/globals.css"
 import { RouteErrorBoundary } from "@/components/error-boundary"
 import { ThemeProvider } from "@/components/theme-provider"
 import { env } from "@/lib/env"
+import "@/lib/i18n"
 import { routeTree } from "./routeTree.gen"
 
 if (env.POSTHOG_PROJECT_TOKEN) {

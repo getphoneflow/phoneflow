@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 
 import { ivrNavigationToolSchema } from "@workspace/shared/api/agent-config/schemas"
@@ -14,6 +13,8 @@ import {
 } from "@workspace/ui/components/dialog"
 import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field"
 import { VariableTextField } from "@/components/flow/variables/variable-text-field"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export function createIvrNavigationDraft(): IvrNavigationTool {
   return { description: "" }
@@ -32,8 +33,9 @@ export function IvrNavigationDialog({
   onOpenChange: (open: boolean) => void
   onSave: (tool: IvrNavigationTool) => void
 }) {
+  const { t } = useTranslation()
   const form = useForm<IvrNavigationTool>({
-    resolver: zodResolver(ivrNavigationToolSchema),
+    resolver: zodResolverI18n(ivrNavigationToolSchema),
     defaultValues: tool,
     values: tool,
   })
@@ -49,9 +51,13 @@ export function IvrNavigationDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>IVR navigation</DialogTitle>
+          <DialogTitle>
+            {t("components.flow.sidepanel.tools.ivr_navigation_dialog.title")}
+          </DialogTitle>
           <DialogDescription>
-            Send keypad tones to navigate a phone menu
+            {t(
+              "components.flow.sidepanel.tools.ivr_navigation_dialog.description"
+            )}
           </DialogDescription>
         </DialogHeader>
         <form
@@ -64,14 +70,20 @@ export function IvrNavigationDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel>Description</FieldLabel>
+                <FieldLabel>
+                  {t(
+                    "components.flow.sidepanel.tools.ivr_navigation_dialog.prompt.label"
+                  )}
+                </FieldLabel>
                 <VariableTextField
                   name={field.name}
                   value={field.value}
                   onBlur={field.onBlur}
                   multiline
                   rows={4}
-                  placeholder="Describe which phone menu to get through"
+                  placeholder={t(
+                    "components.flow.sidepanel.tools.ivr_navigation_dialog.prompt.placeholder"
+                  )}
                   readOnly={readOnly}
                   aria-invalid={fieldState.invalid}
                   onChange={field.onChange}
@@ -88,10 +100,10 @@ export function IvrNavigationDialog({
               variant="outline"
               onClick={() => handleOpenChange(false)}
             >
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
             <Button type="submit" disabled={readOnly}>
-              Save
+              {t("common.actions.save")}
             </Button>
           </DialogFooter>
         </form>

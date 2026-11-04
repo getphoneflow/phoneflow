@@ -12,6 +12,7 @@ import {
   getNextNodePosition,
   SIDE_PANEL_OFFSET_PX,
 } from "@/components/flow/node-position"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 type FlowNodeActionsProps = {
@@ -20,6 +21,7 @@ type FlowNodeActionsProps = {
 
 export function FlowNodeActions({ id }: FlowNodeActionsProps) {
   const { deleteElements, setCenter } = useReactFlow()
+  const { t } = useTranslation()
   const readOnly = useAgentStore((state) => state.readOnly)
   const nodes = useAgentStore((state) => state.config.nodes)
   const addNode = useAgentStore((state) => state.addNode)
@@ -62,9 +64,11 @@ export function FlowNodeActions({ id }: FlowNodeActionsProps) {
           }
         >
           <Trash2Icon className="size-3.5" />
-          <span className="sr-only">Delete</span>
+          <span className="sr-only">{t("common.actions.delete")}</span>
         </TooltipTrigger>
-        <TooltipContent side="right">Delete</TooltipContent>
+        <TooltipContent side="right">
+          {t("common.actions.delete")}
+        </TooltipContent>
       </Tooltip>
 
       <Tooltip>
@@ -79,9 +83,11 @@ export function FlowNodeActions({ id }: FlowNodeActionsProps) {
           }
         >
           <CopyIcon className="size-3.5" />
-          <span className="sr-only">Duplicate</span>
+          <span className="sr-only">{t("common.actions.duplicate")}</span>
         </TooltipTrigger>
-        <TooltipContent side="right">Duplicate</TooltipContent>
+        <TooltipContent side="right">
+          {t("common.actions.duplicate")}
+        </TooltipContent>
       </Tooltip>
     </div>
   )

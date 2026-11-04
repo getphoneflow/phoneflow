@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { Plus, Trash2 } from "lucide-react"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 
@@ -26,11 +25,25 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select"
 import { VariableTextField } from "@/components/flow/variables/variable-text-field"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const variableTypes: { value: ExtractVariable["type"]; label: string }[] = [
-  { value: "string", label: "Text" },
-  { value: "number", label: "Number" },
-  { value: "boolean", label: "Boolean" },
+  {
+    value: "string",
+    label:
+      "components.flow.sidepanel.tools.extract_variables_dialog.types.string",
+  },
+  {
+    value: "number",
+    label:
+      "components.flow.sidepanel.tools.extract_variables_dialog.types.number",
+  },
+  {
+    value: "boolean",
+    label:
+      "components.flow.sidepanel.tools.extract_variables_dialog.types.boolean",
+  },
 ]
 
 export function createExtractVariablesDraft(): ExtractVariablesTool {
@@ -52,8 +65,9 @@ export function ExtractVariablesDialog({
   onOpenChange: (open: boolean) => void
   onSave: (tool: ExtractVariablesTool) => void
 }) {
+  const { t } = useTranslation()
   const form = useForm<ExtractVariablesTool>({
-    resolver: zodResolver(extractVariablesToolSchema),
+    resolver: zodResolverI18n(extractVariablesToolSchema),
     defaultValues: tool,
     values: tool,
   })
@@ -73,9 +87,15 @@ export function ExtractVariablesDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Extract variables</DialogTitle>
+          <DialogTitle>
+            {t(
+              "components.flow.sidepanel.tools.extract_variables_dialog.title"
+            )}
+          </DialogTitle>
           <DialogDescription>
-            Extract variables from the conversation
+            {t(
+              "components.flow.sidepanel.tools.extract_variables_dialog.description"
+            )}
           </DialogDescription>
         </DialogHeader>
         <form
@@ -100,7 +120,9 @@ export function ExtractVariablesDialog({
                       >
                         <Input
                           {...keyField}
-                          placeholder="variable_name"
+                          placeholder={t(
+                            "components.flow.sidepanel.tools.extract_variables_dialog.key.placeholder"
+                          )}
                           readOnly={readOnly}
                           aria-invalid={fieldState.invalid}
                         />
@@ -129,17 +151,17 @@ export function ExtractVariablesDialog({
                       >
                         <SelectTrigger>
                           <SelectValue>
-                            {
+                            {t(
                               variableTypes.find(
                                 (entry) => entry.value === typeField.value
-                              )?.label
-                            }
+                              )!.label
+                            )}
                           </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           {variableTypes.map(({ value, label }) => (
                             <SelectItem key={value} value={value}>
-                              {label}
+                              {t(label)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -167,7 +189,9 @@ export function ExtractVariablesDialog({
                       onBlur={descriptionField.onBlur}
                       multiline
                       rows={2}
-                      placeholder="Describe what to extract (optional)"
+                      placeholder={t(
+                        "components.flow.sidepanel.tools.extract_variables_dialog.variable_description.placeholder"
+                      )}
                       readOnly={readOnly}
                       onChange={descriptionField.onChange}
                     />
@@ -192,7 +216,9 @@ export function ExtractVariablesDialog({
               }
             >
               <Plus />
-              Add variable
+              {t(
+                "components.flow.sidepanel.tools.extract_variables_dialog.add_variable"
+              )}
             </Button>
           </FieldGroup>
           <DialogFooter>
@@ -201,10 +227,10 @@ export function ExtractVariablesDialog({
               variant="outline"
               onClick={() => handleOpenChange(false)}
             >
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
             <Button type="submit" disabled={readOnly}>
-              Save
+              {t("common.actions.save")}
             </Button>
           </DialogFooter>
         </form>

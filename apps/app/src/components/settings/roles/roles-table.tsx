@@ -42,12 +42,13 @@ import {
 } from "@workspace/ui/components/table"
 import {
   RoleDialog,
-  resourceLabel,
+  usePermissionLabels,
 } from "@/components/settings/roles/role-dialog"
 import { RoleRowActions } from "@/components/settings/roles/role-row-actions"
 import type { organization } from "@/lib/auth/client"
 import { organizationRolesQueryOptions } from "@/lib/auth/organization"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 
 type OrganizationRole = NonNullable<
   Awaited<ReturnType<typeof organization.listRoles>>["data"]
@@ -68,21 +69,6 @@ const features = tableFeatures({
   filterFns: { includesString: filterFn_includesString },
 })
 
-function summarizePermissions(
-  permission: Record<string, readonly string[] | undefined>
-) {
-  const parts = Object.entries(permission)
-    .filter((entry): entry is [string, readonly string[]] =>
-      Boolean(entry[1]?.length)
-    )
-    .map(
-      ([resource, actions]) =>
-        `${resourceLabel(resource)} (${actions.join(", ")})`
-    )
-
-  return parts.length > 0 ? parts.join(", ") : "No permissions"
-}
-
 function columnClass(columnId: string) {
   if (columnId === "name") {
     return "w-40 align-top font-medium"
@@ -100,6 +86,8 @@ function columnClass(columnId: string) {
 }
 
 export function RolesTable() {
+  const { t } = useTranslation()
+  const { resourceLabel, actionLabel } = usePermissionLabels()
   const { data: roles } = useSuspenseQuery(organizationRolesQueryOptions())
   const canCreate = useCheckPermission({ ac: ["create"] })
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -108,7 +96,7 @@ export function RolesTable() {
   const data: RoleRow[] = [
     {
       id: "owner",
-      name: "Owner",
+      name: t("components.settings.roles.roles_table.owner.name"),
       permission: {},
     },
     ...roles.map((role) => ({
@@ -119,18 +107,38 @@ export function RolesTable() {
     })),
   ]
 
+  function summarizePermissions(
+    permission: Record<string, readonly string[] | undefined>
+  ) {
+    const parts = Object.entries(permission)
+      .filter((entry): entry is [string, readonly string[]] =>
+        Boolean(entry[1]?.length)
+      )
+      .map(([resource, actions]) =>
+        t("components.settings.roles.roles_table.permission_summary", {
+          resource: resourceLabel(resource),
+          actions: actions.map((action) => actionLabel(action)).join(", "),
+        })
+      )
+
+    return parts.length > 0
+      ? parts.join(", ")
+      : t("components.settings.roles.roles_table.no_permissions")
+  }
+
   const columnHelper = createColumnHelper<typeof features, RoleRow>()
   const columns = columnHelper.columns([
     columnHelper.accessor("name", {
-      header: "Role",
+      header: () => t("components.settings.roles.roles_table.columns.role"),
       filterFn: "includesString",
     }),
     columnHelper.display({
       id: "permissions",
-      header: "Permissions",
+      header: () =>
+        t("components.settings.roles.roles_table.columns.permissions"),
       cell: ({ row }) =>
         row.original.id === "owner"
-          ? "Full access. This role can't be changed."
+          ? t("components.settings.roles.roles_table.owner.permissions")
           : summarizePermissions(row.original.permission),
     }),
     columnHelper.display({
@@ -171,7 +179,9 @@ export function RolesTable() {
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
             }
-            placeholder="Search roles..."
+            placeholder={t(
+              "components.settings.roles.roles_table.search.placeholder"
+            )}
           />
           <InputGroupAddon>
             <Search />
@@ -185,7 +195,7 @@ export function RolesTable() {
           }}
         >
           <PlusIcon />
-          Create role
+          {t("components.settings.roles.roles_table.create")}
         </Button>
       </div>
       <div className="rounded-md border">
@@ -232,7 +242,7 @@ export function RolesTable() {
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No results
+                  {t("common.table.no_results")}
                 </TableCell>
               </TableRow>
             )}
@@ -256,12 +266,16 @@ export function RolesTable() {
               ))}
             </SelectContent>
           </Select>
-          <span className="text-sm font-medium">Rows per page</span>
+          <span className="text-sm font-medium">
+            {t("common.table.rows_per_page")}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="pr-2 text-sm font-medium">
-            Page {table.state.pagination.pageIndex + 1} of{" "}
-            {table.getPageCount() || 1}
+            {t("common.table.page", {
+              page: table.state.pagination.pageIndex + 1,
+              total: table.getPageCount() || 1,
+            })}
           </span>
           <Button
             variant="outline"

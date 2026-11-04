@@ -20,6 +20,7 @@ import {
   organizationRolesQueryOptions,
 } from "@/lib/auth/organization"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 
 type SelectRoleProps = {
   id?: string
@@ -68,6 +69,7 @@ type MemberRoleSelectProps = {
 }
 
 export function MemberRoleSelect({ member }: MemberRoleSelectProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { data: roles } = useSuspenseQuery(organizationRolesQueryOptions())
   const { data: activeMember } = useSuspenseQuery(activeMemberQueryOptions())
@@ -88,7 +90,12 @@ export function MemberRoleSelect({ member }: MemberRoleSelectProps) {
       const displayName = roles.find(
         (role) => role.role === nextRole
       )!.displayName
-      toast.success(`${member.user.name} is now ${displayName}`)
+      toast.success(
+        t("components.settings.members.select_role.toasts.member_updated", {
+          name: member.user.name,
+          role: displayName,
+        })
+      )
       queryClient.invalidateQueries({ queryKey: ["organization-members"] })
       queryClient.invalidateQueries({ queryKey: ["has-permission"] })
     },
@@ -98,13 +105,15 @@ export function MemberRoleSelect({ member }: MemberRoleSelectProps) {
   })
 
   if (member.role === "owner") {
-    return <span>Owner</span>
+    return <span>{t("components.settings.members.select_role.owner")}</span>
   }
 
   return (
     <SelectRole
       value={member.role}
-      ariaLabel={`Role for ${member.user.name}`}
+      ariaLabel={t("components.settings.members.select_role.aria_label", {
+        name: member.user.name,
+      })}
       disabled={!canUpdate || isCurrentUser || updateRoleMutation.isPending}
       onValueChange={(role) => updateRoleMutation.mutate(role)}
     />
@@ -118,6 +127,7 @@ type InvitationRoleSelectProps = {
 export function InvitationRoleSelect({
   invitation,
 }: InvitationRoleSelectProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { data: roles } = useSuspenseQuery(organizationRolesQueryOptions())
   const canCreate = useCheckPermission({ invitation: ["create"] })
@@ -150,7 +160,11 @@ export function InvitationRoleSelect({
       const displayName = roles.find(
         (role) => role.role === nextRole
       )!.displayName
-      toast.success(`Invitation role updated to ${displayName}`)
+      toast.success(
+        t("components.settings.members.select_role.toasts.invitation_updated", {
+          role: displayName,
+        })
+      )
       queryClient.invalidateQueries({ queryKey: ["organization-invitations"] })
     },
     onError: (error) => {
@@ -161,7 +175,9 @@ export function InvitationRoleSelect({
   return (
     <SelectRole
       value={role}
-      ariaLabel={`Role for ${invitation.email}`}
+      ariaLabel={t("components.settings.members.select_role.aria_label", {
+        name: invitation.email,
+      })}
       disabled={!canUpdateRole || updateRoleMutation.isPending}
       onValueChange={(nextRole) => updateRoleMutation.mutate(nextRole)}
     />

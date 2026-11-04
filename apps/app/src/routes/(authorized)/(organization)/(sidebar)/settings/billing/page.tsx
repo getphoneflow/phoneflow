@@ -13,6 +13,7 @@ import { CreditBalance } from "@/components/settings/billing/credit-balance"
 import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
 
 const billingSearchSchema = z.object({
   checkout: z.enum(["success", "canceled"]).optional(),
@@ -41,9 +42,10 @@ function BillingSettingsSkeleton() {
 }
 
 function Page() {
+  const { t } = useTranslation()
   return (
     <>
-      <title>Billing settings - Phoneflow</title>
+      <title>{t("routes.settings.billing.page_title")}</title>
       <Suspense fallback={<BillingSettingsSkeleton />}>
         <BillingSettings />
       </Suspense>
@@ -52,6 +54,7 @@ function Page() {
 }
 
 function BillingSettings() {
+  const { t } = useTranslation()
   const { checkout, session_id: sessionId } = Route.useSearch()
   const navigate = Route.useNavigate()
   const queryClient = useQueryClient()
@@ -67,7 +70,7 @@ function BillingSettings() {
     },
     onSuccess: async () => {
       captureEvent("billing_credits_purchased")
-      toast.success("Credits added to your balance")
+      toast.success(t("routes.settings.billing.toasts.credits_added"))
       await queryClient.invalidateQueries({ queryKey: ["billing"] })
     },
     onError: (error) => {
@@ -83,7 +86,7 @@ function BillingSettings() {
     navigate({ search: {}, replace: true })
 
     if (checkout === "canceled") {
-      toast.message("Checkout canceled")
+      toast.message(t("routes.settings.billing.toasts.checkout_canceled"))
       return
     }
 
@@ -97,7 +100,7 @@ function BillingSettings() {
       <CreditBalance />
       <div>
         <div className="mb-4 flex items-center justify-between gap-3">
-          <FieldLegend>Billing history</FieldLegend>
+          <FieldLegend>{t("routes.settings.billing.history")}</FieldLegend>
           <ManageBillingButton />
         </div>
         <BillingHistory />

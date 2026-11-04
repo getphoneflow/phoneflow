@@ -37,6 +37,7 @@ import {
 } from "@workspace/ui/components/table"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
+import { type TFunction, useTranslation } from "@/lib/i18n"
 import { formatDurationMs } from "@/lib/time"
 
 const features = tableFeatures({
@@ -47,47 +48,67 @@ const features = tableFeatures({
 
 const columnHelper = createColumnHelper<typeof features, ContactListItem>()
 
-const columns = columnHelper.columns([
-  columnHelper.accessor("phoneNumber", {
-    header: "Phone",
-    cell: ({ row }) => row.original.phoneNumber,
-  }),
-  columnHelper.accessor("firstName", {
-    header: "First name",
-    cell: ({ row }) => row.original.firstName,
-  }),
-  columnHelper.accessor("lastName", {
-    header: "Last name",
-    cell: ({ row }) => row.original.lastName,
-  }),
-  columnHelper.accessor("callCount", {
-    header: ({ column }) => <SortableHeader column={column} title="Calls" />,
-  }),
-  columnHelper.accessor("totalDurationMs", {
-    header: ({ column }) => (
-      <SortableHeader column={column} title="Total time" />
-    ),
-    cell: ({ row }) => formatDurationMs(row.original.totalDurationMs),
-  }),
-  columnHelper.accessor("firstCallAt", {
-    header: ({ column }) => (
-      <SortableHeader column={column} title="First call" />
-    ),
-    cell: ({ row }) =>
-      row.original.firstCallAt ? (
-        <UserDateTime value={row.original.firstCallAt} />
-      ) : null,
-  }),
-  columnHelper.accessor("latestCallAt", {
-    header: ({ column }) => (
-      <SortableHeader column={column} title="Last call" />
-    ),
-    cell: ({ row }) =>
-      row.original.latestCallAt ? (
-        <UserDateTime value={row.original.latestCallAt} />
-      ) : null,
-  }),
-])
+function getColumns(t: TFunction) {
+  return columnHelper.columns([
+    columnHelper.accessor("phoneNumber", {
+      header: t("components.contacts.contacts_data_table.columns.phone"),
+      cell: ({ row }) => row.original.phoneNumber,
+    }),
+    columnHelper.accessor("firstName", {
+      header: t("components.contacts.contacts_data_table.columns.first_name"),
+      cell: ({ row }) => row.original.firstName,
+    }),
+    columnHelper.accessor("lastName", {
+      header: t("components.contacts.contacts_data_table.columns.last_name"),
+      cell: ({ row }) => row.original.lastName,
+    }),
+    columnHelper.accessor("callCount", {
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t("components.contacts.contacts_data_table.columns.calls")}
+        />
+      ),
+    }),
+    columnHelper.accessor("totalDurationMs", {
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t(
+            "components.contacts.contacts_data_table.columns.total_time"
+          )}
+        />
+      ),
+      cell: ({ row }) => formatDurationMs(row.original.totalDurationMs),
+    }),
+    columnHelper.accessor("firstCallAt", {
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t(
+            "components.contacts.contacts_data_table.columns.first_call"
+          )}
+        />
+      ),
+      cell: ({ row }) =>
+        row.original.firstCallAt ? (
+          <UserDateTime value={row.original.firstCallAt} />
+        ) : null,
+    }),
+    columnHelper.accessor("latestCallAt", {
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t("components.contacts.contacts_data_table.columns.last_call")}
+        />
+      ),
+      cell: ({ row }) =>
+        row.original.latestCallAt ? (
+          <UserDateTime value={row.original.latestCallAt} />
+        ) : null,
+    }),
+  ])
+}
 
 type ContactsDataTableProps = {
   items: ContactListItem[]
@@ -117,6 +138,8 @@ export function ContactsDataTable({
   onPageChange,
   onPageSizeChange,
 }: ContactsDataTableProps) {
+  const { t } = useTranslation()
+  const columns = getColumns(t)
   const sorting: SortingState = [{ id: sortBy, desc: sortDir === "desc" }]
 
   const table = useTable({
@@ -188,7 +211,7 @@ export function ContactsDataTable({
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No results
+                  {t("common.table.no_results")}
                 </TableCell>
               </TableRow>
             )}
@@ -212,11 +235,16 @@ export function ContactsDataTable({
               ))}
             </SelectContent>
           </Select>
-          <span className="text-sm font-medium">Rows per page</span>
+          <span className="text-sm font-medium">
+            {t("common.table.rows_per_page")}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="pr-2 text-sm font-medium">
-            Page {page} of {table.getPageCount() || 1}
+            {t("common.table.page", {
+              page,
+              total: table.getPageCount() || 1,
+            })}
           </span>
           <Button
             variant="outline"

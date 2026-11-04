@@ -15,6 +15,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 type ToolbarButtonProps = {
@@ -70,6 +71,7 @@ export function FlowToolbar() {
     (state) => state.future.length > 0 && !state.readOnly
   )
   const { zoomIn, zoomOut, zoomTo, fitView } = useReactFlow()
+  const { t } = useTranslation()
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -109,29 +111,40 @@ export function FlowToolbar() {
 
   return (
     <div className="flex items-center gap-0.5 rounded-lg border border-border bg-background p-0.5 shadow-sm">
-      <ToolbarButton label="Undo" disabled={!canUndo} onClick={undo}>
+      <ToolbarButton
+        label={t("components.flow.toolbar.undo")}
+        disabled={!canUndo}
+        onClick={undo}
+      >
         <Undo2Icon />
       </ToolbarButton>
-      <ToolbarButton label="Redo" disabled={!canRedo} onClick={redo}>
+      <ToolbarButton
+        label={t("components.flow.toolbar.redo")}
+        disabled={!canRedo}
+        onClick={redo}
+      >
         <Redo2Icon />
       </ToolbarButton>
       <ToolbarButton
-        label="Zoom out"
+        label={t("components.flow.toolbar.zoom_out")}
         onClick={() => zoomOut({ duration: 200 })}
       >
         <ZoomOutIcon />
       </ToolbarButton>
-      <ToolbarButton label="Zoom in" onClick={() => zoomIn({ duration: 200 })}>
+      <ToolbarButton
+        label={t("components.flow.toolbar.zoom_in")}
+        onClick={() => zoomIn({ duration: 200 })}
+      >
         <ZoomInIcon />
       </ToolbarButton>
       <ToolbarButton
-        label="Zoom to 100%"
+        label={t("components.flow.toolbar.zoom_reset")}
         onClick={() => zoomTo(1, { duration: 200 })}
       >
         <Maximize2Icon />
       </ToolbarButton>
       <ToolbarButton
-        label="Fit view"
+        label={t("components.flow.toolbar.fit_view")}
         onClick={() => fitView({ duration: 300 })}
       >
         <Scan />

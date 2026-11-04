@@ -1,11 +1,15 @@
 /** @jsxRuntime automatic */
 import { Body, Html, Text } from "react-email"
 
-export default function DownloadContactsEmail() {
+import { useTranslation } from "@workspace/email/i18n"
+
+export default function DownloadContactsEmail({ locale }: { locale: string }) {
+  const t = useTranslation(locale)
+
   return (
     <Html>
       <Body>
-        <Text>Download contacts from Phoneflow</Text>
+        <Text>{t("download_contacts.body")}</Text>
       </Body>
     </Html>
   )

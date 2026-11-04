@@ -20,6 +20,7 @@ import {
 import { Field, FieldLabel } from "@workspace/ui/components/field"
 import { InputGroupAddon } from "@workspace/ui/components/input-group"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
 
 type BackgroundAudioOption = {
   id: BackgroundAudio["sound"] | null
@@ -27,9 +28,11 @@ type BackgroundAudioOption = {
   source?: string
 }
 
+const NONE_LABEL = "components.flow.sidepanel.background_audio_select.none"
+
 const NONE_OPTION: BackgroundAudioOption = {
   id: null,
-  name: "None",
+  name: NONE_LABEL,
 }
 
 const BACKGROUND_AUDIO_OPTIONS: BackgroundAudioOption[] = [
@@ -41,12 +44,6 @@ const BACKGROUND_AUDIO_OPTIONS: BackgroundAudioOption[] = [
   })),
 ]
 
-function filterOption(option: BackgroundAudioOption, query: string) {
-  const q = query.trim().toLowerCase()
-  if (!q) return true
-  return option.name.toLowerCase().includes(q)
-}
-
 export function BackgroundAudioSelect({
   value,
   onValueChange,
@@ -56,6 +53,7 @@ export function BackgroundAudioSelect({
   onValueChange: (value?: BackgroundAudio["sound"]) => void
   readOnly?: boolean
 }) {
+  const { t } = useTranslation()
   const selected =
     BACKGROUND_AUDIO_OPTIONS.find((option) => option.id === (value ?? null)) ??
     NONE_OPTION
@@ -67,6 +65,16 @@ export function BackgroundAudioSelect({
     audioRef.current?.pause()
     audioRef.current = null
     setPlayingId(null)
+  }
+
+  function optionName(option: BackgroundAudioOption) {
+    return option.id === null ? t(NONE_LABEL) : option.name
+  }
+
+  function filter(option: BackgroundAudioOption, query: string) {
+    const q = query.trim().toLowerCase()
+    if (!q) return true
+    return optionName(option).toLowerCase().includes(q)
   }
 
   function togglePlay(option: BackgroundAudioOption) {
@@ -94,7 +102,9 @@ export function BackgroundAudioSelect({
 
   return (
     <Field>
-      <FieldLabel>Background audio</FieldLabel>
+      <FieldLabel>
+        {t("components.flow.sidepanel.background_audio_select.label")}
+      </FieldLabel>
       <Combobox
         autoHighlight
         items={BACKGROUND_AUDIO_OPTIONS}
@@ -106,14 +116,14 @@ export function BackgroundAudioSelect({
         onValueChange={(next) => {
           if (next) onValueChange(next.id ?? undefined)
         }}
-        itemToStringLabel={(option) => option.name}
+        itemToStringLabel={optionName}
         isItemEqualToValue={(a, b) => a.id === b.id}
-        filter={filterOption}
+        filter={filter}
       >
         <ComboboxTrigger>
           <ComboboxValue>
             {(option: BackgroundAudioOption) => (
-              <span className="truncate">{option.name}</span>
+              <span className="truncate">{optionName(option)}</span>
             )}
           </ComboboxValue>
         </ComboboxTrigger>
@@ -121,7 +131,9 @@ export function BackgroundAudioSelect({
           <div className="flex items-center gap-1.5 p-1.5">
             <ComboboxInput
               showTrigger={false}
-              placeholder="Search background audio..."
+              placeholder={t(
+                "components.flow.sidepanel.background_audio_select.search"
+              )}
               className="min-w-0 flex-1"
             >
               <InputGroupAddon>
@@ -129,7 +141,9 @@ export function BackgroundAudioSelect({
               </InputGroupAddon>
             </ComboboxInput>
           </div>
-          <ComboboxEmpty>No background audio found</ComboboxEmpty>
+          <ComboboxEmpty>
+            {t("components.flow.sidepanel.background_audio_select.empty")}
+          </ComboboxEmpty>
           <ComboboxList className="pt-0">
             {(option: BackgroundAudioOption) => (
               <ComboboxItem
@@ -155,13 +169,19 @@ export function BackgroundAudioSelect({
                   >
                     {playingId === option.id ? <PauseIcon /> : <PlayIcon />}
                     <span className="sr-only">
-                      {playingId === option.id ? "Pause" : "Play"}
+                      {playingId === option.id
+                        ? t(
+                            "components.flow.sidepanel.background_audio_select.pause"
+                          )
+                        : t(
+                            "components.flow.sidepanel.background_audio_select.play"
+                          )}
                     </span>
                   </Button>
                 ) : (
                   <span className="size-6 shrink-0" />
                 )}
-                <span className="truncate">{option.name}</span>
+                <span className="truncate">{optionName(option)}</span>
               </ComboboxItem>
             )}
           </ComboboxList>

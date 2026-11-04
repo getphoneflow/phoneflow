@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import { PlusIcon, XIcon } from "lucide-react"
@@ -26,15 +25,22 @@ import { SelectRole } from "@/components/settings/members/select-role"
 import { captureEvent } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
 import { fullOrganizationQueryOptions } from "@/lib/auth/organization"
+import { type TFunction, useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
-async function inviteMember(email: string, role: string) {
+async function inviteMember(email: string, role: string, t: TFunction) {
   const result = await organization.inviteMember({ email, role })
   if (result.error) {
-    toast.error(`${email}: ${result.error.message}`)
+    toast.error(
+      t("routes.invite_members.toasts.invite_failed", {
+        email,
+        message: result.error.message,
+      })
+    )
     return
   }
   captureEvent("organization_member_invited", { role })
-  toast.success(`Invitation sent to ${email}`)
+  toast.success(t("routes.invite_members.toasts.invited", { email }))
 }
 
 export const Route = createFileRoute(
@@ -42,6 +48,20 @@ export const Route = createFileRoute(
 )({
   component: Page,
 })
+
+const inviteMembersFormSchema = z.object({
+  emails: z
+    .array(
+      z.object({
+        address: z.email("routes.invite_members.email.invalid"),
+        role: z.string().min(1),
+      })
+    )
+    .min(1, "routes.invite_members.emails.min")
+    .max(5, "routes.invite_members.emails.max"),
+})
+
+type InviteMembersFormValues = z.infer<typeof inviteMembersFormSchema>
 
 function InviteMembersSkeleton() {
   return (
@@ -60,28 +80,15 @@ function Page() {
 }
 
 function InviteMembersContent() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { data: activeOrganization } = useSuspenseQuery(
     fullOrganizationQueryOptions()
   )
 
-  const inviteMembersFormSchema = z.object({
-    emails: z
-      .array(
-        z.object({
-          address: z.email("Enter a valid email address"),
-          role: z.string().min(1),
-        })
-      )
-      .min(1, "Add at least one email address.")
-      .max(5, "You can add up to 5 email addresses."),
-  })
-
-  type InviteMembersFormValues = z.infer<typeof inviteMembersFormSchema>
-
   const form = useForm<InviteMembersFormValues>({
-    resolver: zodResolver(inviteMembersFormSchema),
+    resolver: zodResolverI18n(inviteMembersFormSchema),
     defaultValues: {
       emails: [{ address: "", role: "member" }],
     },
@@ -94,7 +101,7 @@ function InviteMembersContent() {
 
   async function handleInviteMembers(values: InviteMembersFormValues) {
     await Promise.all(
-      values.emails.map(({ address, role }) => inviteMember(address, role))
+      values.emails.map(({ address, role }) => inviteMember(address, role, t))
     )
     await queryClient.invalidateQueries({ queryKey: ["full-organization"] })
     navigate({ to: "/" })
@@ -102,13 +109,17 @@ function InviteMembersContent() {
 
   return (
     <>
-      <title>Invite members - Phoneflow</title>
+      <title>{t("routes.invite_members.page_title")}</title>
       <div className="flex h-screen w-full items-center justify-center p-6">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-xl">Invite members</CardTitle>
+            <CardTitle className="text-xl">
+              {t("routes.invite_members.title")}
+            </CardTitle>
             <CardDescription>
-              Send email invitations to join {activeOrganization?.name}
+              {t("routes.invite_members.description", {
+                organization: activeOrganization?.name,
+              })}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -130,7 +141,9 @@ function InviteMembersContent() {
                                 {...field}
                                 id={field.name}
                                 type="email"
-                                placeholder="name@example.com"
+                                placeholder={t(
+                                  "routes.invite_members.email.placeholder"
+                                )}
                                 autoComplete={index === 0 ? "email" : "off"}
                                 aria-invalid={fieldState.invalid}
                                 disabled={form.formState.isSubmitting}
@@ -153,7 +166,10 @@ function InviteMembersContent() {
                               value={field.value}
                               onValueChange={field.onChange}
                               disabled={form.formState.isSubmitting}
-                              ariaLabel={`Role for email ${index + 1}`}
+                              ariaLabel={t(
+                                "routes.invite_members.role_aria_label",
+                                { index: index + 1 }
+                              )}
                             />
                           </Field>
                         )}
@@ -167,7 +183,10 @@ function InviteMembersContent() {
                           className="mt-0.5 shrink-0"
                           onClick={() => remove(index)}
                           disabled={form.formState.isSubmitting}
-                          aria-label={`Remove email ${index + 1}`}
+                          aria-label={t(
+                            "routes.invite_members.remove_aria_label",
+                            { index: index + 1 }
+                          )}
                         >
                           <XIcon />
                         </Button>
@@ -184,7 +203,7 @@ function InviteMembersContent() {
                       disabled={form.formState.isSubmitting}
                     >
                       <PlusIcon />
-                      Add email address
+                      {t("routes.invite_members.add_email")}
                     </Button>
                   )}
                 </FieldGroup>
@@ -194,11 +213,15 @@ function InviteMembersContent() {
                 )}
 
                 <Button type="submit" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting ? <Spinner /> : "Invite members"}
+                  {form.formState.isSubmitting ? (
+                    <Spinner />
+                  ) : (
+                    t("routes.invite_members.submit")
+                  )}
                 </Button>
 
                 <Button render={<Link to="/" />} variant="ghost">
-                  Skip for now
+                  {t("routes.invite_members.skip")}
                 </Button>
               </FieldGroup>
             </form>

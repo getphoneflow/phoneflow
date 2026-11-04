@@ -16,15 +16,19 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
 
 export function DownloadContactsDialog() {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
   const downloadMutation = useMutation({
     mutationFn: () =>
       api.post<RequestContactDownloadResponse, never>("/contacts/download", {}),
     onSuccess: () => {
-      toast.success("The contacts will be sent to your email shortly")
+      toast.success(
+        t("components.contacts.download_contacts_dialog.toasts.requested")
+      )
       setOpen(false)
     },
     onError: (error) => {
@@ -36,7 +40,7 @@ export function DownloadContactsDialog() {
     <>
       <Button variant="outline" onClick={() => setOpen(true)}>
         <DownloadIcon />
-        Download
+        {t("common.actions.download")}
       </Button>
       <Dialog
         open={open}
@@ -47,16 +51,18 @@ export function DownloadContactsDialog() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Download contacts</DialogTitle>
+            <DialogTitle>
+              {t("components.contacts.download_contacts_dialog.title")}
+            </DialogTitle>
             <DialogDescription>
-              You will receive an email with all contacts
+              {t("components.contacts.download_contacts_dialog.description")}
             </DialogDescription>
           </DialogHeader>
 
           <DialogFooter className="mt-8">
             <DialogClose>
               <Button variant="outline" disabled={downloadMutation.isPending}>
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button
@@ -66,7 +72,7 @@ export function DownloadContactsDialog() {
               {downloadMutation.isPending ? (
                 <Spinner className="mx-8" />
               ) : (
-                "Send email"
+                t("components.contacts.download_contacts_dialog.submit")
               )}
             </Button>
           </DialogFooter>

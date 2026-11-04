@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
@@ -26,9 +25,16 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { BackupCodesList } from "@/components/settings/account/backup-codes-list"
 import { twoFactor } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const passwordSchema = z.object({
-  password: z.string().min(1, "Password is required"),
+  password: z
+    .string()
+    .min(
+      1,
+      "components.settings.account.regenerate_backup_codes_dialog.password.required"
+    ),
 })
 
 type PasswordValues = z.infer<typeof passwordSchema>
@@ -36,12 +42,13 @@ type PasswordValues = z.infer<typeof passwordSchema>
 type RegenerateStep = "password" | "backup-codes"
 
 export function RegenerateBackupCodesDialog() {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState<RegenerateStep>("password")
   const [backupCodes, setBackupCodes] = useState<string[]>([])
 
   const form = useForm<PasswordValues>({
-    resolver: zodResolver(passwordSchema),
+    resolver: zodResolverI18n(passwordSchema),
     defaultValues: { password: "" },
   })
 
@@ -65,14 +72,22 @@ export function RegenerateBackupCodesDialog() {
         throw new Error(result.error.message)
       }
       if (!result.data?.backupCodes) {
-        throw new Error("Failed to generate backup codes")
+        throw new Error(
+          t(
+            "components.settings.account.regenerate_backup_codes_dialog.errors.generate_failed"
+          )
+        )
       }
       return result.data.backupCodes
     },
     onSuccess: (codes) => {
       setBackupCodes(codes)
       setStep("backup-codes")
-      toast.success("New backup codes generated")
+      toast.success(
+        t(
+          "components.settings.account.regenerate_backup_codes_dialog.toasts.generated"
+        )
+      )
     },
     onError: (error) => {
       toast.error(error.message)
@@ -84,7 +99,9 @@ export function RegenerateBackupCodesDialog() {
       <DialogTrigger
         render={
           <Button type="button" variant="outline">
-            Re-generate codes
+            {t(
+              "components.settings.account.regenerate_backup_codes_dialog.trigger"
+            )}
           </Button>
         }
       />
@@ -93,9 +110,15 @@ export function RegenerateBackupCodesDialog() {
         {step === "password" ? (
           <>
             <DialogHeader>
-              <DialogTitle>Re-generate backup codes</DialogTitle>
+              <DialogTitle>
+                {t(
+                  "components.settings.account.regenerate_backup_codes_dialog.title"
+                )}
+              </DialogTitle>
               <DialogDescription>
-                Enter your password to re-generate backup codes
+                {t(
+                  "components.settings.account.regenerate_backup_codes_dialog.description"
+                )}
               </DialogDescription>
             </DialogHeader>
 
@@ -111,7 +134,11 @@ export function RegenerateBackupCodesDialog() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>
+                        {t(
+                          "components.settings.account.regenerate_backup_codes_dialog.password.label"
+                        )}
+                      </FieldLabel>
                       <PasswordInput
                         {...field}
                         id={field.name}
@@ -132,14 +159,16 @@ export function RegenerateBackupCodesDialog() {
                     variant="outline"
                     disabled={regenerateMutation.isPending}
                   >
-                    Cancel
+                    {t("common.actions.cancel")}
                   </Button>
                 </DialogClose>
                 <Button type="submit" disabled={regenerateMutation.isPending}>
                   {regenerateMutation.isPending ? (
                     <Spinner className="mx-8" />
                   ) : (
-                    "Re-generate codes"
+                    t(
+                      "components.settings.account.regenerate_backup_codes_dialog.submit"
+                    )
                   )}
                 </Button>
               </DialogFooter>
@@ -150,10 +179,15 @@ export function RegenerateBackupCodesDialog() {
         {step === "backup-codes" ? (
           <>
             <DialogHeader>
-              <DialogTitle>Save your backup codes</DialogTitle>
+              <DialogTitle>
+                {t(
+                  "components.settings.account.regenerate_backup_codes_dialog.backup_codes.title"
+                )}
+              </DialogTitle>
               <DialogDescription>
-                Save these backup codes in a secure place. Previous codes will
-                no longer work
+                {t(
+                  "components.settings.account.regenerate_backup_codes_dialog.backup_codes.description"
+                )}
               </DialogDescription>
             </DialogHeader>
 
@@ -161,7 +195,9 @@ export function RegenerateBackupCodesDialog() {
               <BackupCodesList codes={backupCodes} />
               <DialogFooter>
                 <Button type="button" onClick={() => handleOpenChange(false)}>
-                  I saved my codes
+                  {t(
+                    "components.settings.account.regenerate_backup_codes_dialog.backup_codes.confirm"
+                  )}
                 </Button>
               </DialogFooter>
             </FieldGroup>

@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@workspace/ui/components/table"
 import type { ParsedCsvRecipient } from "@/components/batch-calls/recipients-csv"
+import { useTranslation } from "@/lib/i18n"
 
 export function RecipientsPreview({
   columns,
@@ -15,11 +16,13 @@ export function RecipientsPreview({
   columns: string[]
   recipients: ParsedCsvRecipient[]
 }) {
+  const { t } = useTranslation()
+
   if (recipients.length === 0) {
     return (
       <div className="flex h-full items-center justify-center rounded-md border">
         <p className="text-sm text-muted-foreground">
-          Please upload recipients first
+          {t("components.batch_calls.recipients_preview.empty")}
         </p>
       </div>
     )

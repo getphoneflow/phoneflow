@@ -24,6 +24,7 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
 import type { OrganizationInvitation } from "@/lib/auth/organization"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 
 type InvitationRowActionsProps = {
   invitation: OrganizationInvitation
@@ -32,6 +33,7 @@ type InvitationRowActionsProps = {
 export function InvitationRowActions({
   invitation,
 }: InvitationRowActionsProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [cancelOpen, setCancelOpen] = useState(false)
   const canCancel = useCheckPermission({ invitation: ["cancel"] })
@@ -46,7 +48,12 @@ export function InvitationRowActions({
       }
     },
     onSuccess: () => {
-      toast.success(`Invitation to ${invitation.email} canceled`)
+      toast.success(
+        t(
+          "components.settings.members.invitation_row_actions.toasts.canceled",
+          { email: invitation.email }
+        )
+      )
       setCancelOpen(false)
       queryClient.invalidateQueries({ queryKey: ["organization-invitations"] })
     },
@@ -60,14 +67,25 @@ export function InvitationRowActions({
       <AlertDialog open={cancelOpen} onOpenChange={setCancelOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel invitation</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t(
+                "components.settings.members.invitation_row_actions.cancel_dialog.title"
+              )}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This will revoke the invitation sent to {invitation.email}
+              {t(
+                "components.settings.members.invitation_row_actions.cancel_dialog.description",
+                {
+                  email: invitation.email,
+                }
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={cancelInvitationMutation.isPending}>
-              Keep
+              {t(
+                "components.settings.members.invitation_row_actions.cancel_dialog.keep"
+              )}
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
@@ -80,7 +98,9 @@ export function InvitationRowActions({
               {cancelInvitationMutation.isPending ? (
                 <Spinner className="mx-6" />
               ) : (
-                "Cancel invitation"
+                t(
+                  "components.settings.members.invitation_row_actions.cancel_dialog.confirm"
+                )
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -92,19 +112,24 @@ export function InvitationRowActions({
           <Button
             variant="ghost"
             size="icon-sm"
-            aria-label={`Open actions for ${invitation.email}`}
+            aria-label={t(
+              "components.settings.members.invitation_row_actions.open_actions",
+              {
+                email: invitation.email,
+              }
+            )}
           >
             <MoreHorizontalIcon />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" sideOffset={4}>
+        <DropdownMenuContent className="w-48" align="end" sideOffset={4}>
           <DropdownMenuItem
             variant="destructive"
             disabled={!canCancel}
             onClick={() => setCancelOpen(true)}
           >
             <Trash2Icon />
-            Cancel invitation
+            {t("components.settings.members.invitation_row_actions.cancel")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

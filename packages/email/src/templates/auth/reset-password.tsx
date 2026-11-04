@@ -2,31 +2,31 @@
 import { Button, Section, Text } from "react-email"
 
 import EmailBase from "@workspace/email/components/base"
+import { useTranslation } from "@workspace/email/i18n"
 
 interface ResetPasswordEmailProps {
+  locale: string
   name: string
   url: string
 }
 
 export default function ResetPasswordEmail({
-  url,
+  locale,
   name,
+  url,
 }: ResetPasswordEmailProps) {
+  const t = useTranslation(locale)
+
   return (
-    <EmailBase preview="Reset your Phoneflow password">
-      <Text>Hi {name},</Text>
-      <Text>
-        We received a request to reset your Phoneflow password. If this was you,
-        you can set a new password here:
-      </Text>
+    <EmailBase preview={t("reset_password.preview")}>
+      <Text>{t("reset_password.greeting", { name })}</Text>
+      <Text>{t("reset_password.body")}</Text>
       <Section className="my-8 text-center">
         <Button href={url} className="rounded-lg bg-black px-6 py-2 text-white">
-          Set new password
+          {t("reset_password.cta")}
         </Button>
       </Section>
-      <Text>
-        If you didn't make this request, you can safely ignore this email.
-      </Text>
+      <Text>{t("reset_password.ignore")}</Text>
     </EmailBase>
   )
 }

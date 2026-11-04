@@ -11,6 +11,7 @@ import {
 import { Separator } from "@workspace/ui/components/separator"
 import { SidebarTrigger } from "@workspace/ui/components/sidebar"
 import { CreateBatchCallForm } from "@/components/batch-calls/create-batch-call-form"
+import { useTranslation } from "@/lib/i18n"
 
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/batch-calls/create/"
@@ -19,6 +20,8 @@ export const Route = createFileRoute(
 })
 
 function Header() {
+  const { t } = useTranslation()
+
   return (
     <header className="flex h-18 items-center gap-2 px-5">
       <SidebarTrigger className="-ml-1" />
@@ -30,12 +33,14 @@ function Header() {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink render={<Link to="/batch-calls" />}>
-              Batch calls
+              {t("routes.batch_calls_create.breadcrumb_parent")}
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Create</BreadcrumbPage>
+            <BreadcrumbPage>
+              {t("routes.batch_calls_create.breadcrumb")}
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -44,9 +49,11 @@ function Header() {
 }
 
 function Page() {
+  const { t } = useTranslation()
+
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <title>Create batch call - Phoneflow</title>
+      <title>{t("routes.batch_calls_create.page_title")}</title>
       <Header />
       <CreateBatchCallForm />
     </div>

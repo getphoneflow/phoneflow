@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { Trash2Icon } from "lucide-react"
@@ -36,9 +35,11 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { deleteUser } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const deleteAccountSchema = z.object({
-  email: z.email("Enter a valid email address"),
+  email: z.email("components.settings.account.delete_account.email.invalid"),
 })
 
 type DeleteAccountValues = z.infer<typeof deleteAccountSchema>
@@ -48,16 +49,18 @@ type DeleteAccountProps = {
 }
 
 export function DeleteAccount({ email }: DeleteAccountProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
   const form = useForm<DeleteAccountValues>({
-    resolver: zodResolver(
+    resolver: zodResolverI18n(
       deleteAccountSchema.superRefine((values, ctx) => {
         if (values.email !== email) {
           ctx.addIssue({
             code: "custom",
-            message: "Email does not match your account",
+            message:
+              "components.settings.account.delete_account.email.mismatch",
             path: ["email"],
           })
         }
@@ -78,7 +81,9 @@ export function DeleteAccount({ email }: DeleteAccountProps) {
       }
     },
     onSuccess: () => {
-      toast.success("Account deleted")
+      toast.success(
+        t("components.settings.account.delete_account.toasts.deleted")
+      )
       queryClient.clear()
       navigate({ to: "/signin" })
     },
@@ -90,7 +95,9 @@ export function DeleteAccount({ email }: DeleteAccountProps) {
   return (
     <FieldGroup>
       <FieldSet>
-        <FieldLegend className="mb-0">Danger zone</FieldLegend>
+        <FieldLegend className="mb-0">
+          {t("components.settings.account.delete_account.danger_zone")}
+        </FieldLegend>
       </FieldSet>
 
       <AlertDialog
@@ -101,15 +108,19 @@ export function DeleteAccount({ email }: DeleteAccountProps) {
       >
         <Item variant="outline">
           <ItemContent>
-            <ItemTitle>Delete account</ItemTitle>
-            <ItemDescription>Permanently delete your account</ItemDescription>
+            <ItemTitle>
+              {t("components.settings.account.delete_account.title")}
+            </ItemTitle>
+            <ItemDescription>
+              {t("components.settings.account.delete_account.description")}
+            </ItemDescription>
           </ItemContent>
           <ItemActions>
             <AlertDialogTrigger
               render={
                 <Button type="button" variant="destructive">
                   <Trash2Icon className="size-4" />
-                  Delete account
+                  {t("components.settings.account.delete_account.trigger")}
                 </Button>
               }
             />
@@ -118,9 +129,13 @@ export function DeleteAccount({ email }: DeleteAccountProps) {
 
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete account</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("components.settings.account.delete_account.dialog.title")}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Enter your email address below to confirm
+              {t(
+                "components.settings.account.delete_account.dialog.description"
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -136,7 +151,11 @@ export function DeleteAccount({ email }: DeleteAccountProps) {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t(
+                        "components.settings.account.delete_account.email.label"
+                      )}
+                    </FieldLabel>
                     <Input
                       {...field}
                       id={field.name}
@@ -156,7 +175,7 @@ export function DeleteAccount({ email }: DeleteAccountProps) {
 
             <AlertDialogFooter className="mt-8">
               <AlertDialogCancel disabled={deleteAccountMutation.isPending}>
-                Cancel
+                {t("common.actions.cancel")}
               </AlertDialogCancel>
               <AlertDialogAction
                 variant="destructive"
@@ -168,7 +187,7 @@ export function DeleteAccount({ email }: DeleteAccountProps) {
                 {deleteAccountMutation.isPending ? (
                   <Spinner className="mx-3" />
                 ) : (
-                  "Delete account"
+                  t("components.settings.account.delete_account.dialog.confirm")
                 )}
               </AlertDialogAction>
             </AlertDialogFooter>

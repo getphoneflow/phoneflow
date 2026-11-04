@@ -14,6 +14,7 @@ import type {
 } from "@workspace/shared/api/phone-numbers/types"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
+import { t } from "@/lib/i18n"
 import { deprovisionInbound, provisionInbound } from "@/lib/livekit"
 import { validator } from "@/lib/validator"
 
@@ -21,6 +22,7 @@ export const phoneNumberRoutes = new Hono()
 
 phoneNumberRoutes.get("/", requireOrganization, async (c) => {
   const organizationId = c.get("organizationId")
+  const locale = c.get("locale")
 
   try {
     const phoneNumbers = await db.query.phoneNumbersTable.findMany({
@@ -46,7 +48,7 @@ phoneNumberRoutes.get("/", requireOrganization, async (c) => {
 
     return c.json(phoneNumbers satisfies PhoneNumberListResponse)
   } catch {
-    return c.json({ error: "Failed to load phone numbers" }, 500)
+    return c.json({ error: t(locale, "phone_numbers.list_failed") }, 500)
   }
 })
 
@@ -57,6 +59,7 @@ phoneNumberRoutes.post(
   validator("json", createPhoneNumberRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
+    const locale = c.get("locale")
 
     try {
       const payload = c.req.valid("json")
@@ -73,7 +76,10 @@ phoneNumberRoutes.post(
         })
 
         if (!agent) {
-          return c.json({ error: "Agent not found" }, 404)
+          return c.json(
+            { error: t(locale, "phone_numbers.agent_not_found") },
+            404
+          )
         }
       }
 
@@ -97,12 +103,15 @@ phoneNumberRoutes.post(
         await db
           .delete(phoneNumbersTable)
           .where(eq(phoneNumbersTable.id, phoneNumber.id))
-        return c.json({ error: "Failed to provision inbound SIP" }, 502)
+        return c.json(
+          { error: t(locale, "phone_numbers.provision_failed") },
+          502
+        )
       }
 
       return c.json(phoneNumber satisfies PhoneNumberResponse, 201)
     } catch {
-      return c.json({ error: "Failed to create phone number" }, 500)
+      return c.json({ error: t(locale, "phone_numbers.create_failed") }, 500)
     }
   }
 )
@@ -115,6 +124,7 @@ phoneNumberRoutes.patch(
   validator("json", updatePhoneNumberRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
+    const locale = c.get("locale")
     const { id } = c.req.valid("param")
 
     try {
@@ -132,7 +142,10 @@ phoneNumberRoutes.patch(
         })
 
         if (!agent) {
-          return c.json({ error: "Agent not found" }, 404)
+          return c.json(
+            { error: t(locale, "phone_numbers.agent_not_found") },
+            404
+          )
         }
       }
 
@@ -147,7 +160,7 @@ phoneNumberRoutes.patch(
       })
 
       if (!existing) {
-        return c.json({ error: "Phone number not found" }, 404)
+        return c.json({ error: t(locale, "phone_numbers.not_found") }, 404)
       }
 
       const [phoneNumber] = await db
@@ -174,13 +187,16 @@ phoneNumberRoutes.patch(
         try {
           await provisionInbound(phoneNumber)
         } catch (error) {
-          return c.json({ error: "Failed to provision inbound SIP" }, 502)
+          return c.json(
+            { error: t(locale, "phone_numbers.provision_failed") },
+            502
+          )
         }
       }
 
       return c.json(phoneNumber satisfies PhoneNumberResponse)
     } catch {
-      return c.json({ error: "Failed to update phone number" }, 500)
+      return c.json({ error: t(locale, "phone_numbers.update_failed") }, 500)
     }
   }
 )
@@ -192,6 +208,7 @@ phoneNumberRoutes.delete(
   validator("param", phoneNumberIdParamsSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
+    const locale = c.get("locale")
     const { id } = c.req.valid("param")
 
     try {
@@ -206,14 +223,14 @@ phoneNumberRoutes.delete(
         .returning()
 
       if (!deletedPhoneNumber) {
-        return c.json({ error: "Phone number not found" }, 404)
+        return c.json({ error: t(locale, "phone_numbers.not_found") }, 404)
       }
 
       await deprovisionInbound({ number: deletedPhoneNumber.number })
 
       return c.json(deletedPhoneNumber satisfies PhoneNumberResponse)
     } catch {
-      return c.json({ error: "Failed to delete phone number" }, 500)
+      return c.json({ error: t(locale, "phone_numbers.delete_failed") }, 500)
     }
   }
 )

@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { PlusIcon } from "lucide-react"
 import { useState } from "react"
@@ -33,14 +32,17 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export function AddPhoneNumberForm() {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
   const canCreate = useCheckPermission({ phoneNumber: ["create"] })
 
   const form = useForm<CreatePhoneNumberRequest>({
-    resolver: zodResolver(createPhoneNumberRequestSchema),
+    resolver: zodResolverI18n(createPhoneNumberRequestSchema),
     defaultValues: {
       number: "",
       sipAddress: null,
@@ -80,13 +82,17 @@ export function AddPhoneNumberForm() {
       <DialogTrigger disabled={!canCreate}>
         <Button disabled={!canCreate}>
           <PlusIcon />
-          Add phone number
+          {t("components.phone_numbers.add_phone_number_form.trigger")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add phone number</DialogTitle>
-          <DialogDescription>Add a new phone number</DialogDescription>
+          <DialogTitle>
+            {t("components.phone_numbers.add_phone_number_form.title")}
+          </DialogTitle>
+          <DialogDescription>
+            {t("components.phone_numbers.add_phone_number_form.description")}
+          </DialogDescription>
         </DialogHeader>
 
         <form
@@ -99,7 +105,11 @@ export function AddPhoneNumberForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Phone number</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.phone_numbers.add_phone_number_form.number.label"
+                    )}
+                  </FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -120,7 +130,11 @@ export function AddPhoneNumberForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>SIP address</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.phone_numbers.add_phone_number_form.sip_address.label"
+                    )}
+                  </FieldLabel>
                   <Input
                     id={field.name}
                     name={field.name}
@@ -147,7 +161,11 @@ export function AddPhoneNumberForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>SIP username</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.phone_numbers.add_phone_number_form.sip_username.label"
+                    )}
+                  </FieldLabel>
                   <Input
                     id={field.name}
                     name={field.name}
@@ -158,7 +176,9 @@ export function AddPhoneNumberForm() {
                       field.onChange(event.target.value || null)
                     }
                     aria-invalid={fieldState.invalid}
-                    placeholder="username"
+                    placeholder={t(
+                      "components.phone_numbers.add_phone_number_form.sip_username.placeholder"
+                    )}
                     autoComplete="off"
                     disabled={saveMutation.isPending}
                   />
@@ -174,7 +194,11 @@ export function AddPhoneNumberForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>SIP password</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.phone_numbers.add_phone_number_form.sip_password.label"
+                    )}
+                  </FieldLabel>
                   <PasswordInput
                     id={field.name}
                     name={field.name}
@@ -198,14 +222,14 @@ export function AddPhoneNumberForm() {
           <DialogFooter className="mt-8">
             <DialogClose>
               <Button variant="outline" disabled={saveMutation.isPending}>
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button type="submit" disabled={saveMutation.isPending}>
               {saveMutation.isPending ? (
                 <Spinner className="mx-8" />
               ) : (
-                "Add phone number"
+                t("components.phone_numbers.add_phone_number_form.submit")
               )}
             </Button>
           </DialogFooter>

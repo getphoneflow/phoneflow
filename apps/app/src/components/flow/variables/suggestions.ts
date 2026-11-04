@@ -13,6 +13,13 @@ const SYSTEM_KEYS = [
 const RESERVED_KEYS = new Set<string>(SYSTEM_KEYS)
 const GROUP_LABELS = ["Inputs", "Extracted", "System", "Parameters"] as const
 
+export const variableGroupLabelKeys: Record<string, string> = {
+  Inputs: "components.flow.variables.suggestions.groups.inputs",
+  Extracted: "components.flow.variables.suggestions.groups.extracted",
+  System: "components.flow.variables.suggestions.groups.system",
+  Parameters: "components.flow.variables.suggestions.groups.parameters",
+}
+
 export type VariableSuggestion = {
   key: string
   label: string

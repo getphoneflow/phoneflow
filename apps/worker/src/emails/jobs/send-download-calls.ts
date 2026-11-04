@@ -1,3 +1,4 @@
+import { t } from "@workspace/email/i18n"
 import sendEmail from "@workspace/email/send"
 import DownloadCallsEmail from "@workspace/email/templates/download-calls"
 import type { CallDownloadResponse } from "@workspace/shared/api/calls/types"
@@ -6,6 +7,8 @@ import { api } from "@/lib/api"
 import { env } from "@/lib/env"
 
 export async function sendDownloadCalls(payload: SendDownloadCallsPayload) {
+  const { locale, organizationName } = payload
+
   const calls = await api.get<CallDownloadResponse>(
     `/calls/export/${payload.organizationId}`
   )
@@ -13,8 +16,10 @@ export async function sendDownloadCalls(payload: SendDownloadCallsPayload) {
   await sendEmail(
     env.EMAIL_FROM,
     payload.to,
-    `Download calls from ${payload.organizationName}`,
-    DownloadCallsEmail(),
+    t(locale, "download_calls.subject", {
+      organization_name: organizationName,
+    }),
+    DownloadCallsEmail({ locale }),
     [
       {
         filename: "calls.json",

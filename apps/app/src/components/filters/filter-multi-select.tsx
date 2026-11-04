@@ -12,6 +12,7 @@ import {
   useComboboxAnchor,
 } from "@workspace/ui/components/combobox"
 import { Field, FieldLabel } from "@workspace/ui/components/field"
+import { useTranslation } from "@/lib/i18n"
 
 export type MultiSelectOption = {
   value: string
@@ -25,7 +26,7 @@ export function FilterMultiSelect({
   items,
   selectedValues,
   onSelectedValuesChange,
-  emptyText = "No items found",
+  emptyText,
 }: {
   label: string
   placeholder: string
@@ -34,6 +35,7 @@ export function FilterMultiSelect({
   onSelectedValuesChange: (values: string[]) => void
   emptyText?: string
 }) {
+  const { t } = useTranslation()
   const anchor = useComboboxAnchor()
   const selectedItems = items.filter((item) =>
     selectedValues.includes(item.value)
@@ -69,8 +71,15 @@ export function FilterMultiSelect({
           </ComboboxValue>
         </ComboboxChips>
         <ComboboxContent anchor={anchor}>
-          <ComboboxInput showTrigger={false} placeholder="Search..." />
-          <ComboboxEmpty>{emptyText}</ComboboxEmpty>
+          <ComboboxInput
+            showTrigger={false}
+            placeholder={t(
+              "components.filters.filter_multi_select.search_placeholder"
+            )}
+          />
+          <ComboboxEmpty>
+            {emptyText ?? t("components.filters.filter_multi_select.empty")}
+          </ComboboxEmpty>
           <ComboboxList>
             {(item: MultiSelectOption) => (
               <ComboboxItem key={item.value} value={item}>

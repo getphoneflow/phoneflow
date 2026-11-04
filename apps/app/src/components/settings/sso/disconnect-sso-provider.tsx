@@ -28,6 +28,7 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { authClient } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
 
 type DisconnectSsoProviderProps = {
   canUpdate: boolean
@@ -40,6 +41,7 @@ export function DisconnectSsoProvider({
   providerId,
   onDisconnected,
 }: DisconnectSsoProviderProps) {
+  const { t } = useTranslation()
   const deleteProviderMutation = useMutation({
     mutationFn: async () => {
       const result = await authClient.sso.deleteProvider({ providerId })
@@ -48,7 +50,9 @@ export function DisconnectSsoProvider({
       }
     },
     onSuccess: () => {
-      toast.success("Provider disconnected")
+      toast.success(
+        t("components.settings.sso.disconnect_sso_provider.toasts.disconnected")
+      )
       onDisconnected()
     },
     onError: (error) => {
@@ -59,15 +63,19 @@ export function DisconnectSsoProvider({
   return (
     <FieldGroup>
       <FieldSet>
-        <FieldLegend className="mb-0">Danger zone</FieldLegend>
+        <FieldLegend className="mb-0">
+          {t("components.settings.sso.disconnect_sso_provider.danger_zone")}
+        </FieldLegend>
       </FieldSet>
 
       <AlertDialog onOpenChange={() => deleteProviderMutation.reset()}>
         <Item variant="outline">
           <ItemContent>
-            <ItemTitle>Disconnect provider</ItemTitle>
+            <ItemTitle>
+              {t("components.settings.sso.disconnect_sso_provider.title")}
+            </ItemTitle>
             <ItemDescription>
-              Permanently delete this connection
+              {t("components.settings.sso.disconnect_sso_provider.description")}
             </ItemDescription>
           </ItemContent>
           <ItemActions>
@@ -79,7 +87,7 @@ export function DisconnectSsoProvider({
                   disabled={!canUpdate}
                 >
                   <Trash2Icon className="size-4" />
-                  Disconnect provider
+                  {t("components.settings.sso.disconnect_sso_provider.trigger")}
                 </Button>
               }
             />
@@ -88,14 +96,20 @@ export function DisconnectSsoProvider({
 
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Disconnect provider</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t(
+                "components.settings.sso.disconnect_sso_provider.dialog.title"
+              )}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Permanently delete this connection
+              {t(
+                "components.settings.sso.disconnect_sso_provider.dialog.description"
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteProviderMutation.isPending}>
-              Cancel
+              {t("common.actions.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
@@ -108,7 +122,9 @@ export function DisconnectSsoProvider({
               {deleteProviderMutation.isPending ? (
                 <Spinner className="mx-8" />
               ) : (
-                "Disconnect provider"
+                t(
+                  "components.settings.sso.disconnect_sso_provider.dialog.confirm"
+                )
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

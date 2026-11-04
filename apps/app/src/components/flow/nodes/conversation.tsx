@@ -2,6 +2,7 @@ import { Handle, type Node, type NodeProps, Position } from "@xyflow/react"
 import { Phone, Play } from "lucide-react"
 
 import type { FlowConversationNode } from "@workspace/shared/api/agent-config/types"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 import { FlowNodeBase } from "./base"
 
@@ -12,13 +13,22 @@ export function ConversationNode({
   data,
   selected,
 }: NodeProps<ConversationNodeType>) {
+  const { t } = useTranslation()
   const isStart = data.isStart
   const tools = useAgentStore((state) => state.config.tools)
   const toolNames = [
-    ...(data.endCall ? ["End call"] : []),
-    ...(data.extractVariables ? ["Extract variables"] : []),
-    ...(data.ivrNavigation ? ["IVR navigation"] : []),
-    ...(data.transferCall ? ["Transfer call"] : []),
+    ...(data.endCall
+      ? [t("components.flow.nodes.conversation.tool_names.end_call")]
+      : []),
+    ...(data.extractVariables
+      ? [t("components.flow.nodes.conversation.tool_names.extract_variables")]
+      : []),
+    ...(data.ivrNavigation
+      ? [t("components.flow.nodes.conversation.tool_names.ivr_navigation")]
+      : []),
+    ...(data.transferCall
+      ? [t("components.flow.nodes.conversation.tool_names.transfer_call")]
+      : []),
     ...(data.toolIds ?? []).map(
       (id) => tools.find((tool) => tool.id === id)?.name
     ),
@@ -45,7 +55,9 @@ export function ConversationNode({
       </div>
       <div className="border-t border-border" />
       <div className="p-3 pb-1 text-xs text-foreground capitalize">
-        {data.instructions.type}:
+        {t(
+          `components.flow.nodes.conversation.instruction_types.${data.instructions.type}`
+        )}
       </div>
       <div className="p-3 pt-0">
         <div className="line-clamp-8 whitespace-pre-wrap wrap-break-word text-xs text-muted-foreground">
@@ -54,7 +66,9 @@ export function ConversationNode({
       </div>
       {toolNames.length > 0 && (
         <>
-          <div className="px-3 text-xs text-foreground">Tools:</div>
+          <div className="px-3 text-xs text-foreground">
+            {t("components.flow.nodes.conversation.tools")}
+          </div>
           <div className="p-3 pt-1 text-xs text-muted-foreground">
             {toolNames.join(", ")}
           </div>

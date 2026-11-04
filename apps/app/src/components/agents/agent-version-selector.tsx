@@ -12,10 +12,12 @@ import {
 import { Spinner } from "@workspace/ui/components/spinner"
 import { formatAgentVersionLabel } from "@/components/helpers"
 import { UserDateTime } from "@/components/user-timezone-provider"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 export function AgentVersionSelector() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const agent = useAgentStore((state) => state.agent)
   const activeVersionNumber = useAgentStore(
     (state) => state.activeVersionNumber
@@ -36,7 +38,7 @@ export function AgentVersionSelector() {
       <DropdownMenuTrigger>
         <Button
           variant="outline"
-          className="w-28 justify-between"
+          className="w-32 justify-between"
           disabled={isFetchingVersion}
         >
           {isFetchingVersion ? (
@@ -44,8 +46,16 @@ export function AgentVersionSelector() {
           ) : (
             <>
               <div>
-                V{isDraftSelected ? draftVersionNumber : activeVersionNumber}
-                {isDraftSelected ? " (Draft)" : null}
+                {isDraftSelected
+                  ? t(
+                      "components.agents.agent_version_selector.version_draft",
+                      {
+                        number: draftVersionNumber,
+                      }
+                    )
+                  : t("components.agents.agent_version_selector.version", {
+                      number: activeVersionNumber,
+                    })}
               </div>
               <ChevronDownIcon />
             </>
@@ -63,9 +73,14 @@ export function AgentVersionSelector() {
           }}
         >
           <div className="min-w-0 flex-1">
-            <div className="truncate">V{draftVersionNumber} (Draft)</div>
+            <div className="truncate">
+              {t("components.agents.agent_version_selector.version_draft", {
+                number: draftVersionNumber,
+              })}
+            </div>
             <div className="truncate text-xs text-muted-foreground">
-              Updated <UserDateTime value={agent.updatedAt} />
+              {t("components.agents.agent_version_selector.updated")}{" "}
+              <UserDateTime value={agent.updatedAt} />
             </div>
           </div>
           <CheckIcon className={isDraftSelected ? undefined : "invisible"} />
@@ -92,10 +107,11 @@ export function AgentVersionSelector() {
             >
               <div className="min-w-0 flex-1">
                 <div className="truncate">
-                  {formatAgentVersionLabel(version)}
+                  {formatAgentVersionLabel(version, t)}
                 </div>
                 <div className="truncate text-xs text-muted-foreground">
-                  Published <UserDateTime value={version.publishedAt} />
+                  {t("components.agents.agent_version_selector.published")}{" "}
+                  <UserDateTime value={version.publishedAt} />
                 </div>
               </div>
               <CheckIcon className={isSelected ? undefined : "invisible"} />

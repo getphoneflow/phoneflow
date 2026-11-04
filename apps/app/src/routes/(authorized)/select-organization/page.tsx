@@ -22,6 +22,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { captureEvent } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
 import { organizationsListQueryOptions } from "@/lib/auth/organization"
+import { useTranslation } from "@/lib/i18n"
 
 export const Route = createFileRoute("/(authorized)/select-organization/")({
   loader: async ({ context }) => {
@@ -48,6 +49,7 @@ export const Route = createFileRoute("/(authorized)/select-organization/")({
 })
 
 function Page() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { data: organizations } = useSuspenseQuery(
@@ -76,13 +78,15 @@ function Page() {
 
   return (
     <>
-      <title>Select organization - Phoneflow</title>
+      <title>{t("routes.select_organization.page_title")}</title>
       <div className="flex h-screen w-full items-center justify-center p-6">
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Select organization</CardTitle>
+            <CardTitle className="text-xl">
+              {t("routes.select_organization.title")}
+            </CardTitle>
             <CardDescription>
-              Choose an organization to continue
+              {t("routes.select_organization.description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -105,7 +109,7 @@ function Page() {
               variant="ghost"
               className="w-full"
             >
-              Create organization
+              {t("routes.select_organization.create_organization")}
             </Button>
           </CardContent>
         </Card>

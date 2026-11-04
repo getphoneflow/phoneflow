@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 
@@ -29,6 +28,8 @@ import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 type EditPhoneNumberFormProps = {
   phoneNumber: PhoneNumberListResponse[number]
@@ -41,10 +42,11 @@ export function EditPhoneNumberForm({
   open,
   onOpenChange,
 }: EditPhoneNumberFormProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const form = useForm<UpdatePhoneNumberRequest>({
-    resolver: zodResolver(updatePhoneNumberRequestSchema),
+    resolver: zodResolverI18n(updatePhoneNumberRequestSchema),
     defaultValues: {
       number: phoneNumber.number,
       sipAddress: phoneNumber.sipAddress,
@@ -79,9 +81,11 @@ export function EditPhoneNumberForm({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit phone number</DialogTitle>
+          <DialogTitle>
+            {t("components.phone_numbers.edit_phone_number_form.title")}
+          </DialogTitle>
           <DialogDescription>
-            Edit the phone number and its SIP connection
+            {t("components.phone_numbers.edit_phone_number_form.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -95,7 +99,11 @@ export function EditPhoneNumberForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Phone number</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.phone_numbers.edit_phone_number_form.number.label"
+                    )}
+                  </FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
@@ -116,7 +124,11 @@ export function EditPhoneNumberForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>SIP address</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.phone_numbers.edit_phone_number_form.sip_address.label"
+                    )}
+                  </FieldLabel>
                   <Input
                     id={field.name}
                     name={field.name}
@@ -143,7 +155,11 @@ export function EditPhoneNumberForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>SIP username</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.phone_numbers.edit_phone_number_form.sip_username.label"
+                    )}
+                  </FieldLabel>
                   <Input
                     id={field.name}
                     name={field.name}
@@ -154,7 +170,9 @@ export function EditPhoneNumberForm({
                       field.onChange(event.target.value || null)
                     }
                     aria-invalid={fieldState.invalid}
-                    placeholder="username"
+                    placeholder={t(
+                      "components.phone_numbers.edit_phone_number_form.sip_username.placeholder"
+                    )}
                     autoComplete="off"
                     disabled={saveMutation.isPending}
                   />
@@ -170,7 +188,11 @@ export function EditPhoneNumberForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>SIP password</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.phone_numbers.edit_phone_number_form.sip_password.label"
+                    )}
+                  </FieldLabel>
                   <PasswordInput
                     id={field.name}
                     name={field.name}
@@ -194,11 +216,15 @@ export function EditPhoneNumberForm({
           <DialogFooter className="mt-8">
             <DialogClose>
               <Button variant="outline" disabled={saveMutation.isPending}>
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button type="submit" disabled={saveMutation.isPending}>
-              {saveMutation.isPending ? <Spinner className="mx-8" /> : "Save"}
+              {saveMutation.isPending ? (
+                <Spinner className="mx-8" />
+              ) : (
+                t("common.actions.save")
+              )}
             </Button>
           </DialogFooter>
         </form>

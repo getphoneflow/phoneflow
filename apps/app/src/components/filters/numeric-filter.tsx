@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select"
+import { useTranslation } from "@/lib/i18n"
 
 export type NumericFilterOperator = "eq" | "between" | "gte" | "lte"
 
@@ -23,10 +24,22 @@ const numericOperatorOptions: {
   value: NumericFilterOperator
   label: string
 }[] = [
-  { value: "eq", label: "is equal to" },
-  { value: "between", label: "is between" },
-  { value: "gte", label: "is greater than or equal to" },
-  { value: "lte", label: "is less than or equal to" },
+  {
+    value: "eq",
+    label: "components.filters.numeric_filter.operators.eq",
+  },
+  {
+    value: "between",
+    label: "components.filters.numeric_filter.operators.between",
+  },
+  {
+    value: "gte",
+    label: "components.filters.numeric_filter.operators.gte",
+  },
+  {
+    value: "lte",
+    label: "components.filters.numeric_filter.operators.lte",
+  },
 ]
 
 export function NumericFilter({
@@ -52,6 +65,7 @@ export function NumericFilter({
     valueMax?: number
   }) => void
 }) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [draftOperator, setDraftOperator] = useState<NumericFilterOperator>(
     operator ?? "eq"
@@ -158,17 +172,17 @@ export function NumericFilter({
           >
             <SelectTrigger className="w-full">
               <SelectValue>
-                {
+                {t(
                   numericOperatorOptions.find(
                     (option) => option.value === draftOperator
-                  )?.label
-                }
+                  )?.label ?? numericOperatorOptions[0].label
+                )}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {numericOperatorOptions.map((option) => (
                 <SelectItem key={option.value} value={option.value}>
-                  {option.label}
+                  {t(option.label)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -183,7 +197,9 @@ export function NumericFilter({
                 value={draftValue}
                 onChange={(event) => setDraftValue(event.target.value)}
               />
-              <span className="text-sm text-muted-foreground">and</span>
+              <span className="text-sm text-muted-foreground">
+                {t("components.filters.numeric_filter.and")}
+              </span>
               <Input
                 type="number"
                 min={0}

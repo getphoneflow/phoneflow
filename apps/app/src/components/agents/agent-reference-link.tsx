@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router"
 
-import { DELETED_AGENT_LABEL } from "@/components/helpers"
+import { formatAgentName } from "@/components/helpers"
+import { useTranslation } from "@/lib/i18n"
 
 type AgentReferenceLinkProps = {
   agentId: string
@@ -15,8 +16,12 @@ export function AgentReferenceLink({
   agentVersionId,
   className,
 }: AgentReferenceLinkProps) {
+  const { t } = useTranslation()
+
   if (!agent) {
-    return <span className="text-muted-foreground">{DELETED_AGENT_LABEL}</span>
+    return (
+      <span className="text-muted-foreground">{formatAgentName(null, t)}</span>
+    )
   }
 
   return (

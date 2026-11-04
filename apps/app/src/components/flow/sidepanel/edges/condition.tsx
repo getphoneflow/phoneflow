@@ -18,11 +18,12 @@ import {
 } from "@workspace/ui/components/select"
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
 import {
-  operatorLabels,
+  operatorLabelKeys,
   operatorNeedsValue,
 } from "@/components/flow/edges/condition-format"
 import { VariableSelect } from "@/components/flow/variables/variable-select"
 import { VariableTextField } from "@/components/flow/variables/variable-text-field"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "../base"
 
@@ -31,17 +32,33 @@ type EdgePanelProps = {
 }
 
 const conditionTypes: { value: FlowEdgeCondition["type"]; label: string }[] = [
-  { value: "prompt", label: "Prompt" },
-  { value: "expression", label: "Expression" },
-  { value: "always", label: "Always" },
+  {
+    value: "prompt",
+    label: "components.flow.sidepanel.edges.condition.condition_type.prompt",
+  },
+  {
+    value: "expression",
+    label:
+      "components.flow.sidepanel.edges.condition.condition_type.expression",
+  },
+  {
+    value: "always",
+    label: "components.flow.sidepanel.edges.condition.condition_type.always",
+  },
 ]
 
 const matchOptions: { value: "all" | "any"; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "any", label: "Any" },
+  {
+    value: "all",
+    label: "components.flow.sidepanel.edges.condition.match.all",
+  },
+  {
+    value: "any",
+    label: "components.flow.sidepanel.edges.condition.match.any",
+  },
 ]
 
-const operatorOptions = Object.entries(operatorLabels) as [
+const operatorOptions = Object.entries(operatorLabelKeys) as [
   ExpressionOperator,
   string,
 ][]
@@ -62,6 +79,7 @@ function defaultCondition(type: FlowEdgeCondition["type"]): FlowEdgeCondition {
 }
 
 export function EdgePanel({ edge }: EdgePanelProps) {
+  const { t } = useTranslation()
   const readOnly = useAgentStore((state) => state.readOnly)
   const setEdge = useAgentStore((state) => state.setEdge)
 
@@ -90,10 +108,16 @@ export function EdgePanel({ edge }: EdgePanelProps) {
   }
 
   return (
-    <FlowSidePanelBase title="Edge">
+    <FlowSidePanelBase
+      title={t("components.flow.sidepanel.edges.condition.title")}
+    >
       <FieldGroup>
         <Field>
-          <FieldLabel>Condition type</FieldLabel>
+          <FieldLabel>
+            {t(
+              "components.flow.sidepanel.edges.condition.condition_type.label"
+            )}
+          </FieldLabel>
           <Tabs
             value={condition.type}
             onValueChange={(value) =>
@@ -109,7 +133,7 @@ export function EdgePanel({ edge }: EdgePanelProps) {
                   value={type.value}
                   disabled={readOnly}
                 >
-                  {type.label}
+                  {t(type.label)}
                 </TabsTrigger>
               ))}
             </TabsList>
@@ -118,9 +142,13 @@ export function EdgePanel({ edge }: EdgePanelProps) {
 
         {condition.type === "prompt" && (
           <Field>
-            <FieldLabel>Prompt</FieldLabel>
+            <FieldLabel>
+              {t("components.flow.sidepanel.edges.condition.prompt.label")}
+            </FieldLabel>
             <VariableTextField
-              placeholder="Transition condition"
+              placeholder={t(
+                "components.flow.sidepanel.edges.condition.prompt.placeholder"
+              )}
               value={condition.prompt}
               readOnly={readOnly}
               onChange={(prompt) => updateCondition({ ...condition, prompt })}
@@ -130,7 +158,9 @@ export function EdgePanel({ edge }: EdgePanelProps) {
 
         {condition.type === "expression" && (
           <Field>
-            <FieldLabel>Match</FieldLabel>
+            <FieldLabel>
+              {t("components.flow.sidepanel.edges.condition.match.label")}
+            </FieldLabel>
             <Tabs
               value={condition.match}
               onValueChange={(value) => {
@@ -146,7 +176,7 @@ export function EdgePanel({ edge }: EdgePanelProps) {
                     value={option.value}
                     disabled={readOnly}
                   >
-                    {option.label}
+                    {t(option.label)}
                   </TabsTrigger>
                 ))}
               </TabsList>
@@ -192,12 +222,14 @@ export function EdgePanel({ edge }: EdgePanelProps) {
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue>{operatorLabels[row.operator]}</SelectValue>
+                      <SelectValue>
+                        {t(operatorLabelKeys[row.operator])}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       {operatorOptions.map(([value, label]) => (
                         <SelectItem key={value} value={value}>
-                          {label}
+                          {t(label)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -205,7 +237,9 @@ export function EdgePanel({ edge }: EdgePanelProps) {
                   {operatorNeedsValue(row.operator) && (
                     <Input
                       className="flex-1"
-                      placeholder="value"
+                      placeholder={t(
+                        "components.flow.sidepanel.edges.condition.value.placeholder"
+                      )}
                       value={row.value ?? ""}
                       readOnly={readOnly}
                       onChange={(event) =>
@@ -224,15 +258,14 @@ export function EdgePanel({ edge }: EdgePanelProps) {
               onClick={() => updateRows([...condition.conditions, emptyRow()])}
             >
               <Plus />
-              Add condition
+              {t("components.flow.sidepanel.edges.condition.add_condition")}
             </Button>
           </Field>
         )}
 
         {condition.type === "always" && (
           <p className="text-sm text-muted-foreground">
-            Always transitions to the next node on the following turn. Must be
-            the only transition on the node.
+            {t("components.flow.sidepanel.edges.condition.always_description")}
           </p>
         )}
       </FieldGroup>

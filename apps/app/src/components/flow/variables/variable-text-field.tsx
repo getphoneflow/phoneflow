@@ -7,8 +7,10 @@ import {
   createInputVariable,
   mentionAt,
   replaceMention,
+  variableGroupLabelKeys,
   variableSuggestions,
 } from "@/components/flow/variables/suggestions"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 type Suggestion = { key: string; label: string; create?: boolean }
@@ -90,6 +92,7 @@ export function VariableTextField({
   name,
   "aria-invalid": ariaInvalid,
 }: VariableTextFieldProps) {
+  const { t } = useTranslation()
   const config = useAgentStore((state) => state.config)
   const fieldRef = useRef<HTMLTextAreaElement | HTMLInputElement | null>(null)
   const [caret, setCaret] = useState(0)
@@ -104,7 +107,15 @@ export function VariableTextField({
   const options: Suggestion[] = [
     ...groups.flatMap((group) => group.items),
     ...(createKey
-      ? [{ key: createKey, label: `Create ${createKey}`, create: true }]
+      ? [
+          {
+            key: createKey,
+            label: t("components.flow.variables.variable_text_field.create", {
+              key: createKey,
+            }),
+            create: true,
+          },
+        ]
       : []),
   ]
   const open = mention !== null && !readOnly && !closed
@@ -219,14 +230,16 @@ export function VariableTextField({
         >
           {options.length === 0 ? (
             <p className="px-2 py-1.5 text-sm text-muted-foreground">
-              No variables
+              {t("components.flow.variables.variable_text_field.empty")}
             </p>
           ) : (
             <>
               {groups.map((group) => (
                 <div key={group.label}>
                   <p className="px-2 pt-1.5 pb-0.5 text-xs text-muted-foreground">
-                    {group.label}
+                    {variableGroupLabelKeys[group.label]
+                      ? t(variableGroupLabelKeys[group.label])
+                      : group.label}
                   </p>
                   {group.items.map((option) => (
                     <button
@@ -249,12 +262,17 @@ export function VariableTextField({
                   onClick={() =>
                     insert({
                       key: createKey,
-                      label: `Create ${createKey}`,
+                      label: t(
+                        "components.flow.variables.variable_text_field.create",
+                        { key: createKey }
+                      ),
                       create: true,
                     })
                   }
                 >
-                  Create {createKey}
+                  {t("components.flow.variables.variable_text_field.create", {
+                    key: createKey,
+                  })}
                 </button>
               ) : null}
             </>

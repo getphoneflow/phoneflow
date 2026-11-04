@@ -11,10 +11,12 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "./base"
 
 export function VariablesPanel() {
+  const { t } = useTranslation()
   const readOnly = useAgentStore((state) => state.readOnly)
   const config = useAgentStore((state) => state.config)
   const setConfig = useAgentStore((state) => state.setConfig)
@@ -49,9 +51,21 @@ export function VariablesPanel() {
       note: false,
     },
     { key: "timezone", value: config.timezone, note: false },
-    { key: "direction", value: "web, inbound, or outbound", note: true },
-    { key: "phone_number", value: "The user's number", note: true },
-    { key: "agent_number", value: "The agent's number", note: true },
+    {
+      key: "direction",
+      value: t("components.flow.sidepanel.variables.system.direction"),
+      note: true,
+    },
+    {
+      key: "phone_number",
+      value: t("components.flow.sidepanel.variables.system.phone_number"),
+      note: true,
+    },
+    {
+      key: "agent_number",
+      value: t("components.flow.sidepanel.variables.system.agent_number"),
+      note: true,
+    },
   ]
 
   function updateInputs(dynamicVariables: DynamicVariable[]) {
@@ -74,12 +88,14 @@ export function VariablesPanel() {
   }
 
   return (
-    <FlowSidePanelBase title="Variables">
+    <FlowSidePanelBase title={t("components.flow.sidepanel.variables.title")}>
       <FieldGroup>
         <Field>
-          <FieldLabel>Inputs</FieldLabel>
+          <FieldLabel>
+            {t("components.flow.sidepanel.variables.inputs.label")}
+          </FieldLabel>
           <FieldDescription>
-            Values passed in when the call starts
+            {t("components.flow.sidepanel.variables.inputs.description")}
           </FieldDescription>
           {inputs.map((variable, index) => (
             <div
@@ -89,7 +105,9 @@ export function VariablesPanel() {
               <div className="flex items-center gap-2">
                 <Input
                   value={variable.key}
-                  placeholder="variable_name"
+                  placeholder={t(
+                    "components.flow.sidepanel.variables.inputs.key_placeholder"
+                  )}
                   readOnly={readOnly}
                   onChange={(event) =>
                     updateInput(index, { key: event.target.value })
@@ -113,7 +131,9 @@ export function VariablesPanel() {
               </div>
               <Input
                 value={variable.defaultValue ?? ""}
-                placeholder="Default value"
+                placeholder={t(
+                  "components.flow.sidepanel.variables.inputs.default_value_placeholder"
+                )}
                 readOnly={readOnly}
                 onChange={(event) =>
                   updateInput(index, { defaultValue: event.target.value })
@@ -128,15 +148,17 @@ export function VariablesPanel() {
             onClick={() => updateInputs([...inputs, { key: "" }])}
           >
             <Plus />
-            Add variable
+            {t("components.flow.sidepanel.variables.inputs.add")}
           </Button>
         </Field>
 
         {extracted.length > 0 ? (
           <Field>
-            <FieldLabel>Extracted</FieldLabel>
+            <FieldLabel>
+              {t("components.flow.sidepanel.variables.extracted.label")}
+            </FieldLabel>
             <FieldDescription>
-              Values filled in during the call
+              {t("components.flow.sidepanel.variables.extracted.description")}
             </FieldDescription>
             {extracted.map((key) => (
               <p key={key} className="font-mono text-sm">
@@ -147,9 +169,11 @@ export function VariablesPanel() {
         ) : null}
 
         <Field>
-          <FieldLabel>System</FieldLabel>
+          <FieldLabel>
+            {t("components.flow.sidepanel.variables.system.label")}
+          </FieldLabel>
           <FieldDescription>
-            Built-in variables always available
+            {t("components.flow.sidepanel.variables.system.description")}
           </FieldDescription>
           {system.map((variable) => (
             <div

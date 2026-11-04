@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -25,9 +24,13 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { SelectRole } from "@/components/settings/members/select-role"
 import { captureEvent } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const inviteMemberFormSchema = z.object({
-  email: z.email("Enter a valid email address"),
+  email: z.email(
+    "components.settings.members.invite_member_dialog.email.invalid"
+  ),
   role: z.string().min(1),
 })
 
@@ -42,10 +45,11 @@ export function InviteMemberDialog({
   open,
   onOpenChange,
 }: InviteMemberDialogProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const form = useForm<InviteMemberFormValues>({
-    resolver: zodResolver(inviteMemberFormSchema),
+    resolver: zodResolverI18n(inviteMemberFormSchema),
     defaultValues: {
       email: "",
       role: "member",
@@ -64,7 +68,11 @@ export function InviteMemberDialog({
     },
     onSuccess: (_data, values) => {
       captureEvent("organization_member_invited", { role: values.role })
-      toast.success(`Invitation sent to ${values.email}`)
+      toast.success(
+        t("components.settings.members.invite_member_dialog.toasts.sent", {
+          email: values.email,
+        })
+      )
       form.reset()
       onOpenChange(false)
       queryClient.invalidateQueries({ queryKey: ["organization-invitations"] })
@@ -85,9 +93,11 @@ export function InviteMemberDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Invite member</DialogTitle>
+          <DialogTitle>
+            {t("components.settings.members.invite_member_dialog.title")}
+          </DialogTitle>
           <DialogDescription>
-            Send an email invitation to join this organization
+            {t("components.settings.members.invite_member_dialog.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -106,12 +116,18 @@ export function InviteMemberDialog({
                   data-invalid={fieldState.invalid}
                   className="min-w-0 flex-1"
                 >
-                  <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.settings.members.invite_member_dialog.email.label"
+                    )}
+                  </FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
                     type="email"
-                    placeholder="name@example.com"
+                    placeholder={t(
+                      "components.settings.members.invite_member_dialog.email.placeholder"
+                    )}
                     autoComplete="email"
                     autoFocus
                     aria-invalid={fieldState.invalid}
@@ -129,13 +145,19 @@ export function InviteMemberDialog({
               control={form.control}
               render={({ field }) => (
                 <Field className="w-36 shrink-0">
-                  <FieldLabel htmlFor={field.name}>Role</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.settings.members.invite_member_dialog.role.label"
+                    )}
+                  </FieldLabel>
                   <SelectRole
                     id={field.name}
                     value={field.value}
                     onValueChange={field.onChange}
                     disabled={inviteMemberMutation.isPending}
-                    ariaLabel="Role"
+                    ariaLabel={t(
+                      "components.settings.members.invite_member_dialog.role.label"
+                    )}
                   />
                 </Field>
               )}
@@ -148,14 +170,14 @@ export function InviteMemberDialog({
                 variant="outline"
                 disabled={inviteMemberMutation.isPending}
               >
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button type="submit" disabled={inviteMemberMutation.isPending}>
               {inviteMemberMutation.isPending ? (
                 <Spinner className="mx-6" />
               ) : (
-                "Send invitation"
+                t("components.settings.members.invite_member_dialog.submit")
               )}
             </Button>
           </DialogFooter>

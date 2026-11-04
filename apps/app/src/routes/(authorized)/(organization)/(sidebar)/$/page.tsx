@@ -10,6 +10,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@workspace/ui/components/empty"
+import { useTranslation } from "@/lib/i18n"
 
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/$/"
@@ -18,22 +19,25 @@ export const Route = createFileRoute(
 })
 
 function Page() {
+  const { t } = useTranslation()
   return (
     <>
-      <title>Page not found - Phoneflow</title>
+      <title>{t("routes.not_found.page_title")}</title>
       <Empty className="mx-auto max-w-md">
         <EmptyHeader>
           <EmptyMedia variant="icon">
             <Search />
           </EmptyMedia>
-          <EmptyTitle className="text-xl">Page not found</EmptyTitle>
+          <EmptyTitle className="text-xl">
+            {t("routes.not_found.title")}
+          </EmptyTitle>
           <EmptyDescription>
-            The page you're looking for doesn't exist or was moved
+            {t("routes.not_found.description")}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button variant="secondary" render={<Link to="/" />}>
-            Return Home
+            {t("routes.not_found.return_home")}
           </Button>
         </EmptyContent>
       </Empty>

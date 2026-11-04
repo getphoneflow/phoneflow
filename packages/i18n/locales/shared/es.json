@@ -1,0 +1,195 @@
+{
+  "schemas": {
+    "agents": {
+      "agent_name": {
+        "required": "El nombre del agente es obligatorio",
+        "max": "El nombre del agente debe tener como máximo 64 caracteres"
+      }
+    },
+    "agent_config": {
+      "stt_config": {
+        "model": {
+          "required": "El modelo de voz a texto es obligatorio"
+        },
+        "language": {
+          "required": "El idioma es obligatorio"
+        },
+        "keyterms": {
+          "empty": "El término clave no puede estar vacío"
+        }
+      },
+      "llm_config": {
+        "model": {
+          "required": "El modelo de lenguaje es obligatorio"
+        }
+      },
+      "tts_config": {
+        "model": {
+          "required": "El modelo de texto a voz es obligatorio"
+        },
+        "voice": {
+          "required": "La voz es obligatoria"
+        },
+        "language": {
+          "required": "El idioma es obligatorio"
+        },
+        "emotion": {
+          "empty": "La emoción no puede estar vacía"
+        }
+      },
+      "flow_node_instructions": {
+        "text": {
+          "required": "Las instrucciones de conversación son obligatorias"
+        }
+      },
+      "variable_key": {
+        "required": "La clave de variable es obligatoria",
+        "format": "La clave de variable solo puede contener minúsculas, números o guiones bajos",
+        "reserved": "La clave de variable está reservada"
+      },
+      "end_call_tool": {
+        "description": {
+          "required": "La descripción es obligatoria"
+        }
+      },
+      "ivr_navigation_tool": {
+        "description": {
+          "required": "La descripción es obligatoria"
+        }
+      },
+      "extract_variables_tool": {
+        "variables": {
+          "min": "Añade al menos una variable",
+          "duplicate_key": "Clave de variable duplicada"
+        }
+      },
+      "transfer_call_destination": {
+        "condition": {
+          "required": "La condición es obligatoria"
+        }
+      },
+      "transfer_call_tool": {
+        "destinations": {
+          "min": "Añade al menos un destino",
+          "duplicate_number": "Número de teléfono duplicado"
+        }
+      },
+      "tool_parameter": {
+        "name": {
+          "required": "El nombre del parámetro es obligatorio",
+          "format": "Usa minúsculas, números o guiones bajos"
+        }
+      },
+      "tool_key_value": {
+        "key": {
+          "required": "La clave es obligatoria"
+        },
+        "value": {
+          "required": "El valor es obligatorio"
+        }
+      },
+      "response_variable": {
+        "name": {
+          "required": "El nombre de la variable es obligatorio",
+          "format": "Usa minúsculas, números o guiones bajos",
+          "reserved": "El nombre de la variable está reservado"
+        },
+        "path": {
+          "required": "La ruta de la respuesta es obligatoria"
+        }
+      },
+      "webhook_tool": {
+        "name": {
+          "required": "El nombre de la herramienta es obligatorio",
+          "format": "Usa minúsculas, números o guiones bajos",
+          "reserved": "El nombre de la herramienta está reservado"
+        },
+        "description": {
+          "required": "La descripción de la herramienta es obligatoria"
+        },
+        "url": {
+          "required": "La URL es obligatoria"
+        },
+        "body": {
+          "json": "El cuerpo debe ser JSON"
+        }
+      },
+      "flow_node_config": {
+        "conversation_name": {
+          "required": "El nombre del nodo de conversación es obligatorio"
+        },
+        "end_name": {
+          "required": "El nombre del nodo final es obligatorio"
+        }
+      },
+      "expression_condition": {
+        "variable": {
+          "required": "La variable de transición es obligatoria"
+        },
+        "value": {
+          "required": "Se requiere un valor para este operador"
+        }
+      },
+      "flow_edge_condition": {
+        "prompt": {
+          "required": "El prompt de transición es obligatorio"
+        },
+        "conditions": {
+          "min": "Añade al menos una condición de transición"
+        }
+      },
+      "agent_config": {
+        "nodes": {
+          "min": "Añade al menos un nodo",
+          "duplicate": "Nodo duplicado",
+          "unknown_tool": "Herramienta desconocida",
+          "duplicate_tool": "Herramienta duplicada",
+          "start_required": "Añade un nodo de inicio al flujo",
+          "start_only_one": "Solo se permite un nodo de inicio"
+        },
+        "edges": {
+          "duplicate": "Transición duplicada",
+          "disconnected": "La transición está desconectada",
+          "always_alone": "La transición «siempre» debe ser la única transición de ese nodo"
+        },
+        "tools": {
+          "duplicate": "Herramienta duplicada",
+          "duplicate_name": "Nombre de herramienta duplicado",
+          "duplicate_parameter_name": "Nombre de parámetro duplicado",
+          "duplicate_response_variable": "Variable de respuesta duplicada"
+        },
+        "dynamic_variables": {
+          "duplicate_key": "Clave de variable duplicada"
+        },
+        "variables": {
+          "unknown": "Variable desconocida \"{{variable}}\""
+        }
+      }
+    },
+    "billing": {
+      "create_checkout_request": {
+        "amount": {
+          "min": "La compra mínima es de 10 $"
+        }
+      },
+      "update_auto_reload_request": {
+        "amount": {
+          "min": "La recarga mínima es de 10 $"
+        },
+        "threshold": {
+          "min": "El umbral debe ser 1 o mayor"
+        }
+      }
+    },
+    "phone_numbers": {
+      "phone_number_request": {
+        "agent_id": {
+          "required_with_version": "Se requiere un agente cuando se selecciona una versión"
+        },
+        "sip_password": {
+          "required_with_username": "La contraseña SIP es obligatoria cuando se indica un usuario"
+        }
+      }
+    }
+  }
+}

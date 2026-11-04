@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   createFileRoute,
@@ -36,12 +35,22 @@ import { PhoneflowIcon } from "@/components/logos/phoneflow"
 import { captureEvent } from "@/lib/analytics"
 import { getLastUsedLoginMethod, signIn } from "@/lib/auth/client"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export const Route = createFileRoute("/(unauthorized)/signin/")({
   component: Page,
 })
 
+const signInFormSchema = z.object({
+  email: z.email("routes.signin.email.invalid"),
+  password: z.string().min(8, "routes.signin.password.min_length"),
+})
+
+type SignInFormValues = z.infer<typeof signInFormSchema>
+
 function Page() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { searchStr } = useLocation()
   const redirect = new URLSearchParams(searchStr).get("redirect") ?? undefined
@@ -55,15 +64,8 @@ function Page() {
     ? `${env.FRONTEND_URL}${redirect}`
     : env.FRONTEND_URL
 
-  const signInFormSchema = z.object({
-    email: z.email("Enter a valid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-  })
-
-  type SignInFormValues = z.infer<typeof signInFormSchema>
-
   const form = useForm<SignInFormValues>({
-    resolver: zodResolver(signInFormSchema),
+    resolver: zodResolverI18n(signInFormSchema),
     defaultValues: {
       email,
       password: "",
@@ -133,7 +135,7 @@ function Page() {
 
   return (
     <>
-      <title>Sign in - Phoneflow</title>
+      <title>{t("routes.signin.page_title")}</title>
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 py-8">
         <div className="flex items-center gap-2">
           <PhoneflowIcon className="size-6" />
@@ -141,10 +143,10 @@ function Page() {
         </div>
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Sign in</CardTitle>
-            <CardDescription>
-              Enter your email and password below to sign in
-            </CardDescription>
+            <CardTitle className="text-xl">
+              {t("routes.signin.title")}
+            </CardTitle>
+            <CardDescription>{t("routes.signin.description")}</CardDescription>
           </CardHeader>
           <CardContent>
             <form
@@ -159,12 +161,14 @@ function Page() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("routes.signin.email.label")}
+                      </FieldLabel>
                       <Input
                         {...field}
                         id={field.name}
                         type="email"
-                        placeholder="name@example.com"
+                        placeholder={t("routes.signin.email.placeholder")}
                         autoComplete="email"
                         aria-invalid={fieldState.invalid}
                         disabled={signInMutation.isPending || !!email}
@@ -182,12 +186,14 @@ function Page() {
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <div className="flex items-center">
-                        <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                        <FieldLabel htmlFor={field.name}>
+                          {t("routes.signin.password.label")}
+                        </FieldLabel>
                         <Link
                           to="/reset-password"
                           className="ml-auto inline-block text-sm underline"
                         >
-                          Forgot your password?
+                          {t("routes.signin.forgot_password")}
                         </Link>
                       </div>
                       <PasswordInput
@@ -216,13 +222,17 @@ function Page() {
                   }
                   className="relative"
                 >
-                  {signInMutation.isPending ? <Spinner /> : "Sign in"}
+                  {signInMutation.isPending ? (
+                    <Spinner />
+                  ) : (
+                    t("routes.signin.submit")
+                  )}
                   {lastLoginMethod === "email" && (
                     <Badge
                       variant="secondary"
                       className="absolute -top-2 right-2"
                     >
-                      Last used
+                      {t("routes.signin.last_used")}
                     </Badge>
                   )}
                 </Button>
@@ -232,18 +242,20 @@ function Page() {
                   render={<Link to="/signin/sso" search={{ redirect }} />}
                   className="relative"
                 >
-                  Sign in with SSO
+                  {t("routes.signin.sso_button")}
                   {lastLoginMethod?.startsWith("sso-") && (
                     <Badge
                       variant="secondary"
                       className="absolute -top-2 right-2"
                     >
-                      Last used
+                      {t("routes.signin.last_used")}
                     </Badge>
                   )}
                 </Button>
 
-                <FieldSeparator>Or continue with</FieldSeparator>
+                <FieldSeparator>
+                  {t("routes.signin.or_continue_with")}
+                </FieldSeparator>
 
                 <Button
                   variant="outline"
@@ -252,27 +264,27 @@ function Page() {
                   className="relative"
                 >
                   <GoogleIcon className="size-5" />
-                  Sign in with Google
+                  {t("routes.signin.google")}
                   {lastLoginMethod === "google" && (
                     <Badge
                       variant="secondary"
                       className="absolute -top-2 right-2"
                     >
-                      Last used
+                      {t("routes.signin.last_used")}
                     </Badge>
                   )}
                 </Button>
 
                 <div className="text-center text-sm">
                   <span className="text-muted-foreground">
-                    Don't have an account?{" "}
+                    {t("routes.signin.no_account")}{" "}
                   </span>
                   <Link
                     to="/signup"
                     search={{ redirect }}
                     className="underline"
                   >
-                    Sign up
+                    {t("routes.signin.sign_up_link")}
                   </Link>
                 </div>
               </FieldGroup>

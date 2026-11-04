@@ -2,6 +2,7 @@ import type { DynamicVariable } from "@workspace/shared/api/agent-config/types"
 import type { CallVariableValues } from "@workspace/shared/api/calls/types"
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
+import { useTranslation } from "@/lib/i18n"
 
 type VariableValuesFieldsProps = {
   variables: DynamicVariable[]
@@ -30,6 +31,8 @@ export function VariableValuesFields({
   className,
   readOnly = false,
 }: VariableValuesFieldsProps) {
+  const { t } = useTranslation()
+
   if (variables.length === 0) {
     return null
   }
@@ -44,7 +47,9 @@ export function VariableValuesFields({
             onChange={(event) =>
               onValueChange(variable.key, event.target.value)
             }
-            placeholder={`Value for {{${variable.key}}}`}
+            placeholder={t("components.variable_values_fields.placeholder", {
+              variable: `{{${variable.key}}}`,
+            })}
             readOnly={readOnly}
           />
         </Field>

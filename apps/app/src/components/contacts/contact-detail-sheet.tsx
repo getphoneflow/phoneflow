@@ -18,9 +18,10 @@ import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
 import { SheetSkeleton } from "@/components/sheet-skeleton"
 import { UserDateTime } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
+import { type TFunction, useTranslation } from "@/lib/i18n"
 import { formatDurationMs } from "@/lib/time"
 
-function formatContactDisplayName(contact: ContactListItem) {
+function formatContactDisplayName(contact: ContactListItem, t: TFunction) {
   if (contact.phoneNumber) {
     return contact.phoneNumber
   }
@@ -28,7 +29,7 @@ function formatContactDisplayName(contact: ContactListItem) {
   if (name) {
     return name
   }
-  return "Unknown"
+  return t("components.contacts.contact_detail_sheet.unknown")
 }
 
 function averageDurationMs(contact: ContactListItem) {
@@ -54,6 +55,7 @@ function CallCard({
   call: CallListItem
   onClick: () => void
 }) {
+  const { t } = useTranslation()
   const isPhone = call.channel === "phone_call"
   const isInbound = call.direction === "inbound"
   const clickable = call.status !== "no_answer"
@@ -84,11 +86,17 @@ function CallCard({
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-2">
         {call.status === "in_progress" ? (
-          <Badge variant="outline">In progress</Badge>
+          <Badge variant="outline">
+            {t("components.contacts.contact_detail_sheet.status.in_progress")}
+          </Badge>
         ) : call.status === "no_answer" ? (
-          <Badge variant="outline">No answer</Badge>
+          <Badge variant="outline">
+            {t("components.contacts.contact_detail_sheet.status.no_answer")}
+          </Badge>
         ) : (
-          <Badge variant="secondary">Completed</Badge>
+          <Badge variant="secondary">
+            {t("components.contacts.contact_detail_sheet.status.completed")}
+          </Badge>
         )}
         <AgentReferenceLink
           agentId={call.agentId}
@@ -96,7 +104,11 @@ function CallCard({
           agentVersionId={call.agentVersionId}
         />
         <span className="text-xs text-muted-foreground">
-          {call.agentVersion ? `V${call.agentVersion.number}` : "Latest"}
+          {call.agentVersion
+            ? t("components.contacts.contact_detail_sheet.version", {
+                number: call.agentVersion.number,
+              })
+            : t("components.contacts.contact_detail_sheet.latest_version")}
         </span>
       </div>
     </button>
@@ -112,6 +124,7 @@ function ContactDetailBody({
   onCallSelect: (callId: string) => void
   onLiveCallSelect: (liveCallId: string) => void
 }) {
+  const { t } = useTranslation()
   const { data: contact } = useSuspenseQuery({
     queryKey: ["contacts", contactId],
     queryFn: () => api.get<ContactDetailResponse>(`/contacts/${contactId}`),
@@ -121,7 +134,7 @@ function ContactDetailBody({
     <>
       <SheetHeader>
         <SheetTitle className="pr-8">
-          {formatContactDisplayName(contact)}
+          {formatContactDisplayName(contact, t)}
         </SheetTitle>
       </SheetHeader>
 
@@ -129,19 +142,27 @@ function ContactDetailBody({
         <div className="shrink-0 px-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <div className="text-xs text-muted-foreground">Total time</div>
+              <div className="text-xs text-muted-foreground">
+                {t("components.contacts.contact_detail_sheet.stats.total_time")}
+              </div>
               <div className="font-medium">
                 {formatDurationMs(contact.totalDurationMs)}
               </div>
             </div>
             <div>
-              <div className="text-xs text-muted-foreground">Avg / call</div>
+              <div className="text-xs text-muted-foreground">
+                {t(
+                  "components.contacts.contact_detail_sheet.stats.average_per_call"
+                )}
+              </div>
               <div className="font-medium">
                 {formatDurationMs(averageDurationMs(contact))}
               </div>
             </div>
             <div>
-              <div className="text-xs text-muted-foreground">First call</div>
+              <div className="text-xs text-muted-foreground">
+                {t("components.contacts.contact_detail_sheet.stats.first_call")}
+              </div>
               <div className="font-medium">
                 {contact.firstCallAt ? (
                   <UserDateTime value={contact.firstCallAt} />
@@ -149,7 +170,9 @@ function ContactDetailBody({
               </div>
             </div>
             <div>
-              <div className="text-xs text-muted-foreground">Last call</div>
+              <div className="text-xs text-muted-foreground">
+                {t("components.contacts.contact_detail_sheet.stats.last_call")}
+              </div>
               <div className="font-medium">
                 {contact.latestCallAt ? (
                   <UserDateTime value={contact.latestCallAt} />
@@ -159,16 +182,36 @@ function ContactDetailBody({
           </div>
 
           <div className="mt-8 divide-y border-y">
-            <FieldRow label="Phone" value={contact.phoneNumber} />
-            <FieldRow label="First name" value={contact.firstName} />
-            <FieldRow label="Last name" value={contact.lastName} />
-            <FieldRow label="External ID" value={contact.externalId} />
+            <FieldRow
+              label={t("components.contacts.contact_detail_sheet.fields.phone")}
+              value={contact.phoneNumber}
+            />
+            <FieldRow
+              label={t(
+                "components.contacts.contact_detail_sheet.fields.first_name"
+              )}
+              value={contact.firstName}
+            />
+            <FieldRow
+              label={t(
+                "components.contacts.contact_detail_sheet.fields.last_name"
+              )}
+              value={contact.lastName}
+            />
+            <FieldRow
+              label={t(
+                "components.contacts.contact_detail_sheet.fields.external_id"
+              )}
+              value={contact.externalId}
+            />
           </div>
         </div>
 
         <div className="mt-6 flex min-h-0 flex-1 flex-col">
           <h3 className="mb-3 shrink-0 px-4 text-sm font-medium">
-            Calls ({contact.calls.length})
+            {t("components.contacts.contact_detail_sheet.calls", {
+              total: contact.calls.length,
+            })}
           </h3>
           {contact.calls.length > 0 ? (
             <div className="min-h-0 flex-1 overflow-y-auto">
@@ -191,7 +234,9 @@ function ContactDetailBody({
               </div>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No calls yet</p>
+            <p className="text-sm text-muted-foreground">
+              {t("components.contacts.contact_detail_sheet.no_calls")}
+            </p>
           )}
         </div>
       </div>

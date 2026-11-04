@@ -30,35 +30,36 @@ import { Field, FieldLabel } from "@workspace/ui/components/field"
 import { InputGroupAddon } from "@workspace/ui/components/input-group"
 import { ProviderIcon } from "@/components/flow/sidepanel/provider-icon"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
 
 type ModelSort = "default" | "price" | "latency" | "score"
 
 type ScoreOrder = 1 | -1
 
-const searchLabel = {
-  stt: "transcription",
-  llm: "language",
-  tts: "voice",
+const searchPlaceholder = {
+  stt: "components.flow.sidepanel.model_select.search.stt",
+  llm: "components.flow.sidepanel.model_select.search.llm",
+  tts: "components.flow.sidepanel.model_select.search.tts",
 }
 
 const scoreMeta: Record<
   ModelKind,
-  { label: string; order: ScoreOrder; format: (score: number) => string }
+  { label: string; order: ScoreOrder; format: string }
 > = {
   stt: {
-    label: "WER",
+    label: "components.flow.sidepanel.model_select.score.wer_label",
     order: 1,
-    format: (score) => `${formatScore(score)}% WER`,
+    format: "components.flow.sidepanel.model_select.score.wer_value",
   },
   llm: {
-    label: "Score",
+    label: "components.flow.sidepanel.model_select.score.label",
     order: -1,
-    format: (score) => `${formatScore(score)}%`,
+    format: "components.flow.sidepanel.model_select.score.value",
   },
   tts: {
-    label: "Score",
+    label: "components.flow.sidepanel.model_select.score.label",
     order: -1,
-    format: (score) => `${formatScore(score)}%`,
+    format: "components.flow.sidepanel.model_select.score.value",
   },
 }
 
@@ -122,12 +123,15 @@ export function ModelSelect({
   onModelChange: (modelId: string) => void
   readOnly?: boolean
 }) {
+  const { t } = useTranslation()
   const [sort, setSort] = useState<ModelSort>("default")
   const {
     label: scoreLabel,
     order: scoreOrder,
-    format: formatScoreLabel,
+    format: scoreFormat,
   } = scoreMeta[kind]
+  const formatScoreLabel = (score: number) =>
+    t(scoreFormat, { score: formatScore(score) })
   const models = sortModels(getModels(kind), sort, scoreOrder)
   const selectedModel = models.find((model) => model.id === modelId)!
 
@@ -157,7 +161,7 @@ export function ModelSelect({
           <div className="flex items-center gap-1.5 p-1.5">
             <ComboboxInput
               showTrigger={false}
-              placeholder={`Search ${searchLabel[kind]} models...`}
+              placeholder={t(searchPlaceholder[kind])}
               className="min-w-0 flex-1"
             >
               <InputGroupAddon>
@@ -169,7 +173,9 @@ export function ModelSelect({
                 <Button
                   variant="outline"
                   size="icon-sm"
-                  aria-label="Sort models"
+                  aria-label={t(
+                    "components.flow.sidepanel.model_select.sort.label"
+                  )}
                 >
                   <ArrowUpDownIcon />
                 </Button>
@@ -180,22 +186,24 @@ export function ModelSelect({
                   onValueChange={(value) => setSort(value as ModelSort)}
                 >
                   <DropdownMenuRadioItem value="default">
-                    Default
+                    {t("components.flow.sidepanel.model_select.sort.default")}
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="price">
-                    Price
+                    {t("components.flow.sidepanel.model_select.sort.price")}
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="latency">
-                    Latency
+                    {t("components.flow.sidepanel.model_select.sort.latency")}
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="score">
-                    {scoreLabel}
+                    {t(scoreLabel)}
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <ComboboxEmpty>No models found</ComboboxEmpty>
+          <ComboboxEmpty>
+            {t("components.flow.sidepanel.model_select.empty")}
+          </ComboboxEmpty>
           <ComboboxList className="pt-0 min-h-80">
             {(model: ModelOption) => (
               <ComboboxItem key={model.id} value={model}>

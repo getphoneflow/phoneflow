@@ -30,6 +30,7 @@ import Canvas from "@/components/flow/canvas"
 import { FlowSidePanel } from "@/components/flow/sidepanel"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 const agentPageSearchSchema = z
@@ -82,7 +83,7 @@ function AgentEditorSkeleton() {
         <div className="ml-auto flex space-x-3">
           <Skeleton className="h-9 w-18" />
           <Skeleton className="h-9 w-23" />
-          <Skeleton className="h-9 w-28" />
+          <Skeleton className="h-9 w-32" />
           <Skeleton className="h-9 w-23" />
           <Skeleton className="size-9" />
         </div>
@@ -93,6 +94,8 @@ function AgentEditorSkeleton() {
 }
 
 function Header({ agent }: { agent: AgentDetailResponse }) {
+  const { t } = useTranslation()
+
   return (
     <header className="flex h-18 shrink-0 items-center gap-2 px-5">
       <SidebarTrigger className="-ml-1" />
@@ -104,7 +107,9 @@ function Header({ agent }: { agent: AgentDetailResponse }) {
         <BreadcrumbList>
           <BreadcrumbItem className="hidden md:block">
             <Link to="/agents">
-              <BreadcrumbLink>Agents</BreadcrumbLink>
+              <BreadcrumbLink>
+                {t("routes.agents_detail.breadcrumb_parent")}
+              </BreadcrumbLink>
             </Link>
           </BreadcrumbItem>
           <BreadcrumbSeparator className="hidden md:block" />
@@ -136,6 +141,7 @@ function Page() {
 }
 
 function AgentEditor() {
+  const { t } = useTranslation()
   const { agentId } = Route.useParams()
   const { agentVersionId } = Route.useSearch()
   const navigate = Route.useNavigate()
@@ -189,7 +195,7 @@ function AgentEditor() {
 
   return (
     <>
-      <title>{`${name} - Phoneflow`}</title>
+      <title>{t("routes.agents_detail.page_title", { name })}</title>
       <Header agent={agent} />
       <Canvas />
       <FlowSidePanel />

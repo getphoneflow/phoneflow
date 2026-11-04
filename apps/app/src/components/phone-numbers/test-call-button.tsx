@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { PhoneOutgoingIcon } from "lucide-react"
 import { useMemo, useState } from "react"
@@ -42,10 +41,7 @@ import {
 } from "@workspace/ui/components/sheet"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
-import {
-  AGENT_VERSION_DRAFT_LABEL,
-  formatAgentVersionLabel,
-} from "@/components/helpers"
+import { formatAgentVersionLabel } from "@/components/helpers"
 import {
   callVariableRecord,
   VariableValuesFields,
@@ -53,6 +49,8 @@ import {
 import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 type OutboundFormValues = Omit<TriggerOutboundCallRequest, "variables">
 
@@ -63,11 +61,12 @@ function hasSipConnection(phoneNumber: PhoneNumberListResponse[number]) {
 }
 
 export function TestCallButton() {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const canCreate = useCheckPermission({ calls: ["create"] })
 
   const form = useForm<OutboundFormValues>({
-    resolver: zodResolver(
+    resolver: zodResolverI18n(
       triggerOutboundCallRequestSchema.omit({ variables: true })
     ),
     defaultValues: {
@@ -139,7 +138,9 @@ export function TestCallButton() {
         agent_version_id: values.agentVersionId ?? null,
         phone_number_id: values.phoneNumberId,
       })
-      toast.success("Outbound call started")
+      toast.success(
+        t("components.phone_numbers.test_call_button.toasts.started")
+      )
       form.reset()
       setOpen(false)
       setVariableValues({})
@@ -171,12 +172,14 @@ export function TestCallButton() {
       <SheetTrigger>
         <Button variant="outline">
           <PhoneOutgoingIcon />
-          Test call
+          {t("components.phone_numbers.test_call_button.trigger")}
         </Button>
       </SheetTrigger>
       <SheetContent className="sm:max-w-md">
         <SheetHeader>
-          <SheetTitle>Test call</SheetTitle>
+          <SheetTitle>
+            {t("components.phone_numbers.test_call_button.title")}
+          </SheetTitle>
         </SheetHeader>
 
         <form
@@ -191,19 +194,29 @@ export function TestCallButton() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Call from</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t(
+                        "components.phone_numbers.test_call_button.phone_number.label"
+                      )}
+                    </FieldLabel>
                     <Select
                       value={field.value || undefined}
                       onValueChange={field.onChange}
                       readOnly={readOnly}
                     >
                       <SelectTrigger id={field.name}>
-                        <SelectValue placeholder="Select a phone number">
+                        <SelectValue
+                          placeholder={t(
+                            "components.phone_numbers.test_call_button.phone_number.placeholder"
+                          )}
+                        >
                           {field.value
                             ? callablePhoneNumbers.find(
                                 (phoneNumber) => phoneNumber.id === field.value
                               )?.number
-                            : "Select a phone number"}
+                            : t(
+                                "components.phone_numbers.test_call_button.phone_number.placeholder"
+                              )}
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
@@ -229,7 +242,11 @@ export function TestCallButton() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Call to</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t(
+                        "components.phone_numbers.test_call_button.to_number.label"
+                      )}
+                    </FieldLabel>
                     <Input
                       {...field}
                       id={field.name}
@@ -250,7 +267,11 @@ export function TestCallButton() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Agent</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t(
+                        "components.phone_numbers.test_call_button.agent.label"
+                      )}
+                    </FieldLabel>
                     <Select
                       value={field.value || undefined}
                       onValueChange={(value) => {
@@ -260,11 +281,17 @@ export function TestCallButton() {
                       readOnly={readOnly}
                     >
                       <SelectTrigger id={field.name}>
-                        <SelectValue placeholder="Select an agent">
+                        <SelectValue
+                          placeholder={t(
+                            "components.phone_numbers.test_call_button.agent.placeholder"
+                          )}
+                        >
                           {field.value
                             ? agents.find((agent) => agent.id === field.value)
                                 ?.name
-                            : "Select an agent"}
+                            : t(
+                                "components.phone_numbers.test_call_button.agent.placeholder"
+                              )}
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
@@ -287,7 +314,11 @@ export function TestCallButton() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Version</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t(
+                        "components.phone_numbers.test_call_button.version.label"
+                      )}
+                    </FieldLabel>
                     <Select
                       value={
                         selectedAgentId
@@ -302,23 +333,26 @@ export function TestCallButton() {
                       <SelectTrigger id={field.name}>
                         <SelectValue>
                           {!selectedAgentId
-                            ? "No version"
+                            ? t(
+                                "components.phone_numbers.test_call_button.version.none"
+                              )
                             : formatAgentVersionLabel(
                                 field.value
                                   ? agentVersions.find(
                                       (version) => version.id === field.value
                                     )
-                                  : null
+                                  : null,
+                                t
                               )}
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="draft">
-                          {AGENT_VERSION_DRAFT_LABEL}
+                          {t("components.helpers.agent_version_draft")}
                         </SelectItem>
                         {agentVersions.map((version) => (
                           <SelectItem key={version.id} value={version.id}>
-                            {formatAgentVersionLabel(version)}
+                            {formatAgentVersionLabel(version, t)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -348,7 +382,7 @@ export function TestCallButton() {
               ) : (
                 <>
                   <PhoneOutgoingIcon />
-                  Start call
+                  {t("components.phone_numbers.test_call_button.submit")}
                 </>
               )}
             </Button>

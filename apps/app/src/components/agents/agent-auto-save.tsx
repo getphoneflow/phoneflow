@@ -11,12 +11,14 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { areAgentConfigsEqual } from "@/components/flow/agent-config"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 const AUTOSAVE_DELAY_MS = 1000
 
 export function AgentAutoSave() {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
   const agentId = useAgentStore((state) => state.agent.id)
   const readOnly = useAgentStore((state) => state.readOnly)
   const savedConfig = useAgentStore((state) => state.savedConfig)
@@ -75,17 +77,19 @@ export function AgentAutoSave() {
       {saveMutation.isPending ? (
         <>
           <Spinner className="size-3" />
-          Saving
+          {t("components.agents.agent_auto_save.saving")}
         </>
       ) : validation.success ? (
         <>
           <CircleCheckIcon className="size-3" />
-          Auto saved
+          {t("components.agents.agent_auto_save.saved")}
         </>
       ) : (
         <span className="flex items-center gap-1.5 text-destructive">
           <CircleAlertIcon className="size-3" />
-          {globalErrors.length > 0 ? globalErrors.join(", ") : "Fix error"}
+          {globalErrors.length > 0
+            ? globalErrors.join(", ")
+            : t("components.agents.agent_auto_save.fix_error")}
         </span>
       )}
     </div>

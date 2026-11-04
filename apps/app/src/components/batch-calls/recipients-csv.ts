@@ -1,4 +1,5 @@
 import type { BatchCallRecipientInput } from "@workspace/shared/api/batch-calls/types"
+import type { TFunction } from "@/lib/i18n"
 
 export type ParsedCsvRecipient = BatchCallRecipientInput
 
@@ -50,7 +51,8 @@ function buildRecipientVariables(
 
 export function parseRecipientsCsv(
   text: string,
-  keys: string[]
+  keys: string[],
+  t: TFunction
 ): {
   columns: string[]
   recipients: ParsedCsvRecipient[]
@@ -60,7 +62,9 @@ export function parseRecipientsCsv(
   const dataRows = rows.slice(1)
 
   if (!columns || dataRows.length === 0) {
-    throw new Error("CSV must include a header and at least one recipient")
+    throw new Error(
+      t("components.batch_calls.recipients_csv.errors.missing_rows")
+    )
   }
 
   const phoneNumberIndex = columns.findIndex(
@@ -68,7 +72,11 @@ export function parseRecipientsCsv(
   )
 
   if (phoneNumberIndex === -1) {
-    throw new Error('CSV must include a "phone_number" column')
+    throw new Error(
+      t(
+        "components.batch_calls.recipients_csv.errors.missing_phone_number_column"
+      )
+    )
   }
 
   const allowed = new Set(keys)
@@ -77,7 +85,11 @@ export function parseRecipientsCsv(
       continue
     }
     if (!allowed.has(column)) {
-      throw new Error(`Unknown variable column "${column}"`)
+      throw new Error(
+        t("components.batch_calls.recipients_csv.errors.unknown_column", {
+          column,
+        })
+      )
     }
   }
 
@@ -89,7 +101,9 @@ export function parseRecipientsCsv(
 
     if (!E164_REGEX.test(toNumber)) {
       throw new Error(
-        `Row ${index + 2}: phone_number must be E.164 (e.g. +14155551234)`
+        t("components.batch_calls.recipients_csv.errors.invalid_phone_number", {
+          row: index + 2,
+        })
       )
     }
 

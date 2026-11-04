@@ -25,6 +25,7 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 
 async function parseAgentConfigFile(file: File) {
   const text = await file.text()
@@ -37,12 +38,13 @@ export function ImportAgentForm() {
   const [file, setFile] = useState<File | null>(null)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
   const canCreate = useCheckPermission({ agent: ["create"] })
 
   const createAgentMutation = useMutation({
     mutationFn: async () => {
       if (!file) {
-        throw new Error("No file selected")
+        throw new Error(t("components.agents.import_agent_form.errors.no_file"))
       }
       const config = await parseAgentConfigFile(file)
       return api.post<CreateAgentResponse, CreateAgentRequest>("/agents", {
@@ -79,14 +81,16 @@ export function ImportAgentForm() {
       <DialogTrigger disabled={!canCreate}>
         <Button variant="outline" disabled={!canCreate}>
           <UploadIcon />
-          Import
+          {t("components.agents.import_agent_form.trigger")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Import agent</DialogTitle>
+          <DialogTitle>
+            {t("components.agents.import_agent_form.title")}
+          </DialogTitle>
           <DialogDescription>
-            Create a new agent from a JSON configuration file
+            {t("components.agents.import_agent_form.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -95,12 +99,13 @@ export function ImportAgentForm() {
           value={file}
           onValueChange={setFile}
           disabled={createAgentMutation.isPending}
+          placeholder={t("components.agents.import_agent_form.placeholder")}
         />
 
         <DialogFooter>
           <DialogClose>
             <Button variant="outline" disabled={createAgentMutation.isPending}>
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
           </DialogClose>
           <Button
@@ -110,7 +115,7 @@ export function ImportAgentForm() {
             {createAgentMutation.isPending ? (
               <Spinner className="mx-8" />
             ) : (
-              "Import agent"
+              t("components.agents.import_agent_form.submit")
             )}
           </Button>
         </DialogFooter>

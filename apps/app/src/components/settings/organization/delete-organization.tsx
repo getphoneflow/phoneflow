@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { Trash2Icon } from "lucide-react"
@@ -37,9 +36,17 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const deleteOrganizationSchema = z.object({
-  name: z.string().trim().min(1, "Name is required"),
+  name: z
+    .string()
+    .trim()
+    .min(
+      1,
+      "components.settings.organization.delete_organization.name.required"
+    ),
 })
 
 type DeleteOrganizationValues = z.infer<typeof deleteOrganizationSchema>
@@ -53,17 +60,19 @@ export function DeleteOrganization({
   organizationId,
   name,
 }: DeleteOrganizationProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const canDelete = useCheckPermission({ organization: ["delete"] })
 
   const form = useForm<DeleteOrganizationValues>({
-    resolver: zodResolver(
+    resolver: zodResolverI18n(
       deleteOrganizationSchema.superRefine((values, ctx) => {
         if (values.name !== name) {
           ctx.addIssue({
             code: "custom",
-            message: "Name does not match this organization",
+            message:
+              "components.settings.organization.delete_organization.name.mismatch",
             path: ["name"],
           })
         }
@@ -84,7 +93,9 @@ export function DeleteOrganization({
       }
     },
     onSuccess: async () => {
-      toast.success("Organization deleted")
+      toast.success(
+        t("components.settings.organization.delete_organization.toasts.deleted")
+      )
       await queryClient.refetchQueries()
       navigate({ to: "/select-organization" })
     },
@@ -96,7 +107,11 @@ export function DeleteOrganization({
   return (
     <FieldGroup>
       <FieldSet>
-        <FieldLegend className="mb-0">Danger zone</FieldLegend>
+        <FieldLegend className="mb-0">
+          {t(
+            "components.settings.organization.delete_organization.danger_zone"
+          )}
+        </FieldLegend>
       </FieldSet>
 
       <AlertDialog
@@ -107,9 +122,13 @@ export function DeleteOrganization({
       >
         <Item variant="outline">
           <ItemContent>
-            <ItemTitle>Delete organization</ItemTitle>
+            <ItemTitle>
+              {t("components.settings.organization.delete_organization.title")}
+            </ItemTitle>
             <ItemDescription>
-              Permanently delete this organization
+              {t(
+                "components.settings.organization.delete_organization.description"
+              )}
             </ItemDescription>
           </ItemContent>
           <ItemActions>
@@ -122,7 +141,9 @@ export function DeleteOrganization({
                   disabled={!canDelete}
                 >
                   <Trash2Icon className="size-4" />
-                  Delete organization
+                  {t(
+                    "components.settings.organization.delete_organization.trigger"
+                  )}
                 </Button>
               }
             />
@@ -131,9 +152,15 @@ export function DeleteOrganization({
 
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete organization</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t(
+                "components.settings.organization.delete_organization.dialog.title"
+              )}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Enter the organization name below to confirm
+              {t(
+                "components.settings.organization.delete_organization.dialog.description"
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -149,7 +176,11 @@ export function DeleteOrganization({
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      {t(
+                        "components.settings.organization.delete_organization.name.label"
+                      )}
+                    </FieldLabel>
                     <Input
                       {...field}
                       id={field.name}
@@ -170,7 +201,7 @@ export function DeleteOrganization({
               <AlertDialogCancel
                 disabled={deleteOrganizationMutation.isPending}
               >
-                Cancel
+                {t("common.actions.cancel")}
               </AlertDialogCancel>
               <AlertDialogAction
                 variant="destructive"
@@ -182,7 +213,9 @@ export function DeleteOrganization({
                 {deleteOrganizationMutation.isPending ? (
                   <Spinner className="mx-5 size-4" />
                 ) : (
-                  "Delete organization"
+                  t(
+                    "components.settings.organization.delete_organization.dialog.confirm"
+                  )
                 )}
               </AlertDialogAction>
             </AlertDialogFooter>

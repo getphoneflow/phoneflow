@@ -25,6 +25,7 @@ import { DeleteAgentDialog } from "@/components/agents/delete-agent-dialog"
 import { DownloadAgentDialog } from "@/components/agents/download-agent-dialog"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 
 export function AgentEditorActions({
   agent,
@@ -35,6 +36,7 @@ export function AgentEditorActions({
   const [deleteOpen, setDeleteOpen] = useState(false)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
   const canCreate = useCheckPermission({ agent: ["create"] })
   const canDelete = useCheckPermission({ agent: ["delete"] })
 
@@ -45,7 +47,9 @@ export function AgentEditorActions({
         {}
       ),
     onSuccess: (duplicated) => {
-      toast.success("Agent duplicated")
+      toast.success(
+        t("components.agents.agent_editor_actions.toasts.duplicated")
+      )
       queryClient.invalidateQueries({ queryKey: ["agents", "list"] })
       navigate({
         to: "/agents/$agentId",
@@ -75,29 +79,34 @@ export function AgentEditorActions({
           <Button
             variant="outline"
             size="icon"
-            aria-label={`Open actions for ${agent.name}`}
+            aria-label={t(
+              "components.agents.agent_editor_actions.open_actions",
+              {
+                name: agent.name,
+              }
+            )}
           >
             <MoreHorizontalIcon />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" sideOffset={4}>
+        <DropdownMenuContent className="w-40" align="end" sideOffset={4}>
           <DropdownMenuItem
             disabled={!canCreate || duplicateAgentMutation.isPending}
             onClick={() => duplicateAgentMutation.mutate()}
           >
             <CopyIcon />
-            Duplicate
+            {t("common.actions.duplicate")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setDownloadOpen(true)}>
             <DownloadIcon />
-            Download
+            {t("common.actions.download")}
           </DropdownMenuItem>
           <DropdownMenuItem
             nativeButton={false}
             render={<Link to="/calls" search={{ agentIds: agent.id }} />}
           >
             <HistoryIcon />
-            View calls
+            {t("components.agents.agent_editor_actions.view_calls")}
           </DropdownMenuItem>
           <DropdownMenuItem
             variant="destructive"
@@ -105,7 +114,7 @@ export function AgentEditorActions({
             onClick={() => setDeleteOpen(true)}
           >
             <Trash2Icon />
-            Delete
+            {t("common.actions.delete")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

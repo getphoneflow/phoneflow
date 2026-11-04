@@ -11,9 +11,15 @@ import {
 
 import { ac, owner } from "@workspace/shared/auth/roles"
 import { env } from "@/lib/env"
+import i18n from "@/lib/i18n"
 
 export const authClient = createAuthClient({
   baseURL: env.API_URL,
+  fetchOptions: {
+    onRequest(context) {
+      context.headers.set("Accept-Language", i18n.language)
+    },
+  },
   plugins: [
     emailOTPClient(),
     lastLoginMethodClient(),

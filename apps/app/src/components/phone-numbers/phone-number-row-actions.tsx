@@ -26,6 +26,7 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { EditPhoneNumberForm } from "@/components/phone-numbers/edit-phone-number-form"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 
 type PhoneNumberRowActionsProps = {
   phoneNumber: PhoneNumberListResponse[number]
@@ -34,6 +35,7 @@ type PhoneNumberRowActionsProps = {
 export function PhoneNumberRowActions({
   phoneNumber,
 }: PhoneNumberRowActionsProps) {
+  const { t } = useTranslation()
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const queryClient = useQueryClient()
@@ -43,7 +45,11 @@ export function PhoneNumberRowActions({
   const deletePhoneNumberMutation = useMutation({
     mutationFn: () => api.delete(`/phone-numbers/${phoneNumber.id}`),
     onSuccess: () => {
-      toast.success(`${phoneNumber.number} deleted`)
+      toast.success(
+        t("components.phone_numbers.phone_number_row_actions.toasts.deleted", {
+          number: phoneNumber.number,
+        })
+      )
       setDeleteOpen(false)
       queryClient.invalidateQueries({ queryKey: ["phone-numbers"] })
       queryClient.invalidateQueries({ queryKey: ["agents", "list"] })
@@ -67,7 +73,12 @@ export function PhoneNumberRowActions({
             <Button
               variant="ghost"
               size="icon-sm"
-              aria-label={`Open actions for ${phoneNumber.number}`}
+              aria-label={t(
+                "components.phone_numbers.phone_number_row_actions.open_actions",
+                {
+                  number: phoneNumber.number,
+                }
+              )}
             >
               <MoreHorizontalIcon />
             </Button>
@@ -78,7 +89,7 @@ export function PhoneNumberRowActions({
               onClick={() => setEditOpen(true)}
             >
               <PencilIcon />
-              Edit
+              {t("common.actions.edit")}
             </DropdownMenuItem>
             <AlertDialogTrigger
               disabled={!canDelete}
@@ -88,7 +99,7 @@ export function PhoneNumberRowActions({
                   disabled={!canDelete || deletePhoneNumberMutation.isPending}
                 >
                   <Trash2Icon />
-                  Delete
+                  {t("common.actions.delete")}
                 </DropdownMenuItem>
               }
             />
@@ -96,14 +107,23 @@ export function PhoneNumberRowActions({
         </DropdownMenu>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete phone number</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t(
+                "components.phone_numbers.phone_number_row_actions.delete_dialog.title"
+              )}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete "{phoneNumber.number}"
+              {t(
+                "components.phone_numbers.phone_number_row_actions.delete_dialog.description",
+                {
+                  number: phoneNumber.number,
+                }
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deletePhoneNumberMutation.isPending}>
-              Cancel
+              {t("common.actions.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
@@ -113,7 +133,7 @@ export function PhoneNumberRowActions({
               {deletePhoneNumberMutation.isPending ? (
                 <Spinner className="mx-3" />
               ) : (
-                "Delete"
+                t("common.actions.delete")
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

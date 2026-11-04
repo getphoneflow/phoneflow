@@ -6,6 +6,7 @@ import type {
   FlowEdgeConfig,
   FlowNodeConfig,
 } from "@workspace/shared/api/agent-config/types"
+import { t } from "@/lib/i18n"
 
 export type EditorFlowNode = FlowNodeConfig & Node
 
@@ -66,12 +67,16 @@ export function validateAgentConfig(
   const global: string[] = []
 
   for (const issue of validation.error.issues) {
+    const message = t(issue.message, {
+      ...("params" in issue && issue.params),
+      defaultValue: issue.message,
+    })
     const [root, index] = issue.path
     if (root === "nodes" && typeof index === "number") {
       const nodeId = config.nodes[index]?.id
       if (nodeId) {
         const messages = byNodeId[nodeId] ?? []
-        messages.push(issue.message)
+        messages.push(message)
         byNodeId[nodeId] = messages
         continue
       }
@@ -80,12 +85,12 @@ export function validateAgentConfig(
       const edgeId = config.edges[index]?.id
       if (edgeId) {
         const messages = byEdgeId[edgeId] ?? []
-        messages.push(issue.message)
+        messages.push(message)
         byEdgeId[edgeId] = messages
         continue
       }
     }
-    global.push(issue.message)
+    global.push(message)
   }
 
   return { validation, flowErrors: { byNodeId, byEdgeId, global } }

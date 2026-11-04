@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { PlusIcon } from "lucide-react"
@@ -34,15 +33,18 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export function CreateAgentForm() {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
   const canCreate = useCheckPermission({ agent: ["create"] })
 
   const form = useForm<CreateAgentRequest>({
-    resolver: zodResolver(createAgentRequestSchema),
+    resolver: zodResolverI18n(createAgentRequestSchema),
     defaultValues: {
       name: "",
       config: createDefaultAgentConfig(),
@@ -81,13 +83,17 @@ export function CreateAgentForm() {
       <DialogTrigger disabled={!canCreate}>
         <Button disabled={!canCreate}>
           <PlusIcon />
-          New Agent
+          {t("components.agents.create_agent_form.trigger")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create agent</DialogTitle>
-          <DialogDescription>Create a new agent</DialogDescription>
+          <DialogTitle>
+            {t("components.agents.create_agent_form.title")}
+          </DialogTitle>
+          <DialogDescription>
+            {t("components.agents.create_agent_form.description")}
+          </DialogDescription>
         </DialogHeader>
 
         <form
@@ -102,12 +108,16 @@ export function CreateAgentForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t("components.agents.create_agent_form.name.label")}
+                  </FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Agent name"
+                    placeholder={t(
+                      "components.agents.create_agent_form.name.placeholder"
+                    )}
                     autoComplete="off"
                     disabled={createAgentMutation.isPending}
                   />
@@ -125,14 +135,14 @@ export function CreateAgentForm() {
                 variant="outline"
                 disabled={createAgentMutation.isPending}
               >
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button type="submit" disabled={createAgentMutation.isPending}>
               {createAgentMutation.isPending ? (
                 <Spinner className="mx-8" />
               ) : (
-                "Create agent"
+                t("components.agents.create_agent_form.submit")
               )}
             </Button>
           </DialogFooter>

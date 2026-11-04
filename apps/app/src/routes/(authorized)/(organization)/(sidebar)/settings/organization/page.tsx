@@ -4,6 +4,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { DeleteOrganization } from "@/components/settings/organization/delete-organization"
 import { OrganizationInformation } from "@/components/settings/organization/organization-information"
 import { fullOrganizationQueryOptions } from "@/lib/auth/organization"
+import { useTranslation } from "@/lib/i18n"
 
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/settings/organization/"
@@ -12,6 +13,7 @@ export const Route = createFileRoute(
 })
 
 function Page() {
+  const { t } = useTranslation()
   const { data: activeOrganization } = useSuspenseQuery(
     fullOrganizationQueryOptions()
   )
@@ -22,7 +24,7 @@ function Page() {
 
   return (
     <>
-      <title>Organization settings - Phoneflow</title>
+      <title>{t("routes.settings.organization.page_title")}</title>
       <div className="mx-auto max-w-lg space-y-8">
         <OrganizationInformation
           organizationId={activeOrganization.id}

@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { ChevronDownIcon, DownloadIcon } from "lucide-react"
@@ -53,15 +52,14 @@ import {
   parseRecipientsCsv,
 } from "@/components/batch-calls/recipients-csv"
 import { RecipientsPreview } from "@/components/batch-calls/recipients-preview"
-import {
-  AGENT_VERSION_DRAFT_LABEL,
-  formatAgentVersionLabel,
-} from "@/components/helpers"
+import { formatAgentVersionLabel } from "@/components/helpers"
 import { useUserTimeZone } from "@/components/user-timezone-provider"
 import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { type TFunction, useTranslation } from "@/lib/i18n"
 import { TIME_ZONES, zonedDateTimeToIso } from "@/lib/time"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const formSchema = z
   .object({
@@ -95,19 +93,29 @@ const emptyRecipients: ParsedRecipients = {
   error: null,
 }
 
-function readRecipients(text: string, keys: string[]): ParsedRecipients {
+function readRecipients(
+  text: string,
+  keys: string[],
+  t: TFunction
+): ParsedRecipients {
   try {
-    const parsed = parseRecipientsCsv(text, keys)
+    const parsed = parseRecipientsCsv(text, keys, t)
     return { ...parsed, error: null }
   } catch (error) {
     return {
       ...emptyRecipients,
-      error: error instanceof Error ? error.message : "Invalid CSV",
+      error:
+        error instanceof Error
+          ? error.message
+          : t(
+              "components.batch_calls.create_batch_call_form.errors.invalid_csv"
+            ),
     }
   }
 }
 
 export function CreateBatchCallForm() {
+  const { t } = useTranslation()
   const canCreate = useCheckPermission({ calls: ["create"] })
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -121,7 +129,7 @@ export function CreateBatchCallForm() {
   const [datePickerOpen, setDatePickerOpen] = useState(false)
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolverI18n(formSchema),
     defaultValues: {
       name: "",
       phoneNumberId: "",
@@ -187,7 +195,7 @@ export function CreateBatchCallForm() {
     if (!csvFile?.text || (selectedAgentId && !agentConfig)) {
       return emptyRecipients
     }
-    return readRecipients(csvFile.text, variableKeys)
+    return readRecipients(csvFile.text, variableKeys, t)
   }, [agentConfig, csvFile?.text, selectedAgentId, variableKeys])
 
   const createMutation = useMutation({
@@ -198,7 +206,9 @@ export function CreateBatchCallForm() {
       ),
     onSuccess: (batchCall) => {
       captureEvent("batch_call_created", { batch_call_id: batchCall.id })
-      toast.success("Batch call triggered")
+      toast.success(
+        t("components.batch_calls.create_batch_call_form.toasts.created")
+      )
       queryClient.invalidateQueries({ queryKey: ["batch-calls"] })
       navigate({ to: "/batch-calls" })
     },
@@ -222,7 +232,9 @@ export function CreateBatchCallForm() {
 
   const onSubmit = form.handleSubmit((values) => {
     if (parsedRecipients.recipients.length === 0) {
-      toast.error("Upload a CSV with at least one recipient")
+      toast.error(
+        t("components.batch_calls.create_batch_call_form.errors.no_recipients")
+      )
       return
     }
 
@@ -230,7 +242,11 @@ export function CreateBatchCallForm() {
 
     if (values.triggerMode === "schedule") {
       if (!scheduleDate || !values.scheduleTime || !values.timezone) {
-        toast.error("Pick a date, time, and timezone")
+        toast.error(
+          t(
+            "components.batch_calls.create_batch_call_form.errors.schedule_required"
+          )
+        )
         return
       }
 
@@ -241,7 +257,11 @@ export function CreateBatchCallForm() {
       )
 
       if (new Date(scheduledAt).getTime() <= Date.now()) {
-        toast.error("Scheduled time must be in the future")
+        toast.error(
+          t(
+            "components.batch_calls.create_batch_call_form.errors.schedule_in_past"
+          )
+        )
         return
       }
     }
@@ -277,11 +297,17 @@ export function CreateBatchCallForm() {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Batch call name</FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  {t(
+                    "components.batch_calls.create_batch_call_form.name.label"
+                  )}
+                </FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
-                  placeholder="Batch call name"
+                  placeholder={t(
+                    "components.batch_calls.create_batch_call_form.name.placeholder"
+                  )}
                   autoComplete="off"
                   readOnly={readOnly}
                   aria-invalid={fieldState.invalid}
@@ -298,19 +324,29 @@ export function CreateBatchCallForm() {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Call from</FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  {t(
+                    "components.batch_calls.create_batch_call_form.phone_number.label"
+                  )}
+                </FieldLabel>
                 <Select
                   value={field.value || undefined}
                   onValueChange={field.onChange}
                   readOnly={readOnly}
                 >
                   <SelectTrigger id={field.name}>
-                    <SelectValue placeholder="Select a phone number">
+                    <SelectValue
+                      placeholder={t(
+                        "components.batch_calls.create_batch_call_form.phone_number.placeholder"
+                      )}
+                    >
                       {field.value
                         ? callablePhoneNumbers.find(
                             (phoneNumber) => phoneNumber.id === field.value
                           )?.number
-                        : "Select a phone number"}
+                        : t(
+                            "components.batch_calls.create_batch_call_form.phone_number.placeholder"
+                          )}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
@@ -330,7 +366,11 @@ export function CreateBatchCallForm() {
 
           <Field>
             <div className="mb-2 flex items-center justify-between gap-2">
-              <FieldLabel>Upload recipients</FieldLabel>
+              <FieldLabel>
+                {t(
+                  "components.batch_calls.create_batch_call_form.recipients.label"
+                )}
+              </FieldLabel>
               <Button
                 type="button"
                 variant="link"
@@ -339,7 +379,9 @@ export function CreateBatchCallForm() {
                 onClick={() => downloadCsvTemplate(variableKeys)}
               >
                 <DownloadIcon />
-                Download template
+                {t(
+                  "components.batch_calls.create_batch_call_form.recipients.download_template"
+                )}
               </Button>
             </div>
             <Dropzone
@@ -348,6 +390,9 @@ export function CreateBatchCallForm() {
               onValueChange={onFileChange}
               disabled={readOnly}
               className="h-40"
+              placeholder={t(
+                "components.batch_calls.create_batch_call_form.recipients.placeholder"
+              )}
             />
             {parsedRecipients.error ? (
               <FieldError>{parsedRecipients.error}</FieldError>
@@ -360,7 +405,11 @@ export function CreateBatchCallForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Agent</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.batch_calls.create_batch_call_form.agent.label"
+                    )}
+                  </FieldLabel>
                   <Select
                     value={field.value || undefined}
                     onValueChange={(value) => {
@@ -370,11 +419,17 @@ export function CreateBatchCallForm() {
                     readOnly={readOnly}
                   >
                     <SelectTrigger id={field.name}>
-                      <SelectValue placeholder="Select">
+                      <SelectValue
+                        placeholder={t(
+                          "components.batch_calls.create_batch_call_form.agent.placeholder"
+                        )}
+                      >
                         {field.value
                           ? agents.find((agent) => agent.id === field.value)
                               ?.name
-                          : "Select"}
+                          : t(
+                              "components.batch_calls.create_batch_call_form.agent.placeholder"
+                            )}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
@@ -397,7 +452,11 @@ export function CreateBatchCallForm() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Version</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.batch_calls.create_batch_call_form.version.label"
+                    )}
+                  </FieldLabel>
                   <Select
                     value={
                       selectedAgentId ? (field.value ?? "draft") : "no-version"
@@ -410,23 +469,26 @@ export function CreateBatchCallForm() {
                     <SelectTrigger id={field.name}>
                       <SelectValue>
                         {!selectedAgentId
-                          ? "Select agent first"
+                          ? t(
+                              "components.batch_calls.create_batch_call_form.version.select_agent_first"
+                            )
                           : formatAgentVersionLabel(
                               field.value
                                 ? agentVersions.find(
                                     (version) => version.id === field.value
                                   )
-                                : null
+                                : null,
+                              t
                             )}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="draft">
-                        {AGENT_VERSION_DRAFT_LABEL}
+                        {t("components.helpers.agent_version_draft")}
                       </SelectItem>
                       {agentVersions.map((version) => (
                         <SelectItem key={version.id} value={version.id}>
-                          {formatAgentVersionLabel(version)}
+                          {formatAgentVersionLabel(version, t)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -444,23 +506,35 @@ export function CreateBatchCallForm() {
             control={form.control}
             render={({ field }) => (
               <Field>
-                <FieldLabel>When to trigger</FieldLabel>
+                <FieldLabel>
+                  {t(
+                    "components.batch_calls.create_batch_call_form.trigger.label"
+                  )}
+                </FieldLabel>
                 <Tabs
                   value={field.value}
                   onValueChange={(value) => field.onChange(value)}
                 >
                   <TabsList className="w-full">
                     <TabsTrigger value="now" disabled={readOnly}>
-                      Now
+                      {t(
+                        "components.batch_calls.create_batch_call_form.trigger.now"
+                      )}
                     </TabsTrigger>
                     <TabsTrigger value="schedule" disabled={readOnly}>
-                      Schedule
+                      {t(
+                        "components.batch_calls.create_batch_call_form.trigger.schedule"
+                      )}
                     </TabsTrigger>
                   </TabsList>
                   <TabsContent value="schedule" className="mt-4">
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field>
-                        <FieldLabel htmlFor="schedule-date">Date</FieldLabel>
+                        <FieldLabel htmlFor="schedule-date">
+                          {t(
+                            "components.batch_calls.create_batch_call_form.schedule.date.label"
+                          )}
+                        </FieldLabel>
                         <Popover
                           open={datePickerOpen}
                           onOpenChange={setDatePickerOpen}
@@ -483,7 +557,9 @@ export function CreateBatchCallForm() {
                                   day: "numeric",
                                   timeZone: selectedTimezone,
                                 })
-                              : "Select date"}
+                              : t(
+                                  "components.batch_calls.create_batch_call_form.schedule.date.placeholder"
+                                )}
                             <ChevronDownIcon data-icon="inline-end" />
                           </PopoverTrigger>
                           <PopoverContent
@@ -512,7 +588,9 @@ export function CreateBatchCallForm() {
                         render={({ field: timeField }) => (
                           <Field>
                             <FieldLabel htmlFor={timeField.name}>
-                              Time
+                              {t(
+                                "components.batch_calls.create_batch_call_form.schedule.time.label"
+                              )}
                             </FieldLabel>
                             <Input
                               {...timeField}
@@ -532,7 +610,9 @@ export function CreateBatchCallForm() {
                         render={({ field: timezoneField }) => (
                           <Field className="sm:col-span-2">
                             <FieldLabel htmlFor={timezoneField.name}>
-                              Timezone
+                              {t(
+                                "components.batch_calls.create_batch_call_form.schedule.timezone.label"
+                              )}
                             </FieldLabel>
                             <Select
                               value={timezoneField.value}
@@ -545,7 +625,11 @@ export function CreateBatchCallForm() {
                                 id={timezoneField.name}
                                 className="w-full min-w-0"
                               >
-                                <SelectValue placeholder="Timezone">
+                                <SelectValue
+                                  placeholder={t(
+                                    "components.batch_calls.create_batch_call_form.schedule.timezone.placeholder"
+                                  )}
+                                >
                                   {timezoneField.value}
                                 </SelectValue>
                               </SelectTrigger>
@@ -577,7 +661,11 @@ export function CreateBatchCallForm() {
           className="w-full"
           disabled={!canSubmit || createMutation.isPending}
         >
-          {createMutation.isPending ? <Spinner /> : "Create batch call"}
+          {createMutation.isPending ? (
+            <Spinner />
+          ) : (
+            t("components.batch_calls.create_batch_call_form.submit")
+          )}
         </Button>
       </form>
 

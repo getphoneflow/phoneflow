@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import {
   useMutation,
   useQuery,
@@ -41,13 +40,12 @@ import {
 } from "@workspace/ui/components/sheet"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
-import {
-  AGENT_VERSION_DRAFT_LABEL,
-  formatAgentVersionLabel,
-} from "@/components/helpers"
+import { formatAgentVersionLabel } from "@/components/helpers"
 import { SheetSkeleton } from "@/components/sheet-skeleton"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 function PhoneNumberBody({
   phoneNumberId,
@@ -56,6 +54,7 @@ function PhoneNumberBody({
   phoneNumberId: string
   onClose: () => void
 }) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const canUpdate = useCheckPermission({ phoneNumber: ["update"] })
 
@@ -72,7 +71,7 @@ function PhoneNumberBody({
   const phoneNumber = phoneNumbers.find((item) => item.id === phoneNumberId)
 
   const form = useForm<UpdatePhoneNumberRequest>({
-    resolver: zodResolver(updatePhoneNumberRequestSchema),
+    resolver: zodResolverI18n(updatePhoneNumberRequestSchema),
     defaultValues: {
       agentId: phoneNumber?.agentId ?? null,
       agentVersionId: phoneNumber?.agentVersionId ?? null,
@@ -113,7 +112,9 @@ function PhoneNumberBody({
   return (
     <>
       <SheetHeader>
-        <SheetTitle>Inbound calls</SheetTitle>
+        <SheetTitle>
+          {t("components.phone_numbers.phone_number_sheet.title")}
+        </SheetTitle>
       </SheetHeader>
 
       <form
@@ -128,7 +129,11 @@ function PhoneNumberBody({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Response agent</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.phone_numbers.phone_number_sheet.agent.label"
+                    )}
+                  </FieldLabel>
                   <Select
                     value={field.value ?? "none"}
                     onValueChange={(value) => {
@@ -143,11 +148,17 @@ function PhoneNumberBody({
                         {field.value
                           ? agents.find((agent) => agent.id === field.value)
                               ?.name
-                          : "No agent"}
+                          : t(
+                              "components.phone_numbers.phone_number_sheet.agent.none"
+                            )}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">No agent</SelectItem>
+                      <SelectItem value="none">
+                        {t(
+                          "components.phone_numbers.phone_number_sheet.agent.none"
+                        )}
+                      </SelectItem>
                       {agents.map((agent) => (
                         <SelectItem key={agent.id} value={agent.id}>
                           {agent.name}
@@ -167,7 +178,11 @@ function PhoneNumberBody({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Version</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.phone_numbers.phone_number_sheet.version.label"
+                    )}
+                  </FieldLabel>
                   <Select
                     value={
                       selectedAgentId ? (field.value ?? "draft") : "no-version"
@@ -180,23 +195,26 @@ function PhoneNumberBody({
                     <SelectTrigger id={field.name}>
                       <SelectValue>
                         {!selectedAgentId
-                          ? "No version"
+                          ? t(
+                              "components.phone_numbers.phone_number_sheet.version.none"
+                            )
                           : formatAgentVersionLabel(
                               field.value
                                 ? agentVersions.find(
                                     (version) => version.id === field.value
                                   )
-                                : null
+                                : null,
+                              t
                             )}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="draft">
-                        {AGENT_VERSION_DRAFT_LABEL}
+                        {t("components.helpers.agent_version_draft")}
                       </SelectItem>
                       {agentVersions.map((version) => (
                         <SelectItem key={version.id} value={version.id}>
-                          {formatAgentVersionLabel(version)}
+                          {formatAgentVersionLabel(version, t)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -212,7 +230,7 @@ function PhoneNumberBody({
 
         <SheetFooter>
           <Button type="submit" disabled={readOnly}>
-            {saveMutation.isPending ? <Spinner /> : "Save"}
+            {saveMutation.isPending ? <Spinner /> : t("common.actions.save")}
           </Button>
         </SheetFooter>
       </form>

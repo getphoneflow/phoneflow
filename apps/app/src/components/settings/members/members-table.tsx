@@ -57,6 +57,7 @@ import {
   type OrganizationMember,
 } from "@/lib/auth/organization"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -71,9 +72,12 @@ const features = tableFeatures({
 })
 
 function MemberName({ member }: { member: OrganizationMember }) {
+  const { t } = useTranslation()
   const { data: activeMember } = useSuspenseQuery(activeMemberQueryOptions())
   return member.userId === activeMember.userId
-    ? `${member.user.name} (You)`
+    ? t("components.settings.members.members_table.current_user", {
+        name: member.user.name,
+      })
     : member.user.name
 }
 
@@ -82,6 +86,7 @@ type MembersTableProps = {
 }
 
 export function MembersTable({ data }: MembersTableProps) {
+  const { t } = useTranslation()
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
   const [inviteOpen, setInviteOpen] = useState(false)
@@ -92,21 +97,32 @@ export function MembersTable({ data }: MembersTableProps) {
   const columns = columnHelper.columns([
     columnHelper.accessor((row) => row.user.name, {
       id: "name",
-      header: ({ column }) => <SortableHeader column={column} title="Name" />,
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t("components.settings.members.members_table.columns.name")}
+        />
+      ),
       cell: ({ row }) => <MemberName member={row.original} />,
     }),
     columnHelper.accessor((row) => row.user.email, {
       id: "email",
-      header: "Email",
+      header: () =>
+        t("components.settings.members.members_table.columns.email"),
       cell: ({ row }) => row.original.user.email,
     }),
     columnHelper.accessor("role", {
-      header: "Role",
+      header: () => t("components.settings.members.members_table.columns.role"),
       cell: ({ row }) => <MemberRoleSelect member={row.original} />,
     }),
     columnHelper.accessor("createdAt", {
       header: ({ column }) => (
-        <SortableHeader column={column} title="Member since" />
+        <SortableHeader
+          column={column}
+          title={t(
+            "components.settings.members.members_table.columns.member_since"
+          )}
+        />
       ),
       cell: ({ row }) => <UserDateTime value={row.original.createdAt} />,
     }),
@@ -139,7 +155,9 @@ export function MembersTable({ data }: MembersTableProps) {
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
             }
-            placeholder="Search members..."
+            placeholder={t(
+              "components.settings.members.members_table.search.placeholder"
+            )}
           />
           <InputGroupAddon>
             <Search />
@@ -147,7 +165,7 @@ export function MembersTable({ data }: MembersTableProps) {
         </InputGroup>
         <Button onClick={() => setInviteOpen(true)} disabled={!canInvite}>
           <PlusIcon />
-          Invite member
+          {t("components.settings.members.members_table.invite")}
         </Button>
       </div>
       <div className="overflow-hidden rounded-md border">
@@ -192,7 +210,7 @@ export function MembersTable({ data }: MembersTableProps) {
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No results
+                  {t("common.table.no_results")}
                 </TableCell>
               </TableRow>
             )}
@@ -216,12 +234,16 @@ export function MembersTable({ data }: MembersTableProps) {
               ))}
             </SelectContent>
           </Select>
-          <span className="text-sm font-medium">Rows per page</span>
+          <span className="text-sm font-medium">
+            {t("common.table.rows_per_page")}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.state.pagination.pageIndex + 1} of{" "}
-            {table.getPageCount() || 1}
+            {t("common.table.page", {
+              page: table.state.pagination.pageIndex + 1,
+              total: table.getPageCount() || 1,
+            })}
           </span>
           <Button
             variant="outline"

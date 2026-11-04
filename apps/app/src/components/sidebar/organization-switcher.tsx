@@ -29,6 +29,7 @@ import {
   fullOrganizationQueryOptions,
   organizationsListQueryOptions,
 } from "@/lib/auth/organization"
+import { useTranslation } from "@/lib/i18n"
 import { CreateOrganizationDialog } from "./create-organization-dialog"
 
 function OrganizationSwitcherSkeleton() {
@@ -44,6 +45,7 @@ export function OrganizationSwitcher() {
 }
 
 function OrganizationSwitcherContent() {
+  const { t } = useTranslation()
   const { isMobile } = useSidebar()
   const queryClient = useQueryClient()
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
@@ -108,7 +110,7 @@ function OrganizationSwitcherContent() {
           >
             <DropdownMenuGroup>
               <DropdownMenuLabel className="text-xs text-muted-foreground">
-                Organizations
+                {t("components.sidebar.organization_switcher.organizations")}
               </DropdownMenuLabel>
               {organizations?.map((org) => (
                 <DropdownMenuItem
@@ -133,7 +135,9 @@ function OrganizationSwitcherContent() {
                   <PlusIcon className="size-4" />
                 </div>
                 <div className="font-medium text-muted-foreground">
-                  Add organization
+                  {t(
+                    "components.sidebar.organization_switcher.add_organization"
+                  )}
                 </div>
               </DropdownMenuItem>
             </DropdownMenuGroup>

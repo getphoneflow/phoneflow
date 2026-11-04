@@ -31,26 +31,56 @@ import { NumericFilter } from "@/components/filters/numeric-filter"
 import { useUserTimeZone } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
 import { formatDate } from "@/lib/time"
 
-const channelFilterOptions = [
-  { value: "all", label: "All channels" },
-  { value: "phone_call", label: "Phone" },
-  { value: "web_call", label: "Web" },
+const channelFilterOptionKeys = [
+  {
+    value: "all",
+    label: "components.calls.calls_filters.channel.all",
+  },
+  {
+    value: "phone_call",
+    label: "components.calls.calls_filters.channel.phone_call",
+  },
+  {
+    value: "web_call",
+    label: "components.calls.calls_filters.channel.web_call",
+  },
 ]
 
-const directionFilterOptions = [
-  { value: "all", label: "All directions" },
-  { value: "inbound", label: "Inbound" },
-  { value: "outbound", label: "Outbound" },
+const directionFilterOptionKeys = [
+  {
+    value: "all",
+    label: "components.calls.calls_filters.direction.all",
+  },
+  {
+    value: "inbound",
+    label: "components.calls.calls_filters.direction.inbound",
+  },
+  {
+    value: "outbound",
+    label: "components.calls.calls_filters.direction.outbound",
+  },
 ]
 
-const statusFilterOptions = [
-  { value: "all", label: "All statuses" },
-  { value: "completed", label: "Completed" },
-  { value: "in_progress", label: "In progress" },
-  { value: "no_answer", label: "No answer" },
+const statusFilterOptionKeys = [
+  { value: "all", label: "components.calls.calls_filters.status.all" },
+  {
+    value: "completed",
+    label: "components.calls.calls_filters.status.completed",
+  },
+  {
+    value: "in_progress",
+    label: "components.calls.calls_filters.status.in_progress",
+  },
+  {
+    value: "no_answer",
+    label: "components.calls.calls_filters.status.no_answer",
+  },
 ]
+
+type FilterOptionKey = { value: string; label: string }
 
 type CallListFilters = Omit<
   CallListQuery,
@@ -63,7 +93,13 @@ type CallsFiltersProps = {
 }
 
 export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
+  const { t } = useTranslation()
   const timeZone = useUserTimeZone()
+  const translateOptions = (options: FilterOptionKey[]) =>
+    options.map((option) => ({ ...option, label: t(option.label) }))
+  const channelFilterOptions = translateOptions(channelFilterOptionKeys)
+  const directionFilterOptions = translateOptions(directionFilterOptionKeys)
+  const statusFilterOptions = translateOptions(statusFilterOptionKeys)
   const { data: agents = [] } = useQuery({
     queryKey: ["agents", "list"],
     queryFn: () => api.get<AgentsListResponse>("/agents"),
@@ -114,7 +150,7 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
     <div className="mb-5 flex flex-wrap items-end gap-3">
       <DateRangeFilter
         id="calls-date-range"
-        label="Date"
+        label={t("components.calls.calls_filters.date.label")}
         from={filters.startedAtFrom}
         to={filters.startedAtTo}
         onChange={({ from, to }) =>
@@ -127,8 +163,8 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
       />
 
       <FilterMultiSelect
-        label="Agent"
-        placeholder="All agents"
+        label={t("components.calls.calls_filters.agent.label")}
+        placeholder={t("components.calls.calls_filters.agent.placeholder")}
         items={agentItems}
         selectedValues={
           Array.isArray(filters.agentIds)
@@ -145,8 +181,8 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
         }
       />
       <FilterMultiSelect
-        label="From"
-        placeholder="All numbers"
+        label={t("components.calls.calls_filters.from.label")}
+        placeholder={t("components.calls.calls_filters.from.placeholder")}
         items={phoneNumberItems}
         selectedValues={
           Array.isArray(filters.fromNumbers)
@@ -163,8 +199,8 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
         }
       />
       <FilterMultiSelect
-        label="To"
-        placeholder="All numbers"
+        label={t("components.calls.calls_filters.to.label")}
+        placeholder={t("components.calls.calls_filters.to.placeholder")}
         items={phoneNumberItems}
         selectedValues={
           Array.isArray(filters.toNumbers)
@@ -181,11 +217,11 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
         }
       />
       <FilterSingleSelect
-        label="Batch"
-        placeholder="All batches"
+        label={t("components.calls.calls_filters.batch.label")}
+        placeholder={t("components.calls.calls_filters.batch.placeholder")}
         items={batchCallItems}
         selectedValue={filters.batchId}
-        emptyText="No batches found"
+        emptyText={t("components.calls.calls_filters.batch.empty")}
         onSelectedValueChange={(batchId) =>
           onFiltersChange({
             ...filters,
@@ -194,8 +230,8 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
         }
       />
       <NumericFilter
-        label="Duration"
-        placeholder="Duration"
+        label={t("components.calls.calls_filters.duration.label")}
+        placeholder={t("components.calls.calls_filters.duration.placeholder")}
         unitAfter="s"
         operator={filters.durationOp}
         value={filters.duration}
@@ -211,8 +247,8 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
       />
       {env.IS_CLOUD ? (
         <NumericFilter
-          label="Cost"
-          placeholder="Cost"
+          label={t("components.calls.calls_filters.cost.label")}
+          placeholder={t("components.calls.calls_filters.cost.placeholder")}
           unitBefore="$"
           operator={filters.costOp}
           value={filters.cost}
@@ -228,7 +264,9 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
         />
       ) : null}
       <Field className="w-40 gap-1.5">
-        <FieldLabel>Channel</FieldLabel>
+        <FieldLabel>
+          {t("components.calls.calls_filters.channel.label")}
+        </FieldLabel>
         <Select
           value={channelFilter}
           onValueChange={(value) =>
@@ -257,7 +295,9 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
         </Select>
       </Field>
       <Field className="w-40 gap-1.5">
-        <FieldLabel>Direction</FieldLabel>
+        <FieldLabel>
+          {t("components.calls.calls_filters.direction.label")}
+        </FieldLabel>
         <Select
           value={directionFilter}
           onValueChange={(value) =>
@@ -286,7 +326,9 @@ export function CallsFilters({ filters, onFiltersChange }: CallsFiltersProps) {
         </Select>
       </Field>
       <Field className="w-40 gap-1.5">
-        <FieldLabel>Status</FieldLabel>
+        <FieldLabel>
+          {t("components.calls.calls_filters.status.label")}
+        </FieldLabel>
         <Select
           value={statusFilter}
           onValueChange={(value) =>

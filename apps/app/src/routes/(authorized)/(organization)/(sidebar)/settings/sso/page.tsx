@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router"
 
 import { SsoSettings } from "@/components/settings/sso/sso-settings"
 import { fullOrganizationQueryOptions } from "@/lib/auth/organization"
+import { useTranslation } from "@/lib/i18n"
 
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/settings/sso/"
@@ -11,6 +12,7 @@ export const Route = createFileRoute(
 })
 
 function Page() {
+  const { t } = useTranslation()
   const { data: activeOrganization } = useSuspenseQuery(
     fullOrganizationQueryOptions()
   )
@@ -21,7 +23,7 @@ function Page() {
 
   return (
     <>
-      <title>Single sign-on - Phoneflow</title>
+      <title>{t("routes.settings.sso.page_title")}</title>
       <div className="mx-auto max-w-lg">
         <SsoSettings
           organizationId={activeOrganization.id}

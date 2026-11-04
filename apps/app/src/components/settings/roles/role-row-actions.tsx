@@ -23,6 +23,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 
 type OrganizationRole = NonNullable<
   Awaited<ReturnType<typeof organization.listRoles>>["data"]
@@ -34,6 +35,7 @@ type RoleRowActionsProps = {
 }
 
 export function RoleRowActions({ role, onEdit }: RoleRowActionsProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [deleteOpen, setDeleteOpen] = useState(false)
   const canUpdate = useCheckPermission({ ac: ["update"] })
@@ -47,7 +49,11 @@ export function RoleRowActions({ role, onEdit }: RoleRowActionsProps) {
       }
     },
     onSuccess: () => {
-      toast.success(`${role.displayName} deleted`)
+      toast.success(
+        t("components.settings.roles.role_row_actions.toasts.deleted", {
+          name: role.displayName,
+        })
+      )
       setDeleteOpen(false)
       queryClient.invalidateQueries({ queryKey: ["organization-roles"] })
       queryClient.invalidateQueries({ queryKey: ["has-permission"] })
@@ -62,15 +68,21 @@ export function RoleRowActions({ role, onEdit }: RoleRowActionsProps) {
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete role</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t(
+                "components.settings.roles.role_row_actions.delete_dialog.title"
+              )}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete "{role.displayName}". Members who
-              have this role will lose its permissions.
+              {t(
+                "components.settings.roles.role_row_actions.delete_dialog.description",
+                { name: role.displayName }
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteRoleMutation.isPending}>
-              Cancel
+              {t("common.actions.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
@@ -83,7 +95,7 @@ export function RoleRowActions({ role, onEdit }: RoleRowActionsProps) {
               {deleteRoleMutation.isPending ? (
                 <Spinner className="mx-3 size-4" />
               ) : (
-                "Delete"
+                t("common.actions.delete")
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -95,15 +107,20 @@ export function RoleRowActions({ role, onEdit }: RoleRowActionsProps) {
           <Button
             variant="ghost"
             size="icon-sm"
-            aria-label={`Open actions for ${role.displayName}`}
+            aria-label={t(
+              "components.settings.roles.role_row_actions.open_actions",
+              {
+                name: role.displayName,
+              }
+            )}
           >
             <MoreHorizontalIcon />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" sideOffset={4}>
+        <DropdownMenuContent className="w-40" align="end" sideOffset={4}>
           <DropdownMenuItem disabled={!canUpdate} onClick={onEdit}>
             <PencilIcon />
-            Edit role
+            {t("components.settings.roles.role_row_actions.edit")}
           </DropdownMenuItem>
           <DropdownMenuItem
             variant="destructive"
@@ -111,7 +128,7 @@ export function RoleRowActions({ role, onEdit }: RoleRowActionsProps) {
             onClick={() => setDeleteOpen(true)}
           >
             <Trash2Icon />
-            Delete role
+            {t("components.settings.roles.role_row_actions.delete")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

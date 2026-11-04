@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { RefreshCwIcon } from "lucide-react"
 import { useState } from "react"
@@ -44,6 +43,8 @@ import { captureEvent } from "@/lib/analytics"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
 import { autoReloadQueryOptions } from "@/lib/billing"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const defaultSettings: UpdateAutoReloadRequest = {
   enabled: false,
@@ -52,6 +53,7 @@ const defaultSettings: UpdateAutoReloadRequest = {
 }
 
 export function AutoReloadButton() {
+  const { t } = useTranslation()
   const canPurchase = useCheckPermission({ billing: ["purchase"] })
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
@@ -59,7 +61,7 @@ export function AutoReloadButton() {
   const { data: settings, isPending } = useQuery(autoReloadQueryOptions())
 
   const form = useForm<UpdateAutoReloadRequest>({
-    resolver: zodResolver(updateAutoReloadRequestSchema),
+    resolver: zodResolverI18n(updateAutoReloadRequestSchema),
     values: settings ?? defaultSettings,
   })
 
@@ -77,7 +79,9 @@ export function AutoReloadButton() {
       })
       queryClient.setQueryData(autoReloadQueryOptions().queryKey, data)
       toast.success(
-        data.enabled ? "Auto reload enabled" : "Auto reload settings saved"
+        data.enabled
+          ? t("components.billing.auto_reload_button.toasts.enabled")
+          : t("components.billing.auto_reload_button.toasts.saved")
       )
       setOpen(false)
     },
@@ -98,7 +102,9 @@ export function AutoReloadButton() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Auto reload</DialogTitle>
+            <DialogTitle>
+              {t("components.billing.auto_reload_button.title")}
+            </DialogTitle>
           </DialogHeader>
 
           {isPending || !settings ? (
@@ -119,10 +125,14 @@ export function AutoReloadButton() {
                     <Field orientation="horizontal">
                       <div className="space-y-1">
                         <FieldLabel htmlFor="auto-reload-enabled">
-                          Enable auto reload
+                          {t(
+                            "components.billing.auto_reload_button.enabled.label"
+                          )}
                         </FieldLabel>
                         <FieldDescription>
-                          Automatically purchase credits when balance is low
+                          {t(
+                            "components.billing.auto_reload_button.enabled.description"
+                          )}
                         </FieldDescription>
                       </div>
                       <Switch
@@ -141,10 +151,14 @@ export function AutoReloadButton() {
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel htmlFor={field.name}>
-                        Amount to reload
+                        {t(
+                          "components.billing.auto_reload_button.amount.label"
+                        )}
                       </FieldLabel>
                       <FieldDescription>
-                        How many credits to add each time auto reload runs
+                        {t(
+                          "components.billing.auto_reload_button.amount.description"
+                        )}
                       </FieldDescription>
                       <InputGroup>
                         <InputGroupAddon>$</InputGroupAddon>
@@ -176,10 +190,14 @@ export function AutoReloadButton() {
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel htmlFor={field.name}>
-                        When threshold reaches
+                        {t(
+                          "components.billing.auto_reload_button.threshold.label"
+                        )}
                       </FieldLabel>
                       <FieldDescription>
-                        Reload once your balance drops to this amount
+                        {t(
+                          "components.billing.auto_reload_button.threshold.description"
+                        )}
                       </FieldDescription>
                       <InputGroup>
                         <InputGroupAddon>$</InputGroupAddon>
@@ -213,7 +231,7 @@ export function AutoReloadButton() {
                     variant="outline"
                     disabled={saveMutation.isPending}
                   >
-                    Cancel
+                    {t("common.actions.cancel")}
                   </Button>
                 </DialogClose>
                 <Button
@@ -224,7 +242,7 @@ export function AutoReloadButton() {
                   {saveMutation.isPending ? (
                     <Spinner className="mx-5" />
                   ) : (
-                    "Save"
+                    t("common.actions.save")
                   )}
                 </Button>
               </DialogFooter>
@@ -240,9 +258,13 @@ export function AutoReloadButton() {
         onClick={() => setOpen(true)}
       >
         <RefreshCwIcon />
-        Auto reload
+        {t("components.billing.auto_reload_button.trigger")}
         {settings ? (
-          <Badge variant="secondary">{settings.enabled ? "On" : "Off"}</Badge>
+          <Badge variant="secondary">
+            {settings.enabled
+              ? t("components.billing.auto_reload_button.status.on")
+              : t("components.billing.auto_reload_button.status.off")}
+          </Badge>
         ) : null}
       </Button>
     </>

@@ -16,6 +16,7 @@ import { PhoneNumberSheet } from "@/components/phone-numbers/phone-number-sheet"
 import { PhoneNumbersDataTable } from "@/components/phone-numbers/phone-numbers-data-table"
 import { TestCallButton } from "@/components/phone-numbers/test-call-button"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
 
 const phoneNumbersPageSearchSchema = z
   .object({
@@ -38,6 +39,8 @@ export const Route = createFileRoute(
 })
 
 function Header() {
+  const { t } = useTranslation()
+
   return (
     <header className="flex h-18 items-center gap-2 px-5">
       <SidebarTrigger className="-ml-1" />
@@ -48,7 +51,9 @@ function Header() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbPage>Phone numbers</BreadcrumbPage>
+            <BreadcrumbPage>
+              {t("routes.phone_numbers.breadcrumb")}
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -61,13 +66,14 @@ function Header() {
 }
 
 function Page() {
+  const { t } = useTranslation()
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
   const { data: phoneNumbers } = useSuspenseQuery(queryOptions())
 
   return (
     <>
-      <title>Phone numbers - Phoneflow</title>
+      <title>{t("routes.phone_numbers.page_title")}</title>
       <Header />
       <div className="p-5 pt-0">
         <PhoneNumbersDataTable

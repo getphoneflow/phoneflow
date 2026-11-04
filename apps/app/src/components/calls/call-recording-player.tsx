@@ -7,6 +7,7 @@ import Timeline from "wavesurfer.js/plugins/timeline"
 import { Button } from "@workspace/ui/components/button"
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
 
 const PLAYBACK_RATES = [0.5, 1, 1.5, 2]
 const SPLIT_CHANNELS = [
@@ -27,6 +28,7 @@ export function CallRecordingPlayer({
   callId: string
   position?: number
 }) {
+  const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
   const fetchParams = useRef({ credentials: "include" as const }).current
   const [playbackRate, setPlaybackRate] = useState(1)
@@ -117,6 +119,11 @@ export function CallRecordingPlayer({
           size="icon-xs"
           disabled={!isReady}
           onClick={onPlayPause}
+          aria-label={
+            isPlaying
+              ? t("components.calls.call_recording_player.pause")
+              : t("components.calls.call_recording_player.play")
+          }
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </Button>
@@ -126,6 +133,7 @@ export function CallRecordingPlayer({
           size="xs"
           disabled={!isReady}
           onClick={onCycleRate}
+          aria-label={t("components.calls.call_recording_player.playback_rate")}
         >
           {playbackRate}x
         </Button>
@@ -138,7 +146,7 @@ export function CallRecordingPlayer({
           onClick={onDownload}
         >
           <DownloadIcon />
-          Audio
+          {t("components.calls.call_recording_player.download_audio")}
         </Button>
       </div>
       <div className="relative h-28">

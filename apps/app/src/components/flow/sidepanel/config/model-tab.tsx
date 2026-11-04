@@ -13,6 +13,7 @@ import {
   SwitchField,
 } from "@/components/flow/sidepanel/config/fields"
 import { ModelSelect } from "@/components/flow/sidepanel/model-select"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 type TurnHandling = AgentConfig["turnHandling"]
@@ -27,6 +28,7 @@ function llmValue<K extends keyof typeof LLM_DEFAULTS>(
 }
 
 export function ModelTab() {
+  const { t } = useTranslation()
   const readOnly = useAgentStore((state) => state.readOnly)
   const config = useAgentStore((state) => state.config)
   const setConfig = useAgentStore((state) => state.setConfig)
@@ -51,7 +53,7 @@ export function ModelTab() {
     <ConfigSection>
       <ModelSelect
         kind="llm"
-        label="Model"
+        label={t("components.flow.sidepanel.config.model_tab.model.label")}
         modelId={llm.model}
         readOnly={readOnly}
         onModelChange={(model) => setConfig(withLlmModel(config, model))}
@@ -59,8 +61,12 @@ export function ModelTab() {
 
       {fields?.has("temperature") ? (
         <NumberField
-          label="Temperature"
-          description="Controls randomness. Lower values are more deterministic, higher values more creative"
+          label={t(
+            "components.flow.sidepanel.config.model_tab.temperature.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.model_tab.temperature.description"
+          )}
           value={llmValue(llm, "temperature")}
           min={0}
           max={2}
@@ -72,16 +78,45 @@ export function ModelTab() {
 
       {fields?.has("reasoningEffort") ? (
         <EnumField
-          label="Reasoning effort"
-          description="How long the model thinks before it answers"
+          label={t(
+            "components.flow.sidepanel.config.model_tab.reasoning_effort.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.model_tab.reasoning_effort.description"
+          )}
           value={llmValue(llm, "reasoningEffort")}
           readOnly={readOnly}
           options={[
-            { value: "none", label: "None" },
-            { value: "minimal", label: "Minimal" },
-            { value: "low", label: "Low" },
-            { value: "medium", label: "Medium" },
-            { value: "high", label: "High" },
+            {
+              value: "none",
+              label: t(
+                "components.flow.sidepanel.config.model_tab.reasoning_effort.options.none"
+              ),
+            },
+            {
+              value: "minimal",
+              label: t(
+                "components.flow.sidepanel.config.model_tab.reasoning_effort.options.minimal"
+              ),
+            },
+            {
+              value: "low",
+              label: t(
+                "components.flow.sidepanel.config.model_tab.reasoning_effort.options.low"
+              ),
+            },
+            {
+              value: "medium",
+              label: t(
+                "components.flow.sidepanel.config.model_tab.reasoning_effort.options.medium"
+              ),
+            },
+            {
+              value: "high",
+              label: t(
+                "components.flow.sidepanel.config.model_tab.reasoning_effort.options.high"
+              ),
+            },
           ]}
           onChange={(reasoningEffort) => patchLlm({ reasoningEffort })}
         />
@@ -90,8 +125,12 @@ export function ModelTab() {
       <AdvancedFields>
         {fields?.has("maxTokens") ? (
           <NumberField
-            label="Max tokens"
-            description="Max tokens the agent can generate in each turn of the conversation"
+            label={t(
+              "components.flow.sidepanel.config.model_tab.max_tokens.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.model_tab.max_tokens.description"
+            )}
             value={llmValue(llm, "maxTokens")}
             min={1}
             step={1}
@@ -102,22 +141,45 @@ export function ModelTab() {
 
         {fields?.has("toolChoice") ? (
           <EnumField
-            label="Tool choice"
-            description="Auto decides, None disables tools, Required always calls one"
+            label={t(
+              "components.flow.sidepanel.config.model_tab.tool_choice.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.model_tab.tool_choice.description"
+            )}
             value={llmValue(llm, "toolChoice")}
             readOnly={readOnly}
             options={[
-              { value: "auto", label: "Auto" },
-              { value: "none", label: "None" },
-              { value: "required", label: "Required" },
+              {
+                value: "auto",
+                label: t(
+                  "components.flow.sidepanel.config.model_tab.tool_choice.options.auto"
+                ),
+              },
+              {
+                value: "none",
+                label: t(
+                  "components.flow.sidepanel.config.model_tab.tool_choice.options.none"
+                ),
+              },
+              {
+                value: "required",
+                label: t(
+                  "components.flow.sidepanel.config.model_tab.tool_choice.options.required"
+                ),
+              },
             ]}
             onChange={(toolChoice) => patchLlm({ toolChoice })}
           />
         ) : null}
 
         <SwitchField
-          label="Preemptive generation"
-          description="Start generating a reply before the user's turn is confirmed"
+          label={t(
+            "components.flow.sidepanel.config.model_tab.preemptive_generation.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.model_tab.preemptive_generation.description"
+          )}
           checked={preemptive.enabled}
           readOnly={readOnly}
           onCheckedChange={(enabled) =>
@@ -128,8 +190,12 @@ export function ModelTab() {
         {preemptive.enabled ? (
           <>
             <SwitchField
-              label="Preemptive TTS"
-              description="Also synthesize speech before the turn is confirmed"
+              label={t(
+                "components.flow.sidepanel.config.model_tab.preemptive_tts.label"
+              )}
+              description={t(
+                "components.flow.sidepanel.config.model_tab.preemptive_tts.description"
+              )}
               checked={preemptive.preemptiveTts}
               readOnly={readOnly}
               onCheckedChange={(preemptiveTts) =>
@@ -137,8 +203,12 @@ export function ModelTab() {
               }
             />
             <NumberField
-              label="Max speech duration (ms)"
-              description="Skip early generation if the user has already been speaking longer than this"
+              label={t(
+                "components.flow.sidepanel.config.model_tab.max_speech_duration.label"
+              )}
+              description={t(
+                "components.flow.sidepanel.config.model_tab.max_speech_duration.description"
+              )}
               value={preemptive.maxSpeechDuration}
               min={1}
               step={100}
@@ -148,8 +218,12 @@ export function ModelTab() {
               }
             />
             <NumberField
-              label="Max retries"
-              description="Maximum early-generation attempts for one turn"
+              label={t(
+                "components.flow.sidepanel.config.model_tab.max_retries.label"
+              )}
+              description={t(
+                "components.flow.sidepanel.config.model_tab.max_retries.description"
+              )}
               value={preemptive.maxRetries}
               min={1}
               step={1}

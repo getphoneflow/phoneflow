@@ -1,0 +1,1977 @@
+{
+  "languages": {
+    "label": "Language",
+    "name": "English"
+  },
+  "common": {
+    "actions": {
+      "add": "Add",
+      "back": "Back",
+      "cancel": "Cancel",
+      "close": "Close",
+      "confirm": "Confirm",
+      "continue": "Continue",
+      "copy": "Copy",
+      "copied": "Copied",
+      "create": "Create",
+      "delete": "Delete",
+      "download": "Download",
+      "duplicate": "Duplicate",
+      "edit": "Edit",
+      "remove": "Remove",
+      "rename": "Rename",
+      "retry": "Retry",
+      "save": "Save",
+      "save_changes": "Save changes",
+      "search": "Search",
+      "submit": "Submit",
+      "update": "Update",
+      "upload": "Upload"
+    },
+    "states": {
+      "loading": "Loading..."
+    },
+    "errors": {
+      "generic": "Something went wrong"
+    },
+    "table": {
+      "no_results": "No results",
+      "rows_per_page": "Rows per page",
+      "page": "Page {{page}} of {{total}}"
+    }
+  },
+  "routes": {
+    "agents": {
+      "breadcrumb": "Agents",
+      "page_title": "Agents - Phoneflow"
+    },
+    "agents_detail": {
+      "page_title": "{{name}} - Phoneflow",
+      "breadcrumb_parent": "Agents"
+    },
+    "calls": {
+      "page_title": "Calls - Phoneflow",
+      "breadcrumb": "Calls"
+    },
+    "contacts": {
+      "page_title": "Contacts - Phoneflow",
+      "breadcrumb": "Contacts"
+    },
+    "batch_calls": {
+      "page_title": "Batch calls - Phoneflow",
+      "create_batch_call": "Create batch call",
+      "breadcrumb": "Batch calls"
+    },
+    "batch_calls_create": {
+      "breadcrumb_parent": "Batch calls",
+      "breadcrumb": "Create",
+      "page_title": "Create batch call - Phoneflow"
+    },
+    "phone_numbers": {
+      "page_title": "Phone numbers - Phoneflow",
+      "breadcrumb": "Phone numbers"
+    },
+    "settings": {
+      "layout": {
+        "nav": {
+          "account": "Account",
+          "organization": "Organization",
+          "billing": "Billing",
+          "members": "Members",
+          "roles": "Roles",
+          "sso": "Single sign-on"
+        },
+        "breadcrumb": "Settings"
+      },
+      "account": {
+        "page_title": "Account settings - Phoneflow"
+      },
+      "billing": {
+        "toasts": {
+          "credits_added": "Credits added to your balance",
+          "checkout_canceled": "Checkout canceled"
+        },
+        "history": "Billing history",
+        "page_title": "Billing settings - Phoneflow"
+      },
+      "members": {
+        "pending_invitations": "Pending invitations",
+        "page_title": "Members settings - Phoneflow"
+      },
+      "organization": {
+        "page_title": "Organization settings - Phoneflow"
+      },
+      "sso": {
+        "page_title": "Single sign-on - Phoneflow"
+      },
+      "roles": {
+        "page_title": "Roles settings - Phoneflow"
+      }
+    },
+    "signin": {
+      "page_title": "Sign in - Phoneflow",
+      "title": "Sign in",
+      "description": "Enter your email and password below to sign in",
+      "email": {
+        "label": "Email",
+        "placeholder": "name@example.com",
+        "invalid": "Enter a valid email address"
+      },
+      "password": {
+        "label": "Password",
+        "min_length": "Password must be at least 8 characters"
+      },
+      "forgot_password": "Forgot your password?",
+      "submit": "Sign in",
+      "or_continue_with": "Or continue with",
+      "google": "Sign in with Google",
+      "last_used": "Last used",
+      "no_account": "Don't have an account?",
+      "sign_up_link": "Sign up",
+      "sso_button": "Sign in with SSO"
+    },
+    "signin_sso": {
+      "page_title": "Sign in with SSO - Phoneflow",
+      "title": "Sign in with SSO",
+      "description": "Enter your work email to continue with your identity provider",
+      "email": {
+        "label": "Work email",
+        "placeholder": "name@company.com",
+        "invalid": "Enter a valid email address"
+      },
+      "submit": "Sign in with SSO",
+      "last_used": "Last used",
+      "back_to_sign_in": "Back to sign in"
+    },
+    "signup": {
+      "page_title": "Sign up - Phoneflow",
+      "title": "Sign up",
+      "description": "Enter your information below to sign up",
+      "name": {
+        "label": "Name",
+        "placeholder": "John Doe",
+        "required": "Name is required"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "name@example.com",
+        "invalid": "Enter a valid email address"
+      },
+      "password": {
+        "label": "Password",
+        "min_length": "Password must be at least 8 characters",
+        "uppercase": "Password must include at least one uppercase letter",
+        "lowercase": "Password must include at least one lowercase letter",
+        "number": "Password must include at least one number"
+      },
+      "confirm_password": {
+        "label": "Confirm Password",
+        "required": "Please confirm your password",
+        "mismatch": "Passwords do not match"
+      },
+      "submit": "Sign up",
+      "sso_button": "Sign in with SSO",
+      "or_continue_with": "Or continue with",
+      "google": "Sign up with Google",
+      "has_account": "Already have an account?",
+      "sign_in_link": "Sign in",
+      "legal": "By signing up you agree with our <terms>Terms of Service</terms> and acknowledge our <privacy>Privacy Policy</privacy>"
+    },
+    "reset_password": {
+      "page_title": "Reset password - Phoneflow",
+      "title": "Reset password",
+      "description": "Enter your email below to receive a password reset link",
+      "email": {
+        "label": "Email",
+        "placeholder": "name@example.com",
+        "invalid": "Enter a valid email address"
+      },
+      "submit": "Send reset link",
+      "success": "If an account exists for this email, a reset link has been sent",
+      "remember_password": "Already remember it?",
+      "sign_in_link": "Sign in"
+    },
+    "set_new_password": {
+      "page_title": "Set new password - Phoneflow",
+      "title": "Set new password",
+      "description": "Enter your new password below",
+      "password": {
+        "label": "New Password",
+        "min_length": "Password must be at least 8 characters",
+        "uppercase": "Password must include at least one uppercase letter",
+        "lowercase": "Password must include at least one lowercase letter",
+        "number": "Password must include at least one number"
+      },
+      "confirm_password": {
+        "label": "Confirm Password",
+        "required": "Please confirm your password",
+        "mismatch": "Passwords do not match"
+      },
+      "submit": "Set new password",
+      "invalid_token": "Invalid or missing reset token",
+      "toasts": {
+        "success": "New password set"
+      },
+      "remember_password": "Already remember it?",
+      "sign_in_link": "Sign in"
+    },
+    "email_verification": {
+      "page_title": "Verify your email - Phoneflow",
+      "title": "Verify your email",
+      "description": "Enter the verification code sent to your email",
+      "no_email": "Didn't receive an email?",
+      "resend": "Resend",
+      "toasts": {
+        "code_sent": "A new verification code was sent"
+      }
+    },
+    "two_factor": {
+      "page_title": "Two-factor authentication - Phoneflow",
+      "title": "Two-factor authentication",
+      "description_backup_code": "Enter one of your backup codes",
+      "description_totp": "Enter the code from your authenticator app",
+      "backup_code": {
+        "label": "Backup code",
+        "required": "Backup code is required"
+      },
+      "verify": "Verify",
+      "trust_device": "Trust this device for 30 days",
+      "use_authenticator": "Use authenticator app",
+      "use_backup_code": "Use a backup code"
+    },
+    "create_organization": {
+      "page_title": "Create organization - Phoneflow",
+      "title": "Create organization",
+      "description": "Create an organization",
+      "name": {
+        "label": "Organization name",
+        "placeholder": "Acme Inc",
+        "required": "Organization name is required",
+        "default_value": "{{name}}'s Org"
+      },
+      "submit": "Create organization",
+      "toasts": {
+        "created": "Organization created"
+      }
+    },
+    "join_organization": {
+      "toasts": {
+        "joined": "Joined organization successfully"
+      }
+    },
+    "select_organization": {
+      "page_title": "Select organization - Phoneflow",
+      "title": "Select organization",
+      "description": "Choose an organization to continue",
+      "create_organization": "Create organization"
+    },
+    "invite_members": {
+      "page_title": "Invite members - Phoneflow",
+      "title": "Invite members",
+      "description": "Send email invitations to join {{organization}}",
+      "email": {
+        "placeholder": "name@example.com",
+        "invalid": "Enter a valid email address"
+      },
+      "emails": {
+        "min": "Add at least one email address.",
+        "max": "You can add up to 5 email addresses."
+      },
+      "role_aria_label": "Role for email {{index}}",
+      "remove_aria_label": "Remove email {{index}}",
+      "add_email": "Add email address",
+      "submit": "Invite members",
+      "skip": "Skip for now",
+      "toasts": {
+        "invited": "Invitation sent to {{email}}",
+        "invite_failed": "{{email}}: {{message}}"
+      }
+    },
+    "not_found": {
+      "page_title": "Page not found - Phoneflow",
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist or was moved",
+      "return_home": "Return Home"
+    }
+  },
+  "components": {
+    "agents": {
+      "add_node_button": {
+        "trigger": "Add node",
+        "start": "Start",
+        "conversation": "Conversation",
+        "end": "End"
+      },
+      "agent_auto_save": {
+        "saving": "Saving",
+        "saved": "Auto saved",
+        "fix_error": "Fix error"
+      },
+      "agent_config_button": {
+        "trigger": "Config"
+      },
+      "agent_editor_actions": {
+        "open_actions": "Open actions for {{name}}",
+        "view_calls": "View calls",
+        "toasts": {
+          "duplicated": "Agent duplicated"
+        }
+      },
+      "agent_name_field": {
+        "placeholder": "Untitled agent"
+      },
+      "agent_row_actions": {
+        "open_actions": "Open actions for {{name}}",
+        "edit_name": "Edit name",
+        "view_calls": "View calls",
+        "toasts": {
+          "duplicated": "Agent duplicated"
+        }
+      },
+      "agent_version_selector": {
+        "version": "V{{number}}",
+        "version_draft": "V{{number}} (Draft)",
+        "updated": "Updated",
+        "published": "Published"
+      },
+      "agents_data_table": {
+        "columns": {
+          "name": "Name",
+          "phone_number": "Phone number",
+          "updated": "Updated"
+        },
+        "search": {
+          "placeholder": "Search agents..."
+        },
+        "page": "Page {{page}} of {{count}}"
+      },
+      "create_agent_form": {
+        "trigger": "New Agent",
+        "title": "Create agent",
+        "description": "Create a new agent",
+        "name": {
+          "label": "Name",
+          "placeholder": "Agent name"
+        },
+        "submit": "Create agent"
+      },
+      "delete_agent_dialog": {
+        "title": "Delete agent",
+        "description": "This will permanently delete \"{{name}}\"",
+        "toasts": {
+          "deleted": "{{name}} deleted"
+        }
+      },
+      "download_agent_dialog": {
+        "title": "Download agent",
+        "description": "Download \"{{name}}\"",
+        "version": {
+          "label": "Version"
+        },
+        "errors": {
+          "version_not_found": "Version not found"
+        }
+      },
+      "edit_agent_name_dialog": {
+        "title": "Edit name",
+        "description": "Change the agent name",
+        "name": {
+          "label": "Name",
+          "placeholder": "Agent name"
+        },
+        "toasts": {
+          "updated": "Agent name updated"
+        }
+      },
+      "flow_config_buttons": {
+        "global_prompt": "Global prompt",
+        "variables": "Variables"
+      },
+      "import_agent_form": {
+        "trigger": "Import",
+        "title": "Import agent",
+        "description": "Create a new agent from a JSON configuration file",
+        "placeholder": "Click or drop a file",
+        "submit": "Import agent",
+        "errors": {
+          "no_file": "No file selected"
+        }
+      },
+      "publish_agent_form": {
+        "trigger": "Publish",
+        "title": "Publish V{{number}}",
+        "description": "Publish a new agent version",
+        "name": {
+          "label": "Name",
+          "placeholder": "Version name (optional)"
+        },
+        "version_description": {
+          "label": "Description",
+          "placeholder": "Version description (optional)"
+        },
+        "submit": "Publish",
+        "toasts": {
+          "published": "V{{number}} published"
+        }
+      },
+      "test_agent_button": {
+        "trigger": "Test"
+      }
+    },
+    "flow": {
+      "toolbar": {
+        "undo": "Undo",
+        "redo": "Redo",
+        "zoom_out": "Zoom out",
+        "zoom_in": "Zoom in",
+        "zoom_reset": "Zoom to 100%",
+        "fit_view": "Fit view"
+      },
+      "nodes": {
+        "conversation": {
+          "instruction_types": {
+            "prompt": "prompt:",
+            "say": "say:"
+          },
+          "tools": "Tools:",
+          "tool_names": {
+            "end_call": "End call",
+            "extract_variables": "Extract variables",
+            "ivr_navigation": "IVR navigation",
+            "transfer_call": "Transfer call"
+          }
+        }
+      },
+      "edges": {
+        "condition_format": {
+          "operators": {
+            "greater_than": ">",
+            "greater_or_equal": ">=",
+            "less_than": "<",
+            "less_or_equal": "<=",
+            "equals": "=",
+            "not_equals": "!=",
+            "contains": "contains",
+            "not_contains": "not contains",
+            "exists": "exists",
+            "not_exists": "not exists"
+          },
+          "match": {
+            "all": " AND ",
+            "any": " OR "
+          },
+          "always": "Always"
+        }
+      },
+      "variables": {
+        "suggestions": {
+          "groups": {
+            "inputs": "Inputs",
+            "extracted": "Extracted",
+            "system": "System",
+            "parameters": "Parameters"
+          }
+        },
+        "variable_select": {
+          "create": "Create {{key}}",
+          "empty": "No variables"
+        },
+        "variable_text_field": {
+          "create": "Create {{key}}",
+          "empty": "No variables"
+        }
+      },
+      "sidepanel": {
+        "config": {
+          "call_tab": {
+            "max_call_duration": {
+              "label": "Max call duration (s)",
+              "description": "Hang up when the call reaches this duration"
+            },
+            "idle_timeout": {
+              "label": "Idle timeout (s)",
+              "description": "How long to wait after the user stays silent before the agent checks if they are still there"
+            },
+            "max_idle_messages": {
+              "label": "Max idle messages",
+              "description": "Maximum times the agent can check if the user is still there during the call"
+            },
+            "silence_timeout": {
+              "label": "Silence timeout (s)",
+              "description": "End the call if the user stays silent for more than this duration"
+            },
+            "timezone": {
+              "label": "Timezone",
+              "description": "Used for {{date}}, {{time}}, and {{timezone}}"
+            }
+          },
+          "model_tab": {
+            "model": {
+              "label": "Model"
+            },
+            "temperature": {
+              "label": "Temperature",
+              "description": "Controls randomness. Lower values are more deterministic, higher values more creative"
+            },
+            "reasoning_effort": {
+              "label": "Reasoning effort",
+              "description": "How long the model thinks before it answers",
+              "options": {
+                "none": "None",
+                "minimal": "Minimal",
+                "low": "Low",
+                "medium": "Medium",
+                "high": "High"
+              }
+            },
+            "max_tokens": {
+              "label": "Max tokens",
+              "description": "Max tokens the agent can generate in each turn of the conversation"
+            },
+            "tool_choice": {
+              "label": "Tool choice",
+              "description": "Auto decides, None disables tools, Required always calls one",
+              "options": {
+                "auto": "Auto",
+                "none": "None",
+                "required": "Required"
+              }
+            },
+            "preemptive_generation": {
+              "label": "Preemptive generation",
+              "description": "Start generating a reply before the user's turn is confirmed"
+            },
+            "preemptive_tts": {
+              "label": "Preemptive TTS",
+              "description": "Also synthesize speech before the turn is confirmed"
+            },
+            "max_speech_duration": {
+              "label": "Max speech duration (ms)",
+              "description": "Skip early generation if the user has already been speaking longer than this"
+            },
+            "max_retries": {
+              "label": "Max retries",
+              "description": "Maximum early-generation attempts for one turn"
+            }
+          },
+          "transcriber_tab": {
+            "model": {
+              "label": "Model"
+            },
+            "keyterms": {
+              "label": "Keyterms",
+              "description": "Boost recognition of names, jargon, and product terms"
+            },
+            "mode": {
+              "label": "Mode",
+              "description": "Balance between speed and accuracy",
+              "options": {
+                "min_latency": "Min latency",
+                "balanced": "Balanced",
+                "max_accuracy": "Max accuracy"
+              }
+            },
+            "intelligent_turn_taking": {
+              "label": "Intelligent turn taking",
+              "description": "On, the transcriber decides when the user finished. Off, the agent waits a fixed silence delay instead"
+            },
+            "min_end_of_turn_wait": {
+              "label": "Min end of turn wait (ms)",
+              "description": "How long to wait after the user stops speaking before the agent can respond"
+            },
+            "max_end_of_turn_wait": {
+              "label": "Max end of turn wait (ms)",
+              "description": "Longest the agent waits after the user stops speaking before ending the turn"
+            },
+            "endpointing_mode": {
+              "label": "Endpointing mode",
+              "description": "Fixed uses the min and max delays, dynamic adapts within that range from pause statistics",
+              "options": {
+                "fixed": "Fixed",
+                "dynamic": "Dynamic"
+              }
+            },
+            "endpointing_alpha": {
+              "label": "Endpointing alpha",
+              "description": "Weight of past pauses in dynamic endpointing. Higher adapts more slowly"
+            },
+            "silence_timeout": {
+              "label": "Silence timeout (ms)",
+              "description": "Silence before this transcriber treats the turn as complete"
+            },
+            "vad_threshold": {
+              "label": "VAD threshold",
+              "description": "How sensitive voice detection is. Higher ignores more background noise"
+            },
+            "eager_end_of_turn_threshold": {
+              "label": "Eager end-of-turn threshold",
+              "description": "Confidence required to signal an early end of turn"
+            },
+            "end_of_turn_threshold": {
+              "label": "End-of-turn threshold",
+              "description": "Confidence needed before the transcriber closes the user's turn"
+            },
+            "end_of_turn_timeout": {
+              "label": "End-of-turn timeout (ms)",
+              "description": "Silence that ends the turn even if confidence is still low"
+            },
+            "min_turn_silence": {
+              "label": "Min turn silence (ms)",
+              "description": "Silence before the model checks whether the turn has ended"
+            },
+            "max_turn_silence": {
+              "label": "Max turn silence (ms)",
+              "description": "Silence that forces the turn to end"
+            },
+            "end_of_turn_confidence": {
+              "label": "End-of-turn confidence",
+              "description": "How sure the transcriber must be that the user is done"
+            },
+            "endpoint_latency_level": {
+              "label": "Endpoint latency level",
+              "description": "0 is default semantic endpointing, 3 is most aggressive"
+            },
+            "min_eot_silence_when_confident": {
+              "label": "Min EOT silence when confident (ms)",
+              "description": "Shortest silence required to end a turn when the model is already confident"
+            },
+            "smart_turn": {
+              "label": "Smart turn",
+              "description": "Confidence required before smart turn detection ends the user's turn"
+            },
+            "smart_turn_timeout": {
+              "label": "Smart turn timeout (ms)",
+              "description": "How long smart turn detection waits before ending the turn"
+            },
+            "voice_focus": {
+              "label": "Voice focus",
+              "description": "Tune recognition for a close or distant microphone",
+              "options": {
+                "near_field": "Near field",
+                "far_field": "Far field"
+              }
+            },
+            "voice_focus_threshold": {
+              "label": "Voice focus threshold",
+              "description": "How aggressively background audio is suppressed. Higher is stronger"
+            },
+            "voice_profile": {
+              "label": "Voice profile",
+              "description": "Bias recognition toward a saved speaker profile"
+            },
+            "voice_profile_top_n": {
+              "label": "Voice profile top N",
+              "description": "How many speaker profiles to match against"
+            },
+            "diarization": {
+              "label": "Diarization",
+              "description": "Label distinct speakers in the transcript"
+            },
+            "strict_language": {
+              "label": "Strict language",
+              "description": "Prefer transcription in the selected language"
+            },
+            "agent_context_carryover": {
+              "label": "Agent context carryover",
+              "description": "Bias the next transcription with what the agent just said"
+            },
+            "mip_opt_out": {
+              "label": "MIP opt-out",
+              "description": "Opt out of using this audio to improve the provider's models"
+            },
+            "language": {
+              "description": "Recognition is optimized for this language"
+            }
+          },
+          "voice_tab": {
+            "model": {
+              "label": "Model"
+            },
+            "speed": {
+              "label": "Speed",
+              "description": "Speaking rate multiplier. 1 is normal pace"
+            },
+            "latency_mode": {
+              "label": "Latency mode",
+              "description": "Normal is highest quality, low is fastest",
+              "options": {
+                "normal": "Normal",
+                "balanced": "Balanced",
+                "low": "Low"
+              }
+            },
+            "interruptions": {
+              "label": "Interruptions",
+              "description": "Stop the agent when the user starts speaking"
+            },
+            "discard_uninterruptible_audio": {
+              "label": "Discard uninterruptible audio",
+              "description": "Drop buffered audio while the agent is speaking and cannot be interrupted"
+            },
+            "min_interruption_duration": {
+              "label": "Min interruption duration (ms)",
+              "description": "How long the user must speak before the agent stops talking"
+            },
+            "min_interruption_words": {
+              "label": "Min interruption words",
+              "description": "How many words the user must say before the agent stops talking"
+            },
+            "false_interruption_timeout": {
+              "label": "False interruption timeout (ms)",
+              "description": "How long to wait with no transcript before an interruption counts as false"
+            },
+            "resume_after_false_interruption": {
+              "label": "Resume after false interruption",
+              "description": "Resume the agent's speech from where it left off after a false interruption"
+            },
+            "tts_volume": {
+              "label": "TTS volume",
+              "description": "Loudness adjustment in decibels. 0 leaves the voice unchanged"
+            },
+            "emotion": {
+              "label": "Emotion",
+              "description": "Emotional tone of the speech, one tag per line"
+            },
+            "mip_opt_out": {
+              "label": "MIP opt-out",
+              "description": "Opt out of using this audio to improve the provider's models"
+            },
+            "volume": {
+              "label": "Volume"
+            }
+          },
+          "title": "Agent config",
+          "tabs": {
+            "transcriber": "Transcriber",
+            "model": "Model",
+            "voice": "Voice",
+            "call": "Call"
+          },
+          "fields": {
+            "advanced": "Advanced",
+            "language": {
+              "label": "Language"
+            },
+            "string_list": {
+              "placeholder": "term1, term2"
+            }
+          },
+          "cost_latency": {
+            "part": "{{name}}: {{value}}",
+            "parts": {
+              "stt": "Transcriber",
+              "llm": "Model",
+              "tts": "Voice",
+              "platform": "Platform"
+            },
+            "cost": "Cost",
+            "latency": "Latency"
+          }
+        },
+        "base": {
+          "close": "Close side panel"
+        },
+        "global_prompt": {
+          "title": "Global prompt",
+          "prompt": {
+            "label": "Global prompt",
+            "placeholder": "You are a helpful assistant"
+          }
+        },
+        "test": {
+          "title": "Test agent"
+        },
+        "voice_select": {
+          "label": "Voice",
+          "search": "Search voices...",
+          "empty": "No voices found",
+          "play": "Play",
+          "pause": "Pause"
+        },
+        "background_audio_select": {
+          "label": "Background audio",
+          "none": "None",
+          "search": "Search background audio...",
+          "empty": "No background audio found",
+          "play": "Play",
+          "pause": "Pause"
+        },
+        "model_select": {
+          "search": {
+            "stt": "Search transcription models...",
+            "llm": "Search language models...",
+            "tts": "Search voice models..."
+          },
+          "score": {
+            "wer_label": "WER",
+            "wer_value": "{{score}}% WER",
+            "label": "Score",
+            "value": "{{score}}%"
+          },
+          "sort": {
+            "label": "Sort models",
+            "default": "Default",
+            "price": "Price",
+            "latency": "Latency"
+          },
+          "empty": "No models found"
+        },
+        "variables": {
+          "title": "Variables",
+          "inputs": {
+            "label": "Inputs",
+            "description": "Values passed in when the call starts",
+            "key_placeholder": "variable_name",
+            "default_value_placeholder": "Default value",
+            "add": "Add variable"
+          },
+          "extracted": {
+            "label": "Extracted",
+            "description": "Values filled in during the call"
+          },
+          "system": {
+            "label": "System",
+            "description": "Built-in variables always available",
+            "direction": "web, inbound, or outbound",
+            "phone_number": "The user's number",
+            "agent_number": "The agent's number"
+          }
+        },
+        "nodes": {
+          "conversation": {
+            "title": "Conversation node",
+            "title_start": "Start node",
+            "name": {
+              "label": "Name"
+            },
+            "first_speaker": {
+              "label": "First speaker",
+              "agent": "Agent",
+              "user": "User"
+            },
+            "instructions": {
+              "prompt": "Prompt",
+              "say": "Say"
+            }
+          },
+          "end": {
+            "title": "End node",
+            "name": {
+              "label": "Name"
+            }
+          }
+        },
+        "edges": {
+          "condition": {
+            "title": "Edge",
+            "condition_type": {
+              "label": "Condition type",
+              "prompt": "Prompt",
+              "expression": "Expression",
+              "always": "Always"
+            },
+            "prompt": {
+              "label": "Prompt",
+              "placeholder": "Transition condition"
+            },
+            "match": {
+              "label": "Match",
+              "all": "All",
+              "any": "Any"
+            },
+            "value": {
+              "placeholder": "value"
+            },
+            "add_condition": "Add condition",
+            "always_description": "Always transitions to the next node on the following turn. Must be the only transition on the node."
+          }
+        },
+        "tools": {
+          "end_call_dialog": {
+            "title": "End call",
+            "description": "Enable the agent to end the call",
+            "prompt": {
+              "label": "Description",
+              "placeholder": "Describe when to end the call"
+            }
+          },
+          "ivr_navigation_dialog": {
+            "title": "IVR navigation",
+            "description": "Send keypad tones to navigate a phone menu",
+            "prompt": {
+              "label": "Description",
+              "placeholder": "Describe which phone menu to get through"
+            }
+          },
+          "extract_variables_dialog": {
+            "title": "Extract variables",
+            "description": "Extract variables from the conversation",
+            "key": {
+              "placeholder": "variable_name"
+            },
+            "types": {
+              "string": "Text",
+              "number": "Number",
+              "boolean": "Boolean"
+            },
+            "variable_description": {
+              "placeholder": "Describe what to extract (optional)"
+            },
+            "add_variable": "Add variable"
+          },
+          "transfer_call_dialog": {
+            "title": "Transfer call",
+            "description": "Transfer the call to a different phone number",
+            "number": {
+              "label": "Number"
+            },
+            "condition": {
+              "label": "Condition",
+              "placeholder": "The caller asks to speak with a representative"
+            },
+            "add_destination": "Add destination"
+          },
+          "webhook_dialog": {
+            "title": "Webhook",
+            "description": "Call any external API during the conversation",
+            "name": {
+              "label": "Name",
+              "placeholder": "tool_name"
+            },
+            "tool_description": {
+              "label": "Description",
+              "placeholder": "Describe what this tool does"
+            },
+            "method": {
+              "label": "Method"
+            },
+            "url": {
+              "label": "URL"
+            },
+            "timeout": {
+              "label": "Timeout (s)"
+            },
+            "max_retries": {
+              "label": "Max retries"
+            },
+            "headers": {
+              "label": "Headers",
+              "key_placeholder": "Key, e.g. Authorization",
+              "value_placeholder": "Value, e.g. Bearer {{api_key}}"
+            },
+            "query_parameters": {
+              "label": "Query parameters",
+              "key_placeholder": "Key, e.g. user_id",
+              "value_placeholder": "Value, e.g. {{user_id}}"
+            },
+            "body": {
+              "label": "Request body"
+            },
+            "parameters": {
+              "label": "Parameters",
+              "description": "Values the agent provides when calling this tool. Use {{user_id}} in the URL, headers, query parameters, or body",
+              "name_placeholder": "Parameter name, e.g. user_id",
+              "types": {
+                "string": "Text",
+                "number": "Number",
+                "boolean": "Boolean"
+              },
+              "description_placeholder": "Description (optional), e.g. The id of {{user_name}}",
+              "required": "Required",
+              "add": "Add parameter"
+            },
+            "response_variables": {
+              "label": "Store in variables",
+              "description": "Extract values from the response and store them in variables",
+              "name_placeholder": "Variable name, e.g. user_name",
+              "path_placeholder": "Response path, e.g. user.name",
+              "add": "Add variable"
+            }
+          },
+          "conversation_tools": {
+            "built_in": {
+              "label": "Built-in tools",
+              "edit": "Edit {{tool}}",
+              "remove": "Remove {{tool}}",
+              "end_call": {
+                "label": "End call",
+                "description": "Enable the agent to end the call"
+              },
+              "extract_variables": {
+                "label": "Extract variables",
+                "description": "Extract variables from the conversation"
+              },
+              "ivr_navigation": {
+                "label": "IVR navigation",
+                "description": "Send keypad tones to navigate a phone menu"
+              },
+              "transfer_call": {
+                "label": "Transfer call",
+                "description": "Forward the call to a phone number"
+              }
+            },
+            "add_tool": "Add tool",
+            "additional": {
+              "label": "Additional tools",
+              "edit": "Edit tool",
+              "remove": "Remove from node",
+              "search": "Search tools...",
+              "no_matches": "No matching tools",
+              "all_attached": "All tools are already on this node",
+              "new_webhook": "New webhook tool"
+            }
+          }
+        }
+      }
+    },
+    "batch_calls": {
+      "recipients_csv": {
+        "errors": {
+          "missing_rows": "CSV must include a header and at least one recipient",
+          "missing_phone_number_column": "CSV must include a \"phone_number\" column",
+          "unknown_column": "Unknown variable column \"{{column}}\"",
+          "invalid_phone_number": "Row {{row}}: phone_number must be E.164 (e.g. +14155551234)"
+        }
+      },
+      "recipients_preview": {
+        "empty": "Please upload recipients first"
+      },
+      "batch_calls_data_table": {
+        "status": {
+          "scheduled": "Scheduled",
+          "triggered": "Triggered"
+        },
+        "columns": {
+          "name": "Name",
+          "status": "Status",
+          "recipients": "Recipients",
+          "from": "From",
+          "agent": "Agent",
+          "version": "Version",
+          "when": "When"
+        },
+        "search_placeholder": "Search batch calls..."
+      },
+      "create_batch_call_form": {
+        "errors": {
+          "invalid_csv": "Invalid CSV",
+          "no_recipients": "Upload a CSV with at least one recipient",
+          "schedule_required": "Pick a date, time, and timezone",
+          "schedule_in_past": "Scheduled time must be in the future"
+        },
+        "toasts": {
+          "created": "Batch call triggered"
+        },
+        "name": {
+          "label": "Batch call name",
+          "placeholder": "Batch call name"
+        },
+        "phone_number": {
+          "label": "Call from",
+          "placeholder": "Select a phone number"
+        },
+        "recipients": {
+          "label": "Upload recipients",
+          "download_template": "Download template",
+          "placeholder": "Click or drop a file"
+        },
+        "agent": {
+          "label": "Agent",
+          "placeholder": "Select"
+        },
+        "version": {
+          "label": "Version",
+          "select_agent_first": "Select agent first"
+        },
+        "trigger": {
+          "label": "When to trigger",
+          "now": "Now",
+          "schedule": "Schedule"
+        },
+        "schedule": {
+          "date": {
+            "label": "Date",
+            "placeholder": "Select date"
+          },
+          "time": {
+            "label": "Time"
+          },
+          "timezone": {
+            "label": "Timezone",
+            "placeholder": "Timezone"
+          }
+        },
+        "submit": "Create batch call"
+      }
+    },
+    "billing": {
+      "add_credits_button": {
+        "title": "Add credits",
+        "description": "Add more credits to this organization balance",
+        "amount": {
+          "label": "Credit amount"
+        },
+        "tax_notice": "Sales tax, VAT, or other indirect taxes may be added to the charge according to your local regulations.",
+        "submit": "Add credits",
+        "trigger": "Add credits"
+      },
+      "auto_reload_button": {
+        "toasts": {
+          "enabled": "Auto reload enabled",
+          "saved": "Auto reload settings saved"
+        },
+        "title": "Auto reload",
+        "enabled": {
+          "label": "Enable auto reload",
+          "description": "Automatically purchase credits when balance is low"
+        },
+        "amount": {
+          "label": "Amount to reload",
+          "description": "How many credits to add each time auto reload runs"
+        },
+        "threshold": {
+          "label": "When threshold reaches",
+          "description": "Reload once your balance drops to this amount"
+        },
+        "trigger": "Auto reload",
+        "status": {
+          "on": "On",
+          "off": "Off"
+        }
+      },
+      "manage_billing_button": {
+        "label": "Manage billing information"
+      }
+    },
+    "calls": {
+      "download_calls_dialog": {
+        "title": "Download calls",
+        "description": "You will receive an email with all calls",
+        "submit": "Send email",
+        "toasts": {
+          "requested": "The calls will be sent to your email shortly"
+        }
+      },
+      "live_call_sheet": {
+        "channel": {
+          "phone_call": "Phone call",
+          "web_call": "Web call"
+        },
+        "version": "V{{number}}",
+        "latest_version": "Latest",
+        "agent": "Agent:",
+        "live_call": "Live call"
+      },
+      "call_detail_sheet": {
+        "channel": {
+          "phone_call": "Phone call",
+          "web_call": "Web call"
+        },
+        "version": "V{{number}}",
+        "latest_version": "Latest",
+        "from": "From:",
+        "to": "To:",
+        "agent": "Agent:",
+        "duration": "Duration: {{duration}}",
+        "tabs": {
+          "transcript": "Transcript",
+          "data": "Data",
+          "cost": "Cost"
+        },
+        "no_transcript": "No transcript available",
+        "no_variables": "No variables",
+        "dynamic_variables": "Dynamic variables"
+      },
+      "call_recording_player": {
+        "play": "Play",
+        "pause": "Pause",
+        "playback_rate": "Playback speed",
+        "download_audio": "Audio"
+      },
+      "call_cost_breakdown": {
+        "items": {
+          "stt": "STT",
+          "llm": "LLM",
+          "tts": "TTS",
+          "telephony": "Telephony",
+          "platform": "Platform"
+        },
+        "empty": "No cost data available",
+        "total": "Total"
+      },
+      "live_call_monitor": {
+        "toasts": {
+          "ended": "Call ended"
+        },
+        "joining": "Joining call...",
+        "disconnected": "Disconnected",
+        "listen": "Listen",
+        "stop_listening": "Stop listening",
+        "end_call": "End call",
+        "end_dialog": {
+          "title": "End call",
+          "description": "This will disconnect everyone and end the live call",
+          "confirm": "End call"
+        }
+      },
+      "calls_data_table": {
+        "columns": {
+          "started": "Started",
+          "duration": "Duration",
+          "cost": "Cost",
+          "channel": "Channel",
+          "direction": "Direction",
+          "from": "From",
+          "to": "To",
+          "agent": "Agent",
+          "version": "Version",
+          "variables": "Variables",
+          "status": "Status"
+        },
+        "channel": {
+          "phone": "Phone",
+          "web": "Web"
+        },
+        "direction": {
+          "inbound": "Inbound",
+          "outbound": "Outbound"
+        },
+        "version": "V{{number}}",
+        "latest_version": "Latest",
+        "status": {
+          "in_progress": "In progress",
+          "no_answer": "No answer",
+          "completed": "Completed"
+        }
+      },
+      "calls_filters": {
+        "date": {
+          "label": "Date"
+        },
+        "agent": {
+          "label": "Agent",
+          "placeholder": "All agents"
+        },
+        "from": {
+          "label": "From",
+          "placeholder": "All numbers"
+        },
+        "to": {
+          "label": "To",
+          "placeholder": "All numbers"
+        },
+        "batch": {
+          "label": "Batch",
+          "placeholder": "All batches",
+          "empty": "No batches found"
+        },
+        "duration": {
+          "label": "Duration",
+          "placeholder": "Duration"
+        },
+        "cost": {
+          "label": "Cost",
+          "placeholder": "Cost"
+        },
+        "channel": {
+          "label": "Channel",
+          "all": "All channels",
+          "phone_call": "Phone",
+          "web_call": "Web"
+        },
+        "direction": {
+          "label": "Direction",
+          "all": "All directions",
+          "inbound": "Inbound",
+          "outbound": "Outbound"
+        },
+        "status": {
+          "label": "Status",
+          "all": "All statuses",
+          "completed": "Completed",
+          "in_progress": "In progress",
+          "no_answer": "No answer"
+        }
+      }
+    },
+    "contacts": {
+      "contacts_filters": {
+        "search": {
+          "label": "Search",
+          "placeholder": "Phone, first name, last name, external ID…"
+        },
+        "calls": {
+          "label": "Calls",
+          "placeholder": "Calls"
+        },
+        "total_time": {
+          "label": "Total time",
+          "placeholder": "Total time"
+        },
+        "first_call": {
+          "label": "First call"
+        },
+        "last_call": {
+          "label": "Last call"
+        }
+      },
+      "contacts_data_table": {
+        "columns": {
+          "phone": "Phone",
+          "first_name": "First name",
+          "last_name": "Last name",
+          "calls": "Calls",
+          "total_time": "Total time",
+          "first_call": "First call",
+          "last_call": "Last call"
+        }
+      },
+      "download_contacts_dialog": {
+        "title": "Download contacts",
+        "description": "You will receive an email with all contacts",
+        "submit": "Send email",
+        "toasts": {
+          "requested": "The contacts will be sent to your email shortly"
+        }
+      },
+      "contact_detail_sheet": {
+        "unknown": "Unknown",
+        "status": {
+          "in_progress": "In progress",
+          "no_answer": "No answer",
+          "completed": "Completed"
+        },
+        "version": "V{{number}}",
+        "latest_version": "Latest",
+        "stats": {
+          "total_time": "Total time",
+          "average_per_call": "Avg / call",
+          "first_call": "First call",
+          "last_call": "Last call"
+        },
+        "fields": {
+          "phone": "Phone",
+          "first_name": "First name",
+          "last_name": "Last name",
+          "external_id": "External ID"
+        },
+        "calls": "Calls ({{total}})",
+        "no_calls": "No calls yet"
+      }
+    },
+    "phone_numbers": {
+      "phone_numbers_data_table": {
+        "columns": {
+          "number": "Number",
+          "agent": "Agent",
+          "version": "Version",
+          "updated": "Updated"
+        },
+        "search_placeholder": "Search phone numbers..."
+      },
+      "phone_number_row_actions": {
+        "toasts": {
+          "deleted": "{{number}} deleted"
+        },
+        "open_actions": "Open actions for {{number}}",
+        "delete_dialog": {
+          "title": "Delete phone number",
+          "description": "This will permanently delete \"{{number}}\""
+        }
+      },
+      "add_phone_number_form": {
+        "trigger": "Add phone number",
+        "title": "Add phone number",
+        "description": "Add a new phone number",
+        "number": {
+          "label": "Phone number"
+        },
+        "sip_address": {
+          "label": "SIP address"
+        },
+        "sip_username": {
+          "label": "SIP username",
+          "placeholder": "username"
+        },
+        "sip_password": {
+          "label": "SIP password"
+        },
+        "submit": "Add phone number"
+      },
+      "edit_phone_number_form": {
+        "title": "Edit phone number",
+        "description": "Edit the phone number and its SIP connection",
+        "number": {
+          "label": "Phone number"
+        },
+        "sip_address": {
+          "label": "SIP address"
+        },
+        "sip_username": {
+          "label": "SIP username",
+          "placeholder": "username"
+        },
+        "sip_password": {
+          "label": "SIP password"
+        }
+      },
+      "phone_number_sheet": {
+        "title": "Inbound calls",
+        "agent": {
+          "label": "Response agent",
+          "none": "No agent"
+        },
+        "version": {
+          "label": "Version",
+          "none": "No version"
+        }
+      },
+      "test_call_button": {
+        "toasts": {
+          "started": "Outbound call started"
+        },
+        "trigger": "Test call",
+        "title": "Test call",
+        "phone_number": {
+          "label": "Call from",
+          "placeholder": "Select a phone number"
+        },
+        "to_number": {
+          "label": "Call to"
+        },
+        "agent": {
+          "label": "Agent",
+          "placeholder": "Select an agent"
+        },
+        "version": {
+          "label": "Version",
+          "none": "No version"
+        },
+        "submit": "Start call"
+      }
+    },
+    "settings": {
+      "billing": {
+        "billing_history": {
+          "status": {
+            "draft": "Draft",
+            "open": "Open",
+            "paid": "Paid",
+            "uncollectible": "Uncollectible",
+            "void": "Void"
+          },
+          "empty": {
+            "title": "No invoices yet",
+            "description": "Invoices will appear here after you purchase credits"
+          },
+          "columns": {
+            "created": "Created",
+            "amount": "Amount",
+            "status": "Status",
+            "invoice": "Invoice"
+          },
+          "view": "View"
+        },
+        "credit_balance": {
+          "title": "Credit balance",
+          "empty": "Buy credits to place or receive calls"
+        }
+      },
+      "account": {
+        "delete_account": {
+          "email": {
+            "invalid": "Enter a valid email address",
+            "mismatch": "Email does not match your account",
+            "label": "Email"
+          },
+          "toasts": {
+            "deleted": "Account deleted"
+          },
+          "danger_zone": "Danger zone",
+          "title": "Delete account",
+          "description": "Permanently delete your account",
+          "trigger": "Delete account",
+          "dialog": {
+            "title": "Delete account",
+            "description": "Enter your email address below to confirm",
+            "confirm": "Delete account"
+          }
+        },
+        "disable_two_factor_dialog": {
+          "password": {
+            "required": "Password is required",
+            "label": "Password"
+          },
+          "toasts": {
+            "disabled": "Two-factor authentication disabled"
+          },
+          "trigger": "Disable",
+          "title": "Disable two-factor authentication",
+          "description": "Enter your password to disable two-factor authentication",
+          "submit": "Disable"
+        },
+        "enable_two_factor_dialog": {
+          "password": {
+            "required": "Password is required",
+            "label": "Password"
+          },
+          "errors": {
+            "enable_failed": "Failed to enable two-factor authentication"
+          },
+          "toasts": {
+            "enabled": "Two-factor authentication enabled"
+          },
+          "trigger": "Enable",
+          "title": "Enable two-factor authentication",
+          "password_description": "Enter your password to continue",
+          "setup_description": "Scan the QR code with your preferred authenticator app",
+          "code_description": "Enter the code from your authenticator app to finish enabling two-factor authentication",
+          "submit": "Enable",
+          "backup_codes": {
+            "title": "Save your backup codes",
+            "description": "Save these backup codes in a secure place. Each code can be used once if you lose access to your authenticator app",
+            "confirm": "I saved my codes"
+          }
+        },
+        "profile_picture": {
+          "errors": {
+            "upload_failed": "Failed to upload image"
+          },
+          "toasts": {
+            "updated": "Profile picture updated",
+            "removed": "Profile picture removed"
+          },
+          "remove": "Remove profile picture"
+        },
+        "regenerate_backup_codes_dialog": {
+          "password": {
+            "required": "Password is required",
+            "label": "Password"
+          },
+          "errors": {
+            "generate_failed": "Failed to generate backup codes"
+          },
+          "toasts": {
+            "generated": "New backup codes generated"
+          },
+          "trigger": "Re-generate codes",
+          "title": "Re-generate backup codes",
+          "description": "Enter your password to re-generate backup codes",
+          "submit": "Re-generate codes",
+          "backup_codes": {
+            "title": "Save your backup codes",
+            "description": "Save these backup codes in a secure place. Previous codes will no longer work",
+            "confirm": "I saved my codes"
+          }
+        },
+        "set_new_password": {
+          "current_password": {
+            "required": "Current password is required",
+            "label": "Current password"
+          },
+          "password": {
+            "min": "Password must be at least 8 characters",
+            "uppercase": "Password must include at least one uppercase letter",
+            "lowercase": "Password must include at least one lowercase letter",
+            "number": "Password must include at least one number",
+            "label": "New password"
+          },
+          "confirm_password": {
+            "required": "Please confirm your password",
+            "mismatch": "Passwords do not match",
+            "label": "Confirm password"
+          },
+          "toasts": {
+            "updated": "New password set"
+          },
+          "title": "Password",
+          "description": "Set a new password",
+          "trigger": "Set new password",
+          "dialog": {
+            "title": "Set new password",
+            "description": "Enter your current password and new password below",
+            "submit": "Set new password"
+          }
+        },
+        "two_factor_auth": {
+          "title": "Two-factor authentication",
+          "enabled": "Authenticator app is enabled",
+          "disabled": "Add an authenticator app for extra account security"
+        },
+        "user_information": {
+          "name": {
+            "required": "Name is required",
+            "label": "Name"
+          },
+          "email": {
+            "label": "Email"
+          },
+          "timezone": {
+            "label": "Timezone",
+            "placeholder": "Timezone"
+          },
+          "toasts": {
+            "updated": "Account information updated"
+          },
+          "title": "Account information",
+          "description": "Update your account information",
+          "profile_picture": "Profile picture"
+        }
+      },
+      "organization": {
+        "delete_organization": {
+          "name": {
+            "required": "Name is required",
+            "mismatch": "Name does not match this organization",
+            "label": "Name"
+          },
+          "toasts": {
+            "deleted": "Organization deleted"
+          },
+          "danger_zone": "Danger zone",
+          "title": "Delete organization",
+          "description": "Permanently delete this organization",
+          "trigger": "Delete organization",
+          "dialog": {
+            "title": "Delete organization",
+            "description": "Enter the organization name below to confirm",
+            "confirm": "Delete organization"
+          }
+        },
+        "organization_information": {
+          "name": {
+            "required": "Name is required",
+            "label": "Name"
+          },
+          "slug": {
+            "required": "Slug is required",
+            "format": "Slug can only contain lowercase letters, numbers, and hyphens",
+            "label": "Slug"
+          },
+          "toasts": {
+            "updated": "Organization information updated"
+          },
+          "title": "Organization information",
+          "description": "Update your organization information"
+        }
+      },
+      "sso": {
+        "disconnect_sso_provider": {
+          "toasts": {
+            "disconnected": "Provider disconnected"
+          },
+          "danger_zone": "Danger zone",
+          "title": "Disconnect provider",
+          "description": "Permanently delete this connection",
+          "trigger": "Disconnect provider",
+          "dialog": {
+            "title": "Disconnect provider",
+            "description": "Permanently delete this connection",
+            "confirm": "Disconnect provider"
+          }
+        },
+        "domain_list": {
+          "domain": {
+            "required": "Enter a domain",
+            "placeholder": "company.com"
+          },
+          "domains": {
+            "min": "Add at least one domain"
+          },
+          "label": "Email domains",
+          "remove": "Remove domain {{index}}",
+          "add": "Add domain"
+        },
+        "oidc_form": {
+          "issuer": {
+            "invalid": "Enter the identity provider issuer URL",
+            "label": "Issuer"
+          },
+          "client_id": {
+            "required": "Client ID is required",
+            "label": "Client ID"
+          },
+          "client_secret": {
+            "required": "Client secret is required",
+            "label": "Client secret"
+          },
+          "toasts": {
+            "connected": "Provider connected"
+          },
+          "redirect_url": "Redirect URL",
+          "submit": "Connect provider"
+        },
+        "saml_form": {
+          "metadata": {
+            "required": "Paste the identity provider metadata",
+            "max": "Metadata is too large",
+            "label": "Identity provider metadata"
+          },
+          "toasts": {
+            "connected": "Provider connected"
+          },
+          "acs_url": "ACS URL",
+          "entity_id": "Entity ID",
+          "submit": "Connect provider"
+        },
+        "sso_settings": {
+          "title": "Single sign-on",
+          "description_connected": "Manage your {{type}} provider",
+          "description": "Connect an identity provider to this organization",
+          "status": {
+            "verified": "Verified",
+            "pending": "Pending verification"
+          },
+          "redirect_url": "Redirect URL",
+          "acs_url": "ACS URL",
+          "entity_id": "Entity ID",
+          "download_metadata": "Download SP metadata"
+        },
+        "update_provider_form": {
+          "toasts": {
+            "updated": "Provider updated"
+          }
+        },
+        "verify_domains": {
+          "toasts": {
+            "verified": "Domain verified"
+          },
+          "description": "Add this TXT record on every domain",
+          "name": "Name",
+          "content": "Content",
+          "submit": "Verify"
+        }
+      },
+      "members": {
+        "invitation_row_actions": {
+          "toasts": {
+            "canceled": "Invitation to {{email}} canceled"
+          },
+          "cancel_dialog": {
+            "title": "Cancel invitation",
+            "description": "This will revoke the invitation sent to {{email}}",
+            "keep": "Keep",
+            "confirm": "Cancel invitation"
+          },
+          "open_actions": "Open actions for {{email}}",
+          "cancel": "Cancel invitation"
+        },
+        "invitations_table": {
+          "columns": {
+            "email": "Email",
+            "role": "Role",
+            "invited_on": "Invited on"
+          }
+        },
+        "invite_member_dialog": {
+          "email": {
+            "invalid": "Enter a valid email address",
+            "label": "Email",
+            "placeholder": "name@example.com"
+          },
+          "role": {
+            "label": "Role"
+          },
+          "toasts": {
+            "sent": "Invitation sent to {{email}}"
+          },
+          "title": "Invite member",
+          "description": "Send an email invitation to join this organization",
+          "submit": "Send invitation"
+        },
+        "member_row_actions": {
+          "toasts": {
+            "removed": "{{name}} removed",
+            "left": "You left the organization"
+          },
+          "remove_dialog": {
+            "title": "Remove member",
+            "description": "This will remove {{name}} from this organization",
+            "confirm": "Remove"
+          },
+          "leave_dialog": {
+            "title": "Leave organization",
+            "description": "You will lose access to this organization",
+            "confirm": "Leave"
+          },
+          "open_actions": "Open actions for {{name}}",
+          "remove": "Remove member",
+          "leave": "Leave organization"
+        },
+        "members_table": {
+          "current_user": "{{name}} (You)",
+          "columns": {
+            "name": "Name",
+            "email": "Email",
+            "role": "Role",
+            "member_since": "Member since"
+          },
+          "search": {
+            "placeholder": "Search members..."
+          },
+          "invite": "Invite member"
+        },
+        "select_role": {
+          "toasts": {
+            "member_updated": "{{name}} is now {{role}}",
+            "invitation_updated": "Invitation role updated to {{role}}"
+          },
+          "owner": "Owner",
+          "aria_label": "Role for {{name}}"
+        }
+      },
+      "roles": {
+        "role_dialog": {
+          "resources": {
+            "organization": "Organization",
+            "member": "Members",
+            "invitation": "Invitations",
+            "team": "Teams",
+            "ac": "Roles",
+            "agent": "Agents",
+            "phone_number": "Phone numbers",
+            "calls": "Calls",
+            "billing": "Billing"
+          },
+          "actions": {
+            "create": "create",
+            "read": "read",
+            "update": "update",
+            "delete": "delete",
+            "cancel": "cancel",
+            "purchase": "purchase"
+          },
+          "toasts": {
+            "updated": "{{name}} updated",
+            "created": "{{name}} created"
+          },
+          "edit_title": "Edit role",
+          "create_title": "Create role",
+          "edit_description": "Update what \"{{name}}\" can do",
+          "create_description": "Choose a name and the permissions this role should have",
+          "name": {
+            "required": "Name is required",
+            "owner_exists": "Owner already exists",
+            "label": "Name",
+            "placeholder": "Support"
+          },
+          "create_submit": "Create role"
+        },
+        "role_row_actions": {
+          "toasts": {
+            "deleted": "{{name}} deleted"
+          },
+          "delete_dialog": {
+            "title": "Delete role",
+            "description": "This will permanently delete \"{{name}}\". Members who have this role will lose its permissions."
+          },
+          "open_actions": "Open actions for {{name}}",
+          "edit": "Edit role",
+          "delete": "Delete role"
+        },
+        "roles_table": {
+          "permission_summary": "{{resource}} ({{actions}})",
+          "no_permissions": "No permissions",
+          "owner": {
+            "name": "Owner",
+            "permissions": "Full access. This role can't be changed."
+          },
+          "columns": {
+            "role": "Role",
+            "permissions": "Permissions"
+          },
+          "search": {
+            "placeholder": "Search roles..."
+          },
+          "create": "Create role"
+        }
+      }
+    },
+    "sidebar": {
+      "nav_main": {
+        "sections": {
+          "build": "Build",
+          "deploy": "Deploy",
+          "monitor": "Monitor",
+          "platform": "Platform"
+        },
+        "items": {
+          "agents": "Agents",
+          "phone_numbers": "Phone numbers",
+          "batch_calls": "Batch calls",
+          "calls": "Calls",
+          "contacts": "Contacts",
+          "settings": "Settings"
+        }
+      },
+      "sidebar_credits": {
+        "balance": "Credit balance:"
+      },
+      "nav_user": {
+        "theme": {
+          "label": "Theme",
+          "light": "Light",
+          "dark": "Dark",
+          "system": "System"
+        },
+        "sign_out": "Sign out"
+      },
+      "create_organization_dialog": {
+        "title": "Create organization",
+        "description": "Create an organization",
+        "name": {
+          "label": "Organization name",
+          "placeholder": "Acme Inc",
+          "required": "Organization name is required"
+        },
+        "submit": "Create organization",
+        "toasts": {
+          "created": "Organization created"
+        }
+      },
+      "organization_switcher": {
+        "organizations": "Organizations",
+        "add_organization": "Add organization"
+      }
+    },
+    "filters": {
+      "date_range_filter": {
+        "all_dates": "All dates"
+      },
+      "filter_multi_select": {
+        "empty": "No items found",
+        "search_placeholder": "Search..."
+      },
+      "filter_single_select": {
+        "empty": "No items found"
+      },
+      "numeric_filter": {
+        "operators": {
+          "eq": "is equal to",
+          "between": "is between",
+          "gte": "is greater than or equal to",
+          "lte": "is less than or equal to"
+        },
+        "and": "and"
+      }
+    },
+    "copy_button": {
+      "toasts": {
+        "copy_failed": "Couldn't copy"
+      }
+    },
+    "variable_values_fields": {
+      "placeholder": "Value for {{variable}}"
+    },
+    "voice_agent_client": {
+      "start_call": "Start call",
+      "calling": "Calling...",
+      "end_call": "End call"
+    },
+    "helpers": {
+      "deleted_agent": "Deleted agent",
+      "deleted_phone_number": "Deleted phone number",
+      "agent_version_draft": "Latest (draft)"
+    }
+  }
+}

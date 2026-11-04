@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import {
   createFileRoute,
@@ -36,13 +35,37 @@ import { captureEvent, identifyUser } from "@/lib/analytics"
 import { signIn, signUp } from "@/lib/auth/client"
 import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from "@/lib/constants"
 import { env } from "@/lib/env"
+import { Trans, useTranslation } from "@/lib/i18n"
 import { TIME_ZONES } from "@/lib/time"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export const Route = createFileRoute("/(unauthorized)/signup/")({
   component: Page,
 })
 
+const signUpFormSchema = z
+  .object({
+    name: z.string().trim().min(1, "routes.signup.name.required"),
+    email: z.email("routes.signup.email.invalid"),
+    password: z
+      .string()
+      .min(8, "routes.signup.password.min_length")
+      .regex(/[A-Z]/, "routes.signup.password.uppercase")
+      .regex(/[a-z]/, "routes.signup.password.lowercase")
+      .regex(/[0-9]/, "routes.signup.password.number"),
+    confirmPassword: z
+      .string()
+      .min(1, "routes.signup.confirm_password.required"),
+  })
+  .refine((values) => values.password === values.confirmPassword, {
+    message: "routes.signup.confirm_password.mismatch",
+    path: ["confirmPassword"],
+  })
+
+type SignUpFormValues = z.infer<typeof signUpFormSchema>
+
 function Page() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { searchStr } = useLocation()
   const redirect = new URLSearchParams(searchStr).get("redirect") ?? undefined
@@ -53,27 +76,8 @@ function Page() {
     : env.FRONTEND_URL
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
 
-  const signUpFormSchema = z
-    .object({
-      name: z.string().trim().min(1, "Name is required"),
-      email: z.email("Enter a valid email address"),
-      password: z
-        .string()
-        .min(8, "Password must be at least 8 characters")
-        .regex(/[A-Z]/, "Password must include at least one uppercase letter")
-        .regex(/[a-z]/, "Password must include at least one lowercase letter")
-        .regex(/[0-9]/, "Password must include at least one number"),
-      confirmPassword: z.string().min(1, "Please confirm your password"),
-    })
-    .refine((values) => values.password === values.confirmPassword, {
-      message: "Passwords do not match",
-      path: ["confirmPassword"],
-    })
-
-  type SignUpFormValues = z.infer<typeof signUpFormSchema>
-
   const form = useForm<SignUpFormValues>({
-    resolver: zodResolver(signUpFormSchema),
+    resolver: zodResolverI18n(signUpFormSchema),
     defaultValues: {
       name: "",
       email,
@@ -131,7 +135,7 @@ function Page() {
 
   return (
     <>
-      <title>Sign up - Phoneflow</title>
+      <title>{t("routes.signup.page_title")}</title>
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 py-8">
         <div className="flex items-center gap-2">
           <PhoneflowIcon className="size-6" />
@@ -139,10 +143,10 @@ function Page() {
         </div>
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Sign up</CardTitle>
-            <CardDescription>
-              Enter your information below to sign up
-            </CardDescription>
+            <CardTitle className="text-xl">
+              {t("routes.signup.title")}
+            </CardTitle>
+            <CardDescription>{t("routes.signup.description")}</CardDescription>
           </CardHeader>
           <CardContent>
             <form
@@ -157,11 +161,13 @@ function Page() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("routes.signup.name.label")}
+                      </FieldLabel>
                       <Input
                         {...field}
                         id={field.name}
-                        placeholder="John Doe"
+                        placeholder={t("routes.signup.name.placeholder")}
                         autoComplete="name"
                         aria-invalid={fieldState.invalid}
                         disabled={signUpMutation.isPending}
@@ -178,12 +184,14 @@ function Page() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("routes.signup.email.label")}
+                      </FieldLabel>
                       <Input
                         {...field}
                         id={field.name}
                         type="email"
-                        placeholder="name@example.com"
+                        placeholder={t("routes.signup.email.placeholder")}
                         autoComplete="email"
                         aria-invalid={fieldState.invalid}
                         disabled={signUpMutation.isPending || !!email}
@@ -200,7 +208,9 @@ function Page() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("routes.signup.password.label")}
+                      </FieldLabel>
                       <PasswordInput
                         {...field}
                         id={field.name}
@@ -221,7 +231,7 @@ function Page() {
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel htmlFor={field.name}>
-                        Confirm Password
+                        {t("routes.signup.confirm_password.label")}
                       </FieldLabel>
                       <PasswordInput
                         {...field}
@@ -248,17 +258,23 @@ function Page() {
                     signUpMutation.isPending || (env.IS_CLOUD && !captchaToken)
                   }
                 >
-                  {signUpMutation.isPending ? <Spinner /> : "Sign up"}
+                  {signUpMutation.isPending ? (
+                    <Spinner />
+                  ) : (
+                    t("routes.signup.submit")
+                  )}
                 </Button>
 
                 <Button
                   variant="outline"
                   render={<Link to="/signin/sso" search={{ redirect }} />}
                 >
-                  Sign in with SSO
+                  {t("routes.signup.sso_button")}
                 </Button>
 
-                <FieldSeparator>Or continue with</FieldSeparator>
+                <FieldSeparator>
+                  {t("routes.signup.or_continue_with")}
+                </FieldSeparator>
 
                 <Button
                   variant="outline"
@@ -266,19 +282,19 @@ function Page() {
                   onClick={handleGoogleSignUp}
                 >
                   <GoogleIcon className="size-5" />
-                  Sign up with Google
+                  {t("routes.signup.google")}
                 </Button>
 
                 <div className="text-center text-sm">
                   <span className="text-muted-foreground">
-                    Already have an account?{" "}
+                    {t("routes.signup.has_account")}{" "}
                   </span>
                   <Link
                     to="/signin"
                     search={{ redirect }}
                     className="underline"
                   >
-                    Sign in
+                    {t("routes.signup.sign_in_link")}
                   </Link>
                 </div>
               </FieldGroup>
@@ -287,24 +303,27 @@ function Page() {
         </Card>
 
         <p className="text-center text-xs text-muted-foreground max-w-75">
-          By signing up you agree with our{" "}
-          <a
-            href={TERMS_OF_SERVICE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline text-primary"
-          >
-            Terms of Service
-          </a>{" "}
-          and acknowledge our{" "}
-          <a
-            href={PRIVACY_POLICY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline text-primary"
-          >
-            Privacy Policy
-          </a>
+          <Trans
+            i18nKey="routes.signup.legal"
+            components={{
+              terms: (
+                <a
+                  href={TERMS_OF_SERVICE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline text-primary"
+                />
+              ),
+              privacy: (
+                <a
+                  href={PRIVACY_POLICY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline text-primary"
+                />
+              ),
+            }}
+          />
         </p>
       </div>
     </>

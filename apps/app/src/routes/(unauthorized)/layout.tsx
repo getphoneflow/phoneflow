@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
 import { z } from "zod"
 
+import { LanguageSelect } from "@/components/language-select"
 import { sessionQueryOptions } from "@/lib/auth/session"
 
 const searchSchema = z.object({
@@ -19,5 +20,16 @@ export const Route = createFileRoute("/(unauthorized)")({
       throw redirect({ to: "/" })
     }
   },
-  component: Outlet,
+  component: UnauthorizedLayout,
 })
+
+function UnauthorizedLayout() {
+  return (
+    <>
+      <div className="fixed top-4 right-4">
+        <LanguageSelect className="w-36" />
+      </div>
+      <Outlet />
+    </>
+  )
+}

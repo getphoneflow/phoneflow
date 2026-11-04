@@ -17,6 +17,7 @@ import {
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
 
 type DeleteAgentDialogProps = {
   agent: Pick<AgentResponse, "id" | "name">
@@ -32,11 +33,16 @@ export function DeleteAgentDialog({
   onDeleted,
 }: DeleteAgentDialogProps) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const deleteAgentMutation = useMutation({
     mutationFn: () => api.delete<DeleteAgentResponse>(`/agents/${agent.id}`),
     onSuccess: () => {
-      toast.success(`${agent.name} deleted`)
+      toast.success(
+        t("components.agents.delete_agent_dialog.toasts.deleted", {
+          name: agent.name,
+        })
+      )
       onOpenChange(false)
       queryClient.invalidateQueries({ queryKey: ["agents", "list"] })
       onDeleted?.()
@@ -56,14 +62,18 @@ export function DeleteAgentDialog({
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete agent</AlertDialogTitle>
+          <AlertDialogTitle>
+            {t("components.agents.delete_agent_dialog.title")}
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete "{agent.name}"
+            {t("components.agents.delete_agent_dialog.description", {
+              name: agent.name,
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteAgentMutation.isPending}>
-            Cancel
+            {t("common.actions.cancel")}
           </AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
@@ -73,7 +83,7 @@ export function DeleteAgentDialog({
             {deleteAgentMutation.isPending ? (
               <Spinner className="mx-3" />
             ) : (
-              "Delete"
+              t("common.actions.delete")
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

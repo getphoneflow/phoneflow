@@ -27,11 +27,9 @@ import {
 } from "@workspace/ui/components/select"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
-import {
-  AGENT_VERSION_DRAFT_LABEL,
-  formatAgentVersionLabel,
-} from "@/components/helpers"
+import { formatAgentVersionLabel } from "@/components/helpers"
 import { api } from "@/lib/api"
+import { type TFunction, useTranslation } from "@/lib/i18n"
 
 type DownloadAgentDialogProps = {
   agent: Pick<AgentResponse, "id" | "name">
@@ -42,7 +40,8 @@ type DownloadAgentDialogProps = {
 function fetchAgentConfig(
   agentId: string,
   versionId: string | null,
-  agentVersions: AgentVersionsListResponse
+  agentVersions: AgentVersionsListResponse,
+  t: TFunction
 ) {
   if (versionId === null) {
     return api.get<AgentConfigResponse>(`/agents/${agentId}/config`)
@@ -50,7 +49,9 @@ function fetchAgentConfig(
 
   const version = agentVersions.find((item) => item.id === versionId)
   if (!version) {
-    throw new Error("Version not found")
+    throw new Error(
+      t("components.agents.download_agent_dialog.errors.version_not_found")
+    )
   }
 
   return api.get<AgentVersionConfigResponse>(
@@ -63,6 +64,7 @@ export function DownloadAgentDialog({
   open,
   onOpenChange,
 }: DownloadAgentDialogProps) {
+  const { t } = useTranslation()
   const [selectedVersionId, setSelectedVersionId] = useState<string | null>(
     null
   )
@@ -76,7 +78,7 @@ export function DownloadAgentDialog({
 
   const downloadMutation = useMutation({
     mutationFn: () =>
-      fetchAgentConfig(agent.id, selectedVersionId, agentVersions),
+      fetchAgentConfig(agent.id, selectedVersionId, agentVersions, t),
     onSuccess: (config) => {
       const version = selectedVersionId
         ? agentVersions.find((item) => item.id === selectedVersionId)
@@ -109,13 +111,21 @@ export function DownloadAgentDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Download agent</DialogTitle>
-          <DialogDescription>Download "{agent.name}"</DialogDescription>
+          <DialogTitle>
+            {t("components.agents.download_agent_dialog.title")}
+          </DialogTitle>
+          <DialogDescription>
+            {t("components.agents.download_agent_dialog.description", {
+              name: agent.name,
+            })}
+          </DialogDescription>
         </DialogHeader>
 
         <FieldGroup>
           <Field>
-            <FieldLabel htmlFor="agent-version">Version</FieldLabel>
+            <FieldLabel htmlFor="agent-version">
+              {t("components.agents.download_agent_dialog.version.label")}
+            </FieldLabel>
             <Select
               value={selectedVersionId ?? "draft"}
               onValueChange={(value) =>
@@ -133,17 +143,18 @@ export function DownloadAgentDialog({
                       ? agentVersions.find(
                           (version) => version.id === selectedVersionId
                         )
-                      : null
+                      : null,
+                    t
                   )}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="draft">
-                  {AGENT_VERSION_DRAFT_LABEL}
+                  {formatAgentVersionLabel(null, t)}
                 </SelectItem>
                 {agentVersions.map((version) => (
                   <SelectItem key={version.id} value={version.id}>
-                    {formatAgentVersionLabel(version)}
+                    {formatAgentVersionLabel(version, t)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -154,7 +165,7 @@ export function DownloadAgentDialog({
         <DialogFooter className="mt-8">
           <DialogClose>
             <Button variant="outline" disabled={downloadMutation.isPending}>
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
           </DialogClose>
           <Button
@@ -164,7 +175,7 @@ export function DownloadAgentDialog({
             {downloadMutation.isPending ? (
               <Spinner className="mx-8" />
             ) : (
-              "Download"
+              t("common.actions.download")
             )}
           </Button>
         </DialogFooter>

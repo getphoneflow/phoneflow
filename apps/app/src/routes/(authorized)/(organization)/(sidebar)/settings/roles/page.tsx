@@ -3,6 +3,7 @@ import { Suspense } from "react"
 
 import { Skeleton } from "@workspace/ui/components/skeleton"
 import { RolesTable } from "@/components/settings/roles/roles-table"
+import { useTranslation } from "@/lib/i18n"
 
 export const Route = createFileRoute(
   "/(authorized)/(organization)/(sidebar)/settings/roles/"
@@ -23,9 +24,10 @@ function RolesSettingsSkeleton() {
 }
 
 function Page() {
+  const { t } = useTranslation()
   return (
     <>
-      <title>Roles settings - Phoneflow</title>
+      <title>{t("routes.settings.roles.page_title")}</title>
       <Suspense fallback={<RolesSettingsSkeleton />}>
         <RolesTable />
       </Suspense>

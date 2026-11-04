@@ -13,6 +13,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { updateUser } from "@/lib/auth/client"
 import { env } from "@/lib/env"
+import i18n, { useTranslation } from "@/lib/i18n"
 
 type ProfilePictureProps = {
   name: string
@@ -20,6 +21,7 @@ type ProfilePictureProps = {
 }
 
 export function ProfilePicture({ name, image }: ProfilePictureProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const uploadMutation = useMutation({
@@ -30,12 +32,20 @@ export function ProfilePicture({ name, image }: ProfilePictureProps) {
       const response = await fetch(`${env.API_URL}/api/user/image`, {
         method: "POST",
         credentials: "include",
+        headers: {
+          "Accept-Language": i18n.language,
+        },
         body: formData,
       })
       const body = await response.json()
 
       if (!response.ok) {
-        throw new Error(body.error || "Failed to upload image")
+        throw new Error(
+          body.error ||
+            t(
+              "components.settings.account.profile_picture.errors.upload_failed"
+            )
+        )
       }
 
       const { url } = body as UploadUserImageResponse
@@ -45,7 +55,9 @@ export function ProfilePicture({ name, image }: ProfilePictureProps) {
       }
     },
     onSuccess: () => {
-      toast.success("Profile picture updated")
+      toast.success(
+        t("components.settings.account.profile_picture.toasts.updated")
+      )
       queryClient.invalidateQueries({ queryKey: ["session"] })
     },
     onError: (error) => {
@@ -61,7 +73,9 @@ export function ProfilePicture({ name, image }: ProfilePictureProps) {
       }
     },
     onSuccess: () => {
-      toast.success("Profile picture removed")
+      toast.success(
+        t("components.settings.account.profile_picture.toasts.removed")
+      )
       queryClient.invalidateQueries({ queryKey: ["session"] })
     },
     onError: (error) => {
@@ -118,7 +132,7 @@ export function ProfilePicture({ name, image }: ProfilePictureProps) {
             variant="secondary"
             size="icon-xs"
             className="absolute -top-1 -right-1 rounded-full opacity-0 group-hover:opacity-100"
-            aria-label="Remove profile picture"
+            aria-label={t("components.settings.account.profile_picture.remove")}
             onClick={() => clearMutation.mutate()}
           >
             <XIcon />

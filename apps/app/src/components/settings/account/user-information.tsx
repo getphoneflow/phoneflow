@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -23,12 +22,18 @@ import {
 } from "@workspace/ui/components/select"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { LanguageSelect } from "@/components/language-select"
 import { ProfilePicture } from "@/components/settings/account/profile-picture"
 import { updateUser } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
 import { TIME_ZONES } from "@/lib/time"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const userInformationSchema = z.object({
-  name: z.string().trim().min(1, "Name is required"),
+  name: z
+    .string()
+    .trim()
+    .min(1, "components.settings.account.user_information.name.required"),
   timezone: z.string().trim().min(1),
 })
 
@@ -47,10 +52,11 @@ export function UserInformation({
   image,
   timezone,
 }: UserInformationProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const form = useForm<UserInformationValues>({
-    resolver: zodResolver(userInformationSchema),
+    resolver: zodResolverI18n(userInformationSchema),
     defaultValues: {
       name,
       timezone,
@@ -68,7 +74,9 @@ export function UserInformation({
       }
     },
     onSuccess: () => {
-      toast.success("Account information updated")
+      toast.success(
+        t("components.settings.account.user_information.toasts.updated")
+      )
       queryClient.invalidateQueries({ queryKey: ["session"] })
     },
     onError: (error) => {
@@ -79,12 +87,18 @@ export function UserInformation({
   return (
     <FieldGroup>
       <FieldSet>
-        <FieldLegend>Account information</FieldLegend>
-        <FieldDescription>Update your account information</FieldDescription>
+        <FieldLegend>
+          {t("components.settings.account.user_information.title")}
+        </FieldLegend>
+        <FieldDescription>
+          {t("components.settings.account.user_information.description")}
+        </FieldDescription>
       </FieldSet>
 
       <Field>
-        <FieldLabel>Profile picture</FieldLabel>
+        <FieldLabel>
+          {t("components.settings.account.user_information.profile_picture")}
+        </FieldLabel>
         <ProfilePicture name={name} image={image} />
       </Field>
 
@@ -100,7 +114,9 @@ export function UserInformation({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  {t("components.settings.account.user_information.name.label")}
+                </FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -116,47 +132,71 @@ export function UserInformation({
           />
 
           <Field>
-            <FieldLabel htmlFor="email">Email</FieldLabel>
+            <FieldLabel htmlFor="email">
+              {t("components.settings.account.user_information.email.label")}
+            </FieldLabel>
             <Input id="email" type="email" value={email} readOnly />
           </Field>
 
-          <Controller
-            name="timezone"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Timezone</FieldLabel>
-                <Select
-                  value={field.value}
-                  onValueChange={(value) => value && field.onChange(value)}
-                  disabled={updateUserInformationMutation.isPending}
-                >
-                  <SelectTrigger id={field.name}>
-                    <SelectValue placeholder="Timezone">
-                      {field.value}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent
-                    alignItemWithTrigger={false}
-                    align="start"
-                    className="max-h-72"
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field>
+              <FieldLabel>{t("languages.label")}</FieldLabel>
+              <LanguageSelect
+                id="language"
+                disabled={updateUserInformationMutation.isPending}
+              />
+            </Field>
+
+            <Controller
+              name="timezone"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.settings.account.user_information.timezone.label"
+                    )}
+                  </FieldLabel>
+                  <Select
+                    value={field.value}
+                    onValueChange={(value) => value && field.onChange(value)}
+                    disabled={updateUserInformationMutation.isPending}
                   >
-                    {TIME_ZONES.map((timeZone) => (
-                      <SelectItem key={timeZone} value={timeZone}>
-                        {timeZone}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-            )}
-          />
+                    <SelectTrigger id={field.name}>
+                      <SelectValue
+                        placeholder={t(
+                          "components.settings.account.user_information.timezone.placeholder"
+                        )}
+                      >
+                        {field.value}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent
+                      alignItemWithTrigger={false}
+                      align="start"
+                      className="max-h-72"
+                    >
+                      {TIME_ZONES.map((timeZone) => (
+                        <SelectItem key={timeZone} value={timeZone}>
+                          {timeZone}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
+              )}
+            />
+          </div>
 
           <Button
             type="submit"
             disabled={updateUserInformationMutation.isPending}
           >
-            {updateUserInformationMutation.isPending ? <Spinner /> : "Save"}
+            {updateUserInformationMutation.isPending ? (
+              <Spinner />
+            ) : (
+              t("common.actions.save")
+            )}
           </Button>
         </FieldGroup>
       </form>

@@ -25,12 +25,14 @@ import type {
 } from "@workspace/shared/api/agents/types"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
+import { t } from "@/lib/i18n"
 import { validator } from "@/lib/validator"
 
 export const agentRoutes = new Hono()
 
 agentRoutes.get("/", requireOrganization, async (c) => {
   const organizationId = c.get("organizationId")
+  const locale = c.get("locale")
 
   try {
     const agents = await db.query.agentsTable.findMany({
@@ -54,7 +56,7 @@ agentRoutes.get("/", requireOrganization, async (c) => {
 
     return c.json(agents satisfies AgentsListResponse)
   } catch {
-    return c.json({ error: "Failed to load agents" }, 500)
+    return c.json({ error: t(locale, "agents.list_failed") }, 500)
   }
 })
 
@@ -65,6 +67,7 @@ agentRoutes.post(
   validator("json", createAgentRequestSchema),
   async (c) => {
     const organizationId = c.get("organizationId")
+    const locale = c.get("locale")
 
     try {
       const payload = c.req.valid("json")
@@ -86,7 +89,7 @@ agentRoutes.post(
 
       return c.json(agent satisfies CreateAgentResponse, 201)
     } catch {
-      return c.json({ error: "Failed to create agent" }, 500)
+      return c.json({ error: t(locale, "agents.create_failed") }, 500)
     }
   }
 )
@@ -97,6 +100,7 @@ agentRoutes.post(
   requirePermission({ agent: ["create"] }),
   validator("param", agentIdParamsSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const { id: agentId } = c.req.valid("param")
 
@@ -109,7 +113,7 @@ agentRoutes.post(
       })
 
       if (!sourceAgent) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json({ error: t(locale, "agents.not_found") }, 404)
       }
 
       const [duplicatedAgent] = await db
@@ -129,7 +133,7 @@ agentRoutes.post(
 
       return c.json(duplicatedAgent satisfies DuplicateAgentResponse, 201)
     } catch {
-      return c.json({ error: "Failed to duplicate agent" }, 500)
+      return c.json({ error: t(locale, "agents.duplicate_failed") }, 500)
     }
   }
 )
@@ -139,6 +143,7 @@ agentRoutes.get(
   requireOrganization,
   validator("param", agentIdParamsSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const { id: agentId } = c.req.valid("param")
 
@@ -165,12 +170,12 @@ agentRoutes.get(
       })
 
       if (!agent) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json({ error: t(locale, "agents.not_found") }, 404)
       }
 
       return c.json(agent satisfies AgentDetailResponse)
     } catch {
-      return c.json({ error: "Failed to load agent" }, 500)
+      return c.json({ error: t(locale, "agents.load_failed") }, 500)
     }
   }
 )
@@ -180,6 +185,7 @@ agentRoutes.get(
   requireOrganization,
   validator("param", agentIdParamsSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const { id: agentId } = c.req.valid("param")
 
@@ -195,12 +201,12 @@ agentRoutes.get(
       })
 
       if (!agent) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json({ error: t(locale, "agents.not_found") }, 404)
       }
 
       return c.json(agent.config satisfies AgentConfigResponse)
     } catch {
-      return c.json({ error: "Failed to load agent config" }, 500)
+      return c.json({ error: t(locale, "agents.load_config_failed") }, 500)
     }
   }
 )
@@ -212,6 +218,7 @@ agentRoutes.patch(
   validator("param", agentIdParamsSchema),
   validator("json", updateAgentNameRequestSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const { id: agentId } = c.req.valid("param")
 
@@ -238,12 +245,12 @@ agentRoutes.patch(
         })
 
       if (!agent) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json({ error: t(locale, "agents.not_found") }, 404)
       }
 
       return c.json(agent satisfies UpdateAgentNameResponse)
     } catch {
-      return c.json({ error: "Failed to update agent name" }, 500)
+      return c.json({ error: t(locale, "agents.update_name_failed") }, 500)
     }
   }
 )
@@ -255,6 +262,7 @@ agentRoutes.patch(
   validator("param", agentIdParamsSchema),
   validator("json", updateAgentConfigRequestSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const { id: agentId } = c.req.valid("param")
 
@@ -278,12 +286,12 @@ agentRoutes.patch(
         })
 
       if (!agent) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json({ error: t(locale, "agents.not_found") }, 404)
       }
 
       return c.json(agent.config satisfies AgentConfigResponse)
     } catch {
-      return c.json({ error: "Failed to update agent config" }, 500)
+      return c.json({ error: t(locale, "agents.update_config_failed") }, 500)
     }
   }
 )
@@ -294,6 +302,7 @@ agentRoutes.delete(
   requirePermission({ agent: ["delete"] }),
   validator("param", agentIdParamsSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const { id: agentId } = c.req.valid("param")
 
@@ -311,12 +320,12 @@ agentRoutes.delete(
         })
 
       if (!deletedAgent) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json({ error: t(locale, "agents.not_found") }, 404)
       }
 
       return c.json(deletedAgent satisfies DeleteAgentResponse)
     } catch {
-      return c.json({ error: "Failed to delete agent" }, 500)
+      return c.json({ error: t(locale, "agents.delete_failed") }, 500)
     }
   }
 )
@@ -326,6 +335,7 @@ agentRoutes.get(
   requireOrganization,
   validator("param", agentIdParamsSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const { id: agentId } = c.req.valid("param")
 
@@ -352,12 +362,12 @@ agentRoutes.get(
       })
 
       if (!agent) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json({ error: t(locale, "agents.not_found") }, 404)
       }
 
       return c.json(agent.versions satisfies AgentVersionsListResponse)
     } catch {
-      return c.json({ error: "Failed to load agent versions" }, 404)
+      return c.json({ error: t(locale, "agents.list_versions_failed") }, 404)
     }
   }
 )
@@ -367,6 +377,7 @@ agentRoutes.get(
   requireOrganization,
   validator("param", agentVersionParamsSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const { id: agentId, number: versionNumber } = c.req.valid("param")
 
@@ -385,12 +396,15 @@ agentRoutes.get(
       })
 
       if (!version) {
-        return c.json({ error: "Agent version not found" }, 404)
+        return c.json({ error: t(locale, "agents.version_not_found") }, 404)
       }
 
       return c.json(version.config satisfies AgentVersionConfigResponse)
     } catch {
-      return c.json({ error: "Failed to load agent version config" }, 500)
+      return c.json(
+        { error: t(locale, "agents.load_version_config_failed") },
+        500
+      )
     }
   }
 )
@@ -402,6 +416,7 @@ agentRoutes.post(
   validator("param", agentIdParamsSchema),
   validator("json", publishAgentRequestSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const { id: agentId } = c.req.valid("param")
 
@@ -457,12 +472,12 @@ agentRoutes.post(
       })
 
       if (!publishedVersion) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json({ error: t(locale, "agents.not_found") }, 404)
       }
 
       return c.json(publishedVersion satisfies AgentVersionResponse, 201)
     } catch {
-      return c.json({ error: "Failed to publish agent version" }, 500)
+      return c.json({ error: t(locale, "agents.publish_failed") }, 500)
     }
   }
 )

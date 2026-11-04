@@ -7,10 +7,12 @@ import type {
 import { InlineEditableField } from "@workspace/ui/components/inline-editable-field"
 import { toast } from "@workspace/ui/components/sonner"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 export function AgentNameField() {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
   const agent = useAgentStore((state) => state.agent)
   const readOnly = useAgentStore((state) => state.readOnly)
 
@@ -35,7 +37,7 @@ export function AgentNameField() {
     <InlineEditableField
       value={agent.name}
       onChange={(name) => updateNameMutation.mutate(name)}
-      placeholder="Untitled agent"
+      placeholder={t("components.agents.agent_name_field.placeholder")}
       disabled={readOnly}
     />
   )

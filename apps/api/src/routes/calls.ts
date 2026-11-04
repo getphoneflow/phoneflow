@@ -43,6 +43,7 @@ import {
   organizationHasCredits,
 } from "@/lib/credits"
 import { env } from "@/lib/env"
+import { t } from "@/lib/i18n"
 import {
   createAccessToken,
   getRecording,
@@ -511,13 +512,14 @@ callRoutes.post(
 )
 
 callRoutes.post("/download", requireOrganization, async (c) => {
+  const locale = c.get("locale")
   const organizationId = c.get("organizationId")
 
   try {
     const session = await auth.api.getSession({ headers: c.req.raw.headers })
 
     if (!session?.user.email) {
-      return c.json({ error: "User email not found" }, 400)
+      return c.json({ error: t(locale, "calls.user_email_not_found") }, 400)
     }
 
     const organization = await db.query.organization.findFirst({
@@ -530,18 +532,19 @@ callRoutes.post("/download", requireOrganization, async (c) => {
     })
 
     if (!organization) {
-      return c.json({ error: "Organization not found" }, 404)
+      return c.json({ error: t(locale, "calls.organization_not_found") }, 404)
     }
 
     await emailsQueue.add("send-download-calls", {
       to: session.user.email,
       organizationId,
       organizationName: organization.name,
+      locale: locale,
     } satisfies SendDownloadCallsPayload)
 
     return c.json({ ok: true } satisfies RequestCallDownloadResponse)
   } catch {
-    return c.json({ error: "Failed to request calls download" }, 500)
+    return c.json({ error: t(locale, "calls.request_download_failed") }, 500)
   }
 })
 
@@ -577,6 +580,7 @@ callRoutes.get("/export/:organizationId", requireAuthToken, async (c) => {
 })
 
 callRoutes.get("/:callId/recording", requireOrganization, async (c) => {
+  const locale = c.get("locale")
   const organizationId = c.get("organizationId")
   const callId = c.req.param("callId")
 
@@ -592,7 +596,7 @@ callRoutes.get("/:callId/recording", requireOrganization, async (c) => {
     })
 
     if (!call) {
-      return c.json({ error: "Call not found" }, 404)
+      return c.json({ error: t(locale, "calls.not_found") }, 404)
     }
 
     const recording = await getRecording(call.id)
@@ -604,11 +608,12 @@ callRoutes.get("/:callId/recording", requireOrganization, async (c) => {
     }
     return c.body(recording.Body.transformToWebStream())
   } catch {
-    return c.json({ error: "Failed to fetch recording" }, 500)
+    return c.json({ error: t(locale, "calls.load_recording_failed") }, 500)
   }
 })
 
 callRoutes.post("/:callId/join", requireOrganization, async (c) => {
+  const locale = c.get("locale")
   const organizationId = c.get("organizationId")
   const callId = c.req.param("callId")
 
@@ -625,11 +630,11 @@ callRoutes.post("/:callId/join", requireOrganization, async (c) => {
     })
 
     if (!call) {
-      return c.json({ error: "Call not found" }, 404)
+      return c.json({ error: t(locale, "calls.not_found") }, 404)
     }
 
     if (call.status !== "in_progress") {
-      return c.json({ error: "Call is not in progress" }, 400)
+      return c.json({ error: t(locale, "calls.not_in_progress") }, 400)
     }
 
     const token = await createAccessToken({
@@ -646,11 +651,12 @@ callRoutes.post("/:callId/join", requireOrganization, async (c) => {
 
     return c.json(token satisfies JoinCallResponse, 201)
   } catch {
-    return c.json({ error: "Failed to join call" }, 500)
+    return c.json({ error: t(locale, "calls.join_failed") }, 500)
   }
 })
 
 callRoutes.post("/:callId/end", requireOrganization, async (c) => {
+  const locale = c.get("locale")
   const organizationId = c.get("organizationId")
   const callId = c.req.param("callId")
 
@@ -667,22 +673,23 @@ callRoutes.post("/:callId/end", requireOrganization, async (c) => {
     })
 
     if (!call) {
-      return c.json({ error: "Call not found" }, 404)
+      return c.json({ error: t(locale, "calls.not_found") }, 404)
     }
 
     if (call.status !== "in_progress") {
-      return c.json({ error: "Call is not in progress" }, 400)
+      return c.json({ error: t(locale, "calls.not_in_progress") }, 400)
     }
 
     await removeCallParticipants(call.livekitRoomName)
 
     return c.json({ ok: true } satisfies EndCallResponse)
   } catch {
-    return c.json({ error: "Failed to end call" }, 500)
+    return c.json({ error: t(locale, "calls.end_failed") }, 500)
   }
 })
 
 callRoutes.get("/:callId", requireOrganization, async (c) => {
+  const locale = c.get("locale")
   const organizationId = c.get("organizationId")
   const callId = c.req.param("callId")
 
@@ -707,12 +714,12 @@ callRoutes.get("/:callId", requireOrganization, async (c) => {
     })
 
     if (!call) {
-      return c.json({ error: "Call not found" }, 404)
+      return c.json({ error: t(locale, "calls.not_found") }, 404)
     }
 
     return c.json(call satisfies CallDetailResponse)
   } catch {
-    return c.json({ error: "Failed to fetch call" }, 500)
+    return c.json({ error: t(locale, "calls.load_failed") }, 500)
   }
 })
 
@@ -722,6 +729,7 @@ callRoutes.get(
   validator("query", callListQuerySchema),
   async (c) => {
     const organizationId = c.get("organizationId")
+    const locale = c.get("locale")
     const query = c.req.valid("query")
 
     try {
@@ -856,7 +864,7 @@ callRoutes.get(
         pageSize: query.pageSize,
       } satisfies CallListResponse)
     } catch {
-      return c.json({ error: "Failed to load calls" }, 500)
+      return c.json({ error: t(locale, "calls.list_failed") }, 500)
     }
   }
 )
@@ -867,6 +875,7 @@ callRoutes.post(
   requirePermission({ calls: ["create"] }),
   validator("json", triggerOutboundCallRequestSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const payload = c.req.valid("json")
 
@@ -885,7 +894,7 @@ callRoutes.post(
       })
 
       if (!phoneNumber) {
-        return c.json({ error: "Phone number not found" }, 404)
+        return c.json({ error: t(locale, "calls.phone_number_not_found") }, 404)
       }
 
       if (
@@ -893,7 +902,10 @@ callRoutes.post(
         !phoneNumber.sipUsername ||
         !phoneNumber.sipPassword
       ) {
-        return c.json({ error: "Phone number has no SIP connection" }, 400)
+        return c.json(
+          { error: t(locale, "calls.phone_number_without_sip") },
+          400
+        )
       }
 
       const agent = await db.query.agentsTable.findFirst({
@@ -907,11 +919,11 @@ callRoutes.post(
       })
 
       if (!agent) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json({ error: t(locale, "calls.agent_not_found") }, 404)
       }
 
       if (env.IS_CLOUD && !(await organizationHasCredits(organizationId))) {
-        return c.json({ error: "Insufficient credits" }, 402)
+        return c.json({ error: t(locale, "calls.insufficient_credits") }, 402)
       }
 
       if (payload.agentVersionId) {
@@ -926,7 +938,10 @@ callRoutes.post(
         })
 
         if (!version) {
-          return c.json({ error: "Agent version not found" }, 404)
+          return c.json(
+            { error: t(locale, "calls.agent_version_not_found") },
+            404
+          )
         }
       }
 
@@ -944,7 +959,7 @@ callRoutes.post(
 
       return c.json({ ok: true } satisfies TriggerOutboundCallResponse)
     } catch {
-      return c.json({ error: "Failed to start outbound call" }, 500)
+      return c.json({ error: t(locale, "calls.start_outbound_failed") }, 500)
     }
   }
 )

@@ -1,3 +1,4 @@
+import { i18n, locales } from "@better-auth/i18n"
 import { sso } from "@better-auth/sso"
 import { stripe } from "@better-auth/stripe"
 import { betterAuth } from "better-auth"
@@ -22,6 +23,7 @@ import { seedOrganizationRoles } from "@/lib/auth/organization-roles"
 import { trustedOrigins } from "@/lib/auth/sso"
 import { handleStripeEvent } from "@/lib/credits"
 import { env } from "@/lib/env"
+import { resolveLocale } from "@/lib/i18n"
 import { emailsQueue } from "@/lib/queues"
 import { stripe as stripeClient } from "@/lib/stripe"
 
@@ -46,11 +48,12 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
-    async sendResetPassword(data) {
+    async sendResetPassword(data, request) {
       await emailsQueue.add("send-reset-password", {
         to: data.user.email,
         name: data.user.name,
         url: data.url,
+        locale: resolveLocale(request?.headers.get("Accept-Language")),
       } satisfies SendResetPasswordPayload)
     },
   },
@@ -65,6 +68,14 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    i18n({
+      translations: {
+        en: locales.en,
+        es: locales.es,
+      },
+      detection: ["header"],
+      defaultLocale: "en",
+    }),
     twoFactor({
       issuer: "Phoneflow",
     }),
@@ -74,11 +85,12 @@ export const auth = betterAuth({
         window: 300,
         max: 3,
       },
-      async sendVerificationOTP({ email, otp, type }) {
+      async sendVerificationOTP({ email, otp, type }, ctx) {
         if (type === "email-verification") {
           await emailsQueue.add("send-verification-otp", {
             to: email,
             otp,
+            locale: resolveLocale(ctx?.request?.headers.get("Accept-Language")),
           } satisfies SendVerificationOtpPayload)
         }
       },
@@ -105,13 +117,14 @@ export const auth = betterAuth({
       dynamicAccessControl: {
         enabled: true,
       },
-      async sendInvitationEmail(data) {
+      async sendInvitationEmail(data, request) {
         const inviteLink = `${env.FRONTEND_URL}/join-organization?invitationId=${data.id}&email=${encodeURIComponent(data.email)}`
 
         await emailsQueue.add("send-organization-invitation", {
           to: data.email,
           url: inviteLink,
           organizationName: data.organization.name,
+          locale: resolveLocale(request?.headers.get("Accept-Language")),
         } satisfies SendOrganizationInvitationPayload)
       },
       organizationHooks: {

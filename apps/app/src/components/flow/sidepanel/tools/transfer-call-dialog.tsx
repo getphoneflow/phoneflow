@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { Plus, Trash2 } from "lucide-react"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 
@@ -21,6 +20,8 @@ import {
 } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import { VariableTextField } from "@/components/flow/variables/variable-text-field"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export function createTransferCallDraft(): TransferCallTool {
   return {
@@ -41,8 +42,9 @@ export function TransferCallDialog({
   onOpenChange: (open: boolean) => void
   onSave: (tool: TransferCallTool) => void
 }) {
+  const { t } = useTranslation()
   const form = useForm<TransferCallTool>({
-    resolver: zodResolver(transferCallToolSchema),
+    resolver: zodResolverI18n(transferCallToolSchema),
     defaultValues: tool,
     values: tool,
   })
@@ -62,9 +64,13 @@ export function TransferCallDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Transfer call</DialogTitle>
+          <DialogTitle>
+            {t("components.flow.sidepanel.tools.transfer_call_dialog.title")}
+          </DialogTitle>
           <DialogDescription>
-            Transfer the call to a different phone number
+            {t(
+              "components.flow.sidepanel.tools.transfer_call_dialog.description"
+            )}
           </DialogDescription>
         </DialogHeader>
         <form
@@ -83,7 +89,11 @@ export function TransferCallDialog({
                   control={form.control}
                   render={({ field: numberField, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel>Number</FieldLabel>
+                      <FieldLabel>
+                        {t(
+                          "components.flow.sidepanel.tools.transfer_call_dialog.number.label"
+                        )}
+                      </FieldLabel>
                       <div className="flex items-center gap-2">
                         <Input
                           {...numberField}
@@ -113,14 +123,20 @@ export function TransferCallDialog({
                   control={form.control}
                   render={({ field: conditionField, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel>Condition</FieldLabel>
+                      <FieldLabel>
+                        {t(
+                          "components.flow.sidepanel.tools.transfer_call_dialog.condition.label"
+                        )}
+                      </FieldLabel>
                       <VariableTextField
                         name={conditionField.name}
                         value={conditionField.value}
                         onBlur={conditionField.onBlur}
                         multiline
                         rows={2}
-                        placeholder="The caller asks to speak with a representative"
+                        placeholder={t(
+                          "components.flow.sidepanel.tools.transfer_call_dialog.condition.placeholder"
+                        )}
                         readOnly={readOnly}
                         aria-invalid={fieldState.invalid}
                         onChange={conditionField.onChange}
@@ -149,7 +165,9 @@ export function TransferCallDialog({
               }
             >
               <Plus />
-              Add destination
+              {t(
+                "components.flow.sidepanel.tools.transfer_call_dialog.add_destination"
+              )}
             </Button>
           </FieldGroup>
           <DialogFooter>
@@ -158,10 +176,10 @@ export function TransferCallDialog({
               variant="outline"
               onClick={() => handleOpenChange(false)}
             >
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
             <Button type="submit" disabled={readOnly}>
-              Save
+              {t("common.actions.save")}
             </Button>
           </DialogFooter>
         </form>

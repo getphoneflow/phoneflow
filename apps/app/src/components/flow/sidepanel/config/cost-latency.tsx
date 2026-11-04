@@ -7,6 +7,7 @@ import {
 } from "@workspace/ui/components/tooltip"
 import { segmentColor } from "@/components/calls/call-cost-breakdown"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 type Part = {
@@ -29,6 +30,7 @@ function ProportionBar({
   amount: (part: Part) => number
   format: (amount: number) => string
 }) {
+  const { t } = useTranslation()
   const total = parts.reduce((sum, part) => sum + amount(part), 0)
   if (total <= 0) return null
 
@@ -38,7 +40,10 @@ function ProportionBar({
         const value = amount(part)
         if (value <= 0) return null
 
-        const label = `${part.name}: ${format(value)}`
+        const label = t("components.flow.sidepanel.config.cost_latency.part", {
+          name: part.name,
+          value: format(value),
+        })
         return (
           <Tooltip key={part.key}>
             <TooltipTrigger
@@ -64,6 +69,7 @@ function ProportionBar({
 }
 
 export function CostLatency() {
+  const { t } = useTranslation()
   const config = useAgentStore((state) => state.config)
   const stt = getModel("stt", config.stt.model)
   const llm = getModel("llm", config.llm.model)
@@ -72,25 +78,31 @@ export function CostLatency() {
   const parts: Part[] = [
     {
       key: "stt",
-      name: stt?.name ?? "Transcriber",
+      name:
+        stt?.name ??
+        t("components.flow.sidepanel.config.cost_latency.parts.stt"),
       usdPerMinute: stt?.usdPerMinute ?? 0,
       latencyMs: stt?.latencyMs ?? 0,
     },
     {
       key: "llm",
-      name: llm?.name ?? "Model",
+      name:
+        llm?.name ??
+        t("components.flow.sidepanel.config.cost_latency.parts.llm"),
       usdPerMinute: llm?.usdPerMinute ?? 0,
       latencyMs: llm?.latencyMs ?? 0,
     },
     {
       key: "tts",
-      name: tts?.name ?? "Voice",
+      name:
+        tts?.name ??
+        t("components.flow.sidepanel.config.cost_latency.parts.tts"),
       usdPerMinute: tts?.usdPerMinute ?? 0,
       latencyMs: tts?.latencyMs ?? 0,
     },
     {
       key: "platform",
-      name: "Platform",
+      name: t("components.flow.sidepanel.config.cost_latency.parts.platform"),
       usdPerMinute: PLATFORM_USD_PER_MINUTE,
       latencyMs: 0,
     },
@@ -104,7 +116,7 @@ export function CostLatency() {
       {env.IS_CLOUD ? (
         <>
           <p>
-            Cost{" "}
+            {t("components.flow.sidepanel.config.cost_latency.cost")}{" "}
             <span className="text-foreground tabular-nums">
               {formatUsdPerMinute(cost)}
             </span>
@@ -117,7 +129,7 @@ export function CostLatency() {
         </>
       ) : null}
       <p>
-        Latency{" "}
+        {t("components.flow.sidepanel.config.cost_latency.latency")}{" "}
         <span className="text-foreground tabular-nums">
           {formatLatency(latency)}
         </span>

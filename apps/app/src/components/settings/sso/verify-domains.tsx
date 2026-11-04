@@ -12,6 +12,7 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { CopyButton } from "@/components/copy-button"
 import { authClient } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
 
 type VerifyDomainsProps = {
   canUpdate: boolean
@@ -26,6 +27,7 @@ export function VerifyDomains({
   domainVerificationToken,
   onVerified,
 }: VerifyDomainsProps) {
+  const { t } = useTranslation()
   const name = `_phoneflow-${providerId}`
   const verifyMutation = useMutation({
     mutationFn: async () => {
@@ -35,7 +37,7 @@ export function VerifyDomains({
       }
     },
     onSuccess: () => {
-      toast.success("Domain verified")
+      toast.success(t("components.settings.sso.verify_domains.toasts.verified"))
       onVerified()
     },
     onError: (error) => {
@@ -45,16 +47,22 @@ export function VerifyDomains({
 
   return (
     <FieldGroup>
-      <FieldDescription>Add this TXT record on every domain</FieldDescription>
+      <FieldDescription>
+        {t("components.settings.sso.verify_domains.description")}
+      </FieldDescription>
       <Field>
-        <FieldLabel>Name</FieldLabel>
+        <FieldLabel>
+          {t("components.settings.sso.verify_domains.name")}
+        </FieldLabel>
         <div className="flex gap-2">
           <Input readOnly value={name} />
           <CopyButton value={name} />
         </div>
       </Field>
       <Field>
-        <FieldLabel>Content</FieldLabel>
+        <FieldLabel>
+          {t("components.settings.sso.verify_domains.content")}
+        </FieldLabel>
         <div className="flex gap-2">
           <Input readOnly value={domainVerificationToken} />
           <CopyButton value={domainVerificationToken} />
@@ -65,7 +73,11 @@ export function VerifyDomains({
         onClick={() => verifyMutation.mutate()}
         disabled={!canUpdate || verifyMutation.isPending}
       >
-        {verifyMutation.isPending ? <Spinner /> : "Verify"}
+        {verifyMutation.isPending ? (
+          <Spinner />
+        ) : (
+          t("components.settings.sso.verify_domains.submit")
+        )}
       </Button>
     </FieldGroup>
   )

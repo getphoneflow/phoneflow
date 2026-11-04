@@ -1,0 +1,93 @@
+{
+  "auth": {
+    "unauthorized": "No autorizado",
+    "forbidden": "Acceso denegado",
+    "no_active_organization": "No hay ninguna organización activa"
+  },
+  "validator": {
+    "failed": "Error de validación"
+  },
+  "agents": {
+    "list_failed": "No se pudieron cargar los agentes",
+    "create_failed": "No se pudo crear el agente",
+    "not_found": "Agente no encontrado",
+    "duplicate_failed": "No se pudo duplicar el agente",
+    "load_failed": "No se pudo cargar el agente",
+    "load_config_failed": "No se pudo cargar la configuración del agente",
+    "update_name_failed": "No se pudo actualizar el nombre del agente",
+    "update_config_failed": "No se pudo actualizar la configuración del agente",
+    "delete_failed": "No se pudo eliminar el agente",
+    "list_versions_failed": "No se pudieron cargar las versiones del agente",
+    "version_not_found": "Versión del agente no encontrada",
+    "load_version_config_failed": "No se pudo cargar la configuración de la versión del agente",
+    "publish_failed": "No se pudo publicar la versión del agente"
+  },
+  "batch_calls": {
+    "list_failed": "No se pudieron cargar las llamadas por lotes",
+    "phone_number_not_found": "Número de teléfono no encontrado",
+    "phone_number_without_sip": "El número de teléfono no tiene conexión SIP",
+    "agent_not_found": "Agente no encontrado",
+    "insufficient_credits": "Créditos insuficientes",
+    "agent_version_not_found": "Versión del agente no encontrada",
+    "scheduled_at_in_past": "La hora programada debe ser futura",
+    "create_failed": "No se pudo crear la llamada por lotes"
+  },
+  "billing": {
+    "load_failed": "No se pudo cargar la facturación",
+    "list_invoices_failed": "No se pudieron cargar las facturas",
+    "not_configured": "La facturación no está configurada",
+    "stripe_customer_not_found": "No se encontró el cliente de Stripe para esta organización",
+    "create_checkout_session_failed": "No se pudo crear la sesión de pago",
+    "start_checkout_failed": "No se pudo iniciar el pago",
+    "checkout_session_not_found": "Sesión de pago no encontrada",
+    "confirm_checkout_failed": "No se pudo confirmar el pago",
+    "organization_not_found": "Organización no encontrada",
+    "load_auto_reload_failed": "No se pudo cargar la configuración de recarga automática",
+    "payment_method_required": "Añade un método de pago en Gestionar información de facturación antes de activar la recarga automática",
+    "update_auto_reload_failed": "No se pudo actualizar la configuración de recarga automática",
+    "open_portal_failed": "No se pudo abrir el portal de facturación",
+    "minimum_purchase": "La compra mínima es de {{amount}} $"
+  },
+  "calls": {
+    "not_found": "Llamada no encontrada",
+    "user_email_not_found": "No se encontró el correo del usuario",
+    "organization_not_found": "Organización no encontrada",
+    "request_download_failed": "No se pudo solicitar la descarga de llamadas",
+    "load_recording_failed": "No se pudo obtener la grabación",
+    "not_in_progress": "La llamada no está en curso",
+    "join_failed": "No se pudo unir a la llamada",
+    "end_failed": "No se pudo finalizar la llamada",
+    "load_failed": "No se pudo obtener la llamada",
+    "list_failed": "No se pudieron cargar las llamadas",
+    "phone_number_not_found": "Número de teléfono no encontrado",
+    "phone_number_without_sip": "El número de teléfono no tiene conexión SIP",
+    "agent_not_found": "Agente no encontrado",
+    "insufficient_credits": "Créditos insuficientes",
+    "agent_version_not_found": "Versión del agente no encontrada",
+    "start_outbound_failed": "No se pudo iniciar la llamada saliente"
+  },
+  "contacts": {
+    "user_email_not_found": "No se encontró el correo del usuario",
+    "organization_not_found": "Organización no encontrada",
+    "request_download_failed": "No se pudo solicitar la descarga de contactos",
+    "not_found": "Contacto no encontrado",
+    "load_failed": "No se pudo obtener el contacto",
+    "list_failed": "No se pudieron cargar los contactos"
+  },
+  "phone_numbers": {
+    "list_failed": "No se pudieron cargar los números de teléfono",
+    "agent_not_found": "Agente no encontrado",
+    "provision_failed": "No se pudo aprovisionar el SIP entrante",
+    "create_failed": "No se pudo crear el número de teléfono",
+    "not_found": "Número de teléfono no encontrado",
+    "update_failed": "No se pudo actualizar el número de teléfono",
+    "delete_failed": "No se pudo eliminar el número de teléfono"
+  },
+  "user": {
+    "storage_not_configured": "El almacenamiento de archivos no está configurado",
+    "image_required": "La imagen es obligatoria",
+    "image_type_invalid": "La imagen debe ser JPEG, PNG, WebP o GIF",
+    "image_too_large": "La imagen debe ocupar 2MB o menos",
+    "upload_image_failed": "No se pudo subir la imagen"
+  }
+}

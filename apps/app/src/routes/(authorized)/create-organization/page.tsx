@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import {
   useMutation,
   useQueryClient,
@@ -28,28 +27,33 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { captureEvent, identifyOrganization } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
 import { sessionQueryOptions } from "@/lib/auth/session"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export const Route = createFileRoute("/(authorized)/create-organization/")({
   component: Page,
 })
 
+const createOrganizationFormSchema = z.object({
+  name: z.string().trim().min(1, "routes.create_organization.name.required"),
+})
+
+type CreateOrganizationFormValues = z.infer<typeof createOrganizationFormSchema>
+
 function Page() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { data: session } = useSuspenseQuery(sessionQueryOptions())
 
-  const createOrganizationFormSchema = z.object({
-    name: z.string().trim().min(1, "Organization name is required"),
-  })
-
-  type CreateOrganizationFormValues = z.infer<
-    typeof createOrganizationFormSchema
-  >
-
   const form = useForm<CreateOrganizationFormValues>({
-    resolver: zodResolver(createOrganizationFormSchema),
+    resolver: zodResolverI18n(createOrganizationFormSchema),
     defaultValues: {
-      name: session?.user.name ? `${session.user.name}'s Org` : "",
+      name: session?.user.name
+        ? t("routes.create_organization.name.default_value", {
+            name: session.user.name,
+          })
+        : "",
     },
   })
 
@@ -70,7 +74,7 @@ function Page() {
         organization_id: org?.id,
         name: org?.name,
       })
-      toast.success("Organization created")
+      toast.success(t("routes.create_organization.toasts.created"))
       await queryClient.refetchQueries()
       navigate({ to: "/invite-members" })
     },
@@ -81,12 +85,16 @@ function Page() {
 
   return (
     <>
-      <title>Create organization - Phoneflow</title>
+      <title>{t("routes.create_organization.page_title")}</title>
       <div className="flex h-screen w-full items-center justify-center p-6">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle className="text-xl">Create organization</CardTitle>
-            <CardDescription>Create an organization</CardDescription>
+            <CardTitle className="text-xl">
+              {t("routes.create_organization.title")}
+            </CardTitle>
+            <CardDescription>
+              {t("routes.create_organization.description")}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form
@@ -102,12 +110,14 @@ function Page() {
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel htmlFor={field.name}>
-                        Organization name
+                        {t("routes.create_organization.name.label")}
                       </FieldLabel>
                       <Input
                         {...field}
                         id={field.name}
-                        placeholder="Acme Inc"
+                        placeholder={t(
+                          "routes.create_organization.name.placeholder"
+                        )}
                         autoComplete="organization"
                         autoFocus
                         aria-invalid={fieldState.invalid}
@@ -127,7 +137,7 @@ function Page() {
                   {createOrganizationMutation.isPending ? (
                     <Spinner />
                   ) : (
-                    "Create organization"
+                    t("routes.create_organization.submit")
                   )}
                 </Button>
               </FieldGroup>

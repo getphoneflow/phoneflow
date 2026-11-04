@@ -21,6 +21,7 @@ import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { organizationHasCredits } from "@/lib/credits"
 import { env } from "@/lib/env"
+import { t } from "@/lib/i18n"
 import { placeOutboundCall } from "@/lib/livekit"
 import { batchCallsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
@@ -29,6 +30,7 @@ export const batchCallRoutes = new Hono()
 
 batchCallRoutes.get("/", requireOrganization, async (c) => {
   const organizationId = c.get("organizationId")
+  const locale = c.get("locale")
 
   try {
     const batchCalls = await db.query.batchCallsTable.findMany({
@@ -59,7 +61,7 @@ batchCallRoutes.get("/", requireOrganization, async (c) => {
 
     return c.json(batchCalls satisfies BatchCallListResponse)
   } catch {
-    return c.json({ error: "Failed to load batch calls" }, 500)
+    return c.json({ error: t(locale, "batch_calls.list_failed") }, 500)
   }
 })
 
@@ -69,6 +71,7 @@ batchCallRoutes.post(
   requirePermission({ calls: ["create"] }),
   validator("json", createBatchCallRequestSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const payload = c.req.valid("json")
 
@@ -87,7 +90,10 @@ batchCallRoutes.post(
       })
 
       if (!phoneNumber) {
-        return c.json({ error: "Phone number not found" }, 404)
+        return c.json(
+          { error: t(locale, "batch_calls.phone_number_not_found") },
+          404
+        )
       }
 
       if (
@@ -95,7 +101,10 @@ batchCallRoutes.post(
         !phoneNumber.sipUsername ||
         !phoneNumber.sipPassword
       ) {
-        return c.json({ error: "Phone number has no SIP connection" }, 400)
+        return c.json(
+          { error: t(locale, "batch_calls.phone_number_without_sip") },
+          400
+        )
       }
 
       const agent = await db.query.agentsTable.findFirst({
@@ -109,11 +118,14 @@ batchCallRoutes.post(
       })
 
       if (!agent) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json({ error: t(locale, "batch_calls.agent_not_found") }, 404)
       }
 
       if (env.IS_CLOUD && !(await organizationHasCredits(organizationId))) {
-        return c.json({ error: "Insufficient credits" }, 402)
+        return c.json(
+          { error: t(locale, "batch_calls.insufficient_credits") },
+          402
+        )
       }
 
       if (payload.agentVersionId) {
@@ -128,7 +140,12 @@ batchCallRoutes.post(
         })
 
         if (!version) {
-          return c.json({ error: "Agent version not found" }, 404)
+          return c.json(
+            {
+              error: t(locale, "batch_calls.agent_version_not_found"),
+            },
+            404
+          )
         }
       }
 
@@ -137,7 +154,10 @@ batchCallRoutes.post(
         : null
 
       if (scheduledAt && scheduledAt.getTime() <= Date.now()) {
-        return c.json({ error: "Scheduled time must be in the future" }, 400)
+        return c.json(
+          { error: t(locale, "batch_calls.scheduled_at_in_past") },
+          400
+        )
       }
 
       const batchCallId = crypto.randomUUID()
@@ -173,7 +193,7 @@ batchCallRoutes.post(
 
       return c.json({ id: batchCallId } satisfies CreateBatchCallResponse)
     } catch {
-      return c.json({ error: "Failed to create batch call" }, 500)
+      return c.json({ error: t(locale, "batch_calls.create_failed") }, 500)
     }
   }
 )

@@ -4,6 +4,7 @@ import { Input } from "@workspace/ui/components/input"
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
 import { ConversationTools } from "@/components/flow/sidepanel/tools/conversation-tools"
 import { VariableTextField } from "@/components/flow/variables/variable-text-field"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 import { FlowSidePanelBase } from "../base"
 
@@ -12,16 +13,23 @@ type ConversationNodePanelProps = {
 }
 
 export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
+  const { t } = useTranslation()
   const readOnly = useAgentStore((state) => state.readOnly)
   const setNode = useAgentStore((state) => state.setNode)
 
   return (
     <FlowSidePanelBase
-      title={node.data.isStart ? "Start node" : "Conversation node"}
+      title={
+        node.data.isStart
+          ? t("components.flow.sidepanel.nodes.conversation.title_start")
+          : t("components.flow.sidepanel.nodes.conversation.title")
+      }
     >
       <FieldGroup>
         <Field>
-          <FieldLabel>Name</FieldLabel>
+          <FieldLabel>
+            {t("components.flow.sidepanel.nodes.conversation.name.label")}
+          </FieldLabel>
           <Input
             value={node.data.name}
             readOnly={readOnly}
@@ -35,7 +43,11 @@ export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
         </Field>
         {node.data.isStart ? (
           <Field>
-            <FieldLabel>First speaker</FieldLabel>
+            <FieldLabel>
+              {t(
+                "components.flow.sidepanel.nodes.conversation.first_speaker.label"
+              )}
+            </FieldLabel>
             <Tabs
               value={node.data.startSpeaker ?? "agent"}
               onValueChange={(value) => {
@@ -49,10 +61,14 @@ export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
             >
               <TabsList>
                 <TabsTrigger value="agent" disabled={readOnly}>
-                  Agent
+                  {t(
+                    "components.flow.sidepanel.nodes.conversation.first_speaker.agent"
+                  )}
                 </TabsTrigger>
                 <TabsTrigger value="user" disabled={readOnly}>
-                  User
+                  {t(
+                    "components.flow.sidepanel.nodes.conversation.first_speaker.user"
+                  )}
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -75,10 +91,14 @@ export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
           >
             <TabsList>
               <TabsTrigger value="prompt" disabled={readOnly}>
-                Prompt
+                {t(
+                  "components.flow.sidepanel.nodes.conversation.instructions.prompt"
+                )}
               </TabsTrigger>
               <TabsTrigger value="say" disabled={readOnly}>
-                Say
+                {t(
+                  "components.flow.sidepanel.nodes.conversation.instructions.say"
+                )}
               </TabsTrigger>
             </TabsList>
           </Tabs>

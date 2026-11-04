@@ -17,6 +17,7 @@ import {
 import { Field, FieldLabel } from "@workspace/ui/components/field"
 import { InputGroupAddon } from "@workspace/ui/components/input-group"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
 
 function VoiceRow({ voice }: { voice: Voice }) {
   return (
@@ -59,6 +60,7 @@ export function VoiceSelect({
   onVoiceChange: (voiceId: string) => void
   readOnly?: boolean
 }) {
+  const { t } = useTranslation()
   const voices = getVoices(modelId)
   const providerSlug = modelId.slice(0, modelId.indexOf("/"))
   const selectedVoice =
@@ -98,7 +100,9 @@ export function VoiceSelect({
 
   return (
     <Field>
-      <FieldLabel>Voice</FieldLabel>
+      <FieldLabel>
+        {t("components.flow.sidepanel.voice_select.label")}
+      </FieldLabel>
       <Combobox
         autoHighlight
         items={voices}
@@ -123,7 +127,7 @@ export function VoiceSelect({
           <div className="flex items-center gap-1.5 p-1.5">
             <ComboboxInput
               showTrigger={false}
-              placeholder="Search voices..."
+              placeholder={t("components.flow.sidepanel.voice_select.search")}
               className="min-w-0 flex-1"
             >
               <InputGroupAddon>
@@ -131,7 +135,9 @@ export function VoiceSelect({
               </InputGroupAddon>
             </ComboboxInput>
           </div>
-          <ComboboxEmpty>No voices found</ComboboxEmpty>
+          <ComboboxEmpty>
+            {t("components.flow.sidepanel.voice_select.empty")}
+          </ComboboxEmpty>
           <ComboboxList className="pt-0 min-h-80">
             {(voice: Voice) => (
               <ComboboxItem
@@ -156,7 +162,9 @@ export function VoiceSelect({
                 >
                   {playingId === voice.id ? <PauseIcon /> : <PlayIcon />}
                   <span className="sr-only">
-                    {playingId === voice.id ? "Pause" : "Play"}
+                    {playingId === voice.id
+                      ? t("components.flow.sidepanel.voice_select.pause")
+                      : t("components.flow.sidepanel.voice_select.play")}
                   </span>
                 </Button>
                 <VoiceRow voice={voice} />

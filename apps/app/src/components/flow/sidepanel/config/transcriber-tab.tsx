@@ -16,6 +16,7 @@ import {
   SwitchField,
 } from "@/components/flow/sidepanel/config/fields"
 import { ModelSelect } from "@/components/flow/sidepanel/model-select"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 type TurnHandling = AgentConfig["turnHandling"]
@@ -29,6 +30,7 @@ function sttValue<K extends keyof typeof STT_DEFAULTS>(
 }
 
 export function TranscriberTab() {
+  const { t } = useTranslation()
   const readOnly = useAgentStore((state) => state.readOnly)
   const config = useAgentStore((state) => state.config)
   const setConfig = useAgentStore((state) => state.setConfig)
@@ -55,7 +57,9 @@ export function TranscriberTab() {
     <ConfigSection>
       <ModelSelect
         kind="stt"
-        label="Model"
+        label={t(
+          "components.flow.sidepanel.config.transcriber_tab.model.label"
+        )}
         modelId={stt.model}
         readOnly={readOnly}
         onModelChange={(model) => setConfig(withSttModel(config, model))}
@@ -63,7 +67,9 @@ export function TranscriberTab() {
 
       {fields?.has("language") ? (
         <LanguageField
-          description="Recognition is optimized for this language"
+          description={t(
+            "components.flow.sidepanel.config.transcriber_tab.language.description"
+          )}
           languages={languages}
           value={sttValue(stt, "language")}
           readOnly={readOnly}
@@ -73,8 +79,12 @@ export function TranscriberTab() {
 
       {fields?.has("keyterms") ? (
         <StringListField
-          label="Keyterms"
-          description="Boost recognition of names, jargon, and product terms"
+          label={t(
+            "components.flow.sidepanel.config.transcriber_tab.keyterms.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.transcriber_tab.keyterms.description"
+          )}
           value={sttValue(stt, "keyterms")}
           readOnly={readOnly}
           onChange={(keyterms) => patchStt({ keyterms })}
@@ -83,14 +93,33 @@ export function TranscriberTab() {
 
       {fields?.has("mode") ? (
         <EnumField
-          label="Mode"
-          description="Balance between speed and accuracy"
+          label={t(
+            "components.flow.sidepanel.config.transcriber_tab.mode.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.transcriber_tab.mode.description"
+          )}
           value={sttValue(stt, "mode")}
           readOnly={readOnly}
           options={[
-            { value: "min_latency", label: "Min latency" },
-            { value: "balanced", label: "Balanced" },
-            { value: "max_accuracy", label: "Max accuracy" },
+            {
+              value: "min_latency",
+              label: t(
+                "components.flow.sidepanel.config.transcriber_tab.mode.options.min_latency"
+              ),
+            },
+            {
+              value: "balanced",
+              label: t(
+                "components.flow.sidepanel.config.transcriber_tab.mode.options.balanced"
+              ),
+            },
+            {
+              value: "max_accuracy",
+              label: t(
+                "components.flow.sidepanel.config.transcriber_tab.mode.options.max_accuracy"
+              ),
+            },
           ]}
           onChange={(mode) => patchStt({ mode })}
         />
@@ -98,8 +127,12 @@ export function TranscriberTab() {
 
       {caps?.turnTaking ? (
         <SwitchField
-          label="Intelligent turn taking"
-          description="On, the transcriber decides when the user finished. Off, the agent waits a fixed silence delay instead"
+          label={t(
+            "components.flow.sidepanel.config.transcriber_tab.intelligent_turn_taking.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.transcriber_tab.intelligent_turn_taking.description"
+          )}
           checked={turn.turnDetection === "stt"}
           readOnly={readOnly}
           onCheckedChange={(enabled) =>
@@ -109,8 +142,12 @@ export function TranscriberTab() {
       ) : null}
 
       <NumberField
-        label="Min end of turn wait (ms)"
-        description="How long to wait after the user stops speaking before the agent can respond"
+        label={t(
+          "components.flow.sidepanel.config.transcriber_tab.min_end_of_turn_wait.label"
+        )}
+        description={t(
+          "components.flow.sidepanel.config.transcriber_tab.min_end_of_turn_wait.description"
+        )}
         value={endpointing.minDelay}
         min={0}
         step={50}
@@ -121,8 +158,12 @@ export function TranscriberTab() {
       />
 
       <NumberField
-        label="Max end of turn wait (ms)"
-        description="Longest the agent waits after the user stops speaking before ending the turn"
+        label={t(
+          "components.flow.sidepanel.config.transcriber_tab.max_end_of_turn_wait.label"
+        )}
+        description={t(
+          "components.flow.sidepanel.config.transcriber_tab.max_end_of_turn_wait.description"
+        )}
         value={endpointing.maxDelay}
         min={0}
         step={50}
@@ -134,13 +175,27 @@ export function TranscriberTab() {
 
       <AdvancedFields>
         <EnumField
-          label="Endpointing mode"
-          description="Fixed uses the min and max delays, dynamic adapts within that range from pause statistics"
+          label={t(
+            "components.flow.sidepanel.config.transcriber_tab.endpointing_mode.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.transcriber_tab.endpointing_mode.description"
+          )}
           value={endpointing.mode}
           readOnly={readOnly}
           options={[
-            { value: "fixed", label: "Fixed" },
-            { value: "dynamic", label: "Dynamic" },
+            {
+              value: "fixed",
+              label: t(
+                "components.flow.sidepanel.config.transcriber_tab.endpointing_mode.options.fixed"
+              ),
+            },
+            {
+              value: "dynamic",
+              label: t(
+                "components.flow.sidepanel.config.transcriber_tab.endpointing_mode.options.dynamic"
+              ),
+            },
           ]}
           onChange={(mode) =>
             patchTurn({
@@ -151,8 +206,12 @@ export function TranscriberTab() {
 
         {endpointing.mode === "dynamic" ? (
           <NumberField
-            label="Endpointing alpha"
-            description="Weight of past pauses in dynamic endpointing. Higher adapts more slowly"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.endpointing_alpha.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.endpointing_alpha.description"
+            )}
             value={endpointing.alpha}
             min={0}
             max={1}
@@ -166,8 +225,12 @@ export function TranscriberTab() {
 
         {fields?.has("endpointingMs") ? (
           <NumberField
-            label="Silence timeout (ms)"
-            description="Silence before this transcriber treats the turn as complete"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.silence_timeout.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.silence_timeout.description"
+            )}
             value={sttValue(stt, "endpointingMs")}
             min={0}
             step={50}
@@ -178,8 +241,12 @@ export function TranscriberTab() {
 
         {fields?.has("vadThreshold") ? (
           <NumberField
-            label="VAD threshold"
-            description="How sensitive voice detection is. Higher ignores more background noise"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.vad_threshold.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.vad_threshold.description"
+            )}
             value={sttValue(stt, "vadThreshold")}
             min={0}
             max={1}
@@ -191,8 +258,12 @@ export function TranscriberTab() {
 
         {fields?.has("eagerEotThreshold") ? (
           <NumberField
-            label="Eager end-of-turn threshold"
-            description="Confidence required to signal an early end of turn"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.eager_end_of_turn_threshold.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.eager_end_of_turn_threshold.description"
+            )}
             value={sttValue(stt, "eagerEotThreshold")}
             min={0.3}
             max={0.9}
@@ -204,8 +275,12 @@ export function TranscriberTab() {
 
         {fields?.has("eotThreshold") ? (
           <NumberField
-            label="End-of-turn threshold"
-            description="Confidence needed before the transcriber closes the user's turn"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.end_of_turn_threshold.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.end_of_turn_threshold.description"
+            )}
             value={sttValue(stt, "eotThreshold")}
             min={0.5}
             max={0.9}
@@ -217,8 +292,12 @@ export function TranscriberTab() {
 
         {fields?.has("eotTimeoutMs") ? (
           <NumberField
-            label="End-of-turn timeout (ms)"
-            description="Silence that ends the turn even if confidence is still low"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.end_of_turn_timeout.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.end_of_turn_timeout.description"
+            )}
             value={sttValue(stt, "eotTimeoutMs")}
             min={1}
             step={50}
@@ -229,8 +308,12 @@ export function TranscriberTab() {
 
         {fields?.has("minTurnSilence") ? (
           <NumberField
-            label="Min turn silence (ms)"
-            description="Silence before the model checks whether the turn has ended"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.min_turn_silence.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.min_turn_silence.description"
+            )}
             value={sttValue(stt, "minTurnSilence")}
             min={0}
             step={50}
@@ -241,8 +324,12 @@ export function TranscriberTab() {
 
         {fields?.has("maxTurnSilence") ? (
           <NumberField
-            label="Max turn silence (ms)"
-            description="Silence that forces the turn to end"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.max_turn_silence.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.max_turn_silence.description"
+            )}
             value={sttValue(stt, "maxTurnSilence")}
             min={0}
             step={50}
@@ -253,8 +340,12 @@ export function TranscriberTab() {
 
         {fields?.has("endOfTurnConfidenceThreshold") ? (
           <NumberField
-            label="End-of-turn confidence"
-            description="How sure the transcriber must be that the user is done"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.end_of_turn_confidence.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.end_of_turn_confidence.description"
+            )}
             value={sttValue(stt, "endOfTurnConfidenceThreshold")}
             min={0}
             max={1}
@@ -268,8 +359,12 @@ export function TranscriberTab() {
 
         {fields?.has("endpointLatencyAdjustmentLevel") ? (
           <NumberField
-            label="Endpoint latency level"
-            description="0 is default semantic endpointing, 3 is most aggressive"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.endpoint_latency_level.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.endpoint_latency_level.description"
+            )}
             value={sttValue(stt, "endpointLatencyAdjustmentLevel")}
             min={0}
             max={3}
@@ -283,8 +378,12 @@ export function TranscriberTab() {
 
         {fields?.has("minEndOfTurnSilenceWhenConfident") ? (
           <NumberField
-            label="Min EOT silence when confident (ms)"
-            description="Shortest silence required to end a turn when the model is already confident"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.min_eot_silence_when_confident.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.min_eot_silence_when_confident.description"
+            )}
             value={sttValue(stt, "minEndOfTurnSilenceWhenConfident")}
             min={0}
             step={50}
@@ -297,8 +396,12 @@ export function TranscriberTab() {
 
         {fields?.has("smartTurn") ? (
           <NumberField
-            label="Smart turn"
-            description="Confidence required before smart turn detection ends the user's turn"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.smart_turn.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.smart_turn.description"
+            )}
             value={sttValue(stt, "smartTurn")}
             min={0}
             max={1}
@@ -310,8 +413,12 @@ export function TranscriberTab() {
 
         {fields?.has("smartTurnTimeout") ? (
           <NumberField
-            label="Smart turn timeout (ms)"
-            description="How long smart turn detection waits before ending the turn"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.smart_turn_timeout.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.smart_turn_timeout.description"
+            )}
             value={sttValue(stt, "smartTurnTimeout")}
             min={1}
             max={5000}
@@ -323,13 +430,27 @@ export function TranscriberTab() {
 
         {fields?.has("voiceFocus") ? (
           <EnumField
-            label="Voice focus"
-            description="Tune recognition for a close or distant microphone"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.voice_focus.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.voice_focus.description"
+            )}
             value={sttValue(stt, "voiceFocus")}
             readOnly={readOnly}
             options={[
-              { value: "near-field", label: "Near field" },
-              { value: "far-field", label: "Far field" },
+              {
+                value: "near-field",
+                label: t(
+                  "components.flow.sidepanel.config.transcriber_tab.voice_focus.options.near_field"
+                ),
+              },
+              {
+                value: "far-field",
+                label: t(
+                  "components.flow.sidepanel.config.transcriber_tab.voice_focus.options.far_field"
+                ),
+              },
             ]}
             onChange={(voiceFocus) => patchStt({ voiceFocus })}
           />
@@ -337,8 +458,12 @@ export function TranscriberTab() {
 
         {fields?.has("voiceFocusThreshold") ? (
           <NumberField
-            label="Voice focus threshold"
-            description="How aggressively background audio is suppressed. Higher is stronger"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.voice_focus_threshold.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.voice_focus_threshold.description"
+            )}
             value={sttValue(stt, "voiceFocusThreshold")}
             min={0}
             max={1}
@@ -352,8 +477,12 @@ export function TranscriberTab() {
 
         {fields?.has("enableVoiceProfile") ? (
           <SwitchField
-            label="Voice profile"
-            description="Bias recognition toward a saved speaker profile"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.voice_profile.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.voice_profile.description"
+            )}
             checked={sttValue(stt, "enableVoiceProfile")}
             readOnly={readOnly}
             onCheckedChange={(enableVoiceProfile) =>
@@ -364,8 +493,12 @@ export function TranscriberTab() {
 
         {fields?.has("voiceProfileTopN") ? (
           <NumberField
-            label="Voice profile top N"
-            description="How many speaker profiles to match against"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.voice_profile_top_n.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.voice_profile_top_n.description"
+            )}
             value={sttValue(stt, "voiceProfileTopN")}
             min={1}
             step={1}
@@ -376,8 +509,12 @@ export function TranscriberTab() {
 
         {fields?.has("diarize") ? (
           <SwitchField
-            label="Diarization"
-            description="Label distinct speakers in the transcript"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.diarization.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.diarization.description"
+            )}
             checked={sttValue(stt, "diarize")}
             readOnly={readOnly}
             onCheckedChange={(diarize) => patchStt({ diarize })}
@@ -386,8 +523,12 @@ export function TranscriberTab() {
 
         {fields?.has("languageHintsStrict") ? (
           <SwitchField
-            label="Strict language"
-            description="Prefer transcription in the selected language"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.strict_language.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.strict_language.description"
+            )}
             checked={sttValue(stt, "languageHintsStrict")}
             readOnly={readOnly}
             onCheckedChange={(languageHintsStrict) =>
@@ -398,8 +539,12 @@ export function TranscriberTab() {
 
         {fields?.has("agentContextCarryover") ? (
           <SwitchField
-            label="Agent context carryover"
-            description="Bias the next transcription with what the agent just said"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.agent_context_carryover.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.agent_context_carryover.description"
+            )}
             checked={sttValue(stt, "agentContextCarryover")}
             readOnly={readOnly}
             onCheckedChange={(agentContextCarryover) =>
@@ -410,8 +555,12 @@ export function TranscriberTab() {
 
         {fields?.has("mipOptOut") ? (
           <SwitchField
-            label="MIP opt-out"
-            description="Opt out of using this audio to improve the provider's models"
+            label={t(
+              "components.flow.sidepanel.config.transcriber_tab.mip_opt_out.label"
+            )}
+            description={t(
+              "components.flow.sidepanel.config.transcriber_tab.mip_opt_out.description"
+            )}
             checked={sttValue(stt, "mipOptOut")}
             readOnly={readOnly}
             onCheckedChange={(mipOptOut) => patchStt({ mipOptOut })}

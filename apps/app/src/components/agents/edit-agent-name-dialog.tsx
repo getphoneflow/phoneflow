@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 
@@ -28,6 +27,8 @@ import { Input } from "@workspace/ui/components/input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 type EditAgentNameDialogProps = {
   agent: Pick<AgentResponse, "id" | "name">
@@ -41,9 +42,10 @@ export function EditAgentNameDialog({
   onOpenChange,
 }: EditAgentNameDialogProps) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const form = useForm<UpdateAgentNameRequest>({
-    resolver: zodResolver(updateAgentNameRequestSchema),
+    resolver: zodResolverI18n(updateAgentNameRequestSchema),
     defaultValues: {
       name: agent.name,
     },
@@ -56,7 +58,9 @@ export function EditAgentNameDialog({
         { body: values }
       ),
     onSuccess: () => {
-      toast.success("Agent name updated")
+      toast.success(
+        t("components.agents.edit_agent_name_dialog.toasts.updated")
+      )
       onOpenChange(false)
       queryClient.invalidateQueries({
         queryKey: ["agents", "detail", agent.id],
@@ -79,8 +83,12 @@ export function EditAgentNameDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit name</DialogTitle>
-          <DialogDescription>Change the agent name</DialogDescription>
+          <DialogTitle>
+            {t("components.agents.edit_agent_name_dialog.title")}
+          </DialogTitle>
+          <DialogDescription>
+            {t("components.agents.edit_agent_name_dialog.description")}
+          </DialogDescription>
         </DialogHeader>
 
         <form
@@ -95,12 +103,16 @@ export function EditAgentNameDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t("components.agents.edit_agent_name_dialog.name.label")}
+                  </FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    placeholder="Agent name"
+                    placeholder={t(
+                      "components.agents.edit_agent_name_dialog.name.placeholder"
+                    )}
                     autoComplete="off"
                     disabled={updateNameMutation.isPending}
                   />
@@ -115,14 +127,14 @@ export function EditAgentNameDialog({
           <DialogFooter className="mt-8">
             <DialogClose>
               <Button variant="outline" disabled={updateNameMutation.isPending}>
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button type="submit" disabled={updateNameMutation.isPending}>
               {updateNameMutation.isPending ? (
                 <Spinner className="mx-8" />
               ) : (
-                "Save"
+                t("common.actions.save")
               )}
             </Button>
           </DialogFooter>

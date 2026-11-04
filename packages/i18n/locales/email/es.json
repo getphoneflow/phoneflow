@@ -1,0 +1,30 @@
+{
+  "reset_password": {
+    "subject": "Restablecer contraseña",
+    "preview": "Restablece tu contraseña",
+    "greeting": "Hola {{name}},",
+    "body": "Hemos recibido una solicitud para restablecer tu contraseña. Si fuiste tú, puedes establecer una nueva aquí:",
+    "cta": "Establecer nueva contraseña",
+    "ignore": "Si no realizaste esta solicitud, puedes ignorar este correo."
+  },
+  "verification_otp": {
+    "subject": "Verifica tu correo electrónico",
+    "preview": "Verifica tu dirección de correo electrónico",
+    "body": "Gracias por registrarte. Usa este código para verificar tu dirección de correo electrónico:",
+    "ignore": "Si no creaste una cuenta, puedes ignorar este correo."
+  },
+  "accept_organization_invitation": {
+    "subject": "Acepta la invitación para unirte a {{organization_name}}",
+    "preview": "Acepta la invitación para unirte a {{organization_name}}",
+    "body": "Has sido invitado a unirte a {{organization_name}}. Haz clic en el botón de abajo para aceptar la invitación:",
+    "cta": "Aceptar invitación"
+  },
+  "download_calls": {
+    "subject": "Descarga de llamadas de {{organization_name}}",
+    "body": "Descargar llamadas"
+  },
+  "download_contacts": {
+    "subject": "Descarga de contactos de {{organization_name}}",
+    "body": "Descargar contactos"
+  }
+}

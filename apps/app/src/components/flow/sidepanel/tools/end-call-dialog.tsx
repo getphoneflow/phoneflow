@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 
 import { endCallToolSchema } from "@workspace/shared/api/agent-config/schemas"
@@ -14,6 +13,8 @@ import {
 } from "@workspace/ui/components/dialog"
 import { Field, FieldError, FieldLabel } from "@workspace/ui/components/field"
 import { VariableTextField } from "@/components/flow/variables/variable-text-field"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export function createEndCallDraft(): EndCallTool {
   return { description: "" }
@@ -32,8 +33,9 @@ export function EndCallDialog({
   onOpenChange: (open: boolean) => void
   onSave: (tool: EndCallTool) => void
 }) {
+  const { t } = useTranslation()
   const form = useForm<EndCallTool>({
-    resolver: zodResolver(endCallToolSchema),
+    resolver: zodResolverI18n(endCallToolSchema),
     defaultValues: tool,
     values: tool,
   })
@@ -49,9 +51,11 @@ export function EndCallDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>End call</DialogTitle>
+          <DialogTitle>
+            {t("components.flow.sidepanel.tools.end_call_dialog.title")}
+          </DialogTitle>
           <DialogDescription>
-            Enable the agent to end the call
+            {t("components.flow.sidepanel.tools.end_call_dialog.description")}
           </DialogDescription>
         </DialogHeader>
         <form
@@ -64,14 +68,20 @@ export function EndCallDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel>Description</FieldLabel>
+                <FieldLabel>
+                  {t(
+                    "components.flow.sidepanel.tools.end_call_dialog.prompt.label"
+                  )}
+                </FieldLabel>
                 <VariableTextField
                   name={field.name}
                   value={field.value}
                   onBlur={field.onBlur}
                   multiline
                   rows={4}
-                  placeholder="Describe when to end the call"
+                  placeholder={t(
+                    "components.flow.sidepanel.tools.end_call_dialog.prompt.placeholder"
+                  )}
                   readOnly={readOnly}
                   aria-invalid={fieldState.invalid}
                   onChange={field.onChange}
@@ -88,10 +98,10 @@ export function EndCallDialog({
               variant="outline"
               onClick={() => handleOpenChange(false)}
             >
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
             <Button type="submit" disabled={readOnly}>
-              Save
+              {t("common.actions.save")}
             </Button>
           </DialogFooter>
         </form>

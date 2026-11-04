@@ -1,27 +1,30 @@
+import type { TFunction } from "@/lib/i18n"
+
 type AgentVersionLabel = {
   number: number
   name?: string | null
 }
 
-export const DELETED_AGENT_LABEL = "Deleted agent"
-export const DELETED_PHONE_NUMBER_LABEL = "Deleted phone number"
-export const AGENT_VERSION_DRAFT_LABEL = "Latest (draft)"
-
-export function formatAgentName(agent: { name: string } | null | undefined) {
-  return agent?.name ?? DELETED_AGENT_LABEL
+export function formatAgentName(
+  agent: { name: string } | null | undefined,
+  t: TFunction
+) {
+  return agent?.name ?? t("components.helpers.deleted_agent")
 }
 
 export function formatPhoneNumber(
-  phoneNumber: { number: string } | null | undefined
+  phoneNumber: { number: string } | null | undefined,
+  t: TFunction
 ) {
-  return phoneNumber?.number ?? DELETED_PHONE_NUMBER_LABEL
+  return phoneNumber?.number ?? t("components.helpers.deleted_phone_number")
 }
 
 export function formatAgentVersionLabel(
-  version: AgentVersionLabel | null | undefined
+  version: AgentVersionLabel | null | undefined,
+  t: TFunction
 ) {
   if (!version) {
-    return AGENT_VERSION_DRAFT_LABEL
+    return t("components.helpers.agent_version_draft")
   }
 
   const name = version.name?.trim()

@@ -2,12 +2,15 @@ import { DownloadIcon } from "lucide-react"
 
 import { Button } from "@workspace/ui/components/button"
 import { CopyButton } from "@/components/copy-button"
+import { useTranslation } from "@/lib/i18n"
 
 type BackupCodesListProps = {
   codes: string[]
 }
 
 export function BackupCodesList({ codes }: BackupCodesListProps) {
+  const { t } = useTranslation()
+
   function handleDownload() {
     const blob = new Blob([codes.join("\n")], { type: "text/plain" })
     const url = URL.createObjectURL(blob)
@@ -36,7 +39,7 @@ export function BackupCodesList({ codes }: BackupCodesListProps) {
           onClick={handleDownload}
         >
           <DownloadIcon />
-          Download
+          {t("common.actions.download")}
         </Button>
       </div>
     </div>

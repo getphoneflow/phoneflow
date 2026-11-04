@@ -23,9 +23,11 @@ import { SheetSkeleton } from "@/components/sheet-skeleton"
 import { UserDateTime } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
 import { formatDurationMs } from "@/lib/time"
 
 function CallDetailBody({ callId }: { callId: string }) {
+  const { t } = useTranslation()
   const { data: call } = useSuspenseQuery({
     queryKey: ["calls", callId],
     queryFn: () => api.get<CallDetailResponse>(`/calls/${callId}`),
@@ -50,10 +52,15 @@ function CallDetailBody({ callId }: { callId: string }) {
   )
 
   const variables = Object.entries(call.variables ?? {})
-  const channelLabel = call.channel === "phone_call" ? "Phone call" : "Web call"
+  const channelLabel =
+    call.channel === "phone_call"
+      ? t("components.calls.call_detail_sheet.channel.phone_call")
+      : t("components.calls.call_detail_sheet.channel.web_call")
   const versionLabel = call.agentVersion
-    ? `V${call.agentVersion.number}`
-    : "Latest"
+    ? t("components.calls.call_detail_sheet.version", {
+        number: call.agentVersion.number,
+      })
+    : t("components.calls.call_detail_sheet.latest_version")
 
   return (
     <>
@@ -64,11 +71,12 @@ function CallDetailBody({ callId }: { callId: string }) {
         {call.channel === "phone_call" ? (
           <div className="text-sm text-muted-foreground">
             <p>
-              From:{" "}
+              {t("components.calls.call_detail_sheet.from")}{" "}
               <span className="font-medium text-foreground">
                 {call.fromNumber}
               </span>
-              {" · "}To:{" "}
+              {" · "}
+              {t("components.calls.call_detail_sheet.to")}{" "}
               <span className="font-medium text-foreground">
                 {call.toNumber}
               </span>
@@ -76,7 +84,9 @@ function CallDetailBody({ callId }: { callId: string }) {
           </div>
         ) : null}
         <div className="flex items-center gap-1 text-sm">
-          <span className="text-muted-foreground">Agent: </span>
+          <span className="text-muted-foreground">
+            {t("components.calls.call_detail_sheet.agent")}{" "}
+          </span>
           <AgentReferenceLink
             agentId={call.agentId}
             agent={call.agent}
@@ -87,7 +97,9 @@ function CallDetailBody({ callId }: { callId: string }) {
         </div>
         {call.durationMs && (
           <p className="text-sm text-muted-foreground">
-            Duration: {formatDurationMs(call.durationMs)}
+            {t("components.calls.call_detail_sheet.duration", {
+              duration: formatDurationMs(call.durationMs),
+            })}
           </p>
         )}
         <div className="mt-2">
@@ -101,9 +113,17 @@ function CallDetailBody({ callId }: { callId: string }) {
       >
         <div className="shrink-0 px-4">
           <TabsList className="w-full">
-            <TabsTrigger value="transcript">Transcript</TabsTrigger>
-            <TabsTrigger value="data">Data</TabsTrigger>
-            {env.IS_CLOUD ? <TabsTrigger value="cost">Cost</TabsTrigger> : null}
+            <TabsTrigger value="transcript">
+              {t("components.calls.call_detail_sheet.tabs.transcript")}
+            </TabsTrigger>
+            <TabsTrigger value="data">
+              {t("components.calls.call_detail_sheet.tabs.data")}
+            </TabsTrigger>
+            {env.IS_CLOUD ? (
+              <TabsTrigger value="cost">
+                {t("components.calls.call_detail_sheet.tabs.cost")}
+              </TabsTrigger>
+            ) : null}
           </TabsList>
         </div>
         <TabsContent
@@ -113,7 +133,7 @@ function CallDetailBody({ callId }: { callId: string }) {
           {messages.length === 0 ? (
             <div className="flex flex-1 items-center justify-center">
               <p className="text-sm text-muted-foreground">
-                No transcript available
+                {t("components.calls.call_detail_sheet.no_transcript")}
               </p>
             </div>
           ) : (
@@ -131,11 +151,15 @@ function CallDetailBody({ callId }: { callId: string }) {
         >
           {variables.length === 0 ? (
             <div className="flex flex-1 items-center justify-center">
-              <p className="text-sm text-muted-foreground">No variables</p>
+              <p className="text-sm text-muted-foreground">
+                {t("components.calls.call_detail_sheet.no_variables")}
+              </p>
             </div>
           ) : (
             <div className="p-4">
-              <div className="mb-4 font-medium">Dynamic variables</div>
+              <div className="mb-4 font-medium">
+                {t("components.calls.call_detail_sheet.dynamic_variables")}
+              </div>
               {variables.map(([key, value]) => (
                 <div key={key} className="flex justify-between gap-4 pb-2">
                   <span className="text-sm text-muted-foreground">{key}</span>

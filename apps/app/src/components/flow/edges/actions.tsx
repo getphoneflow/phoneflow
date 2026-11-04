@@ -6,6 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
 type FlowEdgeActionsProps = {
@@ -14,6 +15,7 @@ type FlowEdgeActionsProps = {
 
 export function FlowEdgeActions({ id }: FlowEdgeActionsProps) {
   const { deleteElements } = useReactFlow()
+  const { t } = useTranslation()
   const readOnly = useAgentStore((state) => state.readOnly)
 
   return (
@@ -30,9 +32,11 @@ export function FlowEdgeActions({ id }: FlowEdgeActionsProps) {
           }
         >
           <Trash2Icon className="size-3.5" />
-          <span className="sr-only">Delete</span>
+          <span className="sr-only">{t("common.actions.delete")}</span>
         </TooltipTrigger>
-        <TooltipContent side="right">Delete</TooltipContent>
+        <TooltipContent side="right">
+          {t("common.actions.delete")}
+        </TooltipContent>
       </Tooltip>
     </div>
   )

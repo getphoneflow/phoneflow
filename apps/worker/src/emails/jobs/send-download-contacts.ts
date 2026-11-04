@@ -1,3 +1,4 @@
+import { t } from "@workspace/email/i18n"
 import sendEmail from "@workspace/email/send"
 import DownloadContactsEmail from "@workspace/email/templates/download-contacts"
 import type { ContactDownloadResponse } from "@workspace/shared/api/contacts/types"
@@ -8,6 +9,8 @@ import { env } from "@/lib/env"
 export async function sendDownloadContacts(
   payload: SendDownloadContactsPayload
 ) {
+  const { locale, organizationName } = payload
+
   const contacts = await api.get<ContactDownloadResponse>(
     `/contacts/export/${payload.organizationId}`
   )
@@ -15,8 +18,10 @@ export async function sendDownloadContacts(
   await sendEmail(
     env.EMAIL_FROM,
     payload.to,
-    `Download contacts from ${payload.organizationName}`,
-    DownloadContactsEmail(),
+    t(locale, "download_contacts.subject", {
+      organization_name: organizationName,
+    }),
+    DownloadContactsEmail({ locale }),
     [
       {
         filename: "contacts.json",

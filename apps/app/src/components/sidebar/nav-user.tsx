@@ -40,6 +40,7 @@ import { useTheme } from "@/components/theme-provider"
 import { resetAnalytics } from "@/lib/analytics"
 import { signOut } from "@/lib/auth/client"
 import { sessionQueryOptions } from "@/lib/auth/session"
+import { useTranslation } from "@/lib/i18n"
 
 function NavUserSkeleton() {
   return <Skeleton className="h-12 w-full" />
@@ -54,6 +55,7 @@ export function NavUser() {
 }
 
 function NavUserContent() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { isMobile } = useSidebar()
@@ -131,23 +133,23 @@ function NavUserContent() {
                 {theme === "light" && <SunIcon />}
                 {theme === "dark" && <MoonIcon />}
                 {theme === "system" && <MonitorIcon />}
-                Theme
+                {t("components.sidebar.nav_user.theme.label")}
               </DropdownMenuSubTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuSubContent className="w-30">
                   <DropdownMenuItem onClick={() => setTheme("light")}>
                     <SunIcon />
-                    Light
+                    {t("components.sidebar.nav_user.theme.light")}
                     {theme === "light" && <CheckIcon className="ml-auto" />}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setTheme("dark")}>
                     <MoonIcon />
-                    Dark
+                    {t("components.sidebar.nav_user.theme.dark")}
                     {theme === "dark" && <CheckIcon className="ml-auto" />}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setTheme("system")}>
                     <MonitorIcon />
-                    System
+                    {t("components.sidebar.nav_user.theme.system")}
                     {theme === "system" && <CheckIcon className="ml-auto" />}
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
@@ -156,7 +158,7 @@ function NavUserContent() {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>
               <LogOutIcon />
-              Sign out
+              {t("components.sidebar.nav_user.sign_out")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

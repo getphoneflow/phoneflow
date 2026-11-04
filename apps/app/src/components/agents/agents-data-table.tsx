@@ -53,6 +53,7 @@ import {
 import { AgentRowActions } from "@/components/agents/agent-row-actions"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
+import { type TFunction, useTranslation } from "@/lib/i18n"
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -68,32 +69,47 @@ const features = tableFeatures({
 
 const columnHelper = createColumnHelper<typeof features, AgentsListItem>()
 
-const columns = columnHelper.columns([
-  columnHelper.accessor("name", {
-    header: ({ column }) => <SortableHeader column={column} title="Name" />,
-    cell: ({ row }) => row.original.name,
-  }),
-  columnHelper.display({
-    id: "phoneNumbers",
-    header: "Phone number",
-    cell: ({ row }) =>
-      row.original.phoneNumbers.map((p) => p.number).join(", "),
-  }),
-  columnHelper.accessor("updatedAt", {
-    header: ({ column }) => <SortableHeader column={column} title="Updated" />,
-    cell: ({ row }) => <UserDateTime value={row.original.updatedAt} />,
-  }),
-  columnHelper.display({
-    id: "actions",
-    header: "",
-    cell: ({ row }) => <AgentRowActions agent={row.original} />,
-  }),
-])
+function getColumns(t: TFunction) {
+  return columnHelper.columns([
+    columnHelper.accessor("name", {
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t("components.agents.agents_data_table.columns.name")}
+        />
+      ),
+      cell: ({ row }) => row.original.name,
+    }),
+    columnHelper.display({
+      id: "phoneNumbers",
+      header: () =>
+        t("components.agents.agents_data_table.columns.phone_number"),
+      cell: ({ row }) =>
+        row.original.phoneNumbers.map((p) => p.number).join(", "),
+    }),
+    columnHelper.accessor("updatedAt", {
+      header: ({ column }) => (
+        <SortableHeader
+          column={column}
+          title={t("components.agents.agents_data_table.columns.updated")}
+        />
+      ),
+      cell: ({ row }) => <UserDateTime value={row.original.updatedAt} />,
+    }),
+    columnHelper.display({
+      id: "actions",
+      header: "",
+      cell: ({ row }) => <AgentRowActions agent={row.original} />,
+    }),
+  ])
+}
 
 export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
   const navigate = useNavigate()
+  const { t } = useTranslation()
+  const columns = getColumns(t)
 
   const table = useTable({
     features,
@@ -116,7 +132,9 @@ export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          placeholder="Search agents..."
+          placeholder={t(
+            "components.agents.agents_data_table.search.placeholder"
+          )}
         />
         <InputGroupAddon>
           <Search />
@@ -178,7 +196,7 @@ export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  No results
+                  {t("common.table.no_results")}
                 </TableCell>
               </TableRow>
             )}
@@ -202,12 +220,16 @@ export function AgentsDataTable({ data }: { data: AgentsListResponse }) {
               ))}
             </SelectContent>
           </Select>
-          <span className="text-sm font-medium">Rows per page</span>
+          <span className="text-sm font-medium">
+            {t("common.table.rows_per_page")}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium pr-2">
-            Page {table.state.pagination.pageIndex + 1} of{" "}
-            {table.getPageCount() || 1}
+            {t("components.agents.agents_data_table.page", {
+              page: table.state.pagination.pageIndex + 1,
+              count: table.getPageCount() || 1,
+            })}
           </span>
           <Button
             variant="outline"

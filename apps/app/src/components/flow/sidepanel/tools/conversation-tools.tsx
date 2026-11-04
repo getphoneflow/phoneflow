@@ -31,6 +31,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@workspace/ui/components/popover"
+import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 import { createEndCallDraft, EndCallDialog } from "./end-call-dialog"
 import {
@@ -63,15 +64,19 @@ const builtInTools: {
 }[] = [
   {
     kind: "endCall",
-    label: "End call",
-    description: "Enable the agent to end the call",
+    label:
+      "components.flow.sidepanel.tools.conversation_tools.built_in.end_call.label",
+    description:
+      "components.flow.sidepanel.tools.conversation_tools.built_in.end_call.description",
     icon: PhoneOff,
     summary: (node) => node.data.endCall?.description,
   },
   {
     kind: "extractVariables",
-    label: "Extract variables",
-    description: "Extract variables from the conversation",
+    label:
+      "components.flow.sidepanel.tools.conversation_tools.built_in.extract_variables.label",
+    description:
+      "components.flow.sidepanel.tools.conversation_tools.built_in.extract_variables.description",
     icon: Braces,
     summary: (node) =>
       node.data.extractVariables?.variables
@@ -80,15 +85,19 @@ const builtInTools: {
   },
   {
     kind: "ivrNavigation",
-    label: "IVR navigation",
-    description: "Send keypad tones to navigate a phone menu",
+    label:
+      "components.flow.sidepanel.tools.conversation_tools.built_in.ivr_navigation.label",
+    description:
+      "components.flow.sidepanel.tools.conversation_tools.built_in.ivr_navigation.description",
     icon: Keyboard,
     summary: (node) => node.data.ivrNavigation?.description,
   },
   {
     kind: "transferCall",
-    label: "Transfer call",
-    description: "Forward the call to a phone number",
+    label:
+      "components.flow.sidepanel.tools.conversation_tools.built_in.transfer_call.label",
+    description:
+      "components.flow.sidepanel.tools.conversation_tools.built_in.transfer_call.description",
     icon: PhoneForwarded,
     summary: (node) =>
       node.data.transferCall?.destinations
@@ -99,13 +108,14 @@ const builtInTools: {
 
 const additionalTools: {
   type: AgentTool["type"]
-  label: string
+  newLabel: string
   icon: LucideIcon
   createDraft: () => AgentTool
 }[] = [
   {
     type: "webhook",
-    label: "Webhook",
+    newLabel:
+      "components.flow.sidepanel.tools.conversation_tools.additional.new_webhook",
     icon: Webhook,
     createDraft: createWebhookToolDraft,
   },
@@ -128,6 +138,7 @@ type ConversationToolsProps = {
 }
 
 export function ConversationTools({ node }: ConversationToolsProps) {
+  const { t } = useTranslation()
   const readOnly = useAgentStore((state) => state.readOnly)
   const tools = useAgentStore((state) => state.config.tools)
   const setNode = useAgentStore((state) => state.setNode)
@@ -196,15 +207,25 @@ export function ConversationTools({ node }: ConversationToolsProps) {
   return (
     <>
       <Field>
-        <FieldLabel>Built-in tools</FieldLabel>
+        <FieldLabel>
+          {t(
+            "components.flow.sidepanel.tools.conversation_tools.built_in.label"
+          )}
+        </FieldLabel>
         {attachedBuiltIns.map((entry) => (
           <ToolRow
             key={entry.kind}
             icon={entry.icon}
-            title={entry.label}
+            title={t(entry.label)}
             summary={entry.summary(node)}
-            editLabel={`Edit ${entry.label}`}
-            removeLabel={`Remove ${entry.label}`}
+            editLabel={t(
+              "components.flow.sidepanel.tools.conversation_tools.built_in.edit",
+              { tool: t(entry.label) }
+            )}
+            removeLabel={t(
+              "components.flow.sidepanel.tools.conversation_tools.built_in.remove",
+              { tool: t(entry.label) }
+            )}
             readOnly={readOnly}
             onEdit={() => openBuiltIn(entry.kind)}
             onRemove={() => updateData(omitBuiltIn(node.data, entry.kind))}
@@ -222,7 +243,7 @@ export function ConversationTools({ node }: ConversationToolsProps) {
             }
           >
             <Plus />
-            Add tool
+            {t("components.flow.sidepanel.tools.conversation_tools.add_tool")}
           </PopoverTrigger>
           <PopoverContent
             align="start"
@@ -232,8 +253,8 @@ export function ConversationTools({ node }: ConversationToolsProps) {
               <ToolPickerItem
                 key={entry.kind}
                 icon={entry.icon}
-                title={entry.label}
-                description={entry.description}
+                title={t(entry.label)}
+                description={t(entry.description)}
                 onSelect={() => {
                   setBuiltInPickerOpen(false)
                   openBuiltIn(entry.kind)
@@ -245,7 +266,11 @@ export function ConversationTools({ node }: ConversationToolsProps) {
       </Field>
 
       <Field>
-        <FieldLabel>Additional tools</FieldLabel>
+        <FieldLabel>
+          {t(
+            "components.flow.sidepanel.tools.conversation_tools.additional.label"
+          )}
+        </FieldLabel>
         {attachedTools.map(({ id, tool }) => {
           const definition = tool ? additionalToolByType(tool.type) : undefined
           return (
@@ -254,8 +279,12 @@ export function ConversationTools({ node }: ConversationToolsProps) {
               icon={definition?.icon ?? additionalTools[0].icon}
               title={tool?.name ?? id}
               summary={tool?.description}
-              editLabel="Edit tool"
-              removeLabel="Remove from node"
+              editLabel={t(
+                "components.flow.sidepanel.tools.conversation_tools.additional.edit"
+              )}
+              removeLabel={t(
+                "components.flow.sidepanel.tools.conversation_tools.additional.remove"
+              )}
               readOnly={readOnly}
               onEdit={() => {
                 if (tool?.type === "webhook") {
@@ -286,7 +315,7 @@ export function ConversationTools({ node }: ConversationToolsProps) {
             }
           >
             <Plus />
-            Add tool
+            {t("components.flow.sidepanel.tools.conversation_tools.add_tool")}
           </PopoverTrigger>
           <PopoverContent
             align="start"
@@ -294,7 +323,9 @@ export function ConversationTools({ node }: ConversationToolsProps) {
           >
             <InputGroup>
               <InputGroupInput
-                placeholder="Search tools..."
+                placeholder={t(
+                  "components.flow.sidepanel.tools.conversation_tools.additional.search"
+                )}
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
               />
@@ -306,8 +337,12 @@ export function ConversationTools({ node }: ConversationToolsProps) {
               {availableTools.length === 0 ? (
                 <p className="px-1 py-2 text-sm text-muted-foreground">
                   {tools.length === 0 || needle.length > 0
-                    ? "No matching tools"
-                    : "All tools are already on this node"}
+                    ? t(
+                        "components.flow.sidepanel.tools.conversation_tools.additional.no_matches"
+                      )
+                    : t(
+                        "components.flow.sidepanel.tools.conversation_tools.additional.all_attached"
+                      )}
                 </p>
               ) : (
                 availableTools.map((tool) => (
@@ -347,7 +382,7 @@ export function ConversationTools({ node }: ConversationToolsProps) {
                 }}
               >
                 <Plus />
-                New {entry.label.toLowerCase()} tool
+                {t(entry.newLabel)}
               </Button>
             ))}
           </PopoverContent>

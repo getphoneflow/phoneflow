@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
@@ -32,20 +31,42 @@ import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { changePassword } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const setNewPasswordSchema = z
   .object({
-    currentPassword: z.string().min(1, "Current password is required"),
+    currentPassword: z
+      .string()
+      .min(
+        1,
+        "components.settings.account.set_new_password.current_password.required"
+      ),
     password: z
       .string()
-      .min(8, "Password must be at least 8 characters")
-      .regex(/[A-Z]/, "Password must include at least one uppercase letter")
-      .regex(/[a-z]/, "Password must include at least one lowercase letter")
-      .regex(/[0-9]/, "Password must include at least one number"),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
+      .min(8, "components.settings.account.set_new_password.password.min")
+      .regex(
+        /[A-Z]/,
+        "components.settings.account.set_new_password.password.uppercase"
+      )
+      .regex(
+        /[a-z]/,
+        "components.settings.account.set_new_password.password.lowercase"
+      )
+      .regex(
+        /[0-9]/,
+        "components.settings.account.set_new_password.password.number"
+      ),
+    confirmPassword: z
+      .string()
+      .min(
+        1,
+        "components.settings.account.set_new_password.confirm_password.required"
+      ),
   })
   .refine((values) => values.password === values.confirmPassword, {
-    message: "Passwords do not match",
+    message:
+      "components.settings.account.set_new_password.confirm_password.mismatch",
     path: ["confirmPassword"],
   })
 
@@ -56,6 +77,7 @@ type SetNewPasswordProps = {
 }
 
 export function SetNewPassword({ accounts }: SetNewPasswordProps) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
   const hasPassword = accounts.some(
@@ -63,7 +85,7 @@ export function SetNewPassword({ accounts }: SetNewPasswordProps) {
   )
 
   const form = useForm<SetNewPasswordValues>({
-    resolver: zodResolver(setNewPasswordSchema),
+    resolver: zodResolverI18n(setNewPasswordSchema),
     defaultValues: {
       currentPassword: "",
       password: "",
@@ -82,7 +104,9 @@ export function SetNewPassword({ accounts }: SetNewPasswordProps) {
       }
     },
     onSuccess: () => {
-      toast.success("New password set")
+      toast.success(
+        t("components.settings.account.set_new_password.toasts.updated")
+      )
       form.reset()
       setOpen(false)
     },
@@ -106,14 +130,18 @@ export function SetNewPassword({ accounts }: SetNewPasswordProps) {
     >
       <Item variant="outline">
         <ItemContent>
-          <ItemTitle>Password</ItemTitle>
-          <ItemDescription>Set a new password</ItemDescription>
+          <ItemTitle>
+            {t("components.settings.account.set_new_password.title")}
+          </ItemTitle>
+          <ItemDescription>
+            {t("components.settings.account.set_new_password.description")}
+          </ItemDescription>
         </ItemContent>
         <ItemActions>
           <DialogTrigger
             render={
               <Button type="button" variant="outline">
-                Set new password
+                {t("components.settings.account.set_new_password.trigger")}
               </Button>
             }
           />
@@ -122,9 +150,13 @@ export function SetNewPassword({ accounts }: SetNewPasswordProps) {
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Set new password</DialogTitle>
+          <DialogTitle>
+            {t("components.settings.account.set_new_password.dialog.title")}
+          </DialogTitle>
           <DialogDescription>
-            Enter your current password and new password below
+            {t(
+              "components.settings.account.set_new_password.dialog.description"
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -140,7 +172,11 @@ export function SetNewPassword({ accounts }: SetNewPasswordProps) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Current password</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.settings.account.set_new_password.current_password.label"
+                    )}
+                  </FieldLabel>
                   <PasswordInput
                     {...field}
                     id={field.name}
@@ -160,7 +196,11 @@ export function SetNewPassword({ accounts }: SetNewPasswordProps) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>New password</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.settings.account.set_new_password.password.label"
+                    )}
+                  </FieldLabel>
                   <PasswordInput
                     {...field}
                     id={field.name}
@@ -180,7 +220,11 @@ export function SetNewPassword({ accounts }: SetNewPasswordProps) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Confirm password</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.settings.account.set_new_password.confirm_password.label"
+                    )}
+                  </FieldLabel>
                   <PasswordInput
                     {...field}
                     id={field.name}
@@ -202,14 +246,14 @@ export function SetNewPassword({ accounts }: SetNewPasswordProps) {
                 variant="outline"
                 disabled={setNewPasswordMutation.isPending}
               >
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button type="submit" disabled={setNewPasswordMutation.isPending}>
               {setNewPasswordMutation.isPending ? (
                 <Spinner className="mx-8" />
               ) : (
-                "Set new password"
+                t("components.settings.account.set_new_password.dialog.submit")
               )}
             </Button>
           </DialogFooter>

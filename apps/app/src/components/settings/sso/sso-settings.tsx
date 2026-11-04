@@ -24,6 +24,7 @@ import { api } from "@/lib/api"
 import { authClient } from "@/lib/auth/client"
 import { useCheckPermission } from "@/lib/auth/permissions"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
 import { DisconnectSsoProvider } from "./disconnect-sso-provider"
 import { OidcForm } from "./oidc-form"
 import { SamlForm } from "./saml-form"
@@ -36,6 +37,7 @@ type SsoSettingsProps = {
 }
 
 export function SsoSettings({ organizationId, slug }: SsoSettingsProps) {
+  const { t } = useTranslation()
   const canUpdate = useCheckPermission({ organization: ["update"] })
   const queryClient = useQueryClient()
   const providerQuery = useSuspenseQuery({
@@ -80,16 +82,25 @@ export function SsoSettings({ organizationId, slug }: SsoSettingsProps) {
     <div className="space-y-8">
       <div className="flex items-start justify-between gap-4">
         <FieldSet>
-          <FieldLegend>Single sign-on</FieldLegend>
+          <FieldLegend>
+            {t("components.settings.sso.sso_settings.title")}
+          </FieldLegend>
           <FieldDescription>
             {provider
-              ? `Manage your ${provider.type === "oidc" ? "OIDC" : "SAML"} provider`
-              : "Connect an identity provider to this organization"}
+              ? t(
+                  "components.settings.sso.sso_settings.description_connected",
+                  {
+                    type: provider.type === "oidc" ? "OIDC" : "SAML",
+                  }
+                )
+              : t("components.settings.sso.sso_settings.description")}
           </FieldDescription>
         </FieldSet>
         {provider ? (
           <Badge variant={provider.domainVerified ? "default" : "secondary"}>
-            {provider.domainVerified ? "Verified" : "Pending verification"}
+            {provider.domainVerified
+              ? t("components.settings.sso.sso_settings.status.verified")
+              : t("components.settings.sso.sso_settings.status.pending")}
           </Badge>
         ) : null}
       </div>
@@ -122,7 +133,9 @@ export function SsoSettings({ organizationId, slug }: SsoSettingsProps) {
           <FieldGroup>
             {provider.type === "oidc" ? (
               <Field>
-                <FieldLabel>Redirect URL</FieldLabel>
+                <FieldLabel>
+                  {t("components.settings.sso.sso_settings.redirect_url")}
+                </FieldLabel>
                 <div className="flex gap-2">
                   <Input readOnly value={redirectUrl} />
                   <CopyButton value={redirectUrl} />
@@ -131,14 +144,18 @@ export function SsoSettings({ organizationId, slug }: SsoSettingsProps) {
             ) : (
               <>
                 <Field>
-                  <FieldLabel>ACS URL</FieldLabel>
+                  <FieldLabel>
+                    {t("components.settings.sso.sso_settings.acs_url")}
+                  </FieldLabel>
                   <div className="flex gap-2">
                     <Input readOnly value={acsUrl} />
                     <CopyButton value={acsUrl} />
                   </div>
                 </Field>
                 <Field>
-                  <FieldLabel>Entity ID</FieldLabel>
+                  <FieldLabel>
+                    {t("components.settings.sso.sso_settings.entity_id")}
+                  </FieldLabel>
                   <div className="flex gap-2">
                     <Input readOnly value={provider.issuer} />
                     <CopyButton value={provider.issuer} />
@@ -151,7 +168,7 @@ export function SsoSettings({ organizationId, slug }: SsoSettingsProps) {
                   }
                 >
                   <DownloadIcon />
-                  Download SP metadata
+                  {t("components.settings.sso.sso_settings.download_metadata")}
                 </Button>
               </>
             )}

@@ -7,8 +7,10 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { api } from "@/lib/api"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
 
 export function ManageBillingButton() {
+  const { t } = useTranslation()
   const canPurchase = useCheckPermission({ billing: ["purchase"] })
 
   const portalMutation = useMutation({
@@ -34,7 +36,7 @@ export function ManageBillingButton() {
       ) : (
         <>
           <ExternalLinkIcon />
-          Manage billing information
+          {t("components.billing.manage_billing_button.label")}
         </>
       )}
     </Button>

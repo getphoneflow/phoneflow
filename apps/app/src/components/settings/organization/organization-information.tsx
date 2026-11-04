@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -18,16 +17,27 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { organization } from "@/lib/auth/client"
 import { useCheckPermission } from "@/lib/auth/permissions"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const organizationInformationSchema = z.object({
-  name: z.string().trim().min(1, "Name is required"),
+  name: z
+    .string()
+    .trim()
+    .min(
+      1,
+      "components.settings.organization.organization_information.name.required"
+    ),
   slug: z
     .string()
     .trim()
-    .min(1, "Slug is required")
+    .min(
+      1,
+      "components.settings.organization.organization_information.slug.required"
+    )
     .regex(
       /^[a-z0-9-]+$/,
-      "Slug can only contain lowercase letters, numbers, and hyphens"
+      "components.settings.organization.organization_information.slug.format"
     ),
 })
 
@@ -46,11 +56,12 @@ export function OrganizationInformation({
   name,
   slug,
 }: OrganizationInformationProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const canUpdate = useCheckPermission({ organization: ["update"] })
 
   const form = useForm<OrganizationInformationValues>({
-    resolver: zodResolver(organizationInformationSchema),
+    resolver: zodResolverI18n(organizationInformationSchema),
     defaultValues: { name, slug },
   })
 
@@ -68,7 +79,11 @@ export function OrganizationInformation({
       }
     },
     onSuccess: () => {
-      toast.success("Organization information updated")
+      toast.success(
+        t(
+          "components.settings.organization.organization_information.toasts.updated"
+        )
+      )
       queryClient.invalidateQueries({ queryKey: ["full-organization"] })
       queryClient.invalidateQueries({ queryKey: ["organizations-list"] })
     },
@@ -83,9 +98,13 @@ export function OrganizationInformation({
   return (
     <FieldGroup>
       <FieldSet>
-        <FieldLegend>Organization information</FieldLegend>
+        <FieldLegend>
+          {t("components.settings.organization.organization_information.title")}
+        </FieldLegend>
         <FieldDescription>
-          Update your organization information
+          {t(
+            "components.settings.organization.organization_information.description"
+          )}
         </FieldDescription>
       </FieldSet>
 
@@ -101,7 +120,11 @@ export function OrganizationInformation({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  {t(
+                    "components.settings.organization.organization_information.name.label"
+                  )}
+                </FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -121,7 +144,11 @@ export function OrganizationInformation({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Slug</FieldLabel>
+                <FieldLabel htmlFor={field.name}>
+                  {t(
+                    "components.settings.organization.organization_information.slug.label"
+                  )}
+                </FieldLabel>
                 <Input
                   {...field}
                   id={field.name}
@@ -140,7 +167,7 @@ export function OrganizationInformation({
             {updateOrganizationInformationMutation.isPending ? (
               <Spinner />
             ) : (
-              "Save"
+              t("common.actions.save")
             )}
           </Button>
         </FieldGroup>

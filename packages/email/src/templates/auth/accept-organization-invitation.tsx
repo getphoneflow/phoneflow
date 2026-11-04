@@ -2,27 +2,35 @@
 import { Button, Section, Text } from "react-email"
 
 import EmailBase from "@workspace/email/components/base"
+import { useTranslation } from "@workspace/email/i18n"
 
 interface AcceptOrganizationInvitationEmailProps {
+  locale: string
   url: string
   organizationName: string
 }
 
 export default function AcceptOrganizationInvitationEmail({
+  locale,
   url,
   organizationName,
 }: AcceptOrganizationInvitationEmailProps) {
+  const t = useTranslation(locale)
+
   return (
     <EmailBase
-      preview={`Accept invitation to join ${organizationName} on Phoneflow`}
+      preview={t("accept_organization_invitation.preview", {
+        organization_name: organizationName,
+      })}
     >
       <Text>
-        You have been invited to join {organizationName} on Phoneflow. Click the
-        button below to accept the invitation:
+        {t("accept_organization_invitation.body", {
+          organization_name: organizationName,
+        })}
       </Text>
       <Section className="my-8 text-center">
         <Button href={url} className="rounded-lg bg-black px-6 py-2 text-white">
-          Accept invitation
+          {t("accept_organization_invitation.cta")}
         </Button>
       </Section>
     </EmailBase>

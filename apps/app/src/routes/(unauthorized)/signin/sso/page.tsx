@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { createFileRoute, Link, useLocation } from "@tanstack/react-router"
 import { useEffect } from "react"
@@ -26,18 +25,21 @@ import { Spinner } from "@workspace/ui/components/spinner"
 import { PhoneflowIcon } from "@/components/logos/phoneflow"
 import { getLastUsedLoginMethod, signIn } from "@/lib/auth/client"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export const Route = createFileRoute("/(unauthorized)/signin/sso/")({
   component: Page,
 })
 
 const ssoSignInSchema = z.object({
-  email: z.email("Enter a valid email address"),
+  email: z.email("routes.signin_sso.email.invalid"),
 })
 
 type SsoSignInValues = z.infer<typeof ssoSignInSchema>
 
 function Page() {
+  const { t } = useTranslation()
   const { searchStr } = useLocation()
   const params = new URLSearchParams(searchStr)
   const redirect = params.get("redirect") ?? undefined
@@ -46,7 +48,7 @@ function Page() {
     ? `${env.FRONTEND_URL}${redirect}`
     : env.FRONTEND_URL
   const form = useForm<SsoSignInValues>({
-    resolver: zodResolver(ssoSignInSchema),
+    resolver: zodResolverI18n(ssoSignInSchema),
     defaultValues: { email: params.get("email") ?? "" },
   })
 
@@ -83,7 +85,7 @@ function Page() {
 
   return (
     <>
-      <title>Sign in with SSO - Phoneflow</title>
+      <title>{t("routes.signin_sso.page_title")}</title>
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 py-8">
         <div className="flex items-center gap-2">
           <PhoneflowIcon className="size-6" />
@@ -91,9 +93,11 @@ function Page() {
         </div>
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Sign in with SSO</CardTitle>
+            <CardTitle className="text-xl">
+              {t("routes.signin_sso.title")}
+            </CardTitle>
             <CardDescription>
-              Enter your work email to continue with your identity provider
+              {t("routes.signin_sso.description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -109,12 +113,14 @@ function Page() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor={field.name}>Work email</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("routes.signin_sso.email.label")}
+                      </FieldLabel>
                       <Input
                         {...field}
                         id={field.name}
                         type="email"
-                        placeholder="name@company.com"
+                        placeholder={t("routes.signin_sso.email.placeholder")}
                         autoComplete="username"
                         aria-invalid={fieldState.invalid}
                         disabled={signInMutation.isPending}
@@ -130,13 +136,17 @@ function Page() {
                   disabled={signInMutation.isPending}
                   className="relative"
                 >
-                  {signInMutation.isPending ? <Spinner /> : "Sign in with SSO"}
+                  {signInMutation.isPending ? (
+                    <Spinner />
+                  ) : (
+                    t("routes.signin_sso.submit")
+                  )}
                   {lastLoginMethod?.startsWith("sso-") && (
                     <Badge
                       variant="secondary"
                       className="absolute -top-2 right-2"
                     >
-                      Last used
+                      {t("routes.signin_sso.last_used")}
                     </Badge>
                   )}
                 </Button>
@@ -146,7 +156,7 @@ function Page() {
                     search={{ redirect }}
                     className="underline"
                   >
-                    Back to sign in
+                    {t("routes.signin_sso.back_to_sign_in")}
                   </Link>
                 </div>
               </FieldGroup>

@@ -14,7 +14,9 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
+    "@workspace/i18n": "workspace:*",
     "dotenv": "catalog:",
+    "i18next": "catalog:",
     "nodemailer": "^9.0.5",
     "react": "catalog:",
     "react-email": "^6.9.2"

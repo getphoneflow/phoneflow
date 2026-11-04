@@ -24,6 +24,7 @@ import {
   organizationHasPaymentMethod,
 } from "@/lib/credits"
 import { env } from "@/lib/env"
+import { t } from "@/lib/i18n"
 import { stripe } from "@/lib/stripe"
 import { validator } from "@/lib/validator"
 
@@ -35,6 +36,7 @@ function isStripeConfigured() {
 
 billingRoutes.get("/", requireOrganization, async (c) => {
   const organizationId = c.get("organizationId")
+  const locale = c.get("locale")
 
   try {
     const org = await db.query.organization.findFirst({
@@ -50,12 +52,13 @@ billingRoutes.get("/", requireOrganization, async (c) => {
       balance: Number(org?.creditBalance ?? 0),
     } satisfies BillingCreditsResponse)
   } catch {
-    return c.json({ error: "Failed to load billing" }, 500)
+    return c.json({ error: t(locale, "billing.load_failed") }, 500)
   }
 })
 
 billingRoutes.get("/invoices", requireOrganization, async (c) => {
   const organizationId = c.get("organizationId")
+  const locale = c.get("locale")
 
   try {
     const org = await db.query.organization.findFirst({
@@ -85,7 +88,7 @@ billingRoutes.get("/invoices", requireOrganization, async (c) => {
       })) satisfies BillingInvoicesResponse
     )
   } catch {
-    return c.json({ error: "Failed to load invoices" }, 500)
+    return c.json({ error: t(locale, "billing.list_invoices_failed") }, 500)
   }
 })
 
@@ -95,18 +98,23 @@ billingRoutes.post(
   requirePermission({ billing: ["purchase"] }),
   validator("json", createCheckoutRequestSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const amount = Math.round(c.req.valid("json").amount * 100) / 100
 
     if (amount < MIN_CREDIT_PURCHASE_AMOUNT) {
       return c.json(
-        { error: `Minimum purchase is $${MIN_CREDIT_PURCHASE_AMOUNT}` },
+        {
+          error: t(locale, "billing.minimum_purchase", {
+            amount: MIN_CREDIT_PURCHASE_AMOUNT,
+          }),
+        },
         400
       )
     }
 
     if (!isStripeConfigured()) {
-      return c.json({ error: "Billing is not configured" }, 503)
+      return c.json({ error: t(locale, "billing.not_configured") }, 503)
     }
 
     try {
@@ -121,7 +129,7 @@ billingRoutes.post(
 
       if (!org?.stripeCustomerId) {
         return c.json(
-          { error: "Stripe customer not found for this organization" },
+          { error: t(locale, "billing.stripe_customer_not_found") },
           400
         )
       }
@@ -157,12 +165,17 @@ billingRoutes.post(
       })
 
       if (!checkout.url) {
-        return c.json({ error: "Failed to create checkout session" }, 500)
+        return c.json(
+          {
+            error: t(locale, "billing.create_checkout_session_failed"),
+          },
+          500
+        )
       }
 
       return c.json({ url: checkout.url } satisfies CheckoutResponse)
     } catch {
-      return c.json({ error: "Failed to start checkout" }, 500)
+      return c.json({ error: t(locale, "billing.start_checkout_failed") }, 500)
     }
   }
 )
@@ -173,25 +186,32 @@ billingRoutes.post(
   requirePermission({ billing: ["purchase"] }),
   validator("json", confirmCheckoutRequestSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const { sessionId } = c.req.valid("json")
 
     if (!isStripeConfigured()) {
-      return c.json({ error: "Billing is not configured" }, 503)
+      return c.json({ error: t(locale, "billing.not_configured") }, 503)
     }
 
     try {
       const checkout = await stripe.checkout.sessions.retrieve(sessionId)
 
       if (checkout.metadata?.organizationId !== organizationId) {
-        return c.json({ error: "Checkout session not found" }, 404)
+        return c.json(
+          { error: t(locale, "billing.checkout_session_not_found") },
+          404
+        )
       }
 
       await applyPaidCheckoutSession(checkout)
 
       return c.json({ ok: true } satisfies ConfirmCheckoutResponse)
     } catch {
-      return c.json({ error: "Failed to confirm checkout" }, 500)
+      return c.json(
+        { error: t(locale, "billing.confirm_checkout_failed") },
+        500
+      )
     }
   }
 )
@@ -201,6 +221,7 @@ billingRoutes.get(
   requireOrganization,
   requirePermission({ billing: ["purchase"] }),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
 
     try {
@@ -216,7 +237,10 @@ billingRoutes.get(
       })
 
       if (!org) {
-        return c.json({ error: "Organization not found" }, 404)
+        return c.json(
+          { error: t(locale, "billing.organization_not_found") },
+          404
+        )
       }
 
       return c.json({
@@ -225,7 +249,10 @@ billingRoutes.get(
         threshold: Number(org.autoReloadThreshold),
       } satisfies AutoReloadResponse)
     } catch {
-      return c.json({ error: "Failed to load auto reload settings" }, 500)
+      return c.json(
+        { error: t(locale, "billing.load_auto_reload_failed") },
+        500
+      )
     }
   }
 )
@@ -236,11 +263,12 @@ billingRoutes.put(
   requirePermission({ billing: ["purchase"] }),
   validator("json", updateAutoReloadRequestSchema),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
     const { enabled, amount, threshold } = c.req.valid("json")
 
     if (!isStripeConfigured()) {
-      return c.json({ error: "Billing is not configured" }, 503)
+      return c.json({ error: t(locale, "billing.not_configured") }, 503)
     }
 
     try {
@@ -255,7 +283,7 @@ billingRoutes.put(
 
       if (!org?.stripeCustomerId) {
         return c.json(
-          { error: "Stripe customer not found for this organization" },
+          { error: t(locale, "billing.stripe_customer_not_found") },
           400
         )
       }
@@ -266,8 +294,7 @@ billingRoutes.put(
       ) {
         return c.json(
           {
-            error:
-              "Add a payment method in Manage billing information before enabling auto reload",
+            error: t(locale, "billing.payment_method_required"),
           },
           400
         )
@@ -288,7 +315,10 @@ billingRoutes.put(
         threshold,
       } satisfies AutoReloadResponse)
     } catch {
-      return c.json({ error: "Failed to update auto reload settings" }, 500)
+      return c.json(
+        { error: t(locale, "billing.update_auto_reload_failed") },
+        500
+      )
     }
   }
 )
@@ -298,10 +328,11 @@ billingRoutes.post(
   requireOrganization,
   requirePermission({ billing: ["purchase"] }),
   async (c) => {
+    const locale = c.get("locale")
     const organizationId = c.get("organizationId")
 
     if (!isStripeConfigured()) {
-      return c.json({ error: "Billing is not configured" }, 503)
+      return c.json({ error: t(locale, "billing.not_configured") }, 503)
     }
 
     try {
@@ -316,7 +347,7 @@ billingRoutes.post(
 
       if (!org?.stripeCustomerId) {
         return c.json(
-          { error: "Stripe customer not found for this organization" },
+          { error: t(locale, "billing.stripe_customer_not_found") },
           400
         )
       }
@@ -328,7 +359,7 @@ billingRoutes.post(
 
       return c.json({ url: portal.url } satisfies BillingPortalResponse)
     } catch {
-      return c.json({ error: "Failed to open billing portal" }, 500)
+      return c.json({ error: t(locale, "billing.open_portal_failed") }, 500)
     }
   }
 )

@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
@@ -25,19 +24,27 @@ import { PasswordInput } from "@workspace/ui/components/password-input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { twoFactor } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const passwordSchema = z.object({
-  password: z.string().min(1, "Password is required"),
+  password: z
+    .string()
+    .min(
+      1,
+      "components.settings.account.disable_two_factor_dialog.password.required"
+    ),
 })
 
 type PasswordValues = z.infer<typeof passwordSchema>
 
 export function DisableTwoFactorDialog() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
 
   const form = useForm<PasswordValues>({
-    resolver: zodResolver(passwordSchema),
+    resolver: zodResolverI18n(passwordSchema),
     defaultValues: { password: "" },
   })
 
@@ -49,7 +56,11 @@ export function DisableTwoFactorDialog() {
       }
     },
     onSuccess: async () => {
-      toast.success("Two-factor authentication disabled")
+      toast.success(
+        t(
+          "components.settings.account.disable_two_factor_dialog.toasts.disabled"
+        )
+      )
       form.reset()
       setOpen(false)
       await queryClient.invalidateQueries({ queryKey: ["session"] })
@@ -71,16 +82,20 @@ export function DisableTwoFactorDialog() {
       <DialogTrigger
         render={
           <Button type="button" variant="destructive">
-            Disable
+            {t("components.settings.account.disable_two_factor_dialog.trigger")}
           </Button>
         }
       />
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Disable two-factor authentication</DialogTitle>
+          <DialogTitle>
+            {t("components.settings.account.disable_two_factor_dialog.title")}
+          </DialogTitle>
           <DialogDescription>
-            Enter your password to disable two-factor authentication
+            {t(
+              "components.settings.account.disable_two_factor_dialog.description"
+            )}
           </DialogDescription>
         </DialogHeader>
 
@@ -96,7 +111,11 @@ export function DisableTwoFactorDialog() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.settings.account.disable_two_factor_dialog.password.label"
+                    )}
+                  </FieldLabel>
                   <PasswordInput
                     {...field}
                     id={field.name}
@@ -114,7 +133,7 @@ export function DisableTwoFactorDialog() {
           <DialogFooter className="mt-8">
             <DialogClose>
               <Button variant="outline" disabled={disableMutation.isPending}>
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button
@@ -125,7 +144,9 @@ export function DisableTwoFactorDialog() {
               {disableMutation.isPending ? (
                 <Spinner className="mx-7" />
               ) : (
-                "Disable"
+                t(
+                  "components.settings.account.disable_two_factor_dialog.submit"
+                )
               )}
             </Button>
           </DialogFooter>

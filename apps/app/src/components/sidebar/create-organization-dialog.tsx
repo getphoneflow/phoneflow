@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -24,9 +23,14 @@ import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { captureEvent, identifyOrganization } from "@/lib/analytics"
 import { organization } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 const createOrganizationFormSchema = z.object({
-  name: z.string().trim().min(1, "Organization name is required"),
+  name: z
+    .string()
+    .trim()
+    .min(1, "components.sidebar.create_organization_dialog.name.required"),
 })
 
 type CreateOrganizationFormValues = z.infer<typeof createOrganizationFormSchema>
@@ -40,10 +44,11 @@ export function CreateOrganizationDialog({
   open,
   onOpenChange,
 }: CreateOrganizationDialogProps) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const form = useForm<CreateOrganizationFormValues>({
-    resolver: zodResolver(createOrganizationFormSchema),
+    resolver: zodResolverI18n(createOrganizationFormSchema),
     defaultValues: {
       name: "",
     },
@@ -66,7 +71,9 @@ export function CreateOrganizationDialog({
         organization_id: org?.id,
         name: org?.name,
       })
-      toast.success("Organization created")
+      toast.success(
+        t("components.sidebar.create_organization_dialog.toasts.created")
+      )
       form.reset()
       onOpenChange(false)
       await queryClient.refetchQueries()
@@ -87,8 +94,12 @@ export function CreateOrganizationDialog({
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create organization</DialogTitle>
-          <DialogDescription>Create an organization</DialogDescription>
+          <DialogTitle>
+            {t("components.sidebar.create_organization_dialog.title")}
+          </DialogTitle>
+          <DialogDescription>
+            {t("components.sidebar.create_organization_dialog.description")}
+          </DialogDescription>
         </DialogHeader>
 
         <form
@@ -104,12 +115,16 @@ export function CreateOrganizationDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor={field.name}>
-                    Organization name
+                    {t(
+                      "components.sidebar.create_organization_dialog.name.label"
+                    )}
                   </FieldLabel>
                   <Input
                     {...field}
                     id={field.name}
-                    placeholder="Acme Inc"
+                    placeholder={t(
+                      "components.sidebar.create_organization_dialog.name.placeholder"
+                    )}
                     autoComplete="organization"
                     autoFocus
                     aria-invalid={fieldState.invalid}
@@ -129,7 +144,7 @@ export function CreateOrganizationDialog({
                 variant="outline"
                 disabled={createOrganizationMutation.isPending}
               >
-                Cancel
+                {t("common.actions.cancel")}
               </Button>
             </DialogClose>
             <Button
@@ -139,7 +154,7 @@ export function CreateOrganizationDialog({
               {createOrganizationMutation.isPending ? (
                 <Spinner className="mx-8" />
               ) : (
-                "Create organization"
+                t("components.sidebar.create_organization_dialog.submit")
               )}
             </Button>
           </DialogFooter>

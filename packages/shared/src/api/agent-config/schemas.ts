@@ -17,10 +17,12 @@ function requiredString(message: string) {
 
 export const sttConfigSchema = z
   .object({
-    model: requiredString("Speech-to-text model is required"),
-    language: requiredString("Language is required").exactOptional(),
+    model: requiredString("schemas.agent_config.stt_config.model.required"),
+    language: requiredString(
+      "schemas.agent_config.stt_config.language.required"
+    ).exactOptional(),
     keyterms: z
-      .array(requiredString("Keyterm cannot be empty"))
+      .array(requiredString("schemas.agent_config.stt_config.keyterms.empty"))
       .exactOptional(),
     // Deepgram, xAI
     endpointingMs: z.number().int().nonnegative().exactOptional(),
@@ -58,7 +60,7 @@ export const sttConfigSchema = z
 
 export const llmConfigSchema = z
   .object({
-    model: requiredString("Language model is required"),
+    model: requiredString("schemas.agent_config.llm_config.model.required"),
     temperature: z.number().min(0).max(2).exactOptional(),
     maxTokens: z.number().int().positive().exactOptional(),
     toolChoice: z.enum(["auto", "none", "required"]).exactOptional(),
@@ -70,16 +72,20 @@ export const llmConfigSchema = z
 
 export const ttsConfigSchema = z
   .object({
-    model: requiredString("Text-to-speech model is required"),
-    voice: requiredString("Voice is required"),
-    language: requiredString("Language is required").exactOptional(),
+    model: requiredString("schemas.agent_config.tts_config.model.required"),
+    voice: requiredString("schemas.agent_config.tts_config.voice.required"),
+    language: requiredString(
+      "schemas.agent_config.tts_config.language.required"
+    ).exactOptional(),
     // Deepgram
     mipOptOut: z.boolean().exactOptional(),
     // Fish Audio
     latencyMode: z.enum(["normal", "balanced", "low"]).exactOptional(),
     speed: z.number().positive().exactOptional(),
     volume: z.number().exactOptional(),
-    emotion: z.array(requiredString("Emotion cannot be empty")).exactOptional(),
+    emotion: z
+      .array(requiredString("schemas.agent_config.tts_config.emotion.empty"))
+      .exactOptional(),
   })
   .strict()
 
@@ -148,15 +154,19 @@ export const callSettingsSchema = z
 
 export const flowNodeInstructionsSchema = z.object({
   type: z.enum(["prompt", "say"]),
-  text: requiredString("Conversation instructions are required"),
+  text: requiredString(
+    "schemas.agent_config.flow_node_instructions.text.required"
+  ),
 })
 
-const variableKeySchema = requiredString("Variable key is required")
-  .regex(
-    /^[a-z0-9_]+$/,
-    "Variable key must be lowercase letters, numbers, or underscores"
+const variableKeySchema = requiredString(
+  "schemas.agent_config.variable_key.required"
+)
+  .regex(/^[a-z0-9_]+$/, "schemas.agent_config.variable_key.format")
+  .refine(
+    (key) => !reservedVariableKeys.has(key),
+    "schemas.agent_config.variable_key.reserved"
   )
-  .refine((key) => !reservedVariableKeys.has(key), "Variable key is reserved")
 
 export const dynamicVariableSchema = z
   .object({
@@ -175,13 +185,17 @@ export const extractVariableSchema = z
 
 export const endCallToolSchema = z
   .object({
-    description: requiredString("Description is required"),
+    description: requiredString(
+      "schemas.agent_config.end_call_tool.description.required"
+    ),
   })
   .strict()
 
 export const ivrNavigationToolSchema = z
   .object({
-    description: requiredString("Description is required"),
+    description: requiredString(
+      "schemas.agent_config.ivr_navigation_tool.description.required"
+    ),
   })
   .strict()
 
@@ -189,7 +203,7 @@ export const extractVariablesToolSchema = z
   .object({
     variables: z
       .array(extractVariableSchema)
-      .min(1, "Add at least one variable"),
+      .min(1, "schemas.agent_config.extract_variables_tool.variables.min"),
   })
   .strict()
   .superRefine((value, ctx) => {
@@ -199,7 +213,8 @@ export const extractVariablesToolSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["variables", index, "key"],
-          message: "Duplicate variable key",
+          message:
+            "schemas.agent_config.extract_variables_tool.variables.duplicate_key",
         })
       }
       keys.add(variable.key)
@@ -209,7 +224,9 @@ export const extractVariablesToolSchema = z
 export const transferCallDestinationSchema = z
   .object({
     number: z.e164(),
-    condition: requiredString("Condition is required"),
+    condition: requiredString(
+      "schemas.agent_config.transfer_call_destination.condition.required"
+    ),
   })
   .strict()
 
@@ -217,7 +234,7 @@ export const transferCallToolSchema = z
   .object({
     destinations: z
       .array(transferCallDestinationSchema)
-      .min(1, "Add at least one destination"),
+      .min(1, "schemas.agent_config.transfer_call_tool.destinations.min"),
   })
   .strict()
   .superRefine((value, ctx) => {
@@ -227,7 +244,8 @@ export const transferCallToolSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["destinations", index, "number"],
-          message: "Duplicate phone number",
+          message:
+            "schemas.agent_config.transfer_call_tool.destinations.duplicate_number",
         })
       }
       numbers.add(destination.number)
@@ -236,10 +254,9 @@ export const transferCallToolSchema = z
 
 const toolParameterSchema = z
   .object({
-    name: requiredString("Parameter name is required").regex(
-      /^[a-z0-9_]+$/,
-      "Use lowercase letters, numbers, or underscores"
-    ),
+    name: requiredString(
+      "schemas.agent_config.tool_parameter.name.required"
+    ).regex(/^[a-z0-9_]+$/, "schemas.agent_config.tool_parameter.name.format"),
     type: z.enum(["string", "number", "boolean"]),
     description: z.string(),
     required: z.boolean(),
@@ -248,20 +265,25 @@ const toolParameterSchema = z
 
 const toolKeyValueSchema = z
   .object({
-    key: requiredString("Key is required"),
-    value: requiredString("Value is required"),
+    key: requiredString("schemas.agent_config.tool_key_value.key.required"),
+    value: requiredString("schemas.agent_config.tool_key_value.value.required"),
   })
   .strict()
 
 const responseVariableSchema = z
   .object({
-    name: requiredString("Variable name is required")
-      .regex(/^[a-z0-9_]+$/, "Use lowercase letters, numbers, or underscores")
+    name: requiredString("schemas.agent_config.response_variable.name.required")
+      .regex(
+        /^[a-z0-9_]+$/,
+        "schemas.agent_config.response_variable.name.format"
+      )
       .refine(
         (name) => !reservedVariableKeys.has(name),
-        "Variable name is reserved"
+        "schemas.agent_config.response_variable.name.reserved"
       ),
-    path: requiredString("Response path is required"),
+    path: requiredString(
+      "schemas.agent_config.response_variable.path.required"
+    ),
   })
   .strict()
 
@@ -276,17 +298,19 @@ export const webhookToolSchema = z
   .object({
     id: z.string().trim().min(1),
     type: z.literal("webhook"),
-    name: requiredString("Tool name is required")
-      .regex(/^[a-z0-9_]+$/, "Use lowercase letters, numbers, or underscores")
+    name: requiredString("schemas.agent_config.webhook_tool.name.required")
+      .regex(/^[a-z0-9_]+$/, "schemas.agent_config.webhook_tool.name.format")
       .refine(
         (name) =>
           !reservedToolNames.has(name) && !name.startsWith("notify_condition_"),
-        "Tool name is reserved"
+        "schemas.agent_config.webhook_tool.name.reserved"
       ),
-    description: requiredString("Tool description is required"),
+    description: requiredString(
+      "schemas.agent_config.webhook_tool.description.required"
+    ),
     parameters: z.array(toolParameterSchema),
     method: z.enum(["GET", "POST", "PUT", "PATCH", "DELETE"]),
-    url: requiredString("URL is required"),
+    url: requiredString("schemas.agent_config.webhook_tool.url.required"),
     timeoutMs: z.number().int().min(1000).max(600_000),
     maxRetries: z.number().int().min(0).max(5),
     headers: z.array(toolKeyValueSchema),
@@ -298,7 +322,7 @@ export const webhookToolSchema = z
       } catch {
         return false
       }
-    }, "Body must be JSON"),
+    }, "schemas.agent_config.webhook_tool.body.json"),
     responseVariables: z.array(responseVariableSchema),
   })
   .strict()
@@ -312,7 +336,9 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
     position: z.object({ x: z.number(), y: z.number() }),
     data: z
       .object({
-        name: requiredString("Conversation node name is required"),
+        name: requiredString(
+          "schemas.agent_config.flow_node_config.conversation_name.required"
+        ),
         isStart: z.literal(true).optional(),
         startSpeaker: z.enum(["agent", "user"]).optional(),
         instructions: flowNodeInstructionsSchema,
@@ -330,7 +356,9 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
     position: z.object({ x: z.number(), y: z.number() }),
     data: z
       .object({
-        name: requiredString("End node name is required"),
+        name: requiredString(
+          "schemas.agent_config.flow_node_config.end_name.required"
+        ),
       })
       .strict(),
   }),
@@ -356,7 +384,9 @@ const valuelessOperators = new Set<z.infer<typeof expressionOperatorSchema>>([
 
 export const expressionConditionSchema = z
   .object({
-    variable: requiredString("Transition variable is required"),
+    variable: requiredString(
+      "schemas.agent_config.expression_condition.variable.required"
+    ),
     operator: expressionOperatorSchema,
     value: z.string().optional(),
   })
@@ -366,7 +396,7 @@ export const expressionConditionSchema = z
       valuelessOperators.has(condition.operator) ||
       (condition.value?.trim().length ?? 0) > 0,
     {
-      message: "Value is required for this operator",
+      message: "schemas.agent_config.expression_condition.value.required",
       path: ["value"],
     }
   )
@@ -375,7 +405,9 @@ export const flowEdgeConditionSchema = z.discriminatedUnion("type", [
   z
     .object({
       type: z.literal("prompt"),
-      prompt: requiredString("Transition prompt is required"),
+      prompt: requiredString(
+        "schemas.agent_config.flow_edge_condition.prompt.required"
+      ),
     })
     .strict(),
   z
@@ -384,7 +416,7 @@ export const flowEdgeConditionSchema = z.discriminatedUnion("type", [
       match: z.enum(["all", "any"]),
       conditions: z
         .array(expressionConditionSchema)
-        .min(1, "Add at least one transition condition"),
+        .min(1, "schemas.agent_config.flow_edge_condition.conditions.min"),
     })
     .strict(),
   z.object({ type: z.literal("always") }).strict(),
@@ -411,7 +443,9 @@ export const agentConfigSchema = z
     timezone: z.string(),
     dynamicVariables: z.array(dynamicVariableSchema),
     tools: z.array(agentToolSchema),
-    nodes: z.array(flowNodeConfigSchema).min(1, "Add at least one node"),
+    nodes: z
+      .array(flowNodeConfigSchema)
+      .min(1, "schemas.agent_config.agent_config.nodes.min"),
     edges: z.array(flowEdgeConfigSchema),
   })
   .superRefine((config, ctx) => {
@@ -423,7 +457,7 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["tools", index, "id"],
-          message: "Duplicate tool",
+          message: "schemas.agent_config.agent_config.tools.duplicate",
         })
       }
       toolIds.add(tool.id)
@@ -432,7 +466,7 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["tools", index, "name"],
-          message: "Duplicate tool name",
+          message: "schemas.agent_config.agent_config.tools.duplicate_name",
         })
       }
       toolNames.add(tool.name)
@@ -447,7 +481,8 @@ export const agentConfigSchema = z
           ctx.addIssue({
             code: "custom",
             path: ["tools", index, "parameters", parameterIndex, "name"],
-            message: "Duplicate parameter name",
+            message:
+              "schemas.agent_config.agent_config.tools.duplicate_parameter_name",
           })
         }
         parameterNames.add(parameter.name)
@@ -459,7 +494,8 @@ export const agentConfigSchema = z
           ctx.addIssue({
             code: "custom",
             path: ["tools", index, "responseVariables", variableIndex, "name"],
-            message: "Duplicate response variable",
+            message:
+              "schemas.agent_config.agent_config.tools.duplicate_response_variable",
           })
         }
         responseNames.add(variable.name)
@@ -474,7 +510,7 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["nodes", index],
-          message: "Duplicate node",
+          message: "schemas.agent_config.agent_config.nodes.duplicate",
         })
       }
       nodeIds.add(node.id)
@@ -490,14 +526,14 @@ export const agentConfigSchema = z
             ctx.addIssue({
               code: "custom",
               path: ["nodes", index, "data", "toolIds", toolIndex],
-              message: "Unknown tool",
+              message: "schemas.agent_config.agent_config.nodes.unknown_tool",
             })
           }
           if (seenToolIds.has(toolId)) {
             ctx.addIssue({
               code: "custom",
               path: ["nodes", index, "data", "toolIds", toolIndex],
-              message: "Duplicate tool",
+              message: "schemas.agent_config.agent_config.nodes.duplicate_tool",
             })
           }
           seenToolIds.add(toolId)
@@ -509,7 +545,7 @@ export const agentConfigSchema = z
       ctx.addIssue({
         code: "custom",
         path: ["nodes"],
-        message: "Add a start node to the flow",
+        message: "schemas.agent_config.agent_config.nodes.start_required",
       })
     } else if (startCount > 1) {
       config.nodes.forEach((node, index) => {
@@ -517,7 +553,7 @@ export const agentConfigSchema = z
           ctx.addIssue({
             code: "custom",
             path: ["nodes", index],
-            message: "Only one start node is allowed",
+            message: "schemas.agent_config.agent_config.nodes.start_only_one",
           })
         }
       })
@@ -532,7 +568,7 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["edges", index],
-          message: "Duplicate transition",
+          message: "schemas.agent_config.agent_config.edges.duplicate",
         })
       }
       edgeIds.add(edge.id)
@@ -541,7 +577,7 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["edges", index],
-          message: "Transition is disconnected",
+          message: "schemas.agent_config.agent_config.edges.disconnected",
         })
       }
 
@@ -550,7 +586,7 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["edges", index],
-          message: "Duplicate transition",
+          message: "schemas.agent_config.agent_config.edges.duplicate",
         })
       }
       sourceTargetKeys.add(key)
@@ -565,7 +601,7 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["edges", index],
-          message: "Always transition must be the only transition on that node",
+          message: "schemas.agent_config.agent_config.edges.always_alone",
         })
       }
     })
@@ -577,7 +613,8 @@ export const agentConfigSchema = z
         ctx.addIssue({
           code: "custom",
           path: ["dynamicVariables", index, "key"],
-          message: "Duplicate variable key",
+          message:
+            "schemas.agent_config.agent_config.dynamic_variables.duplicate_key",
         })
       }
       dynamicKeys.add(variable.key)
@@ -654,7 +691,8 @@ export const agentConfigSchema = z
         reported.add(key)
         ctx.addIssue({
           code: "custom",
-          message: `Unknown variable "{{${key}}}"`,
+          message: "schemas.agent_config.agent_config.variables.unknown",
+          params: { variable: `{{${key}}}` },
         })
       }
     }
@@ -668,12 +706,18 @@ export const agentConfigSchema = z
         continue
       }
       reported.add(name)
-      ctx.addIssue({
-        code: "custom",
-        message: /^[a-z0-9_]+$/.test(name)
-          ? `Unknown variable "{{${name}}}"`
-          : "Variable key must be lowercase letters, numbers, or underscores",
-      })
+      if (/^[a-z0-9_]+$/.test(name)) {
+        ctx.addIssue({
+          code: "custom",
+          message: "schemas.agent_config.agent_config.variables.unknown",
+          params: { variable: `{{${name}}}` },
+        })
+      } else {
+        ctx.addIssue({
+          code: "custom",
+          message: "schemas.agent_config.variable_key.format",
+        })
+      }
     }
     for (const request of webhookRequests) {
       const keys = new Set([...knownVariables, ...request.parameters])

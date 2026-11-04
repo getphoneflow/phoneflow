@@ -8,6 +8,7 @@ import {
 import { DisableTwoFactorDialog } from "@/components/settings/account/disable-two-factor-dialog"
 import { EnableTwoFactorDialog } from "@/components/settings/account/enable-two-factor-dialog"
 import { RegenerateBackupCodesDialog } from "@/components/settings/account/regenerate-backup-codes-dialog"
+import { useTranslation } from "@/lib/i18n"
 
 type TwoFactorAuthProps = {
   twoFactorEnabled: boolean
@@ -18,6 +19,7 @@ export function TwoFactorAuth({
   twoFactorEnabled,
   accounts,
 }: TwoFactorAuthProps) {
+  const { t } = useTranslation()
   const hasPassword = accounts.some(
     (account) => account.providerId === "credential"
   )
@@ -29,11 +31,13 @@ export function TwoFactorAuth({
   return (
     <Item variant="outline">
       <ItemContent>
-        <ItemTitle>Two-factor authentication</ItemTitle>
+        <ItemTitle>
+          {t("components.settings.account.two_factor_auth.title")}
+        </ItemTitle>
         <ItemDescription>
           {twoFactorEnabled
-            ? "Authenticator app is enabled"
-            : "Add an authenticator app for extra account security"}
+            ? t("components.settings.account.two_factor_auth.enabled")
+            : t("components.settings.account.two_factor_auth.disabled")}
         </ItemDescription>
       </ItemContent>
       <ItemActions>

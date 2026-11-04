@@ -7,6 +7,7 @@ import {
   ComboboxList,
 } from "@workspace/ui/components/combobox"
 import { Field, FieldLabel } from "@workspace/ui/components/field"
+import { useTranslation } from "@/lib/i18n"
 
 export type SingleSelectOption = {
   value: string
@@ -20,7 +21,7 @@ export function FilterSingleSelect({
   items,
   selectedValue,
   onSelectedValueChange,
-  emptyText = "No items found",
+  emptyText,
 }: {
   label: string
   placeholder: string
@@ -29,6 +30,7 @@ export function FilterSingleSelect({
   onSelectedValueChange: (value: string | undefined) => void
   emptyText?: string
 }) {
+  const { t } = useTranslation()
   const selectedItem =
     items.find((item) => item.value === selectedValue) ?? null
 
@@ -48,7 +50,9 @@ export function FilterSingleSelect({
       >
         <ComboboxInput placeholder={placeholder} showClear={!!selectedItem} />
         <ComboboxContent>
-          <ComboboxEmpty>{emptyText}</ComboboxEmpty>
+          <ComboboxEmpty>
+            {emptyText ?? t("components.filters.filter_single_select.empty")}
+          </ComboboxEmpty>
           <ComboboxList>
             {(item: SingleSelectOption) => (
               <ComboboxItem key={item.value} value={item}>

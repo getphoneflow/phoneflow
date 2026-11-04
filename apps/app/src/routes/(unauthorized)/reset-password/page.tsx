@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { useState } from "react"
@@ -26,22 +25,25 @@ import { Captcha } from "@/components/captcha"
 import { PhoneflowIcon } from "@/components/logos/phoneflow"
 import { requestPasswordReset } from "@/lib/auth/client"
 import { env } from "@/lib/env"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 
 export const Route = createFileRoute("/(unauthorized)/reset-password/")({
   component: Page,
 })
 
+const recoverPasswordFormSchema = z.object({
+  email: z.email("routes.reset_password.email.invalid"),
+})
+
+type RecoverPasswordFormValues = z.infer<typeof recoverPasswordFormSchema>
+
 function Page() {
+  const { t } = useTranslation()
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
 
-  const recoverPasswordFormSchema = z.object({
-    email: z.email("Enter a valid email address"),
-  })
-
-  type RecoverPasswordFormValues = z.infer<typeof recoverPasswordFormSchema>
-
   const form = useForm<RecoverPasswordFormValues>({
-    resolver: zodResolver(recoverPasswordFormSchema),
+    resolver: zodResolverI18n(recoverPasswordFormSchema),
     defaultValues: {
       email: "",
     },
@@ -63,9 +65,7 @@ function Page() {
       }
     },
     onSuccess: () => {
-      toast.success(
-        "If an account exists for this email, a reset link has been sent"
-      )
+      toast.success(t("routes.reset_password.success"))
       form.reset()
       setCaptchaToken(null)
     },
@@ -77,7 +77,7 @@ function Page() {
 
   return (
     <>
-      <title>Reset password - Phoneflow</title>
+      <title>{t("routes.reset_password.page_title")}</title>
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6 py-8">
         <div className="flex items-center gap-2">
           <PhoneflowIcon className="size-6" />
@@ -85,9 +85,11 @@ function Page() {
         </div>
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle className="text-xl">Reset password</CardTitle>
+            <CardTitle className="text-xl">
+              {t("routes.reset_password.title")}
+            </CardTitle>
             <CardDescription>
-              Enter your email below to receive a password reset link
+              {t("routes.reset_password.description")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -103,12 +105,16 @@ function Page() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                      <FieldLabel htmlFor={field.name}>
+                        {t("routes.reset_password.email.label")}
+                      </FieldLabel>
                       <Input
                         {...field}
                         id={field.name}
                         type="email"
-                        placeholder="name@example.com"
+                        placeholder={t(
+                          "routes.reset_password.email.placeholder"
+                        )}
                         autoComplete="email"
                         aria-invalid={fieldState.invalid}
                         disabled={resetPasswordMutation.isPending}
@@ -135,16 +141,16 @@ function Page() {
                   {resetPasswordMutation.isPending ? (
                     <Spinner className="mx-12" />
                   ) : (
-                    "Send reset link"
+                    t("routes.reset_password.submit")
                   )}
                 </Button>
 
                 <div className="text-center text-sm">
                   <span className="text-muted-foreground">
-                    Already remember it?{" "}
+                    {t("routes.reset_password.remember_password")}{" "}
                   </span>
                   <Link to="/signin" className="underline">
-                    Sign in
+                    {t("routes.reset_password.sign_in_link")}
                   </Link>
                 </div>
               </FieldGroup>

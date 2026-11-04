@@ -23,19 +23,21 @@ import {
 } from "@workspace/ui/components/select"
 import { Switch } from "@workspace/ui/components/switch"
 import { Textarea } from "@workspace/ui/components/textarea"
+import { useTranslation } from "@/lib/i18n"
 
 export function ConfigSection({ children }: { children: ReactNode }) {
   return <FieldGroup className="gap-5">{children}</FieldGroup>
 }
 
 export function AdvancedFields({ children }: { children: ReactNode }) {
+  const { t } = useTranslation()
   const items = Children.toArray(children).filter(Boolean)
   if (items.length === 0) return null
 
   return (
     <Collapsible className="group/advanced">
       <CollapsibleTrigger className="flex w-full items-center justify-between py-1 text-sm font-medium text-muted-foreground hover:text-foreground">
-        Advanced
+        {t("components.flow.sidepanel.config.fields.advanced")}
         <ChevronDownIcon className="size-4 transition-transform group-data-open/advanced:rotate-180" />
       </CollapsibleTrigger>
       <CollapsibleContent>
@@ -171,7 +173,7 @@ export function EnumField<T extends string>({
 }
 
 export function LanguageField({
-  label = "Language",
+  label,
   description,
   value,
   languages,
@@ -185,6 +187,7 @@ export function LanguageField({
   onChange: (value: string) => void
   readOnly?: boolean
 }) {
+  const { t } = useTranslation()
   if (languages.length === 0) return null
 
   const options = languages.map((language) => ({
@@ -195,7 +198,9 @@ export function LanguageField({
 
   return (
     <EnumField
-      label={label}
+      label={
+        label ?? t("components.flow.sidepanel.config.fields.language.label")
+      }
       description={description}
       value={current}
       options={options}
@@ -211,7 +216,7 @@ export function StringListField({
   value,
   onChange,
   readOnly,
-  placeholder = "term1, term2",
+  placeholder,
 }: {
   label: string
   description?: string
@@ -220,6 +225,7 @@ export function StringListField({
   readOnly?: boolean
   placeholder?: string
 }) {
+  const { t } = useTranslation()
   const serialized = value.join(", ")
   const [draft, setDraft] = useState(serialized)
   const [focused, setFocused] = useState(false)
@@ -243,7 +249,10 @@ export function StringListField({
       <Input
         readOnly={readOnly}
         disabled={readOnly}
-        placeholder={placeholder}
+        placeholder={
+          placeholder ??
+          t("components.flow.sidepanel.config.fields.string_list.placeholder")
+        }
         value={draft}
         onFocus={() => setFocused(true)}
         onBlur={() => {

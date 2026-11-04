@@ -1,4 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -8,6 +7,8 @@ import { FieldGroup } from "@workspace/ui/components/field"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
 import { authClient } from "@/lib/auth/client"
+import { useTranslation } from "@/lib/i18n"
+import { zodResolverI18n } from "@/lib/zod-resolver"
 import { DomainList, domainListSchema } from "./domain-list"
 
 const providerSchema = z.object({
@@ -29,8 +30,9 @@ export function UpdateProviderForm({
   domain: savedDomain,
   onUpdated,
 }: UpdateProviderFormProps) {
+  const { t } = useTranslation()
   const form = useForm<ProviderValues>({
-    resolver: zodResolver(providerSchema),
+    resolver: zodResolverI18n(providerSchema),
     defaultValues: {
       domains: savedDomain.split(",").map((value) => ({ value })),
     },
@@ -51,7 +53,9 @@ export function UpdateProviderForm({
       }
     },
     onSuccess: () => {
-      toast.success("Provider updated")
+      toast.success(
+        t("components.settings.sso.update_provider_form.toasts.updated")
+      )
       onUpdated()
     },
     onError: (error) => {
@@ -69,7 +73,7 @@ export function UpdateProviderForm({
       <FieldGroup>
         <DomainList control={form.control} disabled={disabled} />
         <Button type="submit" disabled={disabled}>
-          {saveMutation.isPending ? <Spinner /> : "Save"}
+          {saveMutation.isPending ? <Spinner /> : t("common.actions.save")}
         </Button>
       </FieldGroup>
     </form>

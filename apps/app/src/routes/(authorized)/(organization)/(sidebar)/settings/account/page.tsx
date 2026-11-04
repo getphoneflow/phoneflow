@@ -7,6 +7,7 @@ import { TwoFactorAuth } from "@/components/settings/account/two-factor-auth"
 import { UserInformation } from "@/components/settings/account/user-information"
 import { listAccounts } from "@/lib/auth/client"
 import { sessionQueryOptions } from "@/lib/auth/session"
+import { useTranslation } from "@/lib/i18n"
 
 function accountProvidersQueryOptions() {
   return queryOptions({
@@ -28,6 +29,7 @@ export const Route = createFileRoute(
 })
 
 function Page() {
+  const { t } = useTranslation()
   const { data: session } = useSuspenseQuery(sessionQueryOptions())
   const { data: accounts } = useSuspenseQuery(accountProvidersQueryOptions())
 
@@ -37,7 +39,7 @@ function Page() {
 
   return (
     <>
-      <title>Account settings - Phoneflow</title>
+      <title>{t("routes.settings.account.page_title")}</title>
       <div className="mx-auto max-w-lg space-y-8">
         <UserInformation
           name={session.user.name}

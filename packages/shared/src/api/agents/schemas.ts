@@ -5,8 +5,8 @@ import { agentConfigSchema } from "@workspace/shared/api/agent-config/schemas"
 const agentNameSchema = z
   .string()
   .trim()
-  .min(1, "Agent name is required")
-  .max(64, "Agent name must be at most 64 characters")
+  .min(1, "schemas.agents.agent_name.required")
+  .max(64, "schemas.agents.agent_name.max")
 
 export const agentIdParamsSchema = z.object({
   id: z.uuid(),

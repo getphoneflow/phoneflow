@@ -1,0 +1,195 @@
+{
+  "schemas": {
+    "agents": {
+      "agent_name": {
+        "required": "Agent name is required",
+        "max": "Agent name must be at most 64 characters"
+      }
+    },
+    "agent_config": {
+      "stt_config": {
+        "model": {
+          "required": "Speech-to-text model is required"
+        },
+        "language": {
+          "required": "Language is required"
+        },
+        "keyterms": {
+          "empty": "Keyterm cannot be empty"
+        }
+      },
+      "llm_config": {
+        "model": {
+          "required": "Language model is required"
+        }
+      },
+      "tts_config": {
+        "model": {
+          "required": "Text-to-speech model is required"
+        },
+        "voice": {
+          "required": "Voice is required"
+        },
+        "language": {
+          "required": "Language is required"
+        },
+        "emotion": {
+          "empty": "Emotion cannot be empty"
+        }
+      },
+      "flow_node_instructions": {
+        "text": {
+          "required": "Conversation instructions are required"
+        }
+      },
+      "variable_key": {
+        "required": "Variable key is required",
+        "format": "Variable key must be lowercase letters, numbers, or underscores",
+        "reserved": "Variable key is reserved"
+      },
+      "end_call_tool": {
+        "description": {
+          "required": "Description is required"
+        }
+      },
+      "ivr_navigation_tool": {
+        "description": {
+          "required": "Description is required"
+        }
+      },
+      "extract_variables_tool": {
+        "variables": {
+          "min": "Add at least one variable",
+          "duplicate_key": "Duplicate variable key"
+        }
+      },
+      "transfer_call_destination": {
+        "condition": {
+          "required": "Condition is required"
+        }
+      },
+      "transfer_call_tool": {
+        "destinations": {
+          "min": "Add at least one destination",
+          "duplicate_number": "Duplicate phone number"
+        }
+      },
+      "tool_parameter": {
+        "name": {
+          "required": "Parameter name is required",
+          "format": "Use lowercase letters, numbers, or underscores"
+        }
+      },
+      "tool_key_value": {
+        "key": {
+          "required": "Key is required"
+        },
+        "value": {
+          "required": "Value is required"
+        }
+      },
+      "response_variable": {
+        "name": {
+          "required": "Variable name is required",
+          "format": "Use lowercase letters, numbers, or underscores",
+          "reserved": "Variable name is reserved"
+        },
+        "path": {
+          "required": "Response path is required"
+        }
+      },
+      "webhook_tool": {
+        "name": {
+          "required": "Tool name is required",
+          "format": "Use lowercase letters, numbers, or underscores",
+          "reserved": "Tool name is reserved"
+        },
+        "description": {
+          "required": "Tool description is required"
+        },
+        "url": {
+          "required": "URL is required"
+        },
+        "body": {
+          "json": "Body must be JSON"
+        }
+      },
+      "flow_node_config": {
+        "conversation_name": {
+          "required": "Conversation node name is required"
+        },
+        "end_name": {
+          "required": "End node name is required"
+        }
+      },
+      "expression_condition": {
+        "variable": {
+          "required": "Transition variable is required"
+        },
+        "value": {
+          "required": "Value is required for this operator"
+        }
+      },
+      "flow_edge_condition": {
+        "prompt": {
+          "required": "Transition prompt is required"
+        },
+        "conditions": {
+          "min": "Add at least one transition condition"
+        }
+      },
+      "agent_config": {
+        "nodes": {
+          "min": "Add at least one node",
+          "duplicate": "Duplicate node",
+          "unknown_tool": "Unknown tool",
+          "duplicate_tool": "Duplicate tool",
+          "start_required": "Add a start node to the flow",
+          "start_only_one": "Only one start node is allowed"
+        },
+        "edges": {
+          "duplicate": "Duplicate transition",
+          "disconnected": "Transition is disconnected",
+          "always_alone": "Always transition must be the only transition on that node"
+        },
+        "tools": {
+          "duplicate": "Duplicate tool",
+          "duplicate_name": "Duplicate tool name",
+          "duplicate_parameter_name": "Duplicate parameter name",
+          "duplicate_response_variable": "Duplicate response variable"
+        },
+        "dynamic_variables": {
+          "duplicate_key": "Duplicate variable key"
+        },
+        "variables": {
+          "unknown": "Unknown variable \"{{variable}}\""
+        }
+      }
+    },
+    "billing": {
+      "create_checkout_request": {
+        "amount": {
+          "min": "Minimum purchase is $10"
+        }
+      },
+      "update_auto_reload_request": {
+        "amount": {
+          "min": "Minimum reload amount is $10"
+        },
+        "threshold": {
+          "min": "Threshold must be 1 or greater"
+        }
+      }
+    },
+    "phone_numbers": {
+      "phone_number_request": {
+        "agent_id": {
+          "required_with_version": "Agent is required when a version is selected"
+        },
+        "sip_password": {
+          "required_with_username": "SIP password is required when a username is set"
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { env } from "@/lib/env"
+import i18n from "@/lib/i18n"
 
 type RequestOptions<TBody = never> = {
   headers?: HeadersInit
@@ -11,6 +12,7 @@ async function request<TResponse, TBody = never>(
   options?: RequestOptions<TBody>
 ): Promise<TResponse> {
   const headers = new Headers(options?.headers)
+  headers.set("Accept-Language", i18n.language)
   if (options?.body !== undefined) {
     headers.set("Content-Type", "application/json")
   }

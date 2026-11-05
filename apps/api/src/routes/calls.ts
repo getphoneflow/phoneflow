@@ -41,6 +41,7 @@ import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { computeCallCosts } from "@/lib/call-cost"
+import { selectCallsToReap } from "@/lib/call-reaper"
 import { recordContactCall, resolvePhoneContactId } from "@/lib/contacts"
 import {
   deductOrganizationCredits,
@@ -64,6 +65,9 @@ import { validator } from "@/lib/validator"
 export const callRoutes = new Hono()
 
 const STALE_CALL_AGE_MS = 10 * 60 * 1000
+
+// In memory on purpose: losing it on a restart only delays a reap by one sweep.
+let roomGoneSince = new Map<string, number>()
 
 type ResolvedAgentConfig = {
   organizationId: string
@@ -586,13 +590,17 @@ callRoutes.post("/reap-stale", requireAuthToken, async (c) => {
       return c.json({ error: "LiveKit unavailable" }, 503)
     }
 
+    const { expired, goneSince } = selectCallsToReap(
+      staleCalls,
+      liveRoomNames,
+      roomGoneSince,
+      Date.now()
+    )
+    roomGoneSince = goneSince
+
     let reaped = 0
 
-    for (const call of staleCalls) {
-      if (liveRoomNames.has(call.livekitRoomName)) {
-        continue
-      }
-
+    for (const call of expired) {
       const closed = await db.transaction(async (tx) => {
         const now = new Date()
         const [row] = await tx

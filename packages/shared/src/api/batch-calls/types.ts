@@ -15,6 +15,7 @@ export type CreateBatchCallRequest = z.infer<
 
 export type CreateBatchCallResponse = {
   id: string
+  doNotCallCount: number
 }
 
 export type TriggerBatchCallResponse = {
@@ -31,6 +32,7 @@ export type BatchCallListItem = {
   status: BatchCallStatus
   scheduledAt: Date | null
   totalCount: number
+  doNotCallSkippedCount: number
   createdAt: Date
   updatedAt: Date
   phoneNumber: { number: string } | null

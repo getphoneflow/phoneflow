@@ -32,6 +32,9 @@ export const batchCallsTable = pgTable(
       mode: "date",
     }),
     totalCount: integer("total_count").notNull().default(0),
+    doNotCallSkippedCount: integer("do_not_call_skipped_count")
+      .notNull()
+      .default(0),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
       .defaultNow()
       .notNull(),

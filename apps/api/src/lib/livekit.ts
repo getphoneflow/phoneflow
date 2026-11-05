@@ -18,6 +18,7 @@ import {
 } from "livekit-server-sdk"
 
 import type { CallVariableValues } from "@workspace/shared/api/calls/types"
+import { DoNotCallError, isDoNotCall } from "@/lib/do-not-call"
 import { env } from "@/lib/env"
 import { getPrivateObject, privateConfig, privateS3Configured } from "@/lib/s3"
 
@@ -244,6 +245,7 @@ export async function clearSipConfig() {
 }
 
 type OutboundCall = {
+  organizationId: string
   agentId: string
   agentVersionId: string | null
   fromNumber: string
@@ -256,6 +258,10 @@ type OutboundCall = {
 }
 
 export async function placeOutboundCall(call: OutboundCall) {
+  if (await isDoNotCall(call.organizationId, call.toNumber)) {
+    throw new DoNotCallError()
+  }
+
   const roomName = `${ROOM_PREFIX}${crypto.randomUUID()}`
 
   const dispatch = createAgentDispatchClient()

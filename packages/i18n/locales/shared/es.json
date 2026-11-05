@@ -164,6 +164,11 @@
         "variables": {
           "unknown": "Variable desconocida \"{{variable}}\""
         }
+      },
+      "opt_out": {
+        "message": {
+          "required": "El mensaje de baja no puede estar vacío"
+        }
       }
     },
     "billing": {
@@ -189,6 +194,18 @@
         "sip_password": {
           "required_with_username": "La contraseña SIP es obligatoria cuando se indica un usuario"
         }
+      }
+    },
+    "do_not_call": {
+      "number": {
+        "invalid": "Introduce un número válido en formato E.164, por ejemplo +34600123456"
+      },
+      "reason": {
+        "max": "El motivo no puede superar los 500 caracteres"
+      },
+      "bulk": {
+        "empty": "El archivo no contiene números de teléfono",
+        "max": "El archivo tiene demasiadas filas"
       }
     }
   }

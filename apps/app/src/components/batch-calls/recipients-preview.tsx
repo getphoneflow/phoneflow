@@ -7,14 +7,17 @@ import {
   TableRow,
 } from "@workspace/ui/components/table"
 import type { ParsedCsvRecipient } from "@/components/batch-calls/recipients-csv"
+import { DoNotCallBadge } from "@/components/do-not-call/do-not-call-badge"
 import { useTranslation } from "@/lib/i18n"
 
 export function RecipientsPreview({
   columns,
   recipients,
+  doNotCallNumbers,
 }: {
   columns: string[]
   recipients: ParsedCsvRecipient[]
+  doNotCallNumbers: Set<string>
 }) {
   const { t } = useTranslation()
 
@@ -48,9 +51,16 @@ export function RecipientsPreview({
             <TableRow key={`${index}-${recipient.toNumber}`}>
               {previewColumns.map((column) => (
                 <TableCell key={column}>
-                  {column === "phone_number"
-                    ? recipient.toNumber
-                    : (recipient.variables?.[column] ?? "")}
+                  {column === "phone_number" ? (
+                    <span className="inline-flex items-center gap-2">
+                      {recipient.toNumber}
+                      {doNotCallNumbers.has(recipient.toNumber) ? (
+                        <DoNotCallBadge />
+                      ) : null}
+                    </span>
+                  ) : (
+                    (recipient.variables?.[column] ?? "")
+                  )}
                 </TableCell>
               ))}
             </TableRow>

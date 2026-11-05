@@ -20,6 +20,7 @@ import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { organizationHasCredits } from "@/lib/credits"
+import { DoNotCallError, findDoNotCallNumbers } from "@/lib/do-not-call"
 import { env } from "@/lib/env"
 import { t } from "@/lib/i18n"
 import { placeOutboundCall } from "@/lib/livekit"
@@ -160,6 +161,14 @@ batchCallRoutes.post(
         )
       }
 
+      const listed = await findDoNotCallNumbers(
+        organizationId,
+        payload.recipients.map((recipient) => recipient.toNumber)
+      )
+      const doNotCallCount = payload.recipients.filter((recipient) =>
+        listed.has(recipient.toNumber)
+      ).length
+
       const batchCallId = crypto.randomUUID()
 
       await db.transaction(async (tx) => {
@@ -191,7 +200,10 @@ batchCallRoutes.post(
         scheduledAt ? { delay: scheduledAt.getTime() - Date.now() } : undefined
       )
 
-      return c.json({ id: batchCallId } satisfies CreateBatchCallResponse)
+      return c.json({
+        id: batchCallId,
+        doNotCallCount,
+      } satisfies CreateBatchCallResponse)
     } catch {
       return c.json({ error: t(locale, "batch_calls.create_failed") }, 500)
     }
@@ -256,9 +268,12 @@ batchCallRoutes.post(
         return c.json({ error: "Phone number has no SIP connection" }, 400)
       }
 
+      let doNotCallSkippedCount = 0
+
       for (const recipient of batchCall.recipients) {
         try {
           await placeOutboundCall({
+            organizationId: batchCall.organizationId,
             agentId: batchCall.agentId,
             agentVersionId: batchCall.agentVersionId,
             toNumber: recipient.toNumber,
@@ -269,7 +284,10 @@ batchCallRoutes.post(
             variables: recipient.variables ?? {},
             batchCallId: id,
           })
-        } catch {
+        } catch (error) {
+          if (error instanceof DoNotCallError) {
+            doNotCallSkippedCount += 1
+          }
           // Continue if one recipient fails
         }
       }
@@ -278,6 +296,7 @@ batchCallRoutes.post(
         .update(batchCallsTable)
         .set({
           status: "triggered",
+          doNotCallSkippedCount,
           updatedAt: new Date(),
         })
         .where(eq(batchCallsTable.id, id))

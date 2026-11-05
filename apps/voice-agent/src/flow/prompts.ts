@@ -15,3 +15,7 @@ export const EXTRACT_INSTRUCTIONS = `Whenever the user provides one of the reque
 You can call it multiple times as more values are provided.
 Do not ask the user for confirmation, just call the tool.
 Do not inform the user that you are calling the tool, just call it.`
+
+export const OPT_OUT_INSTRUCTIONS = `When the caller clearly asks not to be called again or to be removed from the calling list, in any language (for example "no me llaméis más", "quítame de la lista", "stop calling me"), immediately call the \`add_to_do_not_call\` tool.
+Only call it on a clear request about future calls. Never call it on ambiguous remarks or on a lack of interest in this call, such as "now is not a good time", "call me later", "I'm busy" or "I'm not interested".
+If you are not sure, ask the caller whether they want to stop receiving calls, and only call the tool if they say yes.`

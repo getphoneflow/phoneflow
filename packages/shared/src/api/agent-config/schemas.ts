@@ -152,6 +152,15 @@ export const callSettingsSchema = z
   })
   .strict()
 
+export const optOutConfigSchema = z
+  .object({
+    action: z.enum(["end_call", "continue"]),
+    message: requiredString(
+      "schemas.agent_config.opt_out.message.required"
+    ).exactOptional(),
+  })
+  .strict()
+
 export const flowNodeInstructionsSchema = z.object({
   type: z.enum(["prompt", "say"]),
   text: requiredString(
@@ -288,6 +297,7 @@ const responseVariableSchema = z
   .strict()
 
 const reservedToolNames = new Set([
+  "add_to_do_not_call",
   "end_call",
   "extract_variables",
   "send_dtmf",
@@ -439,6 +449,7 @@ export const agentConfigSchema = z
     turnHandling: turnHandlingConfigSchema,
     backgroundAudio: backgroundAudioSchema.exactOptional(),
     call: callSettingsSchema,
+    optOut: optOutConfigSchema.exactOptional(),
     globalPrompt: z.string(),
     timezone: z.string(),
     dynamicVariables: z.array(dynamicVariableSchema),
@@ -622,6 +633,9 @@ export const agentConfigSchema = z
     })
 
     const texts = [config.globalPrompt]
+    if (config.optOut?.message) {
+      texts.push(config.optOut.message)
+    }
     const expressionKeys: string[] = []
     const webhookRequests: { parameters: string[]; texts: string[] }[] = []
 

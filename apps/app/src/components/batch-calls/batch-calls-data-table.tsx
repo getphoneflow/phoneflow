@@ -101,7 +101,16 @@ function getColumns(t: TFunction) {
       header: t(
         "components.batch_calls.batch_calls_data_table.columns.recipients"
       ),
-      cell: ({ row }) => row.original.totalCount,
+      cell: ({ row }) =>
+        row.original.doNotCallSkippedCount > 0
+          ? t(
+              "components.batch_calls.batch_calls_data_table.recipients_with_skipped",
+              {
+                total: row.original.totalCount,
+                skipped: row.original.doNotCallSkippedCount,
+              }
+            )
+          : row.original.totalCount,
     }),
     columnHelper.display({
       id: "from",

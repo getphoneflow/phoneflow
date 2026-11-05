@@ -37,6 +37,7 @@ export type ContactListResponse = {
 
 export type ContactDetailResponse = ContactListItem & {
   calls: CallListItem[]
+  onDoNotCallList: boolean
 }
 
 export type ContactDownloadResponse = ContactListItem[]

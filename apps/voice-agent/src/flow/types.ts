@@ -5,6 +5,7 @@ import type {
   FlowEdgeCondition,
   FlowNodeInstructions,
   IvrNavigationTool,
+  OptOutConfig,
   TransferCallTool,
 } from "@workspace/shared/api/agent-config/types"
 
@@ -41,4 +42,5 @@ export interface FlowGraph {
   globalPrompt: string
   startNode: FlowConversationNode
   tools: AgentTool[]
+  optOut?: OptOutConfig
 }

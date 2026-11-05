@@ -64,7 +64,8 @@
     "agent_not_found": "Agent not found",
     "insufficient_credits": "Insufficient credits",
     "agent_version_not_found": "Agent version not found",
-    "start_outbound_failed": "Failed to start outbound call"
+    "start_outbound_failed": "Failed to start outbound call",
+    "do_not_call": "This number is on your organization's do-not-call list"
   },
   "contacts": {
     "user_email_not_found": "User email not found",
@@ -89,5 +90,14 @@
     "image_type_invalid": "Image must be JPEG, PNG, WebP, or GIF",
     "image_too_large": "Image must be 2MB or smaller",
     "upload_image_failed": "Failed to upload image"
+  },
+  "do_not_call": {
+    "list_failed": "Failed to load the do-not-call list",
+    "already_listed": "This number is already on the do-not-call list",
+    "create_failed": "Failed to add the number to the do-not-call list",
+    "import_failed": "Failed to import the do-not-call list",
+    "check_failed": "Failed to check the do-not-call list",
+    "not_found": "Number not found on the do-not-call list",
+    "delete_failed": "Failed to remove the number from the do-not-call list"
   }
 }

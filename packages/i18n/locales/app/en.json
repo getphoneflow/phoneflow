@@ -292,6 +292,11 @@
       "title": "Page not found",
       "description": "The page you're looking for doesn't exist or was moved",
       "return_home": "Return Home"
+    },
+    "do_not_call": {
+      "page_title": "Do not call - Phoneflow",
+      "breadcrumb": "Do not call",
+      "search_placeholder": "Search by number or reason"
     }
   },
   "components": {
@@ -503,6 +508,21 @@
             "timezone": {
               "label": "Timezone",
               "description": "Used for {{date}}, {{time}}, and {{timezone}}"
+            },
+            "opt_out": {
+              "label": "In-call opt-out",
+              "description": "When a caller clearly asks not to be called again, the agent adds their number to the do-not-call list",
+              "action": {
+                "label": "After the opt-out",
+                "description": "What the agent does once the number is on the list",
+                "end_call": "End the call",
+                "continue": "Continue the conversation"
+              },
+              "message": {
+                "label": "Opt-out message",
+                "description": "Said word for word after the opt-out. Leave empty to let the agent reply in its own words, or to hang up without saying anything else",
+                "placeholder": "Understood, we won't call you again. Goodbye."
+              }
             }
           },
           "model_tab": {
@@ -1050,7 +1070,8 @@
           "version": "Version",
           "when": "When"
         },
-        "search_placeholder": "Search batch calls..."
+        "search_placeholder": "Search batch calls...",
+        "recipients_with_skipped": "{{total}} ({{skipped}} skipped: do not call)"
       },
       "create_batch_call_form": {
         "errors": {
@@ -1101,7 +1122,8 @@
             "placeholder": "Timezone"
           }
         },
-        "submit": "Create batch call"
+        "submit": "Create batch call",
+        "do_not_call_count": "Recipients on the do-not-call list, which will be skipped: {{count}}"
       }
     },
     "billing": {
@@ -1831,7 +1853,8 @@
             "agent": "Agents",
             "phone_number": "Phone numbers",
             "calls": "Calls",
-            "billing": "Billing"
+            "billing": "Billing",
+            "do_not_call": "Do-not-call list"
           },
           "actions": {
             "create": "create",
@@ -1901,7 +1924,8 @@
           "batch_calls": "Batch calls",
           "calls": "Calls",
           "contacts": "Contacts",
-          "settings": "Settings"
+          "settings": "Settings",
+          "do_not_call": "Do not call"
         }
       },
       "sidebar_credits": {
@@ -1972,6 +1996,71 @@
       "deleted_agent": "Deleted agent",
       "deleted_phone_number": "Deleted phone number",
       "agent_version_draft": "Latest (draft)"
+    },
+    "do_not_call": {
+      "badge": "Do not call",
+      "csv": {
+        "errors": {
+          "invalid": "The file could not be read",
+          "missing_rows": "The file has a header but no rows",
+          "missing_phone_number_column": "The file needs a phone_number column",
+          "too_many_rows": "The file can have at most {{max}} rows"
+        }
+      },
+      "add_dialog": {
+        "trigger": "Add number",
+        "title": "Add number to the do-not-call list",
+        "description": "This number will not be dialled by any agent or batch call in this organization",
+        "number": {
+          "label": "Phone number"
+        },
+        "reason": {
+          "label": "Reason (optional)",
+          "placeholder": "Asked by email not to be called"
+        },
+        "submit": "Add",
+        "toasts": {
+          "added": "{{number}} added to the do-not-call list"
+        }
+      },
+      "import_dialog": {
+        "trigger": "Import CSV",
+        "title": "Import numbers",
+        "description": "Upload a CSV with a phone_number column and an optional reason column. Numbers must include the country prefix",
+        "download_template": "Download template",
+        "placeholder": "Click or drop a file",
+        "rows": "Rows to import: {{count}}",
+        "submit": "Import",
+        "result": {
+          "added": "Added: {{count}}",
+          "already_listed": "Already on the list: {{count}}",
+          "duplicates": "Repeated in the file: {{count}}",
+          "invalid": "Invalid and not imported: {{count}}"
+        }
+      },
+      "remove_dialog": {
+        "trigger": "Remove {{number}} from the do-not-call list",
+        "title": "Remove from the do-not-call list",
+        "description": "{{number}} can be dialled again once removed. Only do this if you know this person has agreed to be called.",
+        "confirm": "Remove",
+        "toasts": {
+          "removed": "{{number}} removed from the do-not-call list"
+        }
+      },
+      "data_table": {
+        "columns": {
+          "number": "Number",
+          "source": "Source",
+          "reason": "Reason",
+          "created_by": "Added by",
+          "created_at": "Added"
+        },
+        "source": {
+          "manual": "Manual",
+          "import": "Import",
+          "call": "During a call"
+        }
+      }
     }
   }
 }

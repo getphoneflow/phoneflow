@@ -15,12 +15,17 @@ import type {
   CreateBatchCallRequest,
   CreateBatchCallResponse,
 } from "@workspace/shared/api/batch-calls/types"
+import type {
+  CheckDoNotCallRequest,
+  CheckDoNotCallResponse,
+} from "@workspace/shared/api/do-not-call/types"
 import type { PhoneNumberListResponse } from "@workspace/shared/api/phone-numbers/types"
 import { Button } from "@workspace/ui/components/button"
 import { Calendar } from "@workspace/ui/components/calendar"
 import { Dropzone } from "@workspace/ui/components/dropzone"
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -198,6 +203,29 @@ export function CreateBatchCallForm() {
     return readRecipients(csvFile.text, variableKeys, t)
   }, [agentConfig, csvFile?.text, selectedAgentId, variableKeys])
 
+  const recipientNumbers = useMemo(
+    () => parsedRecipients.recipients.map((recipient) => recipient.toNumber),
+    [parsedRecipients.recipients]
+  )
+
+  const { data: doNotCallCheck } = useQuery({
+    queryKey: ["do-not-call", "check", recipientNumbers],
+    queryFn: () =>
+      api.post<CheckDoNotCallResponse, CheckDoNotCallRequest>(
+        "/do-not-call/check",
+        { body: { numbers: recipientNumbers } }
+      ),
+    enabled: recipientNumbers.length > 0 && recipientNumbers.length <= 500,
+  })
+
+  const doNotCallNumbers = useMemo(
+    () => new Set(doNotCallCheck?.numbers),
+    [doNotCallCheck]
+  )
+  const doNotCallCount = recipientNumbers.filter((number) =>
+    doNotCallNumbers.has(number)
+  ).length
+
   const createMutation = useMutation({
     mutationFn: (body: CreateBatchCallRequest) =>
       api.post<CreateBatchCallResponse, CreateBatchCallRequest>(
@@ -209,6 +237,13 @@ export function CreateBatchCallForm() {
       toast.success(
         t("components.batch_calls.create_batch_call_form.toasts.created")
       )
+      if (batchCall.doNotCallCount > 0) {
+        toast.warning(
+          t("components.batch_calls.create_batch_call_form.do_not_call_count", {
+            count: batchCall.doNotCallCount,
+          })
+        )
+      }
       queryClient.invalidateQueries({ queryKey: ["batch-calls"] })
       navigate({ to: "/batch-calls" })
     },
@@ -396,6 +431,14 @@ export function CreateBatchCallForm() {
             />
             {parsedRecipients.error ? (
               <FieldError>{parsedRecipients.error}</FieldError>
+            ) : null}
+            {doNotCallCount > 0 ? (
+              <FieldDescription>
+                {t(
+                  "components.batch_calls.create_batch_call_form.do_not_call_count",
+                  { count: doNotCallCount }
+                )}
+              </FieldDescription>
             ) : null}
           </Field>
 
@@ -672,6 +715,7 @@ export function CreateBatchCallForm() {
       <RecipientsPreview
         columns={parsedRecipients.columns}
         recipients={parsedRecipients.recipients}
+        doNotCallNumbers={doNotCallNumbers}
       />
     </div>
   )

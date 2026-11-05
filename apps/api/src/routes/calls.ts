@@ -42,6 +42,11 @@ import {
   deductOrganizationCredits,
   organizationHasCredits,
 } from "@/lib/credits"
+import {
+  DoNotCallError,
+  findDoNotCallNumbers,
+  remotePhoneNumber,
+} from "@/lib/do-not-call"
 import { env } from "@/lib/env"
 import { t } from "@/lib/i18n"
 import {
@@ -858,8 +863,19 @@ callRoutes.get(
         offset: (query.page - 1) * query.pageSize,
       })
 
+      const remoteNumbers = new Map(
+        items.map((item) => [item.id, remotePhoneNumber(item)])
+      )
+      const listed = await findDoNotCallNumbers(
+        organizationId,
+        Array.from(remoteNumbers.values()).filter((number) => number !== null)
+      )
+
       return c.json({
-        items,
+        items: items.map((item) => ({
+          ...item,
+          onDoNotCallList: listed.has(remoteNumbers.get(item.id) ?? ""),
+        })),
         total,
         page: query.page,
         pageSize: query.pageSize,
@@ -947,6 +963,7 @@ callRoutes.post(
       }
 
       await placeOutboundCall({
+        organizationId,
         agentId: payload.agentId,
         agentVersionId: payload.agentVersionId ?? null,
         toNumber: payload.toNumber,
@@ -959,7 +976,11 @@ callRoutes.post(
       })
 
       return c.json({ ok: true } satisfies TriggerOutboundCallResponse)
-    } catch {
+    } catch (error) {
+      if (error instanceof DoNotCallError) {
+        return c.json({ error: t(locale, "calls.do_not_call") }, 409)
+      }
+
       return c.json({ error: t(locale, "calls.start_outbound_failed") }, 500)
     }
   }

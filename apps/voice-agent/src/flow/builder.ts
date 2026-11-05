@@ -1,4 +1,5 @@
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
+import { normalizePhoneNumber } from "@workspace/shared/api/do-not-call/schemas"
 import type {
   FlowConversationNode,
   FlowEdge,
@@ -6,7 +7,10 @@ import type {
   FlowNode,
 } from "@/flow/types"
 
-export function buildFlowGraph(config: AgentConfig) {
+export function buildFlowGraph(
+  config: AgentConfig,
+  remoteNumber: string | undefined
+) {
   const nodesById = new Map<string, FlowNode>()
   let startNode: FlowConversationNode | undefined
 
@@ -81,5 +85,9 @@ export function buildFlowGraph(config: AgentConfig) {
     globalPrompt: config.globalPrompt,
     startNode,
     tools: config.tools,
+    // Nothing to list on a web call or from a withheld or malformed caller ID.
+    ...(config.optOut && remoteNumber && normalizePhoneNumber(remoteNumber)
+      ? { optOut: config.optOut }
+      : {}),
   } as FlowGraph
 }

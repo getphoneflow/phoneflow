@@ -30,7 +30,14 @@
     "insufficient_credits": "Insufficient credits",
     "agent_version_not_found": "Agent version not found",
     "scheduled_at_in_past": "Scheduled time must be in the future",
-    "create_failed": "Failed to create batch call"
+    "create_failed": "Failed to create batch call",
+    "not_found": "Batch call not found",
+    "load_failed": "Failed to load batch call",
+    "list_recipients_failed": "Failed to load recipients",
+    "invalid_status": "This action is not available for the batch call's current status",
+    "pause_failed": "Failed to pause batch call",
+    "resume_failed": "Failed to resume batch call",
+    "cancel_failed": "Failed to cancel batch call"
   },
   "billing": {
     "load_failed": "Failed to load billing",

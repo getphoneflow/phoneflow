@@ -253,6 +253,7 @@ type OutboundCall = {
   sipPassword: string
   variables: CallVariableValues
   batchCallId: string | null
+  batchCallRecipientId?: string | null
 }
 
 export async function placeOutboundCall(call: OutboundCall) {
@@ -267,6 +268,7 @@ export async function placeOutboundCall(call: OutboundCall) {
       fromNumber: call.fromNumber,
       toNumber: call.toNumber,
       batchCallId: call.batchCallId,
+      batchCallRecipientId: call.batchCallRecipientId ?? null,
       triggeredAt: new Date().toISOString(),
     }),
   })

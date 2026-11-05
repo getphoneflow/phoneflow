@@ -38,6 +38,15 @@
       "no_results": "No hay resultados",
       "rows_per_page": "Filas por página",
       "page": "Página {{page}} de {{total}}"
+    },
+    "weekdays_short": {
+      "0": "dom",
+      "1": "lun",
+      "2": "mar",
+      "3": "mié",
+      "4": "jue",
+      "5": "vie",
+      "6": "sáb"
     }
   },
   "routes": {
@@ -66,6 +75,10 @@
       "breadcrumb_parent": "Llamadas por lotes",
       "breadcrumb": "Crear",
       "page_title": "Crear llamada por lotes - Phoneflow"
+    },
+    "batch_calls_detail": {
+      "page_title": "{{name}} - Phoneflow",
+      "breadcrumb_parent": "Llamadas por lotes"
     },
     "phone_numbers": {
       "page_title": "Números de teléfono - Phoneflow",
@@ -1037,10 +1050,6 @@
         "empty": "Primero sube los destinatarios"
       },
       "batch_calls_data_table": {
-        "status": {
-          "scheduled": "Programada",
-          "triggered": "Iniciada"
-        },
         "columns": {
           "name": "Nombre",
           "status": "Estado",
@@ -1083,6 +1092,14 @@
           "label": "Versión",
           "select_agent_first": "Primero selecciona un agente"
         },
+        "max_concurrent_calls": {
+          "label": "Llamadas simultáneas",
+          "description": "Cuántas llamadas puede haber a la vez, de 1 a 50. Comprueba cuántas admite tu troncal SIP."
+        },
+        "calling_window": {
+          "label": "Horario de llamadas",
+          "off": "Las llamadas pueden empezar a cualquier hora."
+        },
         "trigger": {
           "label": "Cuándo iniciar",
           "now": "Ahora",
@@ -1102,6 +1119,70 @@
           }
         },
         "submit": "Crear llamada por lotes"
+      },
+      "status": {
+        "scheduled": "Programada",
+        "running": "En curso",
+        "paused": "En pausa",
+        "completed": "Completada",
+        "cancelled": "Cancelada",
+        "triggered": "Iniciada"
+      },
+      "recipient_status": {
+        "pending": "Pendiente",
+        "dialing": "Marcando",
+        "in_progress": "En curso",
+        "completed": "Completada",
+        "no_answer": "Sin respuesta",
+        "failed": "Fallida",
+        "cancelled": "Cancelada"
+      },
+      "pause_reason": {
+        "manual": "Pausada manualmente. Las llamadas en curso continúan.",
+        "insufficient_credits": "Pausada porque la organización se ha quedado sin créditos. Añade créditos y reanúdala.",
+        "phone_number_unavailable": "Pausada porque el número de teléfono se ha eliminado o no tiene conexión SIP. Corrígelo y reanúdala."
+      },
+      "recipient_error": {
+        "call_timed_out": "No se ha recibido el resultado a tiempo, así que la llamada se ha dado por perdida",
+        "call_start_failed": "El agente no ha podido iniciar la llamada",
+        "insufficient_credits": "No había créditos suficientes al contestar la llamada",
+        "agent_not_found": "El agente ya no existe",
+        "unexpected_call_status": "La llamada ha terminado con un estado inesperado",
+        "placement_failed": "No se ha podido realizar la llamada",
+        "unknown_outcome": "Marcada antes de que existiera el seguimiento por destinatario, y no consta ninguna llamada"
+      },
+      "schedule_fields": {
+        "days": {
+          "label": "Días"
+        },
+        "start_time": "Hora de inicio",
+        "end_time": "Hora de fin",
+        "timezone": "Zona horaria",
+        "description": "Las llamadas solo empiezan dentro de esta franja. Si la hora de fin es anterior a la de inicio, la franja termina al día siguiente. Las llamadas en curso al cerrarse no se interrumpen."
+      },
+      "batch_call_detail": {
+        "progress": "Progreso",
+        "max_concurrent": "Llamadas simultáneas: {{count}}",
+        "no_schedule": "Sin horario de llamadas",
+        "view_calls": "Ver llamadas",
+        "all_statuses": "Todos los estados",
+        "columns": {
+          "to": "Destino",
+          "status": "Estado",
+          "dialed_at": "Fecha de marcado",
+          "error": "Error"
+        },
+        "actions": {
+          "pause": "Pausar",
+          "resume": "Reanudar",
+          "cancel": "Cancelar"
+        },
+        "cancel_dialog": {
+          "title": "¿Cancelar esta llamada por lotes?",
+          "description": "No se llamará a los destinatarios pendientes. Las llamadas en curso continúan. Esta acción no se puede deshacer.",
+          "keep": "Mantener la llamada por lotes",
+          "confirm": "Cancelar la llamada por lotes"
+        }
       }
     },
     "billing": {

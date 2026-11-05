@@ -28,7 +28,6 @@ import { useState } from "react"
 import type {
   BatchCallListItem,
   BatchCallListResponse,
-  BatchCallStatus,
 } from "@workspace/shared/api/batch-calls/types"
 import { Badge } from "@workspace/ui/components/badge"
 import { Button } from "@workspace/ui/components/button"
@@ -53,6 +52,7 @@ import {
   TableRow,
 } from "@workspace/ui/components/table"
 import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
+import { batchCallStatusLabels } from "@/components/batch-calls/batch-call-status"
 import {
   formatAgentVersionLabel,
   formatPhoneNumber,
@@ -76,14 +76,7 @@ const features = tableFeatures({
 const columnHelper = createColumnHelper<typeof features, BatchCallListItem>()
 
 function getColumns(t: TFunction) {
-  const statusLabel: Record<BatchCallStatus, string> = {
-    scheduled: t(
-      "components.batch_calls.batch_calls_data_table.status.scheduled"
-    ),
-    triggered: t(
-      "components.batch_calls.batch_calls_data_table.status.triggered"
-    ),
-  }
+  const statusLabel = batchCallStatusLabels(t)
 
   return columnHelper.columns([
     columnHelper.accessor("name", {
@@ -212,8 +205,8 @@ export function BatchCallsDataTable({ data }: { data: BatchCallListResponse }) {
                   className="cursor-pointer"
                   onClick={() =>
                     navigate({
-                      to: "/calls",
-                      search: { batchId: row.original.id },
+                      to: "/batch-calls/$batchCallId",
+                      params: { batchCallId: row.original.id },
                     })
                   }
                 >

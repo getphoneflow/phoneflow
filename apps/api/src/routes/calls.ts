@@ -412,6 +412,7 @@ callRoutes.post(
       )
 
       if (!resolved) {
+        await failBatchCallRecipient(payload, RECIPIENT_ERRORS.agentNotFound)
         return c.json({ error: "Agent not found" }, 404)
       }
 

@@ -42,6 +42,7 @@ export const RECIPIENT_ERRORS = {
   agentNotFound: "agent_not_found",
   unexpectedCallStatus: "unexpected_call_status",
   placementFailed: "placement_failed",
+  unknownOutcome: "unknown_outcome",
 } as const
 
 const ACTIVE_STATUSES: BatchCallRecipientStatus[] = ["dialing", "in_progress"]
@@ -85,7 +86,8 @@ type RecipientUpdate = {
 }
 
 // A timed-out recipient may still report: the timeout is a guess and a late real
-// outcome is better information. Every other terminal status is final.
+// outcome is better information. So may a call the migration found still in
+// progress. Every other terminal status is final.
 export async function updateBatchCallRecipient(update: RecipientUpdate) {
   const target = update.recipientId
     ? eq(batchCallRecipientsTable.id, update.recipientId)
@@ -113,7 +115,10 @@ export async function updateBatchCallRecipient(update: RecipientUpdate) {
           inArray(batchCallRecipientsTable.status, ACTIVE_STATUSES),
           and(
             eq(batchCallRecipientsTable.status, "failed"),
-            eq(batchCallRecipientsTable.error, RECIPIENT_ERRORS.callTimedOut)
+            inArray(batchCallRecipientsTable.error, [
+              RECIPIENT_ERRORS.callTimedOut,
+              RECIPIENT_ERRORS.unknownOutcome,
+            ])
           )
         )
       )

@@ -25,12 +25,12 @@ WITH "legacy" AS (
 )
 UPDATE "batch_call_recipients" SET
   "status" = CASE
-    WHEN "legacy"."call_id" IS NULL THEN 'failed'
+    WHEN "legacy"."call_status" = 'completed' THEN 'completed'
     WHEN "legacy"."call_status" = 'no_answer' THEN 'no_answer'
-    ELSE 'completed'
+    ELSE 'failed'
   END,
   "call_id" = "legacy"."call_id",
   "dialed_at" = "legacy"."started_at",
-  "error" = CASE WHEN "legacy"."call_id" IS NULL THEN 'unknown_outcome' END
+  "error" = CASE WHEN "legacy"."call_status" IN ('completed', 'no_answer') THEN NULL ELSE 'unknown_outcome' END
 FROM "legacy"
 WHERE "batch_call_recipients"."id" = "legacy"."id";

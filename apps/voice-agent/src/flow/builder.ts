@@ -81,5 +81,6 @@ export function buildFlowGraph(config: AgentConfig) {
     globalPrompt: config.globalPrompt,
     startNode,
     tools: config.tools,
+    voicemailDetection: config.voicemailDetection,
   } as FlowGraph
 }

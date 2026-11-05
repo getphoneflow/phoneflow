@@ -6,6 +6,7 @@ import type {
   FlowNodeInstructions,
   IvrNavigationTool,
   TransferCallTool,
+  VoicemailDetection,
 } from "@workspace/shared/api/agent-config/types"
 
 // Runtime flow
@@ -41,4 +42,5 @@ export interface FlowGraph {
   globalPrompt: string
   startNode: FlowConversationNode
   tools: AgentTool[]
+  voicemailDetection?: VoicemailDetection
 }

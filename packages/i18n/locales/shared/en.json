@@ -47,6 +47,11 @@
         "format": "Variable key must be lowercase letters, numbers, or underscores",
         "reserved": "Variable key is reserved"
       },
+      "voicemail_detection": {
+        "message": {
+          "required": "Voicemail message is required"
+        }
+      },
       "end_call_tool": {
         "description": {
           "required": "Description is required"

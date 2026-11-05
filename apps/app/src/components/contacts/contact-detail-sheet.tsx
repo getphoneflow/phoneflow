@@ -93,6 +93,10 @@ function CallCard({
           <Badge variant="outline">
             {t("components.contacts.contact_detail_sheet.status.no_answer")}
           </Badge>
+        ) : call.status === "voicemail" ? (
+          <Badge variant="outline">
+            {t("components.contacts.contact_detail_sheet.status.voicemail")}
+          </Badge>
         ) : (
           <Badge variant="secondary">
             {t("components.contacts.contact_detail_sheet.status.completed")}
@@ -225,7 +229,10 @@ function ContactDetailBody({
                         onLiveCallSelect(call.id)
                         return
                       }
-                      if (call.status === "completed") {
+                      if (
+                        call.status === "completed" ||
+                        call.status === "voicemail"
+                      ) {
                         onCallSelect(call.id)
                       }
                     }}

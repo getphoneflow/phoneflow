@@ -78,6 +78,10 @@ const statusFilterOptionKeys = [
     value: "no_answer",
     label: "components.calls.calls_filters.status.no_answer",
   },
+  {
+    value: "voicemail",
+    label: "components.calls.calls_filters.status.voicemail",
+  },
 ]
 
 type FilterOptionKey = { value: string; label: string }

@@ -16,6 +16,7 @@ import type {
   flowNodeInstructionsSchema,
   ivrNavigationToolSchema,
   transferCallToolSchema,
+  voicemailDetectionSchema,
   webhookToolSchema,
 } from "./schemas"
 
@@ -27,6 +28,7 @@ export type ToolParameter = WebhookTool["parameters"][number]
 export type ToolKeyValue = WebhookTool["headers"][number]
 export type ResponseVariable = WebhookTool["responseVariables"][number]
 export type BackgroundAudio = z.infer<typeof backgroundAudioSchema>
+export type VoicemailDetection = z.infer<typeof voicemailDetectionSchema>
 export type FlowNodeInstructions = z.infer<typeof flowNodeInstructionsSchema>
 export type EndCallTool = z.infer<typeof endCallToolSchema>
 export type IvrNavigationTool = z.infer<typeof ivrNavigationToolSchema>

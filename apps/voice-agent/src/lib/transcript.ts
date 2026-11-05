@@ -9,15 +9,23 @@ export function buildCallTranscript(history: ChatContext): CallTranscript {
       if (item.role !== "user" && item.role !== "assistant") return []
 
       const content = item.textContent?.trim()
+      if (!content || content === "...") return []
+
       const startedSpeakingAt = item.metrics.startedSpeakingAt
-      if (!content || content === "..." || startedSpeakingAt == null) return []
+      // A user turn skipped by a voicemail verdict has no metrics, but it is what
+      // shows why the call was treated as voicemail. An assistant message without
+      // them was never spoken, so it stays out.
+      if (startedSpeakingAt == null && item.role === "assistant") return []
 
       return [
         {
           id: item.id,
           role: item.role,
           content,
-          createdAt: Math.round(startedSpeakingAt * 1000),
+          createdAt:
+            startedSpeakingAt == null
+              ? item.createdAt
+              : Math.round(startedSpeakingAt * 1000),
         },
       ]
     })

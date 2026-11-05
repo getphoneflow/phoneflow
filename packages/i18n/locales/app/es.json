@@ -1241,6 +1241,7 @@
         "status": {
           "in_progress": "En curso",
           "no_answer": "Sin respuesta",
+          "failed": "Fallida",
           "completed": "Completada"
         }
       },
@@ -1290,7 +1291,8 @@
           "all": "Todos los estados",
           "completed": "Completada",
           "in_progress": "En curso",
-          "no_answer": "Sin respuesta"
+          "no_answer": "Sin respuesta",
+          "failed": "Fallida"
         }
       }
     },
@@ -1339,6 +1341,7 @@
         "status": {
           "in_progress": "En curso",
           "no_answer": "Sin respuesta",
+          "failed": "Fallida",
           "completed": "Completada"
         },
         "version": "V{{number}}",

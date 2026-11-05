@@ -58,7 +58,7 @@ function CallCard({
   const { t } = useTranslation()
   const isPhone = call.channel === "phone_call"
   const isInbound = call.direction === "inbound"
-  const clickable = call.status !== "no_answer"
+  const clickable = call.status !== "no_answer" && call.status !== "failed"
 
   return (
     <button
@@ -92,6 +92,10 @@ function CallCard({
         ) : call.status === "no_answer" ? (
           <Badge variant="outline">
             {t("components.contacts.contact_detail_sheet.status.no_answer")}
+          </Badge>
+        ) : call.status === "failed" ? (
+          <Badge variant="destructive">
+            {t("components.contacts.contact_detail_sheet.status.failed")}
           </Badge>
         ) : (
           <Badge variant="secondary">

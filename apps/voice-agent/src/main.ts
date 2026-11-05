@@ -19,6 +19,7 @@ import {
   parseDispatchMetadata,
   recordUnansweredCall,
   startCall,
+  waitForPendingCompletions,
 } from "@/lib/calls"
 import { endCall } from "@/lib/end-call"
 import { env } from "@/lib/env"
@@ -74,6 +75,10 @@ export default defineAgent({
         await traceProvider.shutdown()
       })
     }
+
+    // The process exits once shutdown callbacks settle, which would otherwise
+    // kill a completion that is still retrying.
+    ctx.addShutdownCallback(waitForPendingCompletions)
 
     const flowGraph = buildFlowGraph(config)
     const variables = createVariables({

@@ -22,6 +22,7 @@ import { env } from "@/lib/env"
 import { getPrivateObject, privateConfig, privateS3Configured } from "@/lib/s3"
 
 const ROOM_PREFIX = "call-"
+const LIST_ROOMS_BATCH_SIZE = 100
 
 type CreateAccessTokenOptions = {
   identity: string
@@ -114,6 +115,20 @@ export async function removeCallParticipants(roomName: string) {
   if (monitor) {
     await rooms.removeParticipant(roomName, monitor.identity)
   }
+}
+
+export async function listLiveRoomNames(roomNames: string[]) {
+  const rooms = createRoomServiceClient()
+  const liveRoomNames = new Set<string>()
+
+  for (let i = 0; i < roomNames.length; i += LIST_ROOMS_BATCH_SIZE) {
+    const batch = roomNames.slice(i, i + LIST_ROOMS_BATCH_SIZE)
+    for (const room of await rooms.listRooms(batch)) {
+      liveRoomNames.add(room.name)
+    }
+  }
+
+  return liveRoomNames
 }
 
 export function getRecordingKey(callId: string) {

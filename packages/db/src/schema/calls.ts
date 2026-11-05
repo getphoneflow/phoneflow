@@ -40,7 +40,7 @@ export const callsTable = pgTable(
     direction: text("direction").notNull().$type<"inbound" | "outbound">(),
     status: text("status")
       .notNull()
-      .$type<"in_progress" | "completed" | "no_answer">(),
+      .$type<"in_progress" | "completed" | "no_answer" | "failed">(),
     fromNumber: text("from_number"),
     toNumber: text("to_number"),
     startedAt: timestamp("started_at", {

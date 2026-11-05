@@ -93,7 +93,9 @@ export const callListQuerySchema = z
       .default(10),
     channel: z.enum(["phone_call", "web_call"]).optional(),
     direction: z.enum(["inbound", "outbound"]).optional(),
-    status: z.enum(["in_progress", "completed", "no_answer"]).optional(),
+    status: z
+      .enum(["in_progress", "completed", "no_answer", "failed"])
+      .optional(),
     startedAtFrom: z.iso.datetime().optional(),
     startedAtTo: z.iso.datetime().optional(),
     agentIds: z.union([z.string(), z.array(z.string())]).optional(),

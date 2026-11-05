@@ -18,7 +18,12 @@ export type CallChannel = "web_call" | "phone_call"
 
 export type CallDirection = "inbound" | "outbound"
 
-export type CallStatus = "in_progress" | "completed" | "no_answer"
+export type ReapStaleCallsResponse = {
+  checked: number
+  reaped: number
+}
+
+export type CallStatus = "in_progress" | "completed" | "no_answer" | "failed"
 
 export type CallVariableValues = Record<string, string>
 

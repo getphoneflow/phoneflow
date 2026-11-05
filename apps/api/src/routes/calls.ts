@@ -1,7 +1,10 @@
 import {
   type AnyRelationsFilter,
+  and,
   count,
   eq,
+  isNull,
+  lt,
   relationsFilterToSQL,
 } from "drizzle-orm"
 import { Hono } from "hono"
@@ -26,6 +29,7 @@ import type {
   CompleteCallResponse,
   EndCallResponse,
   JoinCallResponse,
+  ReapStaleCallsResponse,
   RequestCallDownloadResponse,
   StartCallResponse,
   TriggerOutboundCallResponse,
@@ -40,6 +44,7 @@ import { computeCallCosts } from "@/lib/call-cost"
 import { recordContactCall, resolvePhoneContactId } from "@/lib/contacts"
 import {
   deductOrganizationCredits,
+  maybeTriggerAutoReload,
   organizationHasCredits,
 } from "@/lib/credits"
 import { env } from "@/lib/env"
@@ -47,6 +52,7 @@ import { t } from "@/lib/i18n"
 import {
   createAccessToken,
   getRecording,
+  listLiveRoomNames,
   placeOutboundCall,
   removeCallParticipants,
   startCallRecording,
@@ -56,6 +62,8 @@ import { emailsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
 
 export const callRoutes = new Hono()
+
+const STALE_CALL_AGE_MS = 10 * 60 * 1000
 
 type ResolvedAgentConfig = {
   organizationId: string
@@ -468,38 +476,69 @@ callRoutes.post(
           })
         : null
 
-      const recordingStartedAt = await stopCallRecording(call.livekitRoomName)
+      const updated = await db.transaction(async (tx) => {
+        const [row] = await tx
+          .update(callsTable)
+          .set({
+            status: payload.status,
+            endedAt,
+            durationMs,
+            ...(costs
+              ? {
+                  sttCost: costs.stt.toFixed(6),
+                  llmCost: costs.llm.toFixed(6),
+                  ttsCost: costs.tts.toFixed(6),
+                  telephonyCost: costs.telephony.toFixed(6),
+                  platformCost: costs.platform.toFixed(6),
+                  totalCost: costs.total.toFixed(6),
+                }
+              : {}),
+            transcript: payload.transcript,
+            variables: payload.variables ?? null,
+            updatedAt: new Date(),
+          })
+          .where(
+            and(eq(callsTable.id, payload.callId), isNull(callsTable.endedAt))
+          )
+          .returning({ id: callsTable.id })
 
-      const [updated] = await db
-        .update(callsTable)
-        .set({
-          status: payload.status,
-          endedAt,
-          durationMs,
-          recordingStartedAt,
-          ...(costs
-            ? {
-                sttCost: costs.stt.toFixed(6),
-                llmCost: costs.llm.toFixed(6),
-                ttsCost: costs.tts.toFixed(6),
-                telephonyCost: costs.telephony.toFixed(6),
-                platformCost: costs.platform.toFixed(6),
-                totalCost: costs.total.toFixed(6),
-              }
-            : {}),
-          transcript: payload.transcript,
-          variables: payload.variables ?? null,
-          updatedAt: new Date(),
-        })
-        .where(eq(callsTable.id, payload.callId))
-        .returning()
+        if (!row) {
+          return null
+        }
 
-      if (call.contactId) {
-        await recordContactCall(call.contactId, call.startedAt, durationMs)
+        if (call.contactId) {
+          await recordContactCall(
+            call.contactId,
+            call.startedAt,
+            durationMs,
+            tx
+          )
+        }
+
+        if (costs) {
+          await deductOrganizationCredits(call.organizationId, costs.total, tx)
+        }
+
+        return row
+      })
+
+      if (!updated) {
+        return c.json({ error: "Call already ended" }, 409)
       }
 
       if (costs) {
-        await deductOrganizationCredits(call.organizationId, costs.total)
+        void maybeTriggerAutoReload(call.organizationId)
+      }
+
+      // After the commit: a rolled back attempt must leave the egress running,
+      // or its retry would find nothing to read recordingStartedAt from.
+      const recordingStartedAt = await stopCallRecording(call.livekitRoomName)
+
+      if (recordingStartedAt) {
+        await db
+          .update(callsTable)
+          .set({ recordingStartedAt })
+          .where(eq(callsTable.id, updated.id))
       }
 
       return c.json({
@@ -511,6 +550,83 @@ callRoutes.post(
     }
   }
 )
+
+callRoutes.post("/reap-stale", requireAuthToken, async (c) => {
+  try {
+    const staleCalls = await db
+      .select({
+        id: callsTable.id,
+        contactId: callsTable.contactId,
+        startedAt: callsTable.startedAt,
+        livekitRoomName: callsTable.livekitRoomName,
+      })
+      .from(callsTable)
+      .where(
+        and(
+          eq(callsTable.status, "in_progress"),
+          lt(callsTable.startedAt, new Date(Date.now() - STALE_CALL_AGE_MS))
+        )
+      )
+
+    if (staleCalls.length === 0) {
+      return c.json({
+        checked: 0,
+        reaped: 0,
+      } satisfies ReapStaleCallsResponse)
+    }
+
+    let liveRoomNames: Set<string>
+
+    try {
+      liveRoomNames = await listLiveRoomNames(
+        staleCalls.map((call) => call.livekitRoomName)
+      )
+    } catch (error) {
+      console.error("Failed to list LiveKit rooms", error)
+      return c.json({ error: "LiveKit unavailable" }, 503)
+    }
+
+    let reaped = 0
+
+    for (const call of staleCalls) {
+      if (liveRoomNames.has(call.livekitRoomName)) {
+        continue
+      }
+
+      const closed = await db.transaction(async (tx) => {
+        const now = new Date()
+        const [row] = await tx
+          .update(callsTable)
+          .set({
+            status: "failed",
+            endedAt: now,
+            durationMs: null,
+            updatedAt: now,
+          })
+          .where(and(eq(callsTable.id, call.id), isNull(callsTable.endedAt)))
+          .returning({ id: callsTable.id })
+
+        if (row && call.contactId) {
+          await recordContactCall(call.contactId, call.startedAt, 0, tx)
+        }
+
+        return Boolean(row)
+      })
+
+      if (closed) {
+        reaped += 1
+      }
+    }
+
+    return c.json({
+      checked: staleCalls.length,
+      reaped,
+    } satisfies ReapStaleCallsResponse)
+  } catch (error) {
+    console.error("Failed to reap stale calls", error)
+    return c.json({ error: "Failed to reap stale calls" }, 500)
+  }
+})
 
 callRoutes.post("/download", requireOrganization, async (c) => {
   const locale = c.get("locale")

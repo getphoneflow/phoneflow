@@ -78,6 +78,10 @@ const statusFilterOptionKeys = [
     value: "no_answer",
     label: "components.calls.calls_filters.status.no_answer",
   },
+  {
+    value: "failed",
+    label: "components.calls.calls_filters.status.failed",
+  },
 ]
 
 type FilterOptionKey = { value: string; label: string }

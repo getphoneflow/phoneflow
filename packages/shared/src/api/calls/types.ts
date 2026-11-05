@@ -130,6 +130,7 @@ export type CallDetailResponse = {
   ttsModel: string
   livekitRoomName: string
   startedAt: Date
+  recordingStartedAt: Date | null
   endedAt: Date | null
   durationMs: number | null
   sttCost: string | null

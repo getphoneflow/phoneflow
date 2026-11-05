@@ -468,7 +468,7 @@ callRoutes.post(
           })
         : null
 
-      await stopCallRecording(call.livekitRoomName)
+      const recordingStartedAt = await stopCallRecording(call.livekitRoomName)
 
       const [updated] = await db
         .update(callsTable)
@@ -476,6 +476,7 @@ callRoutes.post(
           status: payload.status,
           endedAt,
           durationMs,
+          recordingStartedAt,
           ...(costs
             ? {
                 sttCost: costs.stt.toFixed(6),

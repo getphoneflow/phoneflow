@@ -35,9 +35,11 @@ function CallDetailBody({ callId }: { callId: string }) {
 
   const [position, setPosition] = useState<number>()
   const startedAt = new Date(call.startedAt).getTime()
+  const recordingStartedAt = new Date(call.recordingStartedAt!).getTime()
+  const recordingOffset = (recordingStartedAt - startedAt) / 1000
 
   function onMessageClick(timestamp: number) {
-    setPosition((timestamp - startedAt) / 1000)
+    setPosition(Math.max(0, (timestamp - startedAt) / 1000))
   }
 
   const messages = (call.transcript ?? []).map(
@@ -103,7 +105,11 @@ function CallDetailBody({ callId }: { callId: string }) {
           </p>
         )}
         <div className="mt-2">
-          <CallRecordingPlayer callId={callId} position={position} />
+          <CallRecordingPlayer
+            callId={callId}
+            position={position}
+            recordingOffset={recordingOffset}
+          />
         </div>
       </SheetHeader>
 

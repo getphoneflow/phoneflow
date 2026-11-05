@@ -85,7 +85,7 @@ function TranscriptMessages({
           return (
             <button
               onClick={() => onMessageClick(msg.timestamp)}
-              className="text-left"
+              className="text-left outline-none"
             >
               {content}
             </button>

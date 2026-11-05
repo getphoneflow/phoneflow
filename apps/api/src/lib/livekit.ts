@@ -157,11 +157,15 @@ export async function startCallRecording(roomName: string, callId: string) {
 }
 
 export async function stopCallRecording(roomName: string) {
-  if (!privateS3Configured()) return
+  if (!privateS3Configured()) return null
 
   const egress = createEgressClient()
   const active = await egress.listEgress({ roomName, active: true })
   await Promise.all(active.map((item) => egress.stopEgress(item.egressId)))
+
+  const startedAtNs = active[0].fileResults[0].startedAt
+  const startedAt = Number(startedAtNs / 1_000_000n)
+  return new Date(startedAt)
 }
 
 type SipPhoneNumber = {

@@ -47,6 +47,10 @@ export const callsTable = pgTable(
       withTimezone: true,
       mode: "date",
     }).notNull(),
+    recordingStartedAt: timestamp("recording_started_at", {
+      withTimezone: true,
+      mode: "date",
+    }),
     endedAt: timestamp("ended_at", { withTimezone: true, mode: "date" }),
     durationMs: integer("duration_ms"),
     sttModel: text("stt_model").notNull(),

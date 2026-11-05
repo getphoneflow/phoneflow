@@ -16,17 +16,21 @@ const SPLIT_CHANNELS = [
 ]
 
 function formatTick(seconds: number) {
-  const time = Math.round(seconds)
-  if (time < 60) return String(time)
-  return `${Math.floor(time / 60)}:${String(time % 60).padStart(2, "0")}`
+  const cs = Math.max(0, Math.round(seconds * 100))
+  const minutes = String(Math.floor(cs / 6000)).padStart(2, "0")
+  const secs = String(Math.floor(cs / 100) % 60).padStart(2, "0")
+  const fraction = String(cs % 100).padStart(2, "0")
+  return `${minutes}:${secs}.${fraction}`
 }
 
 export function CallRecordingPlayer({
   callId,
   position,
+  recordingOffset,
 }: {
   callId: string
   position?: number
+  recordingOffset: number
 }) {
   const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
@@ -49,8 +53,12 @@ export function CallRecordingPlayer({
 
   useEffect(() => {
     if (!wavesurfer || !isReady || position == null) return
-    wavesurfer.setTime(position)
-  }, [wavesurfer, isReady, position])
+    const fileTime = Math.min(
+      wavesurfer.getDuration(),
+      Math.max(0, position - recordingOffset)
+    )
+    wavesurfer.setTime(fileTime)
+  }, [wavesurfer, isReady, position, recordingOffset])
 
   useEffect(() => {
     if (!wavesurfer) return
@@ -65,7 +73,7 @@ export function CallRecordingPlayer({
           fontSize: "10px",
           color: "var(--muted-foreground)",
         },
-        formatTimeCallback: formatTick,
+        formatTimeCallback: (seconds) => formatTick(seconds + recordingOffset),
       })
     )
     wavesurfer.registerPlugin(
@@ -75,6 +83,7 @@ export function CallRecordingPlayer({
         labelColor: "var(--foreground)",
         labelBackground: "transparent",
         labelSize: 10,
+        formatTimeCallback: (seconds) => formatTick(seconds + recordingOffset),
       })
     )
 
@@ -86,7 +95,7 @@ export function CallRecordingPlayer({
 
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-  }, [wavesurfer])
+  }, [wavesurfer, recordingOffset])
 
   function onPlayPause() {
     void wavesurfer?.playPause()

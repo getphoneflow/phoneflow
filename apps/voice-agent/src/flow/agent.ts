@@ -13,10 +13,12 @@ import type { CallSipConnection } from "@workspace/shared/api/calls/types"
 import { evaluateExpression } from "@/flow/expression"
 import {
   EXTRACT_INSTRUCTIONS,
+  OPT_OUT_INSTRUCTIONS,
   PLATFORM_INSTRUCTIONS,
   TRANSITION_INSTRUCTIONS,
 } from "@/flow/prompts"
 import { createSendDtmfTool } from "@/flow/tools/dtmf"
+import { createOptOutTool } from "@/flow/tools/opt-out"
 import { createTransferCallTool } from "@/flow/tools/transfer-call"
 import { createWebhookTool } from "@/flow/tools/webhook"
 import type { FlowConversationNode, FlowGraph, FlowNode } from "@/flow/types"
@@ -44,6 +46,10 @@ function buildNodeInstructions(
 
   if (node.outgoingEdges.some((edge) => edge.condition.type === "prompt")) {
     parts.push(TRANSITION_INSTRUCTIONS)
+  }
+
+  if (graph.optOut) {
+    parts.push(OPT_OUT_INSTRUCTIONS)
   }
 
   return parts.join("\n\n")
@@ -134,6 +140,12 @@ export class FlowAgent extends Agent {
           this.sip,
           this.callId
         )
+      )
+    }
+
+    if (this.graph.optOut) {
+      tools.push(
+        createOptOutTool(this.graph.optOut, this.variables, this.callId)
       )
     }
 

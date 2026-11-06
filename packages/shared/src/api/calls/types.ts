@@ -105,6 +105,7 @@ export type CallListItem = {
   updatedAt: Date
   agent: { name: string } | null
   agentVersion: { number: number } | null
+  onDoNotCallList?: boolean
 }
 
 export type CallListResponse = {

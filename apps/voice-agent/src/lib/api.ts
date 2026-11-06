@@ -3,6 +3,7 @@ import { env } from "@/lib/env"
 type RequestOptions<TBody = never> = {
   headers?: HeadersInit
   body?: TBody
+  signal?: AbortSignal
 }
 
 async function request<TResponse, TBody = never>(

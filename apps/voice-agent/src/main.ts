@@ -75,7 +75,14 @@ export default defineAgent({
       })
     }
 
-    const flowGraph = buildFlowGraph(config)
+    const flowGraph = buildFlowGraph(
+      config,
+      metadata.direction === "outbound"
+        ? metadata.toNumber
+        : metadata.direction === "inbound"
+          ? participant.attributes["sip.phoneNumber"]
+          : undefined
+    )
     const variables = createVariables({
       timezone: config.timezone,
       direction: metadata.direction,

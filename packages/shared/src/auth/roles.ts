@@ -9,6 +9,7 @@ const statement = {
   agent: ["create", "update", "delete"],
   phoneNumber: ["create", "update", "delete"],
   calls: ["create"],
+  doNotCall: ["create", "delete"],
   billing: ["purchase"],
 }
 
@@ -19,5 +20,6 @@ export const owner = ac.newRole({
   agent: ["create", "update", "delete"],
   phoneNumber: ["create", "update", "delete"],
   calls: ["create"],
+  doNotCall: ["create", "delete"],
   billing: ["purchase"],
 })

@@ -17,6 +17,7 @@ import {
 import { callsTable } from "@workspace/db/schema/calls"
 import { contactsTable } from "@workspace/db/schema/contacts"
 import { creditPurchasesTable } from "@workspace/db/schema/credits"
+import { doNotCallNumbersTable } from "@workspace/db/schema/do-not-call"
 import { phoneNumbersTable } from "@workspace/db/schema/phone-numbers"
 
 export const relations = defineRelations(
@@ -28,6 +29,7 @@ export const relations = defineRelations(
     callsTable,
     contactsTable,
     creditPurchasesTable,
+    doNotCallNumbersTable,
     phoneNumbersTable,
     user,
     session,
@@ -225,11 +227,29 @@ export const relations = defineRelations(
         from: r.organization.id,
         to: r.creditPurchasesTable.organizationId,
       }),
+      doNotCallNumbers: r.many.doNotCallNumbersTable({
+        from: r.organization.id,
+        to: r.doNotCallNumbersTable.organizationId,
+      }),
     },
     creditPurchasesTable: {
       organization: r.one.organization({
         from: r.creditPurchasesTable.organizationId,
         to: r.organization.id,
+      }),
+    },
+    doNotCallNumbersTable: {
+      organization: r.one.organization({
+        from: r.doNotCallNumbersTable.organizationId,
+        to: r.organization.id,
+      }),
+      call: r.one.callsTable({
+        from: r.doNotCallNumbersTable.callId,
+        to: r.callsTable.id,
+      }),
+      createdByUser: r.one.user({
+        from: r.doNotCallNumbersTable.createdBy,
+        to: r.user.id,
       }),
     },
     member: {

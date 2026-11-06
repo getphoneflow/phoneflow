@@ -2,6 +2,7 @@ import { Link, useMatchRoute } from "@tanstack/react-router"
 import {
   HistoryIcon,
   PhoneIcon,
+  PhoneOffIcon,
   PhoneOutgoingIcon,
   SettingsIcon,
   UsersIcon,
@@ -56,6 +57,11 @@ const nav = {
           title: "components.sidebar.nav_main.items.contacts",
           url: "/contacts",
           icon: <UsersIcon />,
+        },
+        {
+          title: "components.sidebar.nav_main.items.do_not_call",
+          url: "/do-not-call",
+          icon: <PhoneOffIcon />,
         },
       ],
     },

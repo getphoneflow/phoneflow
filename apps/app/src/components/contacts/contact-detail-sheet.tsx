@@ -15,6 +15,7 @@ import {
   SheetTitle,
 } from "@workspace/ui/components/sheet"
 import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
+import { DoNotCallBadge } from "@/components/do-not-call/do-not-call-badge"
 import { SheetSkeleton } from "@/components/sheet-skeleton"
 import { UserDateTime } from "@/components/user-timezone-provider"
 import { api } from "@/lib/api"
@@ -184,7 +185,12 @@ function ContactDetailBody({
           <div className="mt-8 divide-y border-y">
             <FieldRow
               label={t("components.contacts.contact_detail_sheet.fields.phone")}
-              value={contact.phoneNumber}
+              value={
+                <span className="inline-flex items-center gap-2">
+                  {contact.onDoNotCallList ? <DoNotCallBadge /> : null}
+                  {contact.phoneNumber}
+                </span>
+              }
             />
             <FieldRow
               label={t(

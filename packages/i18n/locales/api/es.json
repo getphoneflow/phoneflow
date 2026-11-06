@@ -64,7 +64,8 @@
     "agent_not_found": "Agente no encontrado",
     "insufficient_credits": "Créditos insuficientes",
     "agent_version_not_found": "Versión del agente no encontrada",
-    "start_outbound_failed": "No se pudo iniciar la llamada saliente"
+    "start_outbound_failed": "No se pudo iniciar la llamada saliente",
+    "do_not_call": "Este número está en la lista de no llamar de tu organización"
   },
   "contacts": {
     "user_email_not_found": "No se encontró el correo del usuario",
@@ -89,5 +90,14 @@
     "image_type_invalid": "La imagen debe ser JPEG, PNG, WebP o GIF",
     "image_too_large": "La imagen debe ocupar 2MB o menos",
     "upload_image_failed": "No se pudo subir la imagen"
+  },
+  "do_not_call": {
+    "list_failed": "No se ha podido cargar la lista de no llamar",
+    "already_listed": "Este número ya está en la lista de no llamar",
+    "create_failed": "No se ha podido añadir el número a la lista de no llamar",
+    "import_failed": "No se ha podido importar la lista de no llamar",
+    "check_failed": "No se ha podido comprobar la lista de no llamar",
+    "not_found": "El número no está en la lista de no llamar",
+    "delete_failed": "No se ha podido quitar el número de la lista de no llamar"
   }
 }

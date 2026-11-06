@@ -57,6 +57,7 @@ import {
   getCallCostBreakdown,
   parseCallCost,
 } from "@/components/calls/call-cost-breakdown"
+import { DoNotCallBadge } from "@/components/do-not-call/do-not-call-badge"
 import { formatAgentName } from "@/components/helpers"
 import { SortableHeader } from "@/components/sortable-header"
 import { UserDateTime } from "@/components/user-timezone-provider"
@@ -193,12 +194,28 @@ function getColumns(t: TFunction) {
     columnHelper.display({
       id: "from",
       header: t("components.calls.calls_data_table.columns.from"),
-      cell: ({ row }) => row.original.fromNumber,
+      cell: ({ row }) => (
+        <span className="inline-flex items-center gap-2">
+          {row.original.fromNumber}
+          {row.original.onDoNotCallList &&
+          row.original.direction === "inbound" ? (
+            <DoNotCallBadge />
+          ) : null}
+        </span>
+      ),
     }),
     columnHelper.display({
       id: "to",
       header: t("components.calls.calls_data_table.columns.to"),
-      cell: ({ row }) => row.original.toNumber,
+      cell: ({ row }) => (
+        <span className="inline-flex items-center gap-2">
+          {row.original.toNumber}
+          {row.original.onDoNotCallList &&
+          row.original.direction === "outbound" ? (
+            <DoNotCallBadge />
+          ) : null}
+        </span>
+      ),
     }),
     columnHelper.accessor((row) => formatAgentName(row.agent, t), {
       id: "agent",

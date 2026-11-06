@@ -18,6 +18,7 @@ import type { SendDownloadContactsPayload } from "@workspace/shared/jobs/emails/
 import { auth } from "@/lib/auth/config"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requireAuthToken } from "@/lib/auth/token"
+import { isDoNotCall } from "@/lib/do-not-call"
 import { t } from "@/lib/i18n"
 import { emailsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
@@ -129,6 +130,9 @@ contactRoutes.get("/:contactId", requireOrganization, async (c) => {
     return c.json({
       ...contact,
       calls,
+      onDoNotCallList: contact.phoneNumber
+        ? await isDoNotCall(organizationId, contact.phoneNumber)
+        : false,
     } satisfies ContactDetailResponse)
   } catch {
     return c.json({ error: t(locale, "contacts.load_failed") }, 500)

@@ -164,6 +164,11 @@
         "variables": {
           "unknown": "Unknown variable \"{{variable}}\""
         }
+      },
+      "opt_out": {
+        "message": {
+          "required": "Opt-out message cannot be empty"
+        }
       }
     },
     "billing": {
@@ -189,6 +194,18 @@
         "sip_password": {
           "required_with_username": "SIP password is required when a username is set"
         }
+      }
+    },
+    "do_not_call": {
+      "number": {
+        "invalid": "Enter a valid phone number in E.164 format, for example +14155551234"
+      },
+      "reason": {
+        "max": "Reason must be at most 500 characters"
+      },
+      "bulk": {
+        "empty": "The file has no phone numbers",
+        "max": "The file has too many rows"
       }
     }
   }

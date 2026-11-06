@@ -292,6 +292,11 @@
       "title": "Página no encontrada",
       "description": "La página que buscas no existe o se ha movido",
       "return_home": "Volver al inicio"
+    },
+    "do_not_call": {
+      "page_title": "No llamar - Phoneflow",
+      "breadcrumb": "No llamar",
+      "search_placeholder": "Buscar por número o motivo"
     }
   },
   "components": {
@@ -503,6 +508,21 @@
             "timezone": {
               "label": "Zona horaria",
               "description": "Se usa para {{date}}, {{time}} y {{timezone}}"
+            },
+            "opt_out": {
+              "label": "Baja durante la llamada",
+              "description": "Cuando alguien pide claramente que no le llaméis más, el agente añade su número a la lista de no llamar",
+              "action": {
+                "label": "Después de la baja",
+                "description": "Qué hace el agente cuando el número ya está en la lista",
+                "end_call": "Terminar la llamada",
+                "continue": "Seguir la conversación"
+              },
+              "message": {
+                "label": "Mensaje de baja",
+                "description": "Se dice literalmente tras la baja. Déjalo vacío para que el agente responda con sus palabras, o para colgar sin decir nada más",
+                "placeholder": "Entendido, no volveremos a llamarte. Hasta luego."
+              }
             }
           },
           "model_tab": {
@@ -1050,7 +1070,8 @@
           "version": "Versión",
           "when": "Cuándo"
         },
-        "search_placeholder": "Buscar llamadas por lotes..."
+        "search_placeholder": "Buscar llamadas por lotes...",
+        "recipients_with_skipped": "{{total}} ({{skipped}} omitidos: no llamar)"
       },
       "create_batch_call_form": {
         "errors": {
@@ -1101,7 +1122,8 @@
             "placeholder": "Zona horaria"
           }
         },
-        "submit": "Crear llamada por lotes"
+        "submit": "Crear llamada por lotes",
+        "do_not_call_count": "Destinatarios en la lista de no llamar, que se omitirán: {{count}}"
       }
     },
     "billing": {
@@ -1831,7 +1853,8 @@
             "agent": "Agentes",
             "phone_number": "Números de teléfono",
             "calls": "Llamadas",
-            "billing": "Facturación"
+            "billing": "Facturación",
+            "do_not_call": "Lista de no llamar"
           },
           "actions": {
             "create": "crear",
@@ -1901,7 +1924,8 @@
           "batch_calls": "Llamadas por lotes",
           "calls": "Llamadas",
           "contacts": "Contactos",
-          "settings": "Configuración"
+          "settings": "Configuración",
+          "do_not_call": "No llamar"
         }
       },
       "sidebar_credits": {
@@ -1972,6 +1996,71 @@
       "deleted_agent": "Agente eliminado",
       "deleted_phone_number": "Número de teléfono eliminado",
       "agent_version_draft": "Última (borrador)"
+    },
+    "do_not_call": {
+      "badge": "No llamar",
+      "csv": {
+        "errors": {
+          "invalid": "No se ha podido leer el archivo",
+          "missing_rows": "El archivo tiene cabecera pero no tiene filas",
+          "missing_phone_number_column": "El archivo necesita una columna phone_number",
+          "too_many_rows": "El archivo puede tener como máximo {{max}} filas"
+        }
+      },
+      "add_dialog": {
+        "trigger": "Añadir número",
+        "title": "Añadir número a la lista de no llamar",
+        "description": "Ningún agente ni llamada por lotes de esta organización marcará este número",
+        "number": {
+          "label": "Número de teléfono"
+        },
+        "reason": {
+          "label": "Motivo (opcional)",
+          "placeholder": "Ha pedido por correo que no le llamemos"
+        },
+        "submit": "Añadir",
+        "toasts": {
+          "added": "{{number}} añadido a la lista de no llamar"
+        }
+      },
+      "import_dialog": {
+        "trigger": "Importar CSV",
+        "title": "Importar números",
+        "description": "Sube un CSV con una columna phone_number y, si quieres, una columna reason. Los números deben incluir el prefijo del país",
+        "download_template": "Descargar plantilla",
+        "placeholder": "Haz clic o suelta un archivo",
+        "rows": "Filas que se importarán: {{count}}",
+        "submit": "Importar",
+        "result": {
+          "added": "Añadidos: {{count}}",
+          "already_listed": "Ya estaban en la lista: {{count}}",
+          "duplicates": "Repetidos en el archivo: {{count}}",
+          "invalid": "No válidos y no importados: {{count}}"
+        }
+      },
+      "remove_dialog": {
+        "trigger": "Quitar {{number}} de la lista de no llamar",
+        "title": "Quitar de la lista de no llamar",
+        "description": "Una vez quitado, se podrá volver a llamar a {{number}}. Hazlo solo si sabes que esta persona ha aceptado recibir llamadas.",
+        "confirm": "Quitar",
+        "toasts": {
+          "removed": "{{number}} quitado de la lista de no llamar"
+        }
+      },
+      "data_table": {
+        "columns": {
+          "number": "Número",
+          "source": "Origen",
+          "reason": "Motivo",
+          "created_by": "Añadido por",
+          "created_at": "Añadido"
+        },
+        "source": {
+          "manual": "Manual",
+          "import": "Importación",
+          "call": "Durante una llamada"
+        }
+      }
     }
   }
 }

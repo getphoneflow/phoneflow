@@ -13,5 +13,6 @@ Build voice agents by connecting nodes, deploy them to handle inbound and outbou
 - **Version control**: Publish immutable agent versions so you can iterate with confidence, switch between versions, and roll back at any time.
 - **Phone numbers**: Import numbers from any provider (Twilio, Telnyx, Zadarma, …) by filling in the number and its SIP credentials.
 - **Inbound and outbound calls**: Route incoming calls to a chosen agent and version, and trigger outbound calls to any number with any agent and version.
+- **Voicemail detection**: On outbound calls, wait for the greeting to finish and classify it, then hang up or leave a message on voicemail, and record the call with a `voicemail` status.
 - **Call monitoring**: Watch every call in real time with visibility into start time, duration, cost (broken down by model), channel (phone or web), direction (inbound or outbound), from/to numbers, and the agent and version that answered.
 

@@ -18,7 +18,7 @@ export type CallChannel = "web_call" | "phone_call"
 
 export type CallDirection = "inbound" | "outbound"
 
-export type CallStatus = "in_progress" | "completed" | "no_answer"
+export type CallStatus = "in_progress" | "completed" | "no_answer" | "voicemail"
 
 export type CallVariableValues = Record<string, string>
 

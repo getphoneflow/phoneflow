@@ -143,6 +143,18 @@ export const backgroundAudioSchema = z
   })
   .strict()
 
+export const voicemailDetectionSchema = z.discriminatedUnion("action", [
+  z.object({ action: z.literal("hang_up") }).strict(),
+  z
+    .object({
+      action: z.literal("leave_message"),
+      message: requiredString(
+        "schemas.agent_config.voicemail_detection.message.required"
+      ),
+    })
+    .strict(),
+])
+
 export const callSettingsSchema = z
   .object({
     maxDurationSec: z.number().int().positive(),
@@ -438,6 +450,7 @@ export const agentConfigSchema = z
     tts: ttsConfigSchema,
     turnHandling: turnHandlingConfigSchema,
     backgroundAudio: backgroundAudioSchema.exactOptional(),
+    voicemailDetection: voicemailDetectionSchema.exactOptional(),
     call: callSettingsSchema,
     globalPrompt: z.string(),
     timezone: z.string(),
@@ -622,6 +635,9 @@ export const agentConfigSchema = z
     })
 
     const texts = [config.globalPrompt]
+    if (config.voicemailDetection?.action === "leave_message") {
+      texts.push(config.voicemailDetection.message)
+    }
     const expressionKeys: string[] = []
     const webhookRequests: { parameters: string[]; texts: string[] }[] = []
 

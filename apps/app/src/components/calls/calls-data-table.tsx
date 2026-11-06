@@ -237,6 +237,10 @@ function getColumns(t: TFunction) {
           <Badge variant="outline">
             {t("components.calls.calls_data_table.status.no_answer")}
           </Badge>
+        ) : row.original.status === "voicemail" ? (
+          <Badge variant="outline">
+            {t("components.calls.calls_data_table.status.voicemail")}
+          </Badge>
         ) : (
           <Badge variant="secondary">
             {t("components.calls.calls_data_table.status.completed")}

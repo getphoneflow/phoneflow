@@ -503,6 +503,18 @@
             "timezone": {
               "label": "Timezone",
               "description": "Used for {{date}}, {{time}}, and {{timezone}}"
+            },
+            "voicemail_detection": {
+              "label": "Voicemail detection",
+              "description": "What to do when an answering machine picks up. Only applies to outbound calls. When on, the agent waits to hear who answered before speaking, so people may hear a few seconds of silence.",
+              "off": "Off",
+              "hang_up": "Hang up",
+              "leave_message": "Leave a message",
+              "message": {
+                "label": "Voicemail message",
+                "description": "Spoken when an answering machine is detected, then the call ends. Supports variables.",
+                "placeholder": "Hi, this is Ana from Acme. Please call us back when you can."
+              }
             }
           },
           "model_tab": {
@@ -1241,6 +1253,7 @@
         "status": {
           "in_progress": "In progress",
           "no_answer": "No answer",
+          "voicemail": "Voicemail",
           "completed": "Completed"
         }
       },
@@ -1290,7 +1303,8 @@
           "all": "All statuses",
           "completed": "Completed",
           "in_progress": "In progress",
-          "no_answer": "No answer"
+          "no_answer": "No answer",
+          "voicemail": "Voicemail"
         }
       }
     },
@@ -1339,6 +1353,7 @@
         "status": {
           "in_progress": "In progress",
           "no_answer": "No answer",
+          "voicemail": "Voicemail",
           "completed": "Completed"
         },
         "version": "V{{number}}",

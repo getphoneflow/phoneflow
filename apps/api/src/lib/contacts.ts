@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm"
 
-import { db } from "@workspace/db/client"
+import { type DbExecutor, db } from "@workspace/db/client"
 import { contactsTable } from "@workspace/db/schema/contacts"
 
 export async function resolvePhoneContactId(
@@ -55,9 +55,10 @@ export async function resolvePhoneContactId(
 export async function recordContactCall(
   contactId: string,
   startedAt: Date,
-  durationMs: number
+  durationMs: number,
+  executor: DbExecutor = db
 ) {
-  const contact = await db.query.contactsTable.findFirst({
+  const contact = await executor.query.contactsTable.findFirst({
     where: { id: contactId },
     columns: {
       callCount: true,
@@ -71,7 +72,7 @@ export async function recordContactCall(
     return
   }
 
-  await db
+  await executor
     .update(contactsTable)
     .set({
       callCount: contact.callCount + 1,

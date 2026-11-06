@@ -237,6 +237,10 @@ function getColumns(t: TFunction) {
           <Badge variant="outline">
             {t("components.calls.calls_data_table.status.no_answer")}
           </Badge>
+        ) : row.original.status === "failed" ? (
+          <Badge variant="destructive">
+            {t("components.calls.calls_data_table.status.failed")}
+          </Badge>
         ) : (
           <Badge variant="secondary">
             {t("components.calls.calls_data_table.status.completed")}
@@ -335,10 +339,17 @@ export function CallsDataTable({
                 <TableRow
                   key={row.id}
                   className={cn(
-                    row.original.status !== "no_answer" && "cursor-pointer"
+                    row.original.status !== "no_answer" &&
+                      row.original.status !== "failed" &&
+                      "cursor-pointer"
                   )}
                   onClick={() => {
-                    if (row.original.status === "no_answer") return
+                    if (
+                      row.original.status === "no_answer" ||
+                      row.original.status === "failed"
+                    ) {
+                      return
+                    }
                     if (row.original.status === "in_progress") {
                       onLiveCallSelect(row.original.id)
                       return

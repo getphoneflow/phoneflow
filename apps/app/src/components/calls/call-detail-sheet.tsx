@@ -35,8 +35,9 @@ function CallDetailBody({ callId }: { callId: string }) {
 
   const [position, setPosition] = useState<number>()
   const startedAt = new Date(call.startedAt).getTime()
-  const recordingStartedAt = new Date(call.recordingStartedAt!).getTime()
-  const recordingOffset = (recordingStartedAt - startedAt) / 1000
+  const recordingOffset = call.recordingStartedAt
+    ? (new Date(call.recordingStartedAt).getTime() - startedAt) / 1000
+    : 0
 
   function onMessageClick(timestamp: number) {
     setPosition(Math.max(0, (timestamp - startedAt) / 1000))

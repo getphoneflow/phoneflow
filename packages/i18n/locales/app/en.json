@@ -1241,6 +1241,7 @@
         "status": {
           "in_progress": "In progress",
           "no_answer": "No answer",
+          "failed": "Failed",
           "completed": "Completed"
         }
       },
@@ -1290,7 +1291,8 @@
           "all": "All statuses",
           "completed": "Completed",
           "in_progress": "In progress",
-          "no_answer": "No answer"
+          "no_answer": "No answer",
+          "failed": "Failed"
         }
       }
     },
@@ -1339,6 +1341,7 @@
         "status": {
           "in_progress": "In progress",
           "no_answer": "No answer",
+          "failed": "Failed",
           "completed": "Completed"
         },
         "version": "V{{number}}",

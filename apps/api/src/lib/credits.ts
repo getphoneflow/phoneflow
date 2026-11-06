@@ -1,7 +1,7 @@
 import { and, eq, sql } from "drizzle-orm"
 import type Stripe from "stripe"
 
-import { db } from "@workspace/db/client"
+import { type DbExecutor, db } from "@workspace/db/client"
 import { organization } from "@workspace/db/schema/auth"
 import { creditPurchasesTable } from "@workspace/db/schema/credits"
 import { stripe } from "@/lib/stripe"
@@ -13,9 +13,10 @@ function toAmount(value: string | number | null | undefined) {
 
 async function adjustOrganizationCredits(
   organizationId: string,
-  delta: number
+  delta: number,
+  executor: DbExecutor = db
 ) {
-  await db
+  await executor
     .update(organization)
     .set({
       creditBalance: sql`${organization.creditBalance} + ${delta.toFixed(6)}::numeric`,
@@ -42,14 +43,14 @@ export async function organizationHasCredits(organizationId: string) {
 
 export async function deductOrganizationCredits(
   organizationId: string,
-  amount: number
+  amount: number,
+  executor: DbExecutor = db
 ) {
   if (!(amount > 0)) {
     return
   }
 
-  await adjustOrganizationCredits(organizationId, -amount)
-  void maybeTriggerAutoReload(organizationId)
+  await adjustOrganizationCredits(organizationId, -amount, executor)
 }
 
 export async function organizationHasPaymentMethod(customerId: string) {
@@ -116,7 +117,7 @@ async function applyPaidAutoReloadInvoice(invoice: Stripe.Invoice) {
   await adjustOrganizationCredits(organizationId, amount)
 }
 
-async function maybeTriggerAutoReload(organizationId: string) {
+export async function maybeTriggerAutoReload(organizationId: string) {
   const [locked] = await db
     .update(organization)
     .set({

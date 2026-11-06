@@ -2,10 +2,15 @@
 import { sdk } from "./instrumentation"
 
 import { batchCallsWorker } from "@/batch-calls/worker"
+import {
+  callsQueue,
+  callsWorker,
+  scheduleStaleCallReaper,
+} from "@/calls/worker"
 import { emailsWorker } from "@/emails/worker"
 import { connection } from "@/lib/redis"
 
-const workers = [emailsWorker, batchCallsWorker]
+const workers = [emailsWorker, batchCallsWorker, callsWorker]
 
 for (const worker of workers) {
   worker.on("ready", () => {
@@ -13,8 +18,13 @@ for (const worker of workers) {
   })
 }
 
+scheduleStaleCallReaper().catch((error) => {
+  console.error("Failed to schedule the stale call reaper", error)
+})
+
 async function handleShutdown() {
   await Promise.all(workers.map((worker) => worker.close()))
+  await callsQueue.close()
   await connection.quit()
   await sdk.shutdown()
   process.exit(0)

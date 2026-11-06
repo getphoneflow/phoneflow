@@ -1,3 +1,5 @@
+import { setTimeout } from "node:timers/promises"
+
 import type {
   CallDispatchMetadata,
   CallVariableValues,
@@ -10,9 +12,16 @@ import type {
   UnansweredCallRequest,
   UnansweredCallResponse,
 } from "@workspace/shared/api/calls/types"
-import { api } from "@/lib/api"
+import { ApiError, api } from "@/lib/api"
 import { endCall } from "@/lib/end-call"
 import { parseJsonObject } from "@/lib/json"
+
+// At most 40s per completion (5 attempts of 5s plus 15s of backoff), inside the
+// 60s LiveKit gives a job process to exit before killing it.
+const COMPLETE_CALL_RETRY_DELAYS_MS = [1_000, 2_000, 4_000, 8_000]
+const COMPLETE_CALL_ATTEMPT_TIMEOUT_MS = 5_000
+
+const pendingCompletions = new Set<Promise<unknown>>()
 
 export function parseDispatchMetadata(metadata: string | undefined) {
   return parseJsonObject(metadata) as CallDispatchMetadata
@@ -128,24 +137,58 @@ export async function recordUnansweredCall(
   )
 }
 
+function isRetryable(error: unknown) {
+  return !(error instanceof ApiError) || error.status >= 500
+}
+
+async function sendCompletion(body: CompleteCallRequest) {
+  for (const delayMs of [...COMPLETE_CALL_RETRY_DELAYS_MS, null]) {
+    try {
+      return await api.post<CompleteCallResponse, CompleteCallRequest>(
+        "/calls/complete",
+        {
+          body,
+          signal: AbortSignal.timeout(COMPLETE_CALL_ATTEMPT_TIMEOUT_MS),
+        }
+      )
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 409) {
+        return null
+      }
+
+      if (delayMs === null || !isRetryable(error)) {
+        console.error("Failed to complete call", body.callId, error)
+        return null
+      }
+
+      await setTimeout(delayMs)
+    }
+  }
+
+  return null
+}
+
 export function completeCall(
   callId: string,
   status: CompleteCallRequest["status"],
   transcript: CompleteCallRequest["transcript"],
   variables: CompleteCallRequest["variables"]
 ) {
-  const endedAt = new Date().toISOString()
+  const completion = sendCompletion({
+    callId,
+    endedAt: new Date().toISOString(),
+    status,
+    transcript,
+    variables,
+  }).finally(() => {
+    pendingCompletions.delete(completion)
+  })
 
-  return api.post<CompleteCallResponse, CompleteCallRequest>(
-    "/calls/complete",
-    {
-      body: {
-        callId,
-        endedAt,
-        status,
-        transcript,
-        variables,
-      },
-    }
-  )
+  pendingCompletions.add(completion)
+
+  return completion
+}
+
+export async function waitForPendingCompletions() {
+  await Promise.all(pendingCompletions)
 }

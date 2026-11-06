@@ -190,6 +190,18 @@
           "required_with_username": "La contraseña SIP es obligatoria cuando se indica un usuario"
         }
       }
+    },
+    "batch_calls": {
+      "schedule": {
+        "time_format": "Usa el formato HH:mm",
+        "timezone_invalid": "La zona horaria no es válida",
+        "days_required": "Elige al menos un día",
+        "days_duplicate": "Los días no se pueden repetir",
+        "empty_window": "La hora de inicio y la de fin deben ser distintas"
+      },
+      "max_concurrent_calls": {
+        "invalid": "Las llamadas simultáneas deben ser un número entero entre 1 y 50"
+      }
     }
   }
 }

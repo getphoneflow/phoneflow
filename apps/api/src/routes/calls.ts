@@ -36,6 +36,11 @@ import { auth } from "@/lib/auth/config"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
+import {
+  RECIPIENT_ERRORS,
+  recipientOutcomeForCallStatus,
+  updateBatchCallRecipient,
+} from "@/lib/batch-calls"
 import { computeCallCosts } from "@/lib/call-cost"
 import { recordContactCall, resolvePhoneContactId } from "@/lib/contacts"
 import {
@@ -108,6 +113,22 @@ async function resolveAgentConfig(
     agentVersionId: null,
     config: agent.config,
   }
+}
+
+async function failBatchCallRecipient(
+  payload: { batchCallId: string | null; batchCallRecipientId?: string | null },
+  error: string
+) {
+  if (!payload.batchCallId || !payload.batchCallRecipientId) {
+    return
+  }
+
+  await updateBatchCallRecipient({
+    batchCallId: payload.batchCallId,
+    recipientId: payload.batchCallRecipientId,
+    status: "failed",
+    error,
+  })
 }
 
 function sipConnection(phoneNumber: {
@@ -282,15 +303,16 @@ callRoutes.post(
   requireAuthToken,
   validator("json", startOutboundCallRequestSchema),
   async (c) => {
-    try {
-      const payload = c.req.valid("json")
+    const payload = c.req.valid("json")
 
+    try {
       const resolved = await resolveAgentConfig(
         payload.agentId,
         payload.agentVersionId
       )
 
       if (!resolved) {
+        await failBatchCallRecipient(payload, RECIPIENT_ERRORS.agentNotFound)
         return c.json({ error: "Agent not found" }, 404)
       }
 
@@ -311,6 +333,10 @@ callRoutes.post(
         env.IS_CLOUD &&
         !(await organizationHasCredits(resolved.organizationId))
       ) {
+        await failBatchCallRecipient(
+          payload,
+          RECIPIENT_ERRORS.insufficientCredits
+        )
         return c.json({ error: "Insufficient credits" }, 402)
       }
 
@@ -343,6 +369,15 @@ callRoutes.post(
         })
         .returning({ id: callsTable.id })
 
+      if (payload.batchCallId) {
+        await updateBatchCallRecipient({
+          batchCallId: payload.batchCallId,
+          recipientId: payload.batchCallRecipientId,
+          callId: call.id,
+          status: "in_progress",
+        })
+      }
+
       await startCallRecording(payload.livekitRoomName, call.id)
 
       return c.json(
@@ -354,6 +389,10 @@ callRoutes.post(
         201
       )
     } catch {
+      await failBatchCallRecipient(
+        payload,
+        RECIPIENT_ERRORS.callStartFailed
+      ).catch(() => {})
       return c.json({ error: "Failed to start call" }, 500)
     }
   }
@@ -373,6 +412,7 @@ callRoutes.post(
       )
 
       if (!resolved) {
+        await failBatchCallRecipient(payload, RECIPIENT_ERRORS.agentNotFound)
         return c.json({ error: "Agent not found" }, 404)
       }
 
@@ -422,6 +462,15 @@ callRoutes.post(
         await recordContactCall(contactId, startedAt, 0)
       }
 
+      if (payload.batchCallId) {
+        await updateBatchCallRecipient({
+          batchCallId: payload.batchCallId,
+          recipientId: payload.batchCallRecipientId,
+          callId: call.id,
+          ...recipientOutcomeForCallStatus("no_answer"),
+        })
+      }
+
       return c.json({ callId: call.id } satisfies UnansweredCallResponse, 201)
     } catch {
       return c.json({ error: "Failed to record unanswered call" }, 500)
@@ -455,6 +504,17 @@ callRoutes.post(
 
       if (endedAt.getTime() < call.startedAt.getTime()) {
         return c.json({ error: "endedAt must be after startedAt" }, 400)
+      }
+
+      // Before anything that can throw below: the call has ended either way, and
+      // a lost outcome would hold a concurrency slot until the timeout.
+      if (call.batchCallId) {
+        await updateBatchCallRecipient({
+          batchCallId: call.batchCallId,
+          recipientId: payload.batchCallRecipientId,
+          callId: call.id,
+          ...recipientOutcomeForCallStatus(payload.status),
+        })
       }
 
       const durationMs = endedAt.getTime() - call.startedAt.getTime()

@@ -23,8 +23,13 @@ async function adjustOrganizationCredits(
     .where(eq(organization.id, organizationId))
 }
 
-export async function getOrganizationCreditBalance(organizationId: string) {
-  const org = await db.query.organization.findFirst({
+type CreditReader = Pick<typeof db, "query">
+
+export async function getOrganizationCreditBalance(
+  organizationId: string,
+  reader: CreditReader = db
+) {
+  const org = await reader.query.organization.findFirst({
     where: {
       id: organizationId,
     },
@@ -36,8 +41,11 @@ export async function getOrganizationCreditBalance(organizationId: string) {
   return toAmount(org?.creditBalance)
 }
 
-export async function organizationHasCredits(organizationId: string) {
-  return (await getOrganizationCreditBalance(organizationId)) > 0
+export async function organizationHasCredits(
+  organizationId: string,
+  reader?: CreditReader
+) {
+  return (await getOrganizationCreditBalance(organizationId, reader)) > 0
 }
 
 export async function deductOrganizationCredits(

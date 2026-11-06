@@ -11,7 +11,16 @@ import type {
   AgentVersionConfigResponse,
   AgentVersionsListResponse,
 } from "@workspace/shared/api/agents/types"
+import {
+  DEFAULT_MAX_CONCURRENT_CALLS,
+  MAX_CONCURRENT_CALLS_LIMIT,
+} from "@workspace/shared/api/batch-calls/schedule"
+import {
+  batchCallScheduleSchema,
+  maxConcurrentCallsSchema,
+} from "@workspace/shared/api/batch-calls/schemas"
 import type {
+  BatchCallSchedule,
   CreateBatchCallRequest,
   CreateBatchCallResponse,
 } from "@workspace/shared/api/batch-calls/types"
@@ -21,6 +30,7 @@ import { Calendar } from "@workspace/ui/components/calendar"
 import { Dropzone } from "@workspace/ui/components/dropzone"
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -40,12 +50,14 @@ import {
 } from "@workspace/ui/components/select"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { Switch } from "@workspace/ui/components/switch"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@workspace/ui/components/tabs"
+import { BatchCallScheduleFields } from "@/components/batch-calls/batch-call-schedule-fields"
 import {
   downloadCsvTemplate,
   type ParsedCsvRecipient,
@@ -70,10 +82,21 @@ const formSchema = z
     triggerMode: z.enum(["now", "schedule"]),
     scheduleTime: z.string().optional(),
     timezone: z.string().optional(),
+    maxConcurrentCalls: maxConcurrentCallsSchema,
+    callingWindow: batchCallScheduleSchema.nullable(),
   })
   .strict()
 
 type FormValues = z.infer<typeof formSchema>
+
+function defaultCallingWindow(timezone: string): BatchCallSchedule {
+  return {
+    timezone,
+    days: [1, 2, 3, 4, 5],
+    startTime: "09:00",
+    endTime: "18:00",
+  }
+}
 
 function hasSipConnection(phoneNumber: PhoneNumberListResponse[number]) {
   return Boolean(
@@ -138,6 +161,8 @@ export function CreateBatchCallForm() {
       triggerMode: "now",
       scheduleTime: new Date().toTimeString().slice(0, 8),
       timezone: userTimeZone,
+      maxConcurrentCalls: DEFAULT_MAX_CONCURRENT_CALLS,
+      callingWindow: null,
     },
   })
 
@@ -210,7 +235,10 @@ export function CreateBatchCallForm() {
         t("components.batch_calls.create_batch_call_form.toasts.created")
       )
       queryClient.invalidateQueries({ queryKey: ["batch-calls"] })
-      navigate({ to: "/batch-calls" })
+      navigate({
+        to: "/batch-calls/$batchCallId",
+        params: { batchCallId: batchCall.id },
+      })
     },
     onError: (error) => {
       toast.error(error.message)
@@ -273,6 +301,8 @@ export function CreateBatchCallForm() {
       agentVersionId: values.agentVersionId ?? null,
       recipients: parsedRecipients.recipients,
       scheduledAt,
+      maxConcurrentCalls: values.maxConcurrentCalls,
+      schedule: values.callingWindow,
     })
   })
 
@@ -500,6 +530,83 @@ export function CreateBatchCallForm() {
               )}
             />
           </div>
+
+          <Controller
+            name="maxConcurrentCalls"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor={field.name}>
+                  {t(
+                    "components.batch_calls.create_batch_call_form.max_concurrent_calls.label"
+                  )}
+                </FieldLabel>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  ref={field.ref}
+                  onBlur={field.onBlur}
+                  value={Number.isNaN(field.value) ? "" : field.value}
+                  onChange={(event) =>
+                    field.onChange(event.target.valueAsNumber)
+                  }
+                  type="number"
+                  min={1}
+                  max={MAX_CONCURRENT_CALLS_LIMIT}
+                  readOnly={readOnly}
+                  aria-invalid={fieldState.invalid}
+                />
+                <FieldDescription>
+                  {t(
+                    "components.batch_calls.create_batch_call_form.max_concurrent_calls.description"
+                  )}
+                </FieldDescription>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+
+          <Controller
+            name="callingWindow"
+            control={form.control}
+            render={({ field }) => (
+              <Field>
+                <div className="flex items-center justify-between gap-2">
+                  <FieldLabel htmlFor={field.name}>
+                    {t(
+                      "components.batch_calls.create_batch_call_form.calling_window.label"
+                    )}
+                  </FieldLabel>
+                  <Switch
+                    id={field.name}
+                    checked={field.value !== null}
+                    disabled={readOnly}
+                    onCheckedChange={(checked) =>
+                      field.onChange(
+                        checked ? defaultCallingWindow(userTimeZone) : null
+                      )
+                    }
+                  />
+                </div>
+                {field.value ? (
+                  <BatchCallScheduleFields
+                    value={field.value}
+                    onChange={field.onChange}
+                    errors={form.formState.errors.callingWindow}
+                    readOnly={readOnly}
+                  />
+                ) : (
+                  <FieldDescription>
+                    {t(
+                      "components.batch_calls.create_batch_call_form.calling_window.off"
+                    )}
+                  </FieldDescription>
+                )}
+              </Field>
+            )}
+          />
 
           <Controller
             name="triggerMode"

@@ -1,5 +1,14 @@
 import { env } from "@/lib/env"
 
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number
+  ) {
+    super(message)
+  }
+}
+
 type RequestOptions<TBody = never> = {
   headers?: HeadersInit
   body?: TBody
@@ -26,7 +35,7 @@ async function request<TResponse, TBody = never>(
   const body = await response.json()
 
   if (!response.ok) {
-    throw new Error(body.error || response.status)
+    throw new ApiError(body.error || response.status, response.status)
   }
 
   return body as TResponse

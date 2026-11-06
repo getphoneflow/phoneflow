@@ -44,6 +44,7 @@ export async function startCall(
             livekitRoomName,
             startedAt,
             batchCallId: metadata.batchCallId ?? null,
+            batchCallRecipientId: metadata.batchCallRecipientId ?? null,
           },
         }
       )
@@ -123,6 +124,7 @@ export async function recordUnansweredCall(
         startedAt: metadata.triggeredAt,
         endedAt,
         batchCallId: metadata.batchCallId ?? null,
+        batchCallRecipientId: metadata.batchCallRecipientId ?? null,
       },
     }
   )
@@ -132,7 +134,8 @@ export function completeCall(
   callId: string,
   status: CompleteCallRequest["status"],
   transcript: CompleteCallRequest["transcript"],
-  variables: CompleteCallRequest["variables"]
+  variables: CompleteCallRequest["variables"],
+  batchCallRecipientId?: CompleteCallRequest["batchCallRecipientId"]
 ) {
   const endedAt = new Date().toISOString()
 
@@ -145,6 +148,7 @@ export function completeCall(
         status,
         transcript,
         variables,
+        batchCallRecipientId,
       },
     }
   )

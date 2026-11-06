@@ -11,6 +11,7 @@ import {
 import * as silero from "@livekit/agents-plugin-silero"
 
 import { BACKGROUND_AUDIO } from "@workspace/shared/constants/background-audio"
+import { CALL_RING_DURATION_MS } from "@workspace/shared/constants/calls"
 import { FlowAgent } from "@/flow/agent"
 import { buildFlowGraph } from "@/flow/builder"
 import { createVariables } from "@/flow/variables"
@@ -27,8 +28,6 @@ import { buildCallTranscript } from "@/lib/transcript"
 import { LLM } from "@/providers/llm"
 import { STT } from "@/providers/stt"
 import { TTS } from "@/providers/tts"
-
-const RING_DURATION_MS = 45_000
 
 export default defineAgent({
   prewarm: async (proc: JobProcess) => {
@@ -49,7 +48,7 @@ export default defineAgent({
           attribute: "sip.callStatus",
           value: "active",
           signal: AbortSignal.timeout(
-            metadata.ringDurationMs ?? RING_DURATION_MS
+            metadata.ringDurationMs ?? CALL_RING_DURATION_MS
           ),
         })
       } catch {
@@ -135,7 +134,8 @@ export default defineAgent({
           callId,
           "completed",
           buildCallTranscript(session.history),
-          variables.snapshot()
+          variables.snapshot(),
+          metadata.batchCallRecipientId
         )
       }
     })

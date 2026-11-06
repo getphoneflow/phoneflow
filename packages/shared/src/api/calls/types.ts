@@ -29,6 +29,7 @@ export type CallDispatchMetadata = {
   toNumber?: string
   fromNumber?: string
   batchCallId?: string | null
+  batchCallRecipientId?: string | null
   triggeredAt?: string
   ringDurationMs?: number
 }

@@ -30,7 +30,14 @@
     "insufficient_credits": "Créditos insuficientes",
     "agent_version_not_found": "Versión del agente no encontrada",
     "scheduled_at_in_past": "La hora programada debe ser futura",
-    "create_failed": "No se pudo crear la llamada por lotes"
+    "create_failed": "No se pudo crear la llamada por lotes",
+    "not_found": "Llamada por lotes no encontrada",
+    "load_failed": "No se pudo cargar la llamada por lotes",
+    "list_recipients_failed": "No se pudieron cargar los destinatarios",
+    "invalid_status": "Esta acción no está disponible en el estado actual de la llamada por lotes",
+    "pause_failed": "No se pudo pausar la llamada por lotes",
+    "resume_failed": "No se pudo reanudar la llamada por lotes",
+    "cancel_failed": "No se pudo cancelar la llamada por lotes"
   },
   "billing": {
     "load_failed": "No se pudo cargar la facturación",

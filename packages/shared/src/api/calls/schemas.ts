@@ -27,6 +27,7 @@ export const startOutboundCallRequestSchema = z
     livekitRoomName: z.string().trim().min(1),
     startedAt: z.iso.datetime(),
     batchCallId: z.uuid().nullable(),
+    batchCallRecipientId: z.uuid().nullable().optional(),
   })
   .strict()
 
@@ -40,6 +41,7 @@ export const unansweredCallRequestSchema = z
     startedAt: z.iso.datetime(),
     endedAt: z.iso.datetime(),
     batchCallId: z.uuid().nullable(),
+    batchCallRecipientId: z.uuid().nullable().optional(),
   })
   .strict()
 
@@ -61,6 +63,7 @@ export const completeCallRequestSchema = z
     status: z.enum(["completed"]),
     transcript: callTranscriptSchema,
     variables: z.record(z.string(), z.string()).optional(),
+    batchCallRecipientId: z.uuid().nullable().optional(),
   })
   .strict()
 

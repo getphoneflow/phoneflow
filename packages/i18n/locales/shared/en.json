@@ -190,6 +190,18 @@
           "required_with_username": "SIP password is required when a username is set"
         }
       }
+    },
+    "batch_calls": {
+      "schedule": {
+        "time_format": "Use the HH:mm format",
+        "timezone_invalid": "Timezone is not valid",
+        "days_required": "Pick at least one day",
+        "days_duplicate": "Days must not repeat",
+        "empty_window": "Start and end time must be different"
+      },
+      "max_concurrent_calls": {
+        "invalid": "Concurrent calls must be a whole number from 1 to 50"
+      }
     }
   }
 }

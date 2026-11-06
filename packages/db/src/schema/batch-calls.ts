@@ -11,6 +11,13 @@ import {
 
 import { agentVersionsTable } from "@workspace/db/schema/agents"
 import { organization } from "@workspace/db/schema/auth"
+import { callsTable } from "@workspace/db/schema/calls"
+import type {
+  BatchCallPauseReason,
+  BatchCallRecipientStatus,
+  BatchCallSchedule,
+  BatchCallStatus,
+} from "@workspace/shared/api/batch-calls/types"
 
 export const batchCallsTable = pgTable(
   "batch_calls",
@@ -26,7 +33,10 @@ export const batchCallsTable = pgTable(
       () => agentVersionsTable.id,
       { onDelete: "set null" }
     ),
-    status: text("status").notNull().$type<"scheduled" | "triggered">(),
+    status: text("status").notNull().$type<BatchCallStatus>(),
+    pauseReason: text("pause_reason").$type<BatchCallPauseReason>(),
+    maxConcurrentCalls: integer("max_concurrent_calls").notNull().default(5),
+    schedule: json().$type<BatchCallSchedule>(),
     scheduledAt: timestamp("scheduled_at", {
       withTimezone: true,
       mode: "date",
@@ -56,6 +66,15 @@ export const batchCallRecipientsTable = pgTable(
       .references(() => batchCallsTable.id, { onDelete: "cascade" }),
     toNumber: text("to_number").notNull(),
     variables: json().$type<Record<string, string>>().notNull().default({}),
+    status: text("status")
+      .notNull()
+      .$type<BatchCallRecipientStatus>()
+      .default("pending"),
+    callId: uuid("call_id").references(() => callsTable.id, {
+      onDelete: "set null",
+    }),
+    error: text("error"),
+    dialedAt: timestamp("dialed_at", { withTimezone: true, mode: "date" }),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
       .defaultNow()
       .notNull(),
@@ -64,6 +83,9 @@ export const batchCallRecipientsTable = pgTable(
       .notNull(),
   },
   (table) => [
-    index("batch_call_recipients_batch_call_id_idx").on(table.batchCallId),
+    index("batch_call_recipients_batch_call_id_status_idx").on(
+      table.batchCallId,
+      table.status
+    ),
   ]
 )

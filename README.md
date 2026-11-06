@@ -13,5 +13,6 @@ Build voice agents by connecting nodes, deploy them to handle inbound and outbou
 - **Version control**: Publish immutable agent versions so you can iterate with confidence, switch between versions, and roll back at any time.
 - **Phone numbers**: Import numbers from any provider (Twilio, Telnyx, Zadarma, …) by filling in the number and its SIP credentials.
 - **Inbound and outbound calls**: Route incoming calls to a chosen agent and version, and trigger outbound calls to any number with any agent and version.
+- **Batch calls**: Upload a CSV of recipients and dial them with a concurrency limit, calling hours (days, time window and timezone), pause, resume and cancel, and a status and error for every recipient.
 - **Call monitoring**: Watch every call in real time with visibility into start time, duration, cost (broken down by model), channel (phone or web), direction (inbound or outbound), from/to numbers, and the agent and version that answered.
 

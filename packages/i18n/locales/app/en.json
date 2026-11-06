@@ -38,6 +38,15 @@
       "no_results": "No results",
       "rows_per_page": "Rows per page",
       "page": "Page {{page}} of {{total}}"
+    },
+    "weekdays_short": {
+      "0": "Sun",
+      "1": "Mon",
+      "2": "Tue",
+      "3": "Wed",
+      "4": "Thu",
+      "5": "Fri",
+      "6": "Sat"
     }
   },
   "routes": {
@@ -66,6 +75,10 @@
       "breadcrumb_parent": "Batch calls",
       "breadcrumb": "Create",
       "page_title": "Create batch call - Phoneflow"
+    },
+    "batch_calls_detail": {
+      "page_title": "{{name}} - Phoneflow",
+      "breadcrumb_parent": "Batch calls"
     },
     "phone_numbers": {
       "page_title": "Phone numbers - Phoneflow",
@@ -1037,10 +1050,6 @@
         "empty": "Please upload recipients first"
       },
       "batch_calls_data_table": {
-        "status": {
-          "scheduled": "Scheduled",
-          "triggered": "Triggered"
-        },
         "columns": {
           "name": "Name",
           "status": "Status",
@@ -1083,6 +1092,14 @@
           "label": "Version",
           "select_agent_first": "Select agent first"
         },
+        "max_concurrent_calls": {
+          "label": "Concurrent calls",
+          "description": "How many calls can be live at once, from 1 to 50. Check how many your SIP trunk allows."
+        },
+        "calling_window": {
+          "label": "Calling hours",
+          "off": "Calls can start at any time."
+        },
         "trigger": {
           "label": "When to trigger",
           "now": "Now",
@@ -1102,6 +1119,70 @@
           }
         },
         "submit": "Create batch call"
+      },
+      "status": {
+        "scheduled": "Scheduled",
+        "running": "Running",
+        "paused": "Paused",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "triggered": "Triggered"
+      },
+      "recipient_status": {
+        "pending": "Pending",
+        "dialing": "Dialing",
+        "in_progress": "In progress",
+        "completed": "Completed",
+        "no_answer": "No answer",
+        "failed": "Failed",
+        "cancelled": "Cancelled"
+      },
+      "pause_reason": {
+        "manual": "Paused manually. Calls already in progress keep going.",
+        "insufficient_credits": "Paused because the organization ran out of credits. Add credits and resume.",
+        "phone_number_unavailable": "Paused because the phone number was removed or has no SIP connection. Fix it and resume."
+      },
+      "recipient_error": {
+        "call_timed_out": "No outcome was reported in time, so the call was marked as lost",
+        "call_start_failed": "The agent could not start the call",
+        "insufficient_credits": "Not enough credits when the call was answered",
+        "agent_not_found": "The agent no longer exists",
+        "unexpected_call_status": "The call ended with an unexpected status",
+        "placement_failed": "The call could not be placed",
+        "unknown_outcome": "Dialed before per-recipient tracking existed, and no call was recorded"
+      },
+      "schedule_fields": {
+        "days": {
+          "label": "Days"
+        },
+        "start_time": "Start time",
+        "end_time": "End time",
+        "timezone": "Timezone",
+        "description": "Calls only start inside this window. If the end time is earlier than the start time, the window ends the next day. Calls in progress when it closes are not interrupted."
+      },
+      "batch_call_detail": {
+        "progress": "Progress",
+        "max_concurrent": "Concurrent calls: {{count}}",
+        "no_schedule": "No calling hours",
+        "view_calls": "View calls",
+        "all_statuses": "All statuses",
+        "columns": {
+          "to": "To",
+          "status": "Status",
+          "dialed_at": "Dialed at",
+          "error": "Error"
+        },
+        "actions": {
+          "pause": "Pause",
+          "resume": "Resume",
+          "cancel": "Cancel"
+        },
+        "cancel_dialog": {
+          "title": "Cancel this batch call?",
+          "description": "Recipients not dialed yet won't be called. Calls in progress keep going. This can't be undone.",
+          "keep": "Keep batch call",
+          "confirm": "Cancel batch call"
+        }
       }
     },
     "billing": {

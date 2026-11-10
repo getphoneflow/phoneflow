@@ -52,15 +52,20 @@
           "required": "La descripción es obligatoria"
         }
       },
+      "extract_variables_tool": {
+        "variables": {
+          "min": "Añade al menos una variable",
+          "duplicate_key": "Clave de variable duplicada"
+        }
+      },
       "ivr_navigation_tool": {
         "description": {
           "required": "La descripción es obligatoria"
         }
       },
-      "extract_variables_tool": {
-        "variables": {
-          "min": "Añade al menos una variable",
-          "duplicate_key": "Clave de variable duplicada"
+      "skip_turn_tool": {
+        "description": {
+          "required": "La descripción es obligatoria"
         }
       },
       "transfer_call_destination": {

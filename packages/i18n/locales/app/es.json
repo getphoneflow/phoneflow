@@ -439,6 +439,7 @@
             "end_call": "Finalizar llamada",
             "extract_variables": "Extraer variables",
             "ivr_navigation": "Navegación IVR",
+            "skip_turn": "Saltar turno",
             "transfer_call": "Transferir llamada"
           }
         }
@@ -896,14 +897,6 @@
               "placeholder": "Describe cuándo finalizar la llamada"
             }
           },
-          "ivr_navigation_dialog": {
-            "title": "Navegación IVR",
-            "description": "Envía tonos del teclado para navegar por un menú telefónico",
-            "prompt": {
-              "label": "Descripción",
-              "placeholder": "Describe qué menú telefónico hay que superar"
-            }
-          },
           "extract_variables_dialog": {
             "title": "Extraer variables",
             "description": "Extrae variables de la conversación",
@@ -919,6 +912,22 @@
               "placeholder": "Describe qué extraer (opcional)"
             },
             "add_variable": "Añadir variable"
+          },
+          "ivr_navigation_dialog": {
+            "title": "Navegación IVR",
+            "description": "Envía tonos del teclado para navegar por un menú telefónico",
+            "prompt": {
+              "label": "Descripción",
+              "placeholder": "Describe qué menú telefónico hay que superar"
+            }
+          },
+          "skip_turn_dialog": {
+            "title": "Saltar turno",
+            "description": "Espera en silencio cuando el usuario necesita un momento",
+            "prompt": {
+              "label": "Descripción",
+              "placeholder": "Describe cuándo saltar el turno"
+            }
           },
           "transfer_call_dialog": {
             "title": "Transferir llamada",
@@ -1005,6 +1014,10 @@
               "ivr_navigation": {
                 "label": "Navegación IVR",
                 "description": "Envía tonos del teclado para navegar por un menú telefónico"
+              },
+              "skip_turn": {
+                "label": "Saltar turno",
+                "description": "Espera en silencio cuando el usuario necesita un momento"
               },
               "transfer_call": {
                 "label": "Transferir llamada",

@@ -191,14 +191,6 @@ export const endCallToolSchema = z
   })
   .strict()
 
-export const ivrNavigationToolSchema = z
-  .object({
-    description: requiredString(
-      "schemas.agent_config.ivr_navigation_tool.description.required"
-    ),
-  })
-  .strict()
-
 export const extractVariablesToolSchema = z
   .object({
     variables: z
@@ -220,6 +212,22 @@ export const extractVariablesToolSchema = z
       keys.add(variable.key)
     })
   })
+
+export const ivrNavigationToolSchema = z
+  .object({
+    description: requiredString(
+      "schemas.agent_config.ivr_navigation_tool.description.required"
+    ),
+  })
+  .strict()
+
+export const skipTurnToolSchema = z
+  .object({
+    description: requiredString(
+      "schemas.agent_config.skip_turn_tool.description.required"
+    ),
+  })
+  .strict()
 
 export const transferCallDestinationSchema = z
   .object({
@@ -291,6 +299,7 @@ const reservedToolNames = new Set([
   "end_call",
   "extract_variables",
   "send_dtmf",
+  "skip_turn",
   "transfer_call",
 ])
 
@@ -345,6 +354,7 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
         endCall: endCallToolSchema.optional(),
         extractVariables: extractVariablesToolSchema.optional(),
         ivrNavigation: ivrNavigationToolSchema.optional(),
+        skipTurn: skipTurnToolSchema.optional(),
         transferCall: transferCallToolSchema.optional(),
         toolIds: z.array(z.string().trim().min(1)).optional(),
       })
@@ -634,12 +644,15 @@ export const agentConfigSchema = z
       if (data.endCall) {
         texts.push(data.endCall.description)
       }
-      if (data.ivrNavigation) {
-        texts.push(data.ivrNavigation.description)
-      }
       for (const variable of data.extractVariables?.variables ?? []) {
         knownVariables.add(variable.key)
         texts.push(variable.description)
+      }
+      if (data.ivrNavigation) {
+        texts.push(data.ivrNavigation.description)
+      }
+      if (data.skipTurn) {
+        texts.push(data.skipTurn.description)
       }
       for (const destination of data.transferCall?.destinations ?? []) {
         texts.push(destination.condition)

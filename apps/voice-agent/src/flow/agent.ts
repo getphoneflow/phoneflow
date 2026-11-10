@@ -17,6 +17,7 @@ import {
   TRANSITION_INSTRUCTIONS,
 } from "@/flow/prompts"
 import { createSendDtmfTool } from "@/flow/tools/dtmf"
+import { createSkipTurnTool } from "@/flow/tools/skip-turn"
 import { createTransferCallTool } from "@/flow/tools/transfer-call"
 import { createWebhookTool } from "@/flow/tools/webhook"
 import type { FlowConversationNode, FlowGraph, FlowNode } from "@/flow/types"
@@ -118,12 +119,16 @@ export class FlowAgent extends Agent {
       )
     }
 
+    if (node.extractVariables) {
+      tools.push(this.buildExtractTool(node, node.extractVariables))
+    }
+
     if (node.ivrNavigation) {
       tools.push(createSendDtmfTool(node.ivrNavigation, this.variables))
     }
 
-    if (node.extractVariables) {
-      tools.push(this.buildExtractTool(node, node.extractVariables))
+    if (node.skipTurn) {
+      tools.push(createSkipTurnTool(node.skipTurn, this.variables))
     }
 
     if (node.transferCall && this.sip) {

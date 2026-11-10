@@ -439,6 +439,7 @@
             "end_call": "End call",
             "extract_variables": "Extract variables",
             "ivr_navigation": "IVR navigation",
+            "skip_turn": "Skip turn",
             "transfer_call": "Transfer call"
           }
         }
@@ -896,14 +897,6 @@
               "placeholder": "Describe when to end the call"
             }
           },
-          "ivr_navigation_dialog": {
-            "title": "IVR navigation",
-            "description": "Send keypad tones to navigate a phone menu",
-            "prompt": {
-              "label": "Description",
-              "placeholder": "Describe which phone menu to get through"
-            }
-          },
           "extract_variables_dialog": {
             "title": "Extract variables",
             "description": "Extract variables from the conversation",
@@ -919,6 +912,22 @@
               "placeholder": "Describe what to extract (optional)"
             },
             "add_variable": "Add variable"
+          },
+          "ivr_navigation_dialog": {
+            "title": "IVR navigation",
+            "description": "Send keypad tones to navigate a phone menu",
+            "prompt": {
+              "label": "Description",
+              "placeholder": "Describe which phone menu to get through"
+            }
+          },
+          "skip_turn_dialog": {
+            "title": "Skip turn",
+            "description": "Wait silently when the user needs a moment",
+            "prompt": {
+              "label": "Description",
+              "placeholder": "Describe when to skip a turn"
+            }
           },
           "transfer_call_dialog": {
             "title": "Transfer call",
@@ -1005,6 +1014,10 @@
               "ivr_navigation": {
                 "label": "IVR navigation",
                 "description": "Send keypad tones to navigate a phone menu"
+              },
+              "skip_turn": {
+                "label": "Skip turn",
+                "description": "Wait silently when the user needs a moment"
               },
               "transfer_call": {
                 "label": "Transfer call",

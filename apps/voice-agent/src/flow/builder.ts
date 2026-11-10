@@ -34,6 +34,10 @@ export function buildFlowGraph(config: AgentConfig) {
         flowNode.ivrNavigation = node.data.ivrNavigation
       }
 
+      if (node.data.skipTurn) {
+        flowNode.skipTurn = node.data.skipTurn
+      }
+
       if (node.data.transferCall) {
         flowNode.transferCall = node.data.transferCall
       }

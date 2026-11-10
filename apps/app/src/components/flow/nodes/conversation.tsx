@@ -26,6 +26,9 @@ export function ConversationNode({
     ...(data.ivrNavigation
       ? [t("components.flow.nodes.conversation.tool_names.ivr_navigation")]
       : []),
+    ...(data.skipTurn
+      ? [t("components.flow.nodes.conversation.tool_names.skip_turn")]
+      : []),
     ...(data.transferCall
       ? [t("components.flow.nodes.conversation.tool_names.transfer_call")]
       : []),

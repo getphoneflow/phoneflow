@@ -2,6 +2,7 @@ import {
   Braces,
   Keyboard,
   type LucideIcon,
+  Pause,
   PhoneForwarded,
   PhoneOff,
   Plus,
@@ -16,6 +17,7 @@ import type {
   ExtractVariablesTool,
   FlowConversationNode,
   IvrNavigationTool,
+  SkipTurnTool,
   TransferCallTool,
   WebhookTool,
 } from "@workspace/shared/api/agent-config/types"
@@ -42,6 +44,7 @@ import {
   createIvrNavigationDraft,
   IvrNavigationDialog,
 } from "./ivr-navigation-dialog"
+import { createSkipTurnDraft, SkipTurnDialog } from "./skip-turn-dialog"
 import { ToolPickerItem, ToolRow } from "./tool-row"
 import {
   createTransferCallDraft,
@@ -53,6 +56,7 @@ type BuiltInKind =
   | "endCall"
   | "extractVariables"
   | "ivrNavigation"
+  | "skipTurn"
   | "transferCall"
 
 const builtInTools: {
@@ -91,6 +95,15 @@ const builtInTools: {
       "components.flow.sidepanel.tools.conversation_tools.built_in.ivr_navigation.description",
     icon: Keyboard,
     summary: (node) => node.data.ivrNavigation?.description,
+  },
+  {
+    kind: "skipTurn",
+    label:
+      "components.flow.sidepanel.tools.conversation_tools.built_in.skip_turn.label",
+    description:
+      "components.flow.sidepanel.tools.conversation_tools.built_in.skip_turn.description",
+    icon: Pause,
+    summary: (node) => node.data.skipTurn?.description,
   },
   {
     kind: "transferCall",
@@ -155,6 +168,9 @@ export function ConversationTools({ node }: ConversationToolsProps) {
     useState<ExtractVariablesTool | null>(null)
   const [ivrNavigationDialog, setIvrNavigationDialog] =
     useState<IvrNavigationTool | null>(null)
+  const [skipTurnDialog, setSkipTurnDialog] = useState<SkipTurnTool | null>(
+    null
+  )
   const [transferCallDialog, setTransferCallDialog] =
     useState<TransferCallTool | null>(null)
   const [webhookDialog, setWebhookDialog] = useState<{
@@ -199,6 +215,10 @@ export function ConversationTools({ node }: ConversationToolsProps) {
       setIvrNavigationDialog(
         node.data.ivrNavigation ?? createIvrNavigationDraft()
       )
+      return
+    }
+    if (kind === "skipTurn") {
+      setSkipTurnDialog(node.data.skipTurn ?? createSkipTurnDraft())
       return
     }
     setTransferCallDialog(node.data.transferCall ?? createTransferCallDraft())
@@ -436,6 +456,23 @@ export function ConversationTools({ node }: ConversationToolsProps) {
           onSave={(tool) => {
             updateData({ ...node.data, ivrNavigation: tool })
             setIvrNavigationDialog(null)
+          }}
+        />
+      ) : null}
+
+      {skipTurnDialog ? (
+        <SkipTurnDialog
+          open
+          tool={skipTurnDialog}
+          readOnly={readOnly}
+          onOpenChange={(open) => {
+            if (!open) {
+              setSkipTurnDialog(null)
+            }
+          }}
+          onSave={(tool) => {
+            updateData({ ...node.data, skipTurn: tool })
+            setSkipTurnDialog(null)
           }}
         />
       ) : null}

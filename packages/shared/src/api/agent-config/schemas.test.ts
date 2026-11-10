@@ -262,13 +262,42 @@ describe("agentConfigSchema", () => {
     })
 
     it("rejects tool names that clash with built-in tools", () => {
+      for (const name of ["end_call", "skip_turn"]) {
+        expect(
+          errors(
+            config((c) => {
+              c.tools = [webhook({ name })]
+            })
+          )
+        ).toContain("schemas.agent_config.webhook_tool.name.reserved")
+      }
+    })
+
+    it("requires a description when skip turn is enabled", () => {
       expect(
         errors(
           config((c) => {
-            c.tools = [webhook({ name: "end_call" })]
+            const node = c.nodes[0]
+            if (node?.type === "conversation") {
+              node.data.skipTurn = { description: "   " }
+            }
           })
         )
-      ).toContain("schemas.agent_config.webhook_tool.name.reserved")
+      ).toContain("schemas.agent_config.skip_turn_tool.description.required")
+
+      expect(
+        errors(
+          config((c) => {
+            const node = c.nodes[0]
+            if (node?.type === "conversation") {
+              node.data.skipTurn = {
+                description: "When {{customer_name}} needs a moment",
+              }
+            }
+            c.dynamicVariables = [{ key: "customer_name" }]
+          })
+        )
+      ).toEqual([])
     })
 
     it("requires the webhook body to be JSON", () => {

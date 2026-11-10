@@ -8,7 +8,8 @@
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "lint": "biome lint .",
-    "format": "biome check --write --linter-enabled=false ."
+    "format": "biome check --write --linter-enabled=false .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@better-auth/sso": "catalog:",
@@ -46,10 +47,12 @@
   "devDependencies": {
     "@tailwindcss/vite": "catalog:",
     "@tanstack/router-plugin": "^1.168.32",
+    "@testing-library/react": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^6.0.5",
+    "jsdom": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   }

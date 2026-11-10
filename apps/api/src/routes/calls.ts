@@ -1,7 +1,9 @@
 import {
   type AnyRelationsFilter,
+  and,
   count,
   eq,
+  isNull,
   relationsFilterToSQL,
 } from "drizzle-orm"
 import { Hono } from "hono"
@@ -491,8 +493,14 @@ callRoutes.post(
           variables: payload.variables ?? null,
           updatedAt: new Date(),
         })
-        .where(eq(callsTable.id, payload.callId))
+        .where(
+          and(eq(callsTable.id, payload.callId), isNull(callsTable.endedAt))
+        )
         .returning()
+
+      if (!updated) {
+        return c.json({ error: "Call already ended" }, 409)
+      }
 
       if (call.contactId) {
         await recordContactCall(call.contactId, call.startedAt, durationMs)

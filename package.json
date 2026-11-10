@@ -6,11 +6,13 @@
   "scripts": {
     "typecheck": "pnpm -r typecheck",
     "lint": "biome lint .",
-    "format": "biome check --write --linter-enabled=false ."
+    "format": "biome check --write --linter-enabled=false .",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
     "typescript": "catalog:",
+    "vitest": "catalog:",
     "zod": "catalog:"
   }
 }

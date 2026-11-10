@@ -8,7 +8,8 @@
     "start": "node dist/apps/worker/src/index.js",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint .",
-    "format": "biome check --write --linter-enabled=false ."
+    "format": "biome check --write --linter-enabled=false .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@opentelemetry/api": "catalog:",

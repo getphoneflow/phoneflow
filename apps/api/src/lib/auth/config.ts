@@ -8,6 +8,7 @@ import {
   emailOTP,
   lastLoginMethod,
   organization,
+  testUtils,
   twoFactor,
 } from "better-auth/plugins"
 
@@ -165,6 +166,7 @@ export const auth = betterAuth({
           }),
         ]
       : []),
+    ...(env.NODE_ENV === "test" ? [testUtils({ captureOTP: true })] : []),
     sso({
       domainVerification: {
         enabled: true,

@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query"
 
 import { organization } from "@/lib/auth/client"
+import { t } from "@/lib/i18n"
 
 export type OrganizationMember = NonNullable<
   Awaited<ReturnType<typeof organization.listMembers>>["data"]
@@ -38,7 +39,7 @@ export function activeMemberQueryOptions() {
     queryFn: async () => {
       const { data } = await organization.getActiveMember()
       if (!data) {
-        throw new Error("No active organization member")
+        throw new Error(t("common.errors.no_active_organization_member"))
       }
       return data
     },

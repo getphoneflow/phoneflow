@@ -32,7 +32,8 @@
       "loading": "Loading..."
     },
     "errors": {
-      "generic": "Something went wrong"
+      "generic": "Something went wrong",
+      "no_active_organization_member": "No active organization member"
     },
     "table": {
       "no_results": "No results",

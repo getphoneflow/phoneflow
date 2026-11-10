@@ -79,7 +79,7 @@ contactRoutes.get("/export/:organizationId", requireAuthToken, async (c) => {
 
     return c.json(contacts satisfies ContactDownloadResponse)
   } catch {
-    return c.json({ error: "Failed to export contacts" }, 500)
+    return c.json({ error: t(c.get("locale"), "contacts.export_failed") }, 500)
   }
 })
 

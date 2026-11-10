@@ -233,19 +233,28 @@ batchCallRoutes.post(
       })
 
       if (!batchCall) {
-        return c.json({ error: "Batch call not found" }, 404)
+        return c.json(
+          { error: t(c.get("locale"), "batch_calls.not_found") },
+          404
+        )
       }
 
       if (
         env.IS_CLOUD &&
         !(await organizationHasCredits(batchCall.organizationId))
       ) {
-        return c.json({ error: "Insufficient credits" }, 402)
+        return c.json(
+          { error: t(c.get("locale"), "batch_calls.insufficient_credits") },
+          402
+        )
       }
 
       const phoneNumber = batchCall.phoneNumber
       if (!phoneNumber) {
-        return c.json({ error: "Phone number not found" }, 404)
+        return c.json(
+          { error: t(c.get("locale"), "batch_calls.phone_number_not_found") },
+          404
+        )
       }
 
       if (
@@ -253,7 +262,10 @@ batchCallRoutes.post(
         !phoneNumber.sipUsername ||
         !phoneNumber.sipPassword
       ) {
-        return c.json({ error: "Phone number has no SIP connection" }, 400)
+        return c.json(
+          { error: t(c.get("locale"), "batch_calls.phone_number_without_sip") },
+          400
+        )
       }
 
       for (const recipient of batchCall.recipients) {
@@ -284,7 +296,10 @@ batchCallRoutes.post(
 
       return c.json({ ok: true } satisfies TriggerBatchCallResponse)
     } catch {
-      return c.json({ error: "Failed to trigger batch call" }, 500)
+      return c.json(
+        { error: t(c.get("locale"), "batch_calls.trigger_failed") },
+        500
+      )
     }
   }
 )

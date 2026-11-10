@@ -30,7 +30,9 @@
     "insufficient_credits": "Créditos insuficientes",
     "agent_version_not_found": "Versión del agente no encontrada",
     "scheduled_at_in_past": "La hora programada debe ser futura",
-    "create_failed": "No se pudo crear la llamada por lotes"
+    "create_failed": "No se pudo crear la llamada por lotes",
+    "not_found": "Llamada por lotes no encontrada",
+    "trigger_failed": "No se pudo iniciar la llamada por lotes"
   },
   "billing": {
     "load_failed": "No se pudo cargar la facturación",
@@ -64,7 +66,13 @@
     "agent_not_found": "Agente no encontrado",
     "insufficient_credits": "Créditos insuficientes",
     "agent_version_not_found": "Versión del agente no encontrada",
-    "start_outbound_failed": "No se pudo iniciar la llamada saliente"
+    "start_outbound_failed": "No se pudo iniciar la llamada saliente",
+    "start_failed": "No se pudo iniciar la llamada",
+    "record_unanswered_failed": "No se pudo registrar la llamada no contestada",
+    "already_ended": "La llamada ya ha finalizado",
+    "ended_before_started": "endedAt debe ser posterior a startedAt",
+    "complete_failed": "No se pudo completar la llamada",
+    "export_failed": "No se pudieron exportar las llamadas"
   },
   "contacts": {
     "user_email_not_found": "No se encontró el correo del usuario",
@@ -72,7 +80,8 @@
     "request_download_failed": "No se pudo solicitar la descarga de contactos",
     "not_found": "Contacto no encontrado",
     "load_failed": "No se pudo obtener el contacto",
-    "list_failed": "No se pudieron cargar los contactos"
+    "list_failed": "No se pudieron cargar los contactos",
+    "export_failed": "No se pudieron exportar los contactos"
   },
   "phone_numbers": {
     "list_failed": "No se pudieron cargar los números de teléfono",

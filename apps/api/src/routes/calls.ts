@@ -148,14 +148,20 @@ callRoutes.post(
       )
 
       if (!resolved) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json(
+          { error: t(c.get("locale"), "calls.agent_not_found") },
+          404
+        )
       }
 
       if (
         env.IS_CLOUD &&
         !(await organizationHasCredits(resolved.organizationId))
       ) {
-        return c.json({ error: "Insufficient credits" }, 402)
+        return c.json(
+          { error: t(c.get("locale"), "calls.insufficient_credits") },
+          402
+        )
       }
 
       const [call] = await db
@@ -187,7 +193,7 @@ callRoutes.post(
         201
       )
     } catch {
-      return c.json({ error: "Failed to start call" }, 500)
+      return c.json({ error: t(c.get("locale"), "calls.start_failed") }, 500)
     }
   }
 )
@@ -216,7 +222,10 @@ callRoutes.post(
       })
 
       if (!phoneNumber?.agentId) {
-        return c.json({ error: "Phone number not found" }, 404)
+        return c.json(
+          { error: t(c.get("locale"), "calls.phone_number_not_found") },
+          404
+        )
       }
 
       const resolved = await resolveAgentConfig(
@@ -225,14 +234,20 @@ callRoutes.post(
       )
 
       if (!resolved) {
-        return c.json({ error: "Phone number not found" }, 404)
+        return c.json(
+          { error: t(c.get("locale"), "calls.phone_number_not_found") },
+          404
+        )
       }
 
       if (
         env.IS_CLOUD &&
         !(await organizationHasCredits(phoneNumber.organizationId))
       ) {
-        return c.json({ error: "Insufficient credits" }, 402)
+        return c.json(
+          { error: t(c.get("locale"), "calls.insufficient_credits") },
+          402
+        )
       }
 
       const contactId = await resolvePhoneContactId(
@@ -274,7 +289,7 @@ callRoutes.post(
         201
       )
     } catch {
-      return c.json({ error: "Failed to start call" }, 500)
+      return c.json({ error: t(c.get("locale"), "calls.start_failed") }, 500)
     }
   }
 )
@@ -293,7 +308,10 @@ callRoutes.post(
       )
 
       if (!resolved) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json(
+          { error: t(c.get("locale"), "calls.agent_not_found") },
+          404
+        )
       }
 
       const phoneNumber = await db.query.phoneNumbersTable.findFirst({
@@ -313,7 +331,10 @@ callRoutes.post(
         env.IS_CLOUD &&
         !(await organizationHasCredits(resolved.organizationId))
       ) {
-        return c.json({ error: "Insufficient credits" }, 402)
+        return c.json(
+          { error: t(c.get("locale"), "calls.insufficient_credits") },
+          402
+        )
       }
 
       const contactId = await resolvePhoneContactId(
@@ -356,7 +377,7 @@ callRoutes.post(
         201
       )
     } catch {
-      return c.json({ error: "Failed to start call" }, 500)
+      return c.json({ error: t(c.get("locale"), "calls.start_failed") }, 500)
     }
   }
 )
@@ -375,7 +396,10 @@ callRoutes.post(
       )
 
       if (!resolved) {
-        return c.json({ error: "Agent not found" }, 404)
+        return c.json(
+          { error: t(c.get("locale"), "calls.agent_not_found") },
+          404
+        )
       }
 
       const contactId = await resolvePhoneContactId(
@@ -426,7 +450,10 @@ callRoutes.post(
 
       return c.json({ callId: call.id } satisfies UnansweredCallResponse, 201)
     } catch {
-      return c.json({ error: "Failed to record unanswered call" }, 500)
+      return c.json(
+        { error: t(c.get("locale"), "calls.record_unanswered_failed") },
+        500
+      )
     }
   }
 )
@@ -446,17 +473,20 @@ callRoutes.post(
       })
 
       if (!call) {
-        return c.json({ error: "Call not found" }, 404)
+        return c.json({ error: t(c.get("locale"), "calls.not_found") }, 404)
       }
 
       if (call.endedAt) {
-        return c.json({ error: "Call already ended" }, 409)
+        return c.json({ error: t(c.get("locale"), "calls.already_ended") }, 409)
       }
 
       const endedAt = new Date(payload.endedAt)
 
       if (endedAt.getTime() < call.startedAt.getTime()) {
-        return c.json({ error: "endedAt must be after startedAt" }, 400)
+        return c.json(
+          { error: t(c.get("locale"), "calls.ended_before_started") },
+          400
+        )
       }
 
       const durationMs = endedAt.getTime() - call.startedAt.getTime()
@@ -499,7 +529,7 @@ callRoutes.post(
         .returning()
 
       if (!updated) {
-        return c.json({ error: "Call already ended" }, 409)
+        return c.json({ error: t(c.get("locale"), "calls.already_ended") }, 409)
       }
 
       if (call.contactId) {
@@ -515,7 +545,7 @@ callRoutes.post(
         durationMs,
       } satisfies CompleteCallResponse)
     } catch {
-      return c.json({ error: "Failed to complete call" }, 500)
+      return c.json({ error: t(c.get("locale"), "calls.complete_failed") }, 500)
     }
   }
 )
@@ -584,7 +614,7 @@ callRoutes.get("/export/:organizationId", requireAuthToken, async (c) => {
 
     return c.json(calls satisfies CallDownloadResponse)
   } catch {
-    return c.json({ error: "Failed to export calls" }, 500)
+    return c.json({ error: t(c.get("locale"), "calls.export_failed") }, 500)
   }
 })
 

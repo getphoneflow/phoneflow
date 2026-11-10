@@ -30,7 +30,9 @@
     "insufficient_credits": "Insufficient credits",
     "agent_version_not_found": "Agent version not found",
     "scheduled_at_in_past": "Scheduled time must be in the future",
-    "create_failed": "Failed to create batch call"
+    "create_failed": "Failed to create batch call",
+    "not_found": "Batch call not found",
+    "trigger_failed": "Failed to trigger batch call"
   },
   "billing": {
     "load_failed": "Failed to load billing",
@@ -64,7 +66,13 @@
     "agent_not_found": "Agent not found",
     "insufficient_credits": "Insufficient credits",
     "agent_version_not_found": "Agent version not found",
-    "start_outbound_failed": "Failed to start outbound call"
+    "start_outbound_failed": "Failed to start outbound call",
+    "start_failed": "Failed to start call",
+    "record_unanswered_failed": "Failed to record unanswered call",
+    "already_ended": "Call already ended",
+    "ended_before_started": "endedAt must be after startedAt",
+    "complete_failed": "Failed to complete call",
+    "export_failed": "Failed to export calls"
   },
   "contacts": {
     "user_email_not_found": "User email not found",
@@ -72,7 +80,8 @@
     "request_download_failed": "Failed to request contacts download",
     "not_found": "Contact not found",
     "load_failed": "Failed to fetch contact",
-    "list_failed": "Failed to load contacts"
+    "list_failed": "Failed to load contacts",
+    "export_failed": "Failed to export contacts"
   },
   "phone_numbers": {
     "list_failed": "Failed to load phone numbers",

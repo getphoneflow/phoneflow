@@ -32,7 +32,8 @@
       "loading": "Cargando..."
     },
     "errors": {
-      "generic": "Algo salió mal"
+      "generic": "Algo salió mal",
+      "no_active_organization_member": "No eres miembro de ninguna organización activa"
     },
     "table": {
       "no_results": "No hay resultados",

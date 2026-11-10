@@ -58,7 +58,7 @@ export const completeCallRequestSchema = z
   .object({
     callId: z.uuid(),
     endedAt: z.iso.datetime(),
-    status: z.enum(["completed"]),
+    status: z.enum(["completed", "voicemail"]),
     transcript: callTranscriptSchema,
     variables: z.record(z.string(), z.string()).optional(),
   })
@@ -93,7 +93,9 @@ export const callListQuerySchema = z
       .default(10),
     channel: z.enum(["phone_call", "web_call"]).optional(),
     direction: z.enum(["inbound", "outbound"]).optional(),
-    status: z.enum(["in_progress", "completed", "no_answer"]).optional(),
+    status: z
+      .enum(["in_progress", "completed", "no_answer", "voicemail"])
+      .optional(),
     startedAtFrom: z.iso.datetime().optional(),
     startedAtTo: z.iso.datetime().optional(),
     agentIds: z.union([z.string(), z.array(z.string())]).optional(),

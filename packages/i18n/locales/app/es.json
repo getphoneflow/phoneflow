@@ -505,6 +505,18 @@
             "timezone": {
               "label": "Zona horaria",
               "description": "Se usa para {{date}}, {{time}} y {{timezone}}"
+            },
+            "voicemail_detection": {
+              "label": "Detección de buzón de voz",
+              "description": "Qué hacer cuando responde un contestador automático. Solo se aplica a las llamadas salientes. Si está activada, el agente espera a saber quién ha respondido antes de hablar, por lo que las personas pueden oír unos segundos de silencio.",
+              "off": "Desactivada",
+              "hang_up": "Colgar",
+              "leave_message": "Dejar un mensaje",
+              "message": {
+                "label": "Mensaje de buzón de voz",
+                "description": "Se reproduce al detectar un contestador automático y después finaliza la llamada. Admite variables.",
+                "placeholder": "Hola, soy Ana de Acme. Llámanos cuando puedas."
+              }
             }
           },
           "model_tab": {
@@ -1255,6 +1267,7 @@
         "status": {
           "in_progress": "En curso",
           "no_answer": "Sin respuesta",
+          "voicemail": "Buzón de voz",
           "completed": "Completada"
         }
       },
@@ -1304,7 +1317,8 @@
           "all": "Todos los estados",
           "completed": "Completada",
           "in_progress": "En curso",
-          "no_answer": "Sin respuesta"
+          "no_answer": "Sin respuesta",
+          "voicemail": "Buzón de voz"
         }
       }
     },
@@ -1353,6 +1367,7 @@
         "status": {
           "in_progress": "En curso",
           "no_answer": "Sin respuesta",
+          "voicemail": "Buzón de voz",
           "completed": "Completada"
         },
         "version": "V{{number}}",

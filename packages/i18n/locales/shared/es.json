@@ -47,6 +47,11 @@
         "format": "La clave de variable solo puede contener minúsculas, números o guiones bajos",
         "reserved": "La clave de variable está reservada"
       },
+      "voicemail_detection": {
+        "message": {
+          "required": "El mensaje de buzón de voz es obligatorio"
+        }
+      },
       "end_call_tool": {
         "description": {
           "required": "La descripción es obligatoria"

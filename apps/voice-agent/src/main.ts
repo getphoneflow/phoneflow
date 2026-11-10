@@ -10,6 +10,7 @@ import {
 } from "@livekit/agents"
 import * as silero from "@livekit/agents-plugin-silero"
 
+import type { CompleteCallRequest } from "@workspace/shared/api/calls/types"
 import { BACKGROUND_AUDIO } from "@workspace/shared/constants/background-audio"
 import { FlowAgent } from "@/flow/agent"
 import { buildFlowGraph } from "@/flow/builder"
@@ -107,12 +108,28 @@ export default defineAgent({
 
     setTimeout(endCall, config.call.maxDurationSec * 1000)
 
+    let callStatus: CompleteCallRequest["status"] = "completed"
     let idleCount = 0
     let silenceTimer = setTimeout(endCall, config.call.endOnSilenceSec * 1000)
+
+    const agent = new FlowAgent(
+      flowGraph,
+      variables,
+      sip,
+      callId,
+      ctx.room,
+      participant.identity,
+      () => {
+        callStatus = "voicemail"
+        clearTimeout(silenceTimer)
+      }
+    )
 
     session.on(
       voice.AgentSessionEventTypes.UserStateChanged,
       async function (event) {
+        if (callStatus === "voicemail") return
+
         if (event.newState === "speaking") {
           idleCount = 0
           clearTimeout(silenceTimer)
@@ -121,6 +138,13 @@ export default defineAgent({
         }
 
         if (event.newState !== "away") return
+
+        // Back to listening re-arms the away timer, so the check runs again later.
+        if (agent.awaitingVoicemailVerdict) {
+          session._updateUserState("listening")
+          return
+        }
+
         if (idleCount >= config.call.maxIdleMessages) return
 
         idleCount += 1
@@ -133,7 +157,7 @@ export default defineAgent({
       if (remoteParticipant.identity === participant.identity) {
         completeCall(
           callId,
-          "completed",
+          callStatus,
           buildCallTranscript(session.history),
           variables.snapshot()
         )
@@ -141,7 +165,7 @@ export default defineAgent({
     })
 
     await session.start({
-      agent: new FlowAgent(flowGraph, variables, sip, callId, ctx.room),
+      agent,
       room: ctx.room,
       record: false,
     })

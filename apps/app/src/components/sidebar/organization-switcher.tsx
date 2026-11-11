@@ -92,15 +92,15 @@ function OrganizationSwitcherContent() {
               />
             }
           >
-            <div className="flex aspect-square size-8 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border bg-muted text-muted-foreground">
               {activeOrganization.name[0]?.toUpperCase()}
             </div>
-            <div className="grid flex-1 text-left text-sm leading-tight">
+            <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">
                 {activeOrganization.name}
               </span>
             </div>
-            <ChevronsUpDownIcon className="ml-auto" />
+            <ChevronsUpDownIcon className="ml-auto shrink-0" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="min-w-56 rounded-lg"
@@ -118,10 +118,10 @@ function OrganizationSwitcherContent() {
                   onClick={() => setActiveMutation.mutate(org.id)}
                   className="gap-2 p-2"
                 >
-                  <div className="flex size-6 items-center justify-center rounded-md border bg-muted text-muted-foreground">
+                  <div className="flex size-6 shrink-0 items-center justify-center rounded-md border bg-muted text-muted-foreground">
                     {org.name[0]?.toUpperCase()}
                   </div>
-                  {org.name}
+                  <span className="truncate">{org.name}</span>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuGroup>
@@ -131,10 +131,10 @@ function OrganizationSwitcherContent() {
                 className="gap-2 p-2"
                 onClick={() => setCreateDialogOpen(true)}
               >
-                <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
+                <div className="flex size-6 shrink-0 items-center justify-center rounded-md border bg-transparent">
                   <PlusIcon className="size-4" />
                 </div>
-                <div className="font-medium text-muted-foreground">
+                <div className="truncate font-medium text-muted-foreground">
                   {t(
                     "components.sidebar.organization_switcher.add_organization"
                   )}

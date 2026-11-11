@@ -29,7 +29,7 @@ export function CallRecordingPlayer({
   recordingOffset,
 }: {
   callId: string
-  position?: number
+  position?: { time: number }
   recordingOffset: number
 }) {
   const { t } = useTranslation()
@@ -52,10 +52,10 @@ export function CallRecordingPlayer({
   })
 
   useEffect(() => {
-    if (!wavesurfer || !isReady || position == null) return
+    if (!wavesurfer || !isReady || !position) return
     const fileTime = Math.min(
       wavesurfer.getDuration(),
-      Math.max(0, position - recordingOffset)
+      Math.max(0, position.time - recordingOffset)
     )
     wavesurfer.setTime(fileTime)
   }, [wavesurfer, isReady, position, recordingOffset])

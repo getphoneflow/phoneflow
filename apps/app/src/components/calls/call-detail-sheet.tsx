@@ -33,13 +33,13 @@ function CallDetailBody({ callId }: { callId: string }) {
     queryFn: () => api.get<CallDetailResponse>(`/calls/${callId}`),
   })
 
-  const [position, setPosition] = useState<number>()
+  const [position, setPosition] = useState<{ time: number }>()
   const startedAt = new Date(call.startedAt).getTime()
   const recordingStartedAt = new Date(call.recordingStartedAt!).getTime()
   const recordingOffset = (recordingStartedAt - startedAt) / 1000
 
   function onMessageClick(timestamp: number) {
-    setPosition(Math.max(0, (timestamp - startedAt) / 1000))
+    setPosition({ time: Math.max(0, (timestamp - startedAt) / 1000) })
   }
 
   const messages = (call.transcript ?? []).map(

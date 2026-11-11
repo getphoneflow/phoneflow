@@ -265,12 +265,14 @@ function Page() {
                   )}
                 </Button>
 
-                <Button
-                  variant="outline"
-                  render={<Link to="/signin/sso" search={{ redirect }} />}
-                >
-                  {t("routes.signup.sso_button")}
-                </Button>
+                {env.IS_CLOUD && (
+                  <Button
+                    variant="outline"
+                    render={<Link to="/signin/sso" search={{ redirect }} />}
+                  >
+                    {t("routes.signup.sso_button")}
+                  </Button>
+                )}
 
                 <FieldSeparator>
                   {t("routes.signup.or_continue_with")}

@@ -55,10 +55,14 @@ const settingsNavItems = [
     title: "routes.settings.layout.nav.roles",
     to: "/settings/roles",
   },
-  {
-    title: "routes.settings.layout.nav.sso",
-    to: "/settings/sso",
-  },
+  ...(env.IS_CLOUD
+    ? [
+        {
+          title: "routes.settings.layout.nav.sso",
+          to: "/settings/sso",
+        },
+      ]
+    : []),
 ]
 
 function SettingsContentSkeleton() {

@@ -237,21 +237,23 @@ function Page() {
                   )}
                 </Button>
 
-                <Button
-                  variant="outline"
-                  render={<Link to="/signin/sso" search={{ redirect }} />}
-                  className="relative"
-                >
-                  {t("routes.signin.sso_button")}
-                  {lastLoginMethod?.startsWith("sso-") && (
-                    <Badge
-                      variant="secondary"
-                      className="absolute -top-2 right-2"
-                    >
-                      {t("routes.signin.last_used")}
-                    </Badge>
-                  )}
-                </Button>
+                {env.IS_CLOUD && (
+                  <Button
+                    variant="outline"
+                    render={<Link to="/signin/sso" search={{ redirect }} />}
+                    className="relative"
+                  >
+                    {t("routes.signin.sso_button")}
+                    {lastLoginMethod?.startsWith("sso-") && (
+                      <Badge
+                        variant="secondary"
+                        className="absolute -top-2 right-2"
+                      >
+                        {t("routes.signin.last_used")}
+                      </Badge>
+                    )}
+                  </Button>
+                )}
 
                 <FieldSeparator>
                   {t("routes.signin.or_continue_with")}

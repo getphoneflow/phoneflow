@@ -164,26 +164,26 @@ export const auth = betterAuth({
             },
             onEvent: handleStripeEvent,
           }),
+          sso({
+            domainVerification: {
+              enabled: true,
+              tokenPrefix: "phoneflow",
+            },
+            organizationProvisioning: {
+              disabled: false,
+              defaultRole: "member",
+            },
+            saml: {
+              requireTimestamps: true,
+              idpInitiatedCallbackUrl: env.FRONTEND_URL,
+              algorithms: {
+                onDeprecated: "reject",
+              },
+            },
+          }),
         ]
       : []),
     ...(env.NODE_ENV === "test" ? [testUtils({ captureOTP: true })] : []),
-    sso({
-      domainVerification: {
-        enabled: true,
-        tokenPrefix: "phoneflow",
-      },
-      organizationProvisioning: {
-        disabled: false,
-        defaultRole: "member",
-      },
-      saml: {
-        requireTimestamps: true,
-        idpInitiatedCallbackUrl: env.FRONTEND_URL,
-        algorithms: {
-          onDeprecated: "reject",
-        },
-      },
-    }),
   ],
   rateLimit: {
     window: 60,

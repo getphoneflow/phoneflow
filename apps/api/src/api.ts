@@ -47,11 +47,11 @@ api.route("/api/batch-calls", batchCallRoutes)
 api.route("/api/calls", callRoutes)
 api.route("/api/contacts", contactRoutes)
 api.route("/api/phone-numbers", phoneNumberRoutes)
-api.route("/api/sso", ssoRoutes)
 api.route("/api/token", tokenRoutes)
 api.route("/api/user", userRoutes)
 if (env.IS_CLOUD) {
   api.route("/api/billing", billingRoutes)
+  api.route("/api/sso", ssoRoutes)
 }
 
 export default api

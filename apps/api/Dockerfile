@@ -1,7 +1,7 @@
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 WORKDIR /app
 
-RUN corepack enable
+RUN npm install -g pnpm@12
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/package.json
@@ -11,11 +11,11 @@ COPY packages/shared/package.json ./packages/shared/package.json
 
 FROM base AS build-deps
 
-RUN pnpm install --frozen-lockfile --filter api...
+RUN pnpm install --frozen-lockfile
 
 FROM base AS prod-deps
 
-RUN pnpm install --prod --frozen-lockfile --filter api...
+RUN pnpm install --prod --frozen-lockfile --filter api --filter @workspace/db --filter @workspace/shared
 
 FROM build-deps AS build
 
@@ -26,7 +26,7 @@ COPY packages/shared ./packages/shared
 
 RUN pnpm --filter api build
 
-FROM node:24-alpine
+FROM node:26-alpine
 WORKDIR /app
 
 COPY --from=prod-deps /app ./

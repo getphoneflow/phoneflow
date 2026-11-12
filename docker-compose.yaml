@@ -1,0 +1,276 @@
+configs:
+  caddyfile:
+    content: |
+      {$$APP_URL} {
+        root * /srv
+        encode
+        try_files {path} /index.html
+        file_server
+      }
+      {$$API_URL} {
+        reverse_proxy api:3000
+      }
+      {$$LIVEKIT_URL} {
+        reverse_proxy livekit:7880
+      }
+      {$$STORAGE_URL} {
+        reverse_proxy seaweedfs:8333
+      }
+
+  seaweedfs-s3:
+    content: |
+      {
+        "identities": [
+          {
+            "name": "phoneflow",
+            "credentials": [{ "accessKey": "${S3_ACCESS_KEY}", "secretKey": "${S3_SECRET_KEY}" }],
+            "actions": ["Admin", "Read", "List", "Tagging", "Write"]
+          },
+          { "name": "anonymous", "actions": ["Read:phoneflow-public"] }
+        ]
+      }
+
+services:
+  caddy:
+    build:
+      context: .
+      dockerfile: apps/app/Dockerfile
+      args:
+        VITE_FRONTEND_URL: ${APP_URL}
+        VITE_API_URL: ${API_URL}
+        VITE_PUBLIC_S3_URL: ${STORAGE_URL}/phoneflow-public
+    restart: unless-stopped
+    environment:
+      APP_URL: ${APP_URL}
+      API_URL: ${API_URL}
+      LIVEKIT_URL: ${LIVEKIT_URL}
+      STORAGE_URL: ${STORAGE_URL}
+    configs:
+      - source: caddyfile
+        target: /etc/caddy/Caddyfile
+    volumes:
+      - caddy-data:/data
+    ports:
+      - "80:80"
+      - "443:443"
+      - "3000:3000"
+      - "7880:7880"
+      - "8333:8333"
+    depends_on:
+      api:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: phoneflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: phoneflow
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U phoneflow -d phoneflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    command: redis-server --maxmemory-policy noeviction --appendonly yes
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  seaweedfs:
+    image: chrislusf/seaweedfs:4.53
+    restart: unless-stopped
+    configs:
+      - source: seaweedfs-s3
+        target: /etc/seaweedfs/s3.json
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        (
+          until echo s3.bucket.list | weed shell >/dev/null 2>&1; do sleep 1; done
+          for bucket in phoneflow-private phoneflow-public; do
+            echo "s3.bucket.create -name $$bucket" | weed shell >/dev/null 2>&1 || true
+          done
+          weed filer.copy /background/*.mp3 http://localhost:8888/buckets/phoneflow-public/background/ >/dev/null
+        ) &
+        exec /entrypoint.sh server -dir=/data -s3 -s3.port=8333 -s3.config=/etc/seaweedfs/s3.json
+    volumes:
+      - seaweedfs-data:/data
+      - ./apps/voice-agent/background:/background:ro
+
+  livekit:
+    image: livekit/livekit-server:v1.13.11
+    restart: unless-stopped
+    networks:
+      default:
+        aliases: [api]
+    environment:
+      LIVEKIT_URL: ${LIVEKIT_URL}
+      LIVEKIT_CONFIG: |
+        port: 7880
+        rtc:
+          tcp_port: 7881
+          udp_port: 7882
+          use_external_ip: EXTERNAL_IP
+          enable_loopback_candidate: true
+        redis:
+          address: redis:6379
+        keys:
+          '${LIVEKIT_API_KEY}': '${LIVEKIT_API_SECRET}'
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        case "$$LIVEKIT_URL" in
+          *://localhost*|*://127.0.0.1*) external=false ;;
+          *) external=true ;;
+        esac
+        export LIVEKIT_CONFIG="$$(echo "$$LIVEKIT_CONFIG" | sed "s/EXTERNAL_IP/$$external/")"
+        exec /livekit-server
+    ports:
+      - "7881:7881"
+      - "7882:7882/udp"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  egress:
+    image: livekit/egress:v1.15.0
+    restart: unless-stopped
+    cap_add:
+      - SYS_ADMIN
+    shm_size: 1gb
+    environment:
+      EGRESS_CONFIG_BODY: |
+        api_key: '${LIVEKIT_API_KEY}'
+        api_secret: '${LIVEKIT_API_SECRET}'
+        ws_url: ws://livekit:7880
+        redis:
+          address: redis:6379
+        enable_room_composite_sdk_source: true
+    depends_on:
+      - livekit
+
+  sip:
+    image: livekit/sip:v1.23.0
+    restart: unless-stopped
+    environment:
+      SIP_CONFIG_BODY: |
+        api_key: '${LIVEKIT_API_KEY}'
+        api_secret: '${LIVEKIT_API_SECRET}'
+        ws_url: ws://livekit:7880
+        redis:
+          address: redis:6379
+        sip_port: 5060
+        rtp_port: 10000-10100
+        use_external_ip: true
+    ports:
+      - "5060:5060/udp"
+      - "5060:5060/tcp"
+      - "10000-10100:10000-10100/udp"
+    depends_on:
+      - livekit
+
+  migrate:
+    build:
+      context: .
+      dockerfile: packages/db/Dockerfile
+    environment:
+      DATABASE_URL: postgres://phoneflow:${POSTGRES_PASSWORD}@postgres:5432/phoneflow
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    network_mode: service:livekit
+    environment:
+      IS_CLOUD: "false"
+      FRONTEND_URL: ${APP_URL}
+      API_URL: ${API_URL}
+      LIVEKIT_URL: ${LIVEKIT_URL}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET}
+      DATABASE_URL: postgres://phoneflow:${POSTGRES_PASSWORD}@postgres:5432/phoneflow
+      REDIS_URL: redis://redis:6379
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      API_TOKEN: ${API_TOKEN}
+      PRIVATE_S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      PRIVATE_S3_SECRET_KEY: ${S3_SECRET_KEY}
+      PRIVATE_S3_BUCKET: phoneflow-private
+      PRIVATE_S3_REGION: us-east-1
+      PRIVATE_S3_ENDPOINT: http://seaweedfs:8333
+      PUBLIC_S3_URL: ${STORAGE_URL}/phoneflow-public
+      PUBLIC_S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      PUBLIC_S3_SECRET_KEY: ${S3_SECRET_KEY}
+      PUBLIC_S3_BUCKET: phoneflow-public
+      PUBLIC_S3_REGION: us-east-1
+      PUBLIC_S3_ENDPOINT: http://seaweedfs:8333
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/auth/ok').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      seaweedfs:
+        condition: service_started
+      livekit:
+        condition: service_started
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    restart: unless-stopped
+    environment:
+      REDIS_URL: redis://redis:6379
+      API_URL: http://api:3000
+      API_TOKEN: ${API_TOKEN}
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      EMAIL_FROM: ${EMAIL_FROM}
+    depends_on:
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+
+  voice-agent:
+    build:
+      context: .
+      dockerfile: apps/voice-agent/Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      LIVEKIT_URL: ws://livekit:7880
+      API_URL: http://api:3000
+    depends_on:
+      api:
+        condition: service_healthy
+      livekit:
+        condition: service_started
+
+volumes:
+  caddy-data:
+  postgres-data:
+  redis-data:
+  seaweedfs-data:

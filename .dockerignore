@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/coverage
+**/.tanstack
+**/.env
+**/.env.local
+.env
+.git
+.vscode
+.DS_Store
+**/.DS_Store
+infra

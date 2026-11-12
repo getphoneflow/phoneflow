@@ -27,6 +27,6 @@ export const env = {
   PUBLIC_S3_REGION: process.env.PUBLIC_S3_REGION ?? "auto",
   PUBLIC_S3_ENDPOINT: process.env.PUBLIC_S3_ENDPOINT ?? "",
   PUBLIC_S3_URL: process.env.PUBLIC_S3_URL ?? "",
-  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY ?? "",
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY ?? "not_configured",
   STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET ?? "",
 }

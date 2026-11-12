@@ -12,6 +12,8 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@ai-sdk/openai": "4.0.115",
+    "@firecrawl/anydoc": "0.2.4",
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/auto-instrumentations-node": "catalog:",
     "@opentelemetry/exporter-metrics-otlp-http": "catalog:",
@@ -19,8 +21,10 @@
     "@opentelemetry/sdk-metrics": "catalog:",
     "@opentelemetry/sdk-node": "catalog:",
     "@opentelemetry/sdk-trace": "catalog:",
+    "@qdrant/js-client-rest": "1.20.0",
     "@workspace/email": "workspace:*",
     "@workspace/shared": "workspace:*",
+    "ai": "7.0.170",
     "bullmq": "catalog:",
     "bullmq-otel": "catalog:",
     "dotenv": "catalog:",

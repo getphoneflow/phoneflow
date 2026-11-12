@@ -20,3 +20,6 @@ export const putPrivateObject = vi.fn<typeof s3.putPrivateObject>(
 export const putPublicObject = vi.fn<typeof s3.putPublicObject>(
   async () => ({}) as never
 )
+export const deletePrivateObject = vi.fn<typeof s3.deletePrivateObject>(
+  async () => ({}) as never
+)

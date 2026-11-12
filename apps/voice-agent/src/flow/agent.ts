@@ -11,6 +11,7 @@ import { z } from "zod"
 import type { ExtractVariablesTool } from "@workspace/shared/api/agent-config/types"
 import type { CallSipConnection } from "@workspace/shared/api/calls/types"
 import { evaluateExpression } from "@/flow/expression"
+import { retrieveKnowledge } from "@/flow/knowledge"
 import {
   EXTRACT_INSTRUCTIONS,
   PLATFORM_INSTRUCTIONS,
@@ -56,13 +57,16 @@ export class FlowAgent extends Agent {
   private readonly sip: CallSipConnection | null
   private readonly callId: string
   private readonly room: JobContext["room"]
+  private readonly organizationId: string
+  private activeNode: FlowNode
 
   constructor(
     graph: FlowGraph,
     variables: Variables,
     sip: CallSipConnection | null,
     callId: string,
-    room: JobContext["room"]
+    room: JobContext["room"],
+    organizationId: string
   ) {
     super({
       instructions: buildNodeInstructions(graph, graph.startNode, variables),
@@ -73,6 +77,8 @@ export class FlowAgent extends Agent {
     this.sip = sip
     this.callId = callId
     this.room = room
+    this.organizationId = organizationId
+    this.activeNode = graph.startNode
   }
 
   private async publishActiveNode(node: FlowNode) {
@@ -202,6 +208,7 @@ export class FlowAgent extends Agent {
   }
 
   private async transitionTo(node: FlowNode) {
+    this.activeNode = node
     await this.publishActiveNode(node)
 
     if (node.type === "end") {
@@ -239,7 +246,7 @@ export class FlowAgent extends Agent {
     }
   }
 
-  override llmNode(
+  override async llmNode(
     chatCtx: ChatContext,
     toolCtx: ToolContext,
     modelSettings: ModelSettings
@@ -250,6 +257,28 @@ export class FlowAgent extends Agent {
       )
     )
 
+    if (this.activeNode.type === "conversation") {
+      const knowledge = await retrieveKnowledge({
+        organizationId: this.organizationId,
+        documentIds: this.activeNode.documentIds ?? [],
+        instructionsType: this.activeNode.instructions.type,
+        query: latestUserText(cleaned),
+      })
+      if (knowledge) {
+        cleaned.addMessage({ role: "system", content: knowledge })
+      }
+    }
+
     return super.llmNode(cleaned, toolCtx, modelSettings)
   }
+}
+
+function latestUserText(chatCtx: ChatContext) {
+  for (let index = chatCtx.items.length - 1; index >= 0; index--) {
+    const item = chatCtx.items[index]
+    if (item?.type === "message" && item.role === "user") {
+      return item.textContent ?? ""
+    }
+  }
+  return ""
 }

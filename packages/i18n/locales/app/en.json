@@ -46,6 +46,10 @@
       "breadcrumb": "Agents",
       "page_title": "Agents - Phoneflow"
     },
+    "knowledge_bases": {
+      "breadcrumb": "Knowledge bases",
+      "page_title": "Knowledge bases - Phoneflow"
+    },
     "agents_detail": {
       "page_title": "{{name}} - Phoneflow",
       "breadcrumb_parent": "Agents"
@@ -296,6 +300,47 @@
     }
   },
   "components": {
+    "knowledge_documents": {
+      "add_form": {
+        "trigger": "Add",
+        "title": "Add knowledge base",
+        "description": "Upload a file or paste text. It is indexed for the nodes you attach it to.",
+        "name": {
+          "label": "Name",
+          "placeholder": "Return policy"
+        },
+        "file": "Upload file",
+        "text": "Add text",
+        "file_label": "File",
+        "text_label": "Text",
+        "text_placeholder": "Paste the knowledge base text",
+        "submit": "Save",
+        "cancel": "Cancel"
+      },
+      "table": {
+        "search": {
+          "placeholder": "Search knowledge bases..."
+        },
+        "columns": {
+          "name": "Name",
+          "status": "Status",
+          "size": "Size"
+        },
+        "status": {
+          "pending": "Pending",
+          "indexing": "Indexing",
+          "ready": "Ready",
+          "failed": "Failed"
+        },
+        "page": "Page {{page}} of {{count}}",
+        "download": "Download {{name}}",
+        "delete": "Delete {{name}}",
+        "delete_title": "Delete knowledge base",
+        "delete_description": "This permanently deletes \"{{name}}\" and its indexed content.",
+        "confirm_delete": "Delete",
+        "cancel": "Cancel"
+      }
+    },
     "agents": {
       "add_node_button": {
         "trigger": "Add node",
@@ -854,6 +899,14 @@
             "instructions": {
               "prompt": "Prompt",
               "say": "Say"
+            },
+            "knowledge": {
+              "label": "Knowledge base",
+              "description": "Add knowledge bases to provide context to the agent.",
+              "add": "Add",
+              "empty": "No knowledge bases yet",
+              "unavailable": "Unavailable",
+              "remove": "Remove {{name}}"
             }
           },
           "end": {
@@ -1845,7 +1898,8 @@
             "agent": "Agents",
             "phone_number": "Phone numbers",
             "calls": "Calls",
-            "billing": "Billing"
+            "billing": "Billing",
+            "knowledge_base": "Knowledge bases"
           },
           "actions": {
             "create": "create",
@@ -1911,6 +1965,7 @@
         },
         "items": {
           "agents": "Agents",
+          "knowledge_bases": "Knowledge bases",
           "phone_numbers": "Phone numbers",
           "batch_calls": "Batch calls",
           "calls": "Calls",

@@ -46,6 +46,10 @@
       "breadcrumb": "Agentes",
       "page_title": "Agentes - Phoneflow"
     },
+    "knowledge_bases": {
+      "breadcrumb": "Bases de conocimiento",
+      "page_title": "Bases de conocimiento - Phoneflow"
+    },
     "agents_detail": {
       "page_title": "{{name}} - Phoneflow",
       "breadcrumb_parent": "Agentes"
@@ -296,6 +300,47 @@
     }
   },
   "components": {
+    "knowledge_documents": {
+      "add_form": {
+        "trigger": "Añadir",
+        "title": "Añadir base de conocimiento",
+        "description": "Sube un archivo o pega texto. Se indexa para los nodos a los que la adjuntes.",
+        "name": {
+          "label": "Nombre",
+          "placeholder": "Política de devoluciones"
+        },
+        "file": "Subir archivo",
+        "text": "Añadir texto",
+        "file_label": "Archivo",
+        "text_label": "Texto",
+        "text_placeholder": "Pega el texto de la base de conocimiento",
+        "submit": "Guardar",
+        "cancel": "Cancelar"
+      },
+      "table": {
+        "search": {
+          "placeholder": "Buscar bases de conocimiento..."
+        },
+        "columns": {
+          "name": "Nombre",
+          "status": "Estado",
+          "size": "Tamaño"
+        },
+        "status": {
+          "pending": "Pendiente",
+          "indexing": "Indexando",
+          "ready": "Lista",
+          "failed": "Error"
+        },
+        "page": "Página {{page}} de {{count}}",
+        "download": "Descargar {{name}}",
+        "delete": "Eliminar {{name}}",
+        "delete_title": "Eliminar base de conocimiento",
+        "delete_description": "Esto elimina de forma permanente \"{{name}}\" y su contenido indexado.",
+        "confirm_delete": "Eliminar",
+        "cancel": "Cancelar"
+      }
+    },
     "agents": {
       "add_node_button": {
         "trigger": "Añadir nodo",
@@ -854,6 +899,14 @@
             "instructions": {
               "prompt": "Prompt",
               "say": "Decir"
+            },
+            "knowledge": {
+              "label": "Base de conocimiento",
+              "description": "Añade bases de conocimiento para dar contexto al agente.",
+              "add": "Añadir",
+              "empty": "Todavía no hay bases de conocimiento",
+              "unavailable": "No disponible",
+              "remove": "Quitar {{name}}"
             }
           },
           "end": {
@@ -1845,7 +1898,8 @@
             "agent": "Agentes",
             "phone_number": "Números de teléfono",
             "calls": "Llamadas",
-            "billing": "Facturación"
+            "billing": "Facturación",
+            "knowledge_base": "Bases de conocimiento"
           },
           "actions": {
             "create": "crear",
@@ -1911,6 +1965,7 @@
         },
         "items": {
           "agents": "Agentes",
+          "knowledge_bases": "Bases de conocimiento",
           "phone_numbers": "Números de teléfono",
           "batch_calls": "Llamadas por lotes",
           "calls": "Llamadas",

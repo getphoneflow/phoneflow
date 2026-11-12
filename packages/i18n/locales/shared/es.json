@@ -1,5 +1,15 @@
 {
   "schemas": {
+    "knowledge_documents": {
+      "name": {
+        "required": "El nombre es obligatorio",
+        "max": "El nombre debe tener como máximo 255 caracteres"
+      },
+      "text": {
+        "required": "El texto es obligatorio",
+        "max": "El texto es demasiado largo"
+      }
+    },
     "agents": {
       "agent_name": {
         "required": "El nombre del agente es obligatorio",

@@ -2,6 +2,7 @@ import type { FlowConversationNode } from "@workspace/shared/api/agent-config/ty
 import { Field, FieldGroup, FieldLabel } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs"
+import { NodeKnowledgeBases } from "@/components/flow/sidepanel/nodes/knowledge-bases"
 import { ConversationTools } from "@/components/flow/sidepanel/tools/conversation-tools"
 import { VariableTextField } from "@/components/flow/variables/variable-text-field"
 import { useTranslation } from "@/lib/i18n"
@@ -123,6 +124,7 @@ export function ConversationNodePanel({ node }: ConversationNodePanelProps) {
           />
         </Field>
 
+        <NodeKnowledgeBases node={node} />
         <ConversationTools node={node} />
       </FieldGroup>
     </FlowSidePanelBase>

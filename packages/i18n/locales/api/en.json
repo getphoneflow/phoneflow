@@ -7,6 +7,19 @@
   "validator": {
     "failed": "Validation failed"
   },
+  "knowledge_documents": {
+    "list_failed": "Failed to load knowledge bases",
+    "create_failed": "Failed to add knowledge base",
+    "not_found": "Knowledge base not found",
+    "delete_failed": "Failed to delete knowledge base",
+    "download_failed": "Failed to download knowledge base",
+    "update_failed": "Failed to update knowledge base",
+    "storage_not_configured": "File storage is not configured",
+    "name_invalid": "Name is required and must be at most 255 characters",
+    "file_required": "A file is required",
+    "file_type_invalid": "This file type is not supported",
+    "file_too_large": "File must be 50MB or smaller"
+  },
   "agents": {
     "list_failed": "Failed to load agents",
     "create_failed": "Failed to create agent",

@@ -1,3 +1,4 @@
+import { ApiError } from "@/lib/api-error"
 import { env } from "@/lib/env"
 
 type RequestOptions<TBody = never> = {
@@ -26,7 +27,7 @@ async function request<TResponse, TBody = never>(
   const body = await response.json()
 
   if (!response.ok) {
-    throw new Error(body.error || response.status)
+    throw new ApiError(body.error || String(response.status), response.status)
   }
 
   return body as TResponse
@@ -38,5 +39,8 @@ export const api = {
   },
   post<TResponse, TBody>(path: string, options: RequestOptions<TBody>) {
     return request<TResponse, TBody>("POST", path, options)
+  },
+  patch<TResponse, TBody>(path: string, options: RequestOptions<TBody>) {
+    return request<TResponse, TBody>("PATCH", path, options)
   },
 }

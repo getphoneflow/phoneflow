@@ -16,6 +16,13 @@ function zodIssuesToMessage(error: Pick<ZodError, "issues">, locale: Locale) {
   )
 }
 
+export function validationMessage(
+  error: Pick<ZodError, "issues">,
+  locale: Locale
+) {
+  return zodIssuesToMessage(error, locale)
+}
+
 export function validator<TSchema extends ZodType>(
   target: "json" | "param" | "query",
   schema: TSchema

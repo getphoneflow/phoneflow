@@ -8,10 +8,12 @@
     "start": "node dist/apps/voice-agent/src/main.js start",
     "typecheck": "tsc --noEmit",
     "lint": "biome lint .",
+    "test": "vitest run",
     "format": "biome check --write --linter-enabled=false .",
     "benchmark-model-latency": "tsx scripts/benchmark-model-latency.ts"
   },
   "dependencies": {
+    "@ai-sdk/openai": "4.0.115",
     "@livekit/agents": "1.9.0",
     "@livekit/agents-plugin-anthropic": "1.9.0",
     "@livekit/agents-plugin-assemblyai": "1.9.0",
@@ -32,7 +34,9 @@
     "@opentelemetry/api": "catalog:",
     "@opentelemetry/exporter-trace-otlp-http": "catalog:",
     "@opentelemetry/sdk-trace-node": "catalog:",
+    "@qdrant/js-client-rest": "1.20.0",
     "@workspace/shared": "workspace:*",
+    "ai": "7.0.170",
     "dotenv": "catalog:",
     "livekit-server-sdk": "catalog:",
     "zod": "catalog:"

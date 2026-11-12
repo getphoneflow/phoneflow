@@ -1,5 +1,15 @@
 {
   "schemas": {
+    "knowledge_documents": {
+      "name": {
+        "required": "Name is required",
+        "max": "Name must be at most 255 characters"
+      },
+      "text": {
+        "required": "Text is required",
+        "max": "Text is too long"
+      }
+    },
     "agents": {
       "agent_name": {
         "required": "Agent name is required",

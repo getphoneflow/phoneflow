@@ -7,6 +7,19 @@
   "validator": {
     "failed": "Error de validación"
   },
+  "knowledge_documents": {
+    "list_failed": "No se pudieron cargar las bases de conocimiento",
+    "create_failed": "No se pudo añadir la base de conocimiento",
+    "not_found": "Base de conocimiento no encontrada",
+    "delete_failed": "No se pudo eliminar la base de conocimiento",
+    "download_failed": "No se pudo descargar la base de conocimiento",
+    "update_failed": "No se pudo actualizar la base de conocimiento",
+    "storage_not_configured": "El almacenamiento de archivos no está configurado",
+    "name_invalid": "El nombre es obligatorio y debe tener como máximo 255 caracteres",
+    "file_required": "Se requiere un archivo",
+    "file_type_invalid": "Este tipo de archivo no es compatible",
+    "file_too_large": "El archivo debe pesar 50 MB o menos"
+  },
   "agents": {
     "list_failed": "No se pudieron cargar los agentes",
     "create_failed": "No se pudo crear el agente",

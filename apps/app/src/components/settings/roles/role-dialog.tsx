@@ -39,6 +39,8 @@ const resourceLabels = {
   phoneNumber: "components.settings.roles.role_dialog.resources.phone_number",
   calls: "components.settings.roles.role_dialog.resources.calls",
   billing: "components.settings.roles.role_dialog.resources.billing",
+  knowledgeBase:
+    "components.settings.roles.role_dialog.resources.knowledge_base",
 } satisfies Record<string, string>
 
 const actionLabels = {

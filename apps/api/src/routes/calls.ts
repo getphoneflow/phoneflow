@@ -187,6 +187,7 @@ callRoutes.post(
       return c.json(
         {
           callId: call.id,
+          organizationId: resolved.organizationId,
           config: resolved.config,
           sip: null,
         } satisfies StartCallResponse,
@@ -283,6 +284,7 @@ callRoutes.post(
       return c.json(
         {
           callId: call.id,
+          organizationId: resolved.organizationId,
           config: resolved.config,
           sip: sipConnection(phoneNumber),
         } satisfies StartCallResponse,
@@ -371,6 +373,7 @@ callRoutes.post(
       return c.json(
         {
           callId: call.id,
+          organizationId: resolved.organizationId,
           config: resolved.config,
           sip: phoneNumber ? sipConnection(phoneNumber) : null,
         } satisfies StartCallResponse,

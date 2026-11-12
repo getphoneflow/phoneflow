@@ -10,6 +10,7 @@ import { batchCallRoutes } from "@/routes/batch-calls"
 import { billingRoutes } from "@/routes/billing"
 import { callRoutes } from "@/routes/calls"
 import { contactRoutes } from "@/routes/contacts"
+import { knowledgeDocumentRoutes } from "@/routes/knowledge-documents"
 import { phoneNumberRoutes } from "@/routes/phone-numbers"
 import { ssoRoutes } from "@/routes/sso"
 import { tokenRoutes } from "@/routes/token"
@@ -46,6 +47,7 @@ api.route("/api/agents", agentRoutes)
 api.route("/api/batch-calls", batchCallRoutes)
 api.route("/api/calls", callRoutes)
 api.route("/api/contacts", contactRoutes)
+api.route("/api/knowledge-documents", knowledgeDocumentRoutes)
 api.route("/api/phone-numbers", phoneNumberRoutes)
 api.route("/api/token", tokenRoutes)
 api.route("/api/user", userRoutes)

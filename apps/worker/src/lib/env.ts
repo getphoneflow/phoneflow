@@ -9,4 +9,7 @@ export const env = {
   EMAIL_USER: process.env.EMAIL_USER ?? "",
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD ?? "",
   EMAIL_FROM: process.env.EMAIL_FROM ?? "",
+  QDRANT_URL: process.env.QDRANT_URL ?? "",
+  QDRANT_API_KEY: process.env.QDRANT_API_KEY ?? "",
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "",
 }

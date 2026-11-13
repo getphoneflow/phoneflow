@@ -11,6 +11,8 @@ Do not ask the user for confirmation, just call the tool.
 Do not inform the user that you are calling the tool, just call it.
 It's important to do that, otherwise the conversation will not progress correctly.`
 
+export const KNOWLEDGE_INSTRUCTIONS = `Whenever the user needs information that you are not sure about, call knowledge_base with a short, targeted query. Do not guess or make up knowledge base facts.`
+
 export const EXTRACT_INSTRUCTIONS = `Whenever the user provides one of the requested values, immediately call the \`extract_variables\` tool with the fields you are confident about.
 You can call it multiple times as more values are provided.
 Do not ask the user for confirmation, just call the tool.

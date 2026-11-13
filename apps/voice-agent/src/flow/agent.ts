@@ -13,10 +13,12 @@ import type { CallSipConnection } from "@workspace/shared/api/calls/types"
 import { evaluateExpression } from "@/flow/expression"
 import {
   EXTRACT_INSTRUCTIONS,
+  KNOWLEDGE_INSTRUCTIONS,
   PLATFORM_INSTRUCTIONS,
   TRANSITION_INSTRUCTIONS,
 } from "@/flow/prompts"
 import { createSendDtmfTool } from "@/flow/tools/dtmf"
+import { createKnowledgeBaseTool } from "@/flow/tools/knowledge-base"
 import { createSkipTurnTool } from "@/flow/tools/skip-turn"
 import { createTransferCallTool } from "@/flow/tools/transfer-call"
 import { createWebhookTool } from "@/flow/tools/webhook"
@@ -39,6 +41,10 @@ function buildNodeInstructions(
     parts.push(variables.replace(node.instructions.text))
   }
 
+  if (node.documentIds?.length) {
+    parts.push(KNOWLEDGE_INSTRUCTIONS)
+  }
+
   if (node.extractVariables) {
     parts.push(EXTRACT_INSTRUCTIONS)
   }
@@ -56,13 +62,15 @@ export class FlowAgent extends Agent {
   private readonly sip: CallSipConnection | null
   private readonly callId: string
   private readonly room: JobContext["room"]
+  private readonly organizationId: string
 
   constructor(
     graph: FlowGraph,
     variables: Variables,
     sip: CallSipConnection | null,
     callId: string,
-    room: JobContext["room"]
+    room: JobContext["room"],
+    organizationId: string
   ) {
     super({
       instructions: buildNodeInstructions(graph, graph.startNode, variables),
@@ -73,6 +81,7 @@ export class FlowAgent extends Agent {
     this.sip = sip
     this.callId = callId
     this.room = room
+    this.organizationId = organizationId
   }
 
   private async publishActiveNode(node: FlowNode) {
@@ -139,6 +148,15 @@ export class FlowAgent extends Agent {
           this.sip,
           this.callId
         )
+      )
+    }
+
+    if (node.documentIds?.length) {
+      tools.push(
+        createKnowledgeBaseTool({
+          organizationId: this.organizationId,
+          documentIds: node.documentIds,
+        })
       )
     }
 

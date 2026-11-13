@@ -1,4 +1,5 @@
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   type PutObjectCommandInput,
@@ -95,6 +96,12 @@ export function putPrivateObject(
   contentType?: string
 ) {
   return putObject(privateClient, privateConfig.bucket, key, body, contentType)
+}
+
+export function deletePrivateObject(key: string) {
+  return privateClient.send(
+    new DeleteObjectCommand({ Bucket: privateConfig.bucket, Key: key })
+  )
 }
 
 export function putPublicObject(

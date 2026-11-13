@@ -357,6 +357,7 @@ export const flowNodeConfigSchema = z.discriminatedUnion("type", [
         skipTurn: skipTurnToolSchema.optional(),
         transferCall: transferCallToolSchema.optional(),
         toolIds: z.array(z.string().trim().min(1)).optional(),
+        documentIds: z.array(z.uuid()).max(50).optional(),
       })
       .strict(),
   }),

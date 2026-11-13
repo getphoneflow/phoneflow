@@ -46,6 +46,10 @@
       "breadcrumb": "Agents",
       "page_title": "Agents - Phoneflow"
     },
+    "knowledge_base": {
+      "breadcrumb": "Knowledge base",
+      "page_title": "Knowledge base - Phoneflow"
+    },
     "agents_detail": {
       "page_title": "{{name}} - Phoneflow",
       "breadcrumb_parent": "Agents"
@@ -296,6 +300,39 @@
     }
   },
   "components": {
+    "knowledge_base": {
+      "add_form": {
+        "trigger": "Add document",
+        "title": "Add document",
+        "description": "Add a document to the knowledge base",
+        "placeholder": "Click or drop a file",
+        "submit": "Add document",
+        "no_file": "No file selected"
+      },
+      "table": {
+        "search": {
+          "placeholder": "Search documents..."
+        },
+        "columns": {
+          "name": "Name",
+          "status": "Status",
+          "size": "Size",
+          "added": "Added"
+        },
+        "status": {
+          "processing": "Processing",
+          "ready": "Ready",
+          "failed": "Failed"
+        },
+        "page": "Page {{page}} of {{count}}",
+        "open_actions": "Open actions for {{name}}",
+        "delete_title": "Delete document",
+        "delete_description": "This will permanently delete \"{{name}}\"",
+        "toasts": {
+          "deleted": "{{name}} deleted"
+        }
+      }
+    },
     "agents": {
       "add_node_button": {
         "trigger": "Add node",
@@ -435,6 +472,7 @@
             "say": "say:"
           },
           "tools": "Tools:",
+          "knowledge_base": "Knowledge base:",
           "tool_names": {
             "end_call": "End call",
             "extract_variables": "Extract variables",
@@ -854,6 +892,16 @@
             "instructions": {
               "prompt": "Prompt",
               "say": "Say"
+            },
+            "knowledge": {
+              "label": "Knowledge base",
+              "add": "Add document",
+              "search": "Search documents...",
+              "new_document": "New document",
+              "no_matches": "No documents found",
+              "all_attached": "All documents are already added",
+              "unavailable": "Unavailable",
+              "remove": "Remove {{name}}"
             }
           },
           "end": {
@@ -1845,7 +1893,8 @@
             "agent": "Agents",
             "phone_number": "Phone numbers",
             "calls": "Calls",
-            "billing": "Billing"
+            "billing": "Billing",
+            "knowledge_base": "Knowledge base"
           },
           "actions": {
             "create": "create",
@@ -1911,6 +1960,7 @@
         },
         "items": {
           "agents": "Agents",
+          "knowledge_base": "Knowledge base",
           "phone_numbers": "Phone numbers",
           "batch_calls": "Batch calls",
           "calls": "Calls",

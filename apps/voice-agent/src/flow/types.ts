@@ -23,6 +23,7 @@ export interface FlowConversationNode {
   skipTurn?: SkipTurnTool
   transferCall?: TransferCallTool
   toolIds?: string[]
+  documentIds?: string[]
   outgoingEdges: FlowEdge[]
 }
 

@@ -87,6 +87,20 @@ services:
       timeout: 3s
       retries: 20
 
+  qdrant:
+    image: qdrant/qdrant:v1.20.0
+    restart: unless-stopped
+    environment:
+      QDRANT__SERVICE__API_KEY: ${QDRANT_API_KEY}
+      QDRANT__SERVICE__ENABLE_STATIC_CONTENT: "false"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/6333'"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
   seaweedfs:
     image: chrislusf/seaweedfs:4.53
     restart: unless-stopped
@@ -248,8 +262,13 @@ services:
       EMAIL_USER: ${EMAIL_USER}
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
       EMAIL_FROM: ${EMAIL_FROM}
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_API_KEY: ${QDRANT_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     depends_on:
       redis:
+        condition: service_healthy
+      qdrant:
         condition: service_healthy
       api:
         condition: service_healthy
@@ -263,8 +282,13 @@ services:
     environment:
       LIVEKIT_URL: ws://livekit:7880
       API_URL: http://api:3000
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_API_KEY: ${QDRANT_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     depends_on:
       api:
+        condition: service_healthy
+      qdrant:
         condition: service_healthy
       livekit:
         condition: service_started
@@ -274,3 +298,4 @@ volumes:
   postgres-data:
   redis-data:
   seaweedfs-data:
+  qdrant-data:

@@ -46,6 +46,10 @@ export function buildFlowGraph(config: AgentConfig) {
         flowNode.toolIds = node.data.toolIds
       }
 
+      if (node.data.documentIds?.length) {
+        flowNode.documentIds = node.data.documentIds
+      }
+
       if (node.data.startSpeaker) {
         flowNode.startSpeaker = node.data.startSpeaker
       }

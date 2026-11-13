@@ -363,6 +363,7 @@ describe("voice agent call endpoints", () => {
 
       expect(res.status).toBe(201)
       const body = res.body
+      expect(body.organizationId).toBe(org.id)
       expect(body.config).toEqual(config)
       expect(body.sip).toBeNull()
 
@@ -448,6 +449,7 @@ describe("voice agent call endpoints", () => {
 
       expect(res.status).toBe(201)
       const body = res.body
+      expect(body.organizationId).toBe(org.id)
       expect(body.config.globalPrompt).toBe("Inbound agent")
       expect(body.sip).toEqual({
         number: phoneNumber.number,
@@ -528,6 +530,7 @@ describe("voice agent call endpoints", () => {
 
       expect(res.status).toBe(201)
       const body = res.body
+      expect(body.organizationId).toBe(org.id)
       expect(body.sip).toMatchObject({ number: phoneNumber.number })
       expect(await getCall(body.callId)).toMatchObject({
         direction: "outbound",

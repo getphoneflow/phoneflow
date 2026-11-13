@@ -17,3 +17,4 @@ function queue(name: string) {
 
 export const emailsQueue = queue("emails")
 export const batchCallsQueue = queue("batch-calls")
+export const knowledgeBaseQueue = queue("knowledge-base")

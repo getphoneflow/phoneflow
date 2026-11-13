@@ -39,4 +39,7 @@ export const api = {
   post<TResponse, TBody>(path: string, options: RequestOptions<TBody>) {
     return request<TResponse, TBody>("POST", path, options)
   },
+  patch<TResponse, TBody>(path: string, options: RequestOptions<TBody>) {
+    return request<TResponse, TBody>("PATCH", path, options)
+  },
 }

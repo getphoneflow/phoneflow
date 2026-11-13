@@ -46,6 +46,10 @@
       "breadcrumb": "Agentes",
       "page_title": "Agentes - Phoneflow"
     },
+    "knowledge_base": {
+      "breadcrumb": "Base de conocimiento",
+      "page_title": "Base de conocimiento - Phoneflow"
+    },
     "agents_detail": {
       "page_title": "{{name}} - Phoneflow",
       "breadcrumb_parent": "Agentes"
@@ -296,6 +300,39 @@
     }
   },
   "components": {
+    "knowledge_base": {
+      "add_form": {
+        "trigger": "Añadir documento",
+        "title": "Añadir documento",
+        "description": "Añade un documento a la base de conocimiento",
+        "placeholder": "Haz clic o suelta un archivo",
+        "submit": "Añadir documento",
+        "no_file": "Ningún archivo seleccionado"
+      },
+      "table": {
+        "search": {
+          "placeholder": "Buscar documentos..."
+        },
+        "columns": {
+          "name": "Nombre",
+          "status": "Estado",
+          "size": "Tamaño",
+          "added": "Añadido"
+        },
+        "status": {
+          "processing": "Procesando",
+          "ready": "Lista",
+          "failed": "Error"
+        },
+        "page": "Página {{page}} de {{count}}",
+        "open_actions": "Abrir acciones de {{name}}",
+        "delete_title": "Eliminar documento",
+        "delete_description": "Esto eliminará de forma permanente \"{{name}}\"",
+        "toasts": {
+          "deleted": "{{name}} eliminado"
+        }
+      }
+    },
     "agents": {
       "add_node_button": {
         "trigger": "Añadir nodo",
@@ -435,6 +472,7 @@
             "say": "decir:"
           },
           "tools": "Herramientas:",
+          "knowledge_base": "Base de conocimiento:",
           "tool_names": {
             "end_call": "Finalizar llamada",
             "extract_variables": "Extraer variables",
@@ -854,6 +892,16 @@
             "instructions": {
               "prompt": "Prompt",
               "say": "Decir"
+            },
+            "knowledge": {
+              "label": "Base de conocimiento",
+              "add": "Añadir documento",
+              "search": "Buscar documentos...",
+              "new_document": "Nuevo documento",
+              "no_matches": "No se han encontrado documentos",
+              "all_attached": "Todos los documentos ya están añadidos",
+              "unavailable": "No disponible",
+              "remove": "Quitar {{name}}"
             }
           },
           "end": {
@@ -1845,7 +1893,8 @@
             "agent": "Agentes",
             "phone_number": "Números de teléfono",
             "calls": "Llamadas",
-            "billing": "Facturación"
+            "billing": "Facturación",
+            "knowledge_base": "Base de conocimiento"
           },
           "actions": {
             "create": "crear",
@@ -1911,6 +1960,7 @@
         },
         "items": {
           "agents": "Agentes",
+          "knowledge_base": "Base de conocimiento",
           "phone_numbers": "Números de teléfono",
           "batch_calls": "Llamadas por lotes",
           "calls": "Llamadas",

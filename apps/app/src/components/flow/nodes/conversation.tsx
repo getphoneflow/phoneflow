@@ -1,7 +1,9 @@
+import { useQuery } from "@tanstack/react-query"
 import { Handle, type Node, type NodeProps, Position } from "@xyflow/react"
 import { Phone, Play } from "lucide-react"
 
 import type { FlowConversationNode } from "@workspace/shared/api/agent-config/types"
+import { knowledgeBaseDocumentsQueryOptions } from "@/components/knowledge-base/documents"
 import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 import { FlowNodeBase } from "./base"
@@ -16,6 +18,15 @@ export function ConversationNode({
   const { t } = useTranslation()
   const isStart = data.isStart
   const tools = useAgentStore((state) => state.config.tools)
+  const documentIds = data.documentIds ?? []
+  const { data: documents = [] } = useQuery({
+    ...knowledgeBaseDocumentsQueryOptions(),
+    enabled: documentIds.length > 0,
+  })
+  const attachedDocuments = documentIds.flatMap((documentId) => {
+    const name = documents.find((document) => document.id === documentId)?.name
+    return name ? [{ id: documentId, name }] : []
+  })
   const toolNames = [
     ...(data.endCall
       ? [t("components.flow.nodes.conversation.tool_names.end_call")]
@@ -67,6 +78,20 @@ export function ConversationNode({
           {data.instructions.text}
         </div>
       </div>
+      {attachedDocuments.length > 0 && (
+        <>
+          <div className="px-3 text-xs text-foreground">
+            {t("components.flow.nodes.conversation.knowledge_base")}
+          </div>
+          <div className="p-3 pt-1 text-xs text-muted-foreground">
+            {attachedDocuments.map((document) => (
+              <div key={document.id} className="truncate" title={document.name}>
+                {document.name}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
       {toolNames.length > 0 && (
         <>
           <div className="px-3 text-xs text-foreground">

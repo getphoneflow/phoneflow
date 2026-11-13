@@ -30,7 +30,7 @@ function Dropzone({
     <label
       data-slot="dropzone"
       className={cn(
-        "flex h-60 w-full cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-input bg-background p-4 text-center text-sm text-muted-foreground hover:bg-muted/40",
+        "flex h-60 w-full min-w-0 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-md border border-dashed border-input bg-background p-4 text-center text-sm text-muted-foreground hover:bg-muted/40",
         isDragActive && "border-ring bg-muted/50",
         disabled && "pointer-events-none opacity-50",
         className
@@ -57,7 +57,12 @@ function Dropzone({
         }}
       />
       {value ? (
-        <span className="truncate text-foreground">{value.name}</span>
+        <span
+          className="inline-block max-w-full truncate text-foreground"
+          title={value.name}
+        >
+          {value.name}
+        </span>
       ) : (
         placeholder
       )}

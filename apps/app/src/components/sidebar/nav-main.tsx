@@ -1,5 +1,6 @@
 import { Link, useMatchRoute } from "@tanstack/react-router"
 import {
+  BookOpen,
   HistoryIcon,
   PhoneIcon,
   PhoneOutgoingIcon,
@@ -26,6 +27,11 @@ const nav = {
           title: "components.sidebar.nav_main.items.agents",
           url: "/agents",
           icon: <WorkflowIcon />,
+        },
+        {
+          title: "components.sidebar.nav_main.items.knowledge_base",
+          url: "/knowledge-base",
+          icon: <BookOpen />,
         },
       ],
     },

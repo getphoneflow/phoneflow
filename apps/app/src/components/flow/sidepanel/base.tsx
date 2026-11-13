@@ -1,7 +1,9 @@
 import { cn } from "cn"
 import { XIcon } from "lucide-react"
+import { Suspense } from "react"
 
 import { Button } from "@workspace/ui/components/button"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 import { useTranslation } from "@/lib/i18n"
 import { useAgentStore } from "@/stores/agent"
 
@@ -32,7 +34,7 @@ export function FlowSidePanelBase({
           contentClassName
         )}
       >
-        {children}
+        <Suspense fallback={<Skeleton className="h-full w-full" />}>{children}</Suspense>
       </div>
       <Button
         variant="ghost"

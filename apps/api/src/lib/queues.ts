@@ -15,3 +15,8 @@ export const batchCallsQueue = new Queue("batch-calls", {
   connection,
   telemetry,
 })
+
+export const knowledgeBaseQueue = new Queue("knowledge-base", {
+  connection,
+  telemetry,
+})

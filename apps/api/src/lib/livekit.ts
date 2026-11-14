@@ -131,41 +131,57 @@ export async function getRecording(callId: string) {
 export async function startCallRecording(roomName: string, callId: string) {
   if (!privateS3Configured()) return
 
-  const egress = createEgressClient()
-  await egress.startRoomCompositeEgress(
-    roomName,
-    {
-      file: new EncodedFileOutput({
-        fileType: EncodedFileType.MP4,
-        filepath: getRecordingKey(callId),
-        disableManifest: true,
-        output: {
-          case: "s3",
-          value: new S3Upload({
-            accessKey: privateConfig.accessKey,
-            secret: privateConfig.secretKey,
-            bucket: privateConfig.bucket,
-            region: privateConfig.region,
-            endpoint: privateConfig.endpoint,
-            forcePathStyle: true,
-          }),
-        },
-      }),
-    },
-    { audioOnly: true, audioMixing: AudioMixing.DUAL_CHANNEL_AGENT }
-  )
+  try {
+    const egress = createEgressClient()
+    await egress.startRoomCompositeEgress(
+      roomName,
+      {
+        file: new EncodedFileOutput({
+          fileType: EncodedFileType.MP4,
+          filepath: getRecordingKey(callId),
+          disableManifest: true,
+          output: {
+            case: "s3",
+            value: new S3Upload({
+              accessKey: privateConfig.accessKey,
+              secret: privateConfig.secretKey,
+              bucket: privateConfig.bucket,
+              region: privateConfig.region,
+              endpoint: privateConfig.endpoint,
+              forcePathStyle: true,
+            }),
+          },
+        }),
+      },
+      { audioOnly: true, audioMixing: AudioMixing.DUAL_CHANNEL_AGENT }
+    )
+  } catch (error) {
+    console.error("Failed to start call recording", callId, error)
+  }
 }
 
 export async function stopCallRecording(roomName: string) {
   if (!privateS3Configured()) return null
 
-  const egress = createEgressClient()
-  const active = await egress.listEgress({ roomName, active: true })
-  await Promise.all(active.map((item) => egress.stopEgress(item.egressId)))
+  try {
+    const egress = createEgressClient()
+    const active = await egress.listEgress({ roomName, active: true })
+    const stops = await Promise.allSettled(
+      active.map((item) => egress.stopEgress(item.egressId))
+    )
 
-  const startedAtNs = active[0].fileResults[0].startedAt
-  const startedAt = Number(startedAtNs / 1_000_000n)
-  return new Date(startedAt)
+    for (const stop of stops) {
+      if (stop.status === "rejected") {
+        console.error("Failed to stop call recording", roomName, stop.reason)
+      }
+    }
+
+    const startedAtNs = active[0]?.fileResults[0]?.startedAt
+    return startedAtNs ? new Date(Number(startedAtNs / 1_000_000n)) : null
+  } catch (error) {
+    console.error("Failed to stop call recording", roomName, error)
+    return null
+  }
 }
 
 type SipPhoneNumber = {

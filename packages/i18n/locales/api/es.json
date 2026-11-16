@@ -7,6 +7,13 @@
   "validator": {
     "failed": "Error de validación"
   },
+  "call_extractions": {
+    "list_failed": "No se pudieron cargar las extracciones de llamada",
+    "create_failed": "No se pudo crear la extracción de llamada",
+    "update_failed": "No se pudo actualizar la extracción de llamada",
+    "delete_failed": "No se pudo eliminar la extracción de llamada",
+    "not_found": "Extracción de llamada no encontrada"
+  },
   "knowledge_base": {
     "list_failed": "No se pudieron cargar los documentos",
     "create_failed": "No se pudo añadir el documento",
@@ -85,6 +92,12 @@
     "already_ended": "La llamada ya ha finalizado",
     "ended_before_started": "endedAt debe ser posterior a startedAt",
     "complete_failed": "No se pudo completar la llamada",
+    "extraction_load_failed": "No se pudo cargar la extracción de la llamada",
+    "extraction_update_failed": "No se pudo guardar la extracción de la llamada",
+    "extraction_not_found": "Extracción de llamada no encontrada",
+    "extraction_not_ready": "Esta llamada no tiene transcripción de la que extraer",
+    "extraction_none_attached": "No hay ninguna extracción de llamada vinculada a este agente",
+    "extraction_rerun_failed": "No se pudo volver a ejecutar la extracción de la llamada",
     "export_failed": "No se pudieron exportar las llamadas"
   },
   "contacts": {

@@ -7,6 +7,13 @@
   "validator": {
     "failed": "Validation failed"
   },
+  "call_extractions": {
+    "list_failed": "Failed to load call extractions",
+    "create_failed": "Failed to create call extraction",
+    "update_failed": "Failed to update call extraction",
+    "delete_failed": "Failed to delete call extraction",
+    "not_found": "Call extraction not found"
+  },
   "knowledge_base": {
     "list_failed": "Failed to load documents",
     "create_failed": "Failed to add document",
@@ -85,6 +92,12 @@
     "already_ended": "Call already ended",
     "ended_before_started": "endedAt must be after startedAt",
     "complete_failed": "Failed to complete call",
+    "extraction_load_failed": "Failed to load call extraction",
+    "extraction_update_failed": "Failed to save call extraction",
+    "extraction_not_found": "Call extraction not found",
+    "extraction_not_ready": "This call has no transcript to extract from",
+    "extraction_none_attached": "No call extraction is attached to this agent",
+    "extraction_rerun_failed": "Failed to rerun call extraction",
     "export_failed": "Failed to export calls"
   },
   "contacts": {

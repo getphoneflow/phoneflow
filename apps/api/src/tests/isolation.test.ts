@@ -19,6 +19,7 @@ describe("organization isolation", () => {
     call: string
     contact: string
     batchCall: string
+    callExtraction: string
   }
 
   beforeAll(async () => {
@@ -50,12 +51,22 @@ describe("organization isolation", () => {
     const otherAgent = await createAgent(other.id)
     await createCall(other.id, otherAgent.id)
 
+    const extraction = await victimOwner.api.post("/api/call-extractions", {
+      body: {
+        name: "Summary",
+        description: "Summarize the call",
+        schema: { type: "string", choices: ["refunded"] },
+        agentIds: [agent.id],
+      },
+    })
+
     ids = {
       agent: agent.id,
       phoneNumber: phoneNumber.id,
       call: call.id,
       contact: contact.id,
       batchCall: batchCallId,
+      callExtraction: extraction.body.id,
     }
   })
 
@@ -75,6 +86,9 @@ describe("organization isolation", () => {
     ["GET", "/api/calls/:call/recording"],
     ["POST", "/api/calls/:call/join"],
     ["POST", "/api/calls/:call/end"],
+    ["POST", "/api/calls/:call/extraction/rerun"],
+    ["PATCH", "/api/call-extractions/:callExtraction"],
+    ["DELETE", "/api/call-extractions/:callExtraction"],
     ["GET", "/api/contacts/:contact"],
   ])(
     "%s %s returns 404 for another organization's resource",
@@ -89,7 +103,14 @@ describe("organization isolation", () => {
           ? { config: await victimConfig() }
           : template.includes("phone-numbers") && method === "PATCH"
             ? { sipAddress: "sip.attacker.example.com" }
-            : {}
+            : template.includes("call-extractions") && method === "PATCH"
+              ? {
+                  name: "Hacked",
+                  description: "Stolen",
+                  schema: { type: "string", choices: ["refunded"] },
+                  agentIds: [],
+                }
+              : {}
 
       const res =
         method === "GET"
@@ -120,6 +141,7 @@ describe("organization isolation", () => {
     ["/api/batch-calls", (body: unknown[]) => body],
     ["/api/calls", (body: { items: unknown[] }) => body.items],
     ["/api/contacts", (body: { items: unknown[] }) => body.items],
+    ["/api/call-extractions", (body: unknown[]) => body],
   ] as const)(
     "GET %s only lists the caller's organization",
     async (path, items) => {

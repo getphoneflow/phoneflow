@@ -13,6 +13,7 @@ const defaultRoles = {
       calls: ["create"],
       billing: ["purchase"],
       knowledgeBase: ["create", "delete"],
+      callExtraction: ["create", "update", "delete"],
     },
   },
   member: {

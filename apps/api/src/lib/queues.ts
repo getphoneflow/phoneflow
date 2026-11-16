@@ -20,3 +20,8 @@ export const knowledgeBaseQueue = new Queue("knowledge-base", {
   connection,
   telemetry,
 })
+
+export const callExtractionQueue = new Queue("call-extraction", {
+  connection,
+  telemetry,
+})

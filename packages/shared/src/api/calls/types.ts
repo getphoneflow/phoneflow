@@ -1,6 +1,7 @@
 import type { z } from "zod"
 
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
+import type { CallExtractionRun } from "@workspace/shared/api/call-extractions/types"
 import type {
   callListQuerySchema,
   callListSortBySchema,
@@ -142,6 +143,7 @@ export type CallDetailResponse = {
   totalCost: string | null
   transcript: CallTranscript | null
   variables: CallVariableValues | null
+  extraction: CallExtractionRun | null
   createdAt: Date
   updatedAt: Date
   agent: { name: string } | null

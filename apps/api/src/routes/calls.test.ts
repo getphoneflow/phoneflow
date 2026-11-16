@@ -86,6 +86,7 @@ describe("calls (dashboard)", () => {
       )
       expect(body.items[0].agent).toEqual({ name: "Sales" })
       expect(body.items[0]).not.toHaveProperty("transcript")
+      expect(body.items[0]).not.toHaveProperty("extraction")
     })
 
     it("paginates", async () => {

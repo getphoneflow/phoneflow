@@ -50,6 +50,10 @@
       "breadcrumb": "Knowledge base",
       "page_title": "Knowledge base - Phoneflow"
     },
+    "call_extractions": {
+      "breadcrumb": "Call extraction",
+      "page_title": "Call extraction - Phoneflow"
+    },
     "agents_detail": {
       "page_title": "{{name}} - Phoneflow",
       "breadcrumb_parent": "Agents"
@@ -300,6 +304,77 @@
     }
   },
   "components": {
+    "call_extractions": {
+      "form": {
+        "trigger": "New extraction",
+        "create_title": "Create call extraction",
+        "edit_title": "Edit call extraction",
+        "description": "Extract values after each call finishes",
+        "name": {
+          "label": "Name",
+          "placeholder": "Call summary"
+        },
+        "prompt": {
+          "label": "Description",
+          "placeholders": {
+            "boolean": "Whether the caller agreed to book the appointment",
+            "string": "A one-sentence summary of what the caller wanted",
+            "number": "The refund amount in dollars"
+          }
+        },
+        "format": {
+          "label": "Type",
+          "options": {
+            "boolean": "Boolean",
+            "string": "Text",
+            "number": "Number"
+          }
+        },
+        "choices": {
+          "label": "Allowed values",
+          "placeholder": "refunded",
+          "add": "Add value",
+          "remove": "Remove value {{index}}"
+        },
+        "bounds": {
+          "minimum": "Minimum",
+          "maximum": "Maximum",
+          "placeholder": "Optional"
+        },
+        "model": {
+          "label": "Model"
+        },
+        "agents": {
+          "label": "Agents",
+          "placeholder": "Add agents",
+          "empty": "No agents yet"
+        },
+        "toasts": {
+          "created": "Call extraction created",
+          "updated": "Call extraction updated"
+        }
+      },
+      "table": {
+        "empty": "No call extractions yet",
+        "search": {
+          "placeholder": "Search extractions..."
+        },
+        "page": "Page {{page}} of {{count}}",
+        "columns": {
+          "name": "Name",
+          "format": "Type",
+          "model": "Model",
+          "agents": "Agents"
+        },
+        "open_actions": "Open actions for {{name}}",
+        "delete_title": "Delete call extraction",
+        "delete_description": "This will delete \"{{name}}\". Results already stored on calls stay there.",
+        "toasts": {
+          "deleted": "{{name}} deleted",
+          "duplicated": "{{name}} duplicated"
+        }
+      }
+    },
     "knowledge_base": {
       "add_form": {
         "trigger": "Add document",
@@ -1238,7 +1313,20 @@
         "tabs": {
           "transcript": "Transcript",
           "data": "Data",
+          "extraction": "Extraction",
           "cost": "Cost"
+        },
+        "extraction": {
+          "rerun": "Rerun",
+          "pending": "Running",
+          "failed": "Failed",
+          "empty": "Not found",
+          "empty_run": "No extraction has run for this call",
+          "status": {
+            "pending": "Running",
+            "completed": "Done",
+            "failed": "Failed"
+          }
         },
         "no_transcript": "No transcript available",
         "no_variables": "No variables",
@@ -1894,7 +1982,8 @@
             "phone_number": "Phone numbers",
             "calls": "Calls",
             "billing": "Billing",
-            "knowledge_base": "Knowledge base"
+            "knowledge_base": "Knowledge base",
+            "call_extraction": "Call extraction"
           },
           "actions": {
             "create": "create",
@@ -1961,6 +2050,7 @@
         "items": {
           "agents": "Agents",
           "knowledge_base": "Knowledge base",
+          "call_extraction": "Call extraction",
           "phone_numbers": "Phone numbers",
           "batch_calls": "Batch calls",
           "calls": "Calls",

@@ -5,6 +5,7 @@ import {
   PhoneIcon,
   PhoneOutgoingIcon,
   SettingsIcon,
+  TextSearchIcon,
   UsersIcon,
   WorkflowIcon,
 } from "lucide-react"
@@ -32,6 +33,11 @@ const nav = {
           title: "components.sidebar.nav_main.items.knowledge_base",
           url: "/knowledge-base",
           icon: <BookOpen />,
+        },
+        {
+          title: "components.sidebar.nav_main.items.call_extraction",
+          url: "/call-extractions",
+          icon: <TextSearchIcon />,
         },
       ],
     },

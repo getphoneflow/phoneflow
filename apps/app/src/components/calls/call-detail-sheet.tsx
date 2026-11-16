@@ -18,6 +18,7 @@ import {
 } from "@workspace/ui/components/tabs"
 import { AgentReferenceLink } from "@/components/agents/agent-reference-link"
 import { CallCostBreakdown } from "@/components/calls/call-cost-breakdown"
+import { CallExtractionPanel } from "@/components/calls/call-extraction-panel"
 import { CallRecordingPlayer } from "@/components/calls/call-recording-player"
 import { SheetSkeleton } from "@/components/sheet-skeleton"
 import { UserDateTime } from "@/components/user-timezone-provider"
@@ -31,6 +32,12 @@ function CallDetailBody({ callId }: { callId: string }) {
   const { data: call } = useSuspenseQuery({
     queryKey: ["calls", callId],
     queryFn: () => api.get<CallDetailResponse>(`/calls/${callId}`),
+    refetchInterval: (query) =>
+      query.state.data?.extraction?.results.some(
+        (result) => result.status === "pending"
+      )
+        ? 2000
+        : false,
   })
 
   const [position, setPosition] = useState<{ time: number }>()
@@ -125,6 +132,9 @@ function CallDetailBody({ callId }: { callId: string }) {
             <TabsTrigger value="data">
               {t("components.calls.call_detail_sheet.tabs.data")}
             </TabsTrigger>
+            <TabsTrigger value="extraction">
+              {t("components.calls.call_detail_sheet.tabs.extraction")}
+            </TabsTrigger>
             {env.IS_CLOUD ? (
               <TabsTrigger value="cost">
                 {t("components.calls.call_detail_sheet.tabs.cost")}
@@ -174,6 +184,12 @@ function CallDetailBody({ callId }: { callId: string }) {
               ))}
             </div>
           )}
+        </TabsContent>
+        <TabsContent
+          value="extraction"
+          className="flex min-h-0 flex-col overflow-y-auto"
+        >
+          <CallExtractionPanel call={call} />
         </TabsContent>
         {env.IS_CLOUD ? (
           <TabsContent

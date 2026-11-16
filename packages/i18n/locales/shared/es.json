@@ -186,6 +186,30 @@
         }
       }
     },
+    "call_extraction": {
+      "name": {
+        "required": "El nombre es obligatorio",
+        "max": "El nombre debe tener como máximo 255 caracteres"
+      },
+      "description": {
+        "required": "La descripción es obligatoria",
+        "max": "La descripción es demasiado larga"
+      },
+      "choice": {
+        "required": "La opción no puede estar vacía",
+        "max": "La opción es demasiado larga"
+      },
+      "field_name": {
+        "required": "El nombre del campo es obligatorio",
+        "max": "El nombre del campo debe tener como máximo 64 caracteres",
+        "invalid": "El nombre del campo debe empezar por una letra y usar minúsculas, números o guiones bajos"
+      },
+      "duplicate_field": "Ese nombre de campo ya está en uso",
+      "duplicate_choice": "Esa opción ya está en uso",
+      "bounds": {
+        "range": "El máximo debe ser mayor o igual que el mínimo"
+      }
+    },
     "phone_numbers": {
       "phone_number_request": {
         "agent_id": {

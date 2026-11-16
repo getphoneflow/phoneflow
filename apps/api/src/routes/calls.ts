@@ -12,6 +12,14 @@ import { db } from "@workspace/db/client"
 import { callsTable } from "@workspace/db/schema/calls"
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 import {
+  callExtractionJobQuerySchema,
+  callExtractionRunSchema,
+} from "@workspace/shared/api/call-extractions/schemas"
+import type {
+  CallExtractionJobResponse,
+  RerunCallExtractionResponse,
+} from "@workspace/shared/api/call-extractions/types"
+import {
   callListQuerySchema,
   completeCallRequestSchema,
   startInboundCallRequestSchema,
@@ -33,6 +41,7 @@ import type {
   TriggerOutboundCallResponse,
   UnansweredCallResponse,
 } from "@workspace/shared/api/calls/types"
+import type { ExtractCallPayload } from "@workspace/shared/jobs/call-extraction/types"
 import type { SendDownloadCallsPayload } from "@workspace/shared/jobs/emails/types"
 import { auth } from "@/lib/auth/config"
 import { requireOrganization } from "@/lib/auth/organization"
@@ -54,7 +63,7 @@ import {
   startCallRecording,
   stopCallRecording,
 } from "@/lib/livekit"
-import { emailsQueue } from "@/lib/queues"
+import { callExtractionQueue, emailsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
 
 export const callRoutes = new Hono()
@@ -493,6 +502,25 @@ callRoutes.post(
       }
 
       const durationMs = endedAt.getTime() - call.startedAt.getTime()
+      const extractions =
+        payload.transcript.length > 0
+          ? await db.query.callExtractionsTable.findMany({
+              where: { agents: { agentId: call.agentId } },
+            })
+          : []
+      const extraction =
+        extractions.length > 0
+          ? {
+              results: extractions.map((item) => ({
+                id: item.id,
+                name: item.name,
+                status: "pending" as const,
+                model: item.model,
+                schema: item.schema,
+                value: null,
+              })),
+            }
+          : null
       const costs = env.IS_CLOUD
         ? computeCallCosts({
             durationMs,
@@ -524,6 +552,7 @@ callRoutes.post(
             : {}),
           transcript: payload.transcript,
           variables: payload.variables ?? null,
+          extraction,
           updatedAt: new Date(),
         })
         .where(
@@ -543,12 +572,139 @@ callRoutes.post(
         await deductOrganizationCredits(call.organizationId, costs.total)
       }
 
+      if (extraction) {
+        await callExtractionQueue.add("extract", {
+          callId: updated.id,
+          callExtractionIds: extractions.map((item) => item.id),
+        } satisfies ExtractCallPayload)
+      }
+
       return c.json({
         id: updated.id,
         durationMs,
       } satisfies CompleteCallResponse)
     } catch {
       return c.json({ error: t(c.get("locale"), "calls.complete_failed") }, 500)
+    }
+  }
+)
+
+callRoutes.get(
+  "/:callId/extraction",
+  requireAuthToken,
+  validator("query", callExtractionJobQuerySchema),
+  async (c) => {
+    const locale = c.get("locale")
+    const callId = c.req.param("callId")
+    const { ids } = c.req.valid("query")
+
+    try {
+      const call = await db.query.callsTable.findFirst({
+        where: { id: callId },
+        columns: {
+          id: true,
+          organizationId: true,
+          transcript: true,
+        },
+      })
+
+      if (!call?.transcript) {
+        return c.json({ error: t(locale, "calls.not_found") }, 404)
+      }
+
+      const extractions = await db.query.callExtractionsTable.findMany({
+        where: {
+          organizationId: call.organizationId,
+          id: { in: ids },
+        },
+        columns: {
+          id: true,
+          name: true,
+          description: true,
+          model: true,
+          schema: true,
+        },
+      })
+
+      return c.json({
+        callId: call.id,
+        transcript: call.transcript,
+        extractions,
+      } satisfies CallExtractionJobResponse)
+    } catch {
+      return c.json({ error: t(locale, "calls.extraction_load_failed") }, 500)
+    }
+  }
+)
+
+callRoutes.patch(
+  "/:callId/extraction",
+  requireAuthToken,
+  validator("json", callExtractionRunSchema),
+  async (c) => {
+    const locale = c.get("locale")
+    const callId = c.req.param("callId")
+    const extraction = c.req.valid("json")
+
+    try {
+      const [updated] = await db
+        .update(callsTable)
+        .set({ extraction, updatedAt: new Date() })
+        .where(eq(callsTable.id, callId))
+        .returning({ id: callsTable.id })
+
+      if (!updated) {
+        return c.json({ error: t(locale, "calls.not_found") }, 404)
+      }
+
+      return c.json({ id: updated.id })
+    } catch {
+      return c.json({ error: t(locale, "calls.extraction_update_failed") }, 500)
+    }
+  }
+)
+
+callRoutes.post(
+  "/:callId/extraction/rerun",
+  requireOrganization,
+  requirePermission({ callExtraction: ["update"] }),
+  async (c) => {
+    const locale = c.get("locale")
+    const organizationId = c.get("organizationId")
+    const callId = c.req.param("callId")
+
+    try {
+      const call = await db.query.callsTable.findFirst({
+        where: { id: callId, organizationId },
+      })
+
+      if (!call) {
+        return c.json({ error: t(locale, "calls.not_found") }, 404)
+      }
+
+      if (!call.transcript?.length) {
+        return c.json({ error: t(locale, "calls.extraction_not_ready") }, 400)
+      }
+
+      const extractions = await db.query.callExtractionsTable.findMany({
+        where: { agents: { agentId: call.agentId } },
+        columns: { id: true },
+      })
+      if (extractions.length === 0) {
+        return c.json(
+          { error: t(locale, "calls.extraction_none_attached") },
+          400
+        )
+      }
+
+      await callExtractionQueue.add("extract", {
+        callId: call.id,
+        callExtractionIds: extractions.map((item) => item.id),
+      } satisfies ExtractCallPayload)
+
+      return c.json({ ok: true } satisfies RerunCallExtractionResponse)
+    } catch {
+      return c.json({ error: t(locale, "calls.extraction_rerun_failed") }, 500)
     }
   }
 )
@@ -876,6 +1032,7 @@ callRoutes.get(
         where,
         columns: {
           transcript: false,
+          extraction: false,
         },
         with: {
           agent: {

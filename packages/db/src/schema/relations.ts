@@ -14,6 +14,10 @@ import {
   batchCallRecipientsTable,
   batchCallsTable,
 } from "@workspace/db/schema/batch-calls"
+import {
+  callExtractionAgentsTable,
+  callExtractionsTable,
+} from "@workspace/db/schema/call-extractions"
 import { callsTable } from "@workspace/db/schema/calls"
 import { contactsTable } from "@workspace/db/schema/contacts"
 import { creditPurchasesTable } from "@workspace/db/schema/credits"
@@ -26,6 +30,8 @@ export const relations = defineRelations(
     agentVersionsTable,
     batchCallsTable,
     batchCallRecipientsTable,
+    callExtractionsTable,
+    callExtractionAgentsTable,
     callsTable,
     contactsTable,
     knowledgeBaseDocumentsTable,
@@ -56,6 +62,10 @@ export const relations = defineRelations(
       calls: r.many.callsTable({
         from: r.agentsTable.id,
         to: r.callsTable.agentId,
+      }),
+      callExtractions: r.many.callExtractionAgentsTable({
+        from: r.agentsTable.id,
+        to: r.callExtractionAgentsTable.agentId,
       }),
       batchCalls: r.many.batchCallsTable({
         from: r.agentsTable.id,
@@ -106,6 +116,26 @@ export const relations = defineRelations(
       batchCall: r.one.batchCallsTable({
         from: r.batchCallRecipientsTable.batchCallId,
         to: r.batchCallsTable.id,
+      }),
+    },
+    callExtractionsTable: {
+      organization: r.one.organization({
+        from: r.callExtractionsTable.organizationId,
+        to: r.organization.id,
+      }),
+      agents: r.many.callExtractionAgentsTable({
+        from: r.callExtractionsTable.id,
+        to: r.callExtractionAgentsTable.callExtractionId,
+      }),
+    },
+    callExtractionAgentsTable: {
+      callExtraction: r.one.callExtractionsTable({
+        from: r.callExtractionAgentsTable.callExtractionId,
+        to: r.callExtractionsTable.id,
+      }),
+      agent: r.one.agentsTable({
+        from: r.callExtractionAgentsTable.agentId,
+        to: r.agentsTable.id,
       }),
     },
     callsTable: {
@@ -228,6 +258,10 @@ export const relations = defineRelations(
       knowledgeBaseDocuments: r.many.knowledgeBaseDocumentsTable({
         from: r.organization.id,
         to: r.knowledgeBaseDocumentsTable.organizationId,
+      }),
+      callExtractions: r.many.callExtractionsTable({
+        from: r.organization.id,
+        to: r.callExtractionsTable.organizationId,
       }),
       batchCalls: r.many.batchCallsTable({
         from: r.organization.id,

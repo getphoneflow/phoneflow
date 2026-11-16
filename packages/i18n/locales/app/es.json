@@ -50,6 +50,10 @@
       "breadcrumb": "Base de conocimiento",
       "page_title": "Base de conocimiento - Phoneflow"
     },
+    "call_extractions": {
+      "breadcrumb": "Extracción de llamadas",
+      "page_title": "Extracción de llamadas - Phoneflow"
+    },
     "agents_detail": {
       "page_title": "{{name}} - Phoneflow",
       "breadcrumb_parent": "Agentes"
@@ -300,6 +304,77 @@
     }
   },
   "components": {
+    "call_extractions": {
+      "form": {
+        "trigger": "Nueva extracción",
+        "create_title": "Crear extracción de llamada",
+        "edit_title": "Editar extracción de llamada",
+        "description": "Extrae valores después de que cada llamada termine",
+        "name": {
+          "label": "Nombre",
+          "placeholder": "Resumen de la llamada"
+        },
+        "prompt": {
+          "label": "Descripción",
+          "placeholders": {
+            "boolean": "Si la persona que llama aceptó reservar la cita",
+            "string": "Un resumen en una frase de lo que quería la persona que llama",
+            "number": "El importe del reembolso en dólares"
+          }
+        },
+        "format": {
+          "label": "Tipo",
+          "options": {
+            "boolean": "Booleano",
+            "string": "Texto",
+            "number": "Número"
+          }
+        },
+        "choices": {
+          "label": "Valores permitidos",
+          "placeholder": "reembolsado",
+          "add": "Añadir valor",
+          "remove": "Quitar valor {{index}}"
+        },
+        "bounds": {
+          "minimum": "Mínimo",
+          "maximum": "Máximo",
+          "placeholder": "Opcional"
+        },
+        "model": {
+          "label": "Modelo"
+        },
+        "agents": {
+          "label": "Agentes",
+          "placeholder": "Añadir agentes",
+          "empty": "Todavía no hay agentes"
+        },
+        "toasts": {
+          "created": "Extracción de llamada creada",
+          "updated": "Extracción de llamada actualizada"
+        }
+      },
+      "table": {
+        "empty": "Todavía no hay extracciones de llamada",
+        "search": {
+          "placeholder": "Buscar extracciones..."
+        },
+        "page": "Página {{page}} de {{count}}",
+        "columns": {
+          "name": "Nombre",
+          "format": "Tipo",
+          "model": "Modelo",
+          "agents": "Agentes"
+        },
+        "open_actions": "Abrir acciones de {{name}}",
+        "delete_title": "Eliminar extracción de llamada",
+        "delete_description": "Esto eliminará \"{{name}}\". Los resultados ya guardados en las llamadas se conservan.",
+        "toasts": {
+          "deleted": "{{name}} eliminada",
+          "duplicated": "{{name}} duplicada"
+        }
+      }
+    },
     "knowledge_base": {
       "add_form": {
         "trigger": "Añadir documento",
@@ -1238,7 +1313,20 @@
         "tabs": {
           "transcript": "Transcripción",
           "data": "Datos",
+          "extraction": "Extracción",
           "cost": "Coste"
+        },
+        "extraction": {
+          "rerun": "Repetir",
+          "pending": "En curso",
+          "failed": "Error",
+          "empty": "No encontrado",
+          "empty_run": "No se ha ejecutado ninguna extracción para esta llamada",
+          "status": {
+            "pending": "En curso",
+            "completed": "Hecho",
+            "failed": "Error"
+          }
         },
         "no_transcript": "No hay transcripción disponible",
         "no_variables": "No hay variables",
@@ -1894,7 +1982,8 @@
             "phone_number": "Números de teléfono",
             "calls": "Llamadas",
             "billing": "Facturación",
-            "knowledge_base": "Base de conocimiento"
+            "knowledge_base": "Base de conocimiento",
+            "call_extraction": "Extracción de llamadas"
           },
           "actions": {
             "create": "crear",
@@ -1961,6 +2050,7 @@
         "items": {
           "agents": "Agentes",
           "knowledge_base": "Base de conocimiento",
+          "call_extraction": "Extracción de llamadas",
           "phone_numbers": "Números de teléfono",
           "batch_calls": "Llamadas por lotes",
           "calls": "Llamadas",

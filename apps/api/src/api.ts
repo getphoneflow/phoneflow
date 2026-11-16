@@ -8,6 +8,7 @@ import { localeMiddleware } from "@/lib/i18n"
 import { agentRoutes } from "@/routes/agents"
 import { batchCallRoutes } from "@/routes/batch-calls"
 import { billingRoutes } from "@/routes/billing"
+import { callExtractionRoutes } from "@/routes/call-extractions"
 import { callRoutes } from "@/routes/calls"
 import { contactRoutes } from "@/routes/contacts"
 import { knowledgeBaseRoutes } from "@/routes/knowledge-base"
@@ -45,6 +46,7 @@ api.on(["POST", "GET"], "/api/auth/*", (c) => {
 
 api.route("/api/agents", agentRoutes)
 api.route("/api/batch-calls", batchCallRoutes)
+api.route("/api/call-extractions", callExtractionRoutes)
 api.route("/api/calls", callRoutes)
 api.route("/api/contacts", contactRoutes)
 api.route("/api/knowledge-base", knowledgeBaseRoutes)

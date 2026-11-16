@@ -41,6 +41,10 @@ const protectedEndpoints: Endpoint[] = [
   { method: "get", path: "/api/billing/auto-reload" },
   { method: "put", path: "/api/billing/auto-reload" },
   { method: "post", path: "/api/billing/portal" },
+  { method: "post", path: "/api/call-extractions" },
+  { method: "patch", path: `/api/call-extractions/${someId}` },
+  { method: "delete", path: `/api/call-extractions/${someId}` },
+  { method: "post", path: `/api/calls/${someId}/extraction/rerun` },
 ]
 
 // Reads every member of the organization can do
@@ -51,6 +55,7 @@ const memberReadableEndpoints: Endpoint[] = [
   { method: "get", path: "/api/contacts" },
   { method: "get", path: "/api/batch-calls" },
   { method: "get", path: "/api/billing" },
+  { method: "get", path: "/api/call-extractions" },
   { method: "get", path: "/api/sso" },
 ]
 
@@ -64,6 +69,8 @@ const serviceEndpoints: Endpoint[] = [
   { method: "get", path: `/api/calls/export/${someId}` },
   { method: "get", path: `/api/contacts/export/${someId}` },
   { method: "post", path: `/api/batch-calls/${someId}/trigger` },
+  { method: "get", path: `/api/calls/${someId}/extraction?ids=${someId}` },
+  { method: "patch", path: `/api/calls/${someId}/extraction` },
 ]
 
 const allOrganizationEndpoints = [

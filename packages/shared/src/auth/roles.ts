@@ -11,6 +11,7 @@ const statement = {
   calls: ["create"],
   billing: ["purchase"],
   knowledgeBase: ["create", "delete"],
+  callExtraction: ["create", "update", "delete"],
 }
 
 export const ac = createAccessControl(statement)
@@ -22,4 +23,5 @@ export const owner = ac.newRole({
   calls: ["create"],
   billing: ["purchase"],
   knowledgeBase: ["create", "delete"],
+  callExtraction: ["create", "update", "delete"],
 })

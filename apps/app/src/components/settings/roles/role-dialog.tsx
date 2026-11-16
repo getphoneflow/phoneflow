@@ -41,6 +41,8 @@ const resourceLabels = {
   billing: "components.settings.roles.role_dialog.resources.billing",
   knowledgeBase:
     "components.settings.roles.role_dialog.resources.knowledge_base",
+  callExtraction:
+    "components.settings.roles.role_dialog.resources.call_extraction",
 } satisfies Record<string, string>
 
 const actionLabels = {

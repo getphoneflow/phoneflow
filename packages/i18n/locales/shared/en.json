@@ -186,6 +186,30 @@
         }
       }
     },
+    "call_extraction": {
+      "name": {
+        "required": "Name is required",
+        "max": "Name must be at most 255 characters"
+      },
+      "description": {
+        "required": "Description is required",
+        "max": "Description is too long"
+      },
+      "choice": {
+        "required": "Choice cannot be empty",
+        "max": "Choice is too long"
+      },
+      "field_name": {
+        "required": "Field name is required",
+        "max": "Field name must be at most 64 characters",
+        "invalid": "Field name must start with a letter and use lowercase letters, numbers, or underscores"
+      },
+      "duplicate_field": "Field name is already used",
+      "duplicate_choice": "Choice is already used",
+      "bounds": {
+        "range": "Maximum must be greater than or equal to minimum"
+      }
+    },
     "phone_numbers": {
       "phone_number_request": {
         "agent_id": {

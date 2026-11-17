@@ -55,6 +55,10 @@ const settingsNavItems = [
     title: "routes.settings.layout.nav.roles",
     to: "/settings/roles",
   },
+  {
+    title: "routes.settings.layout.nav.api_keys",
+    to: "/settings/api-keys",
+  },
   ...(env.IS_CLOUD
     ? [
         {

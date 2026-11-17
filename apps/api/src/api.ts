@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth/config"
 import { env } from "@/lib/env"
 import { localeMiddleware } from "@/lib/i18n"
 import { agentRoutes } from "@/routes/agents"
+import { apiKeyRoutes } from "@/routes/api-keys"
 import { batchCallRoutes } from "@/routes/batch-calls"
 import { billingRoutes } from "@/routes/billing"
 import { callExtractionRoutes } from "@/routes/call-extractions"
@@ -45,6 +46,7 @@ api.on(["POST", "GET"], "/api/auth/*", (c) => {
 })
 
 api.route("/api/agents", agentRoutes)
+api.route("/api/api-keys", apiKeyRoutes)
 api.route("/api/batch-calls", batchCallRoutes)
 api.route("/api/call-extractions", callExtractionRoutes)
 api.route("/api/calls", callRoutes)

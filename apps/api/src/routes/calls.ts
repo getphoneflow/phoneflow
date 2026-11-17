@@ -43,6 +43,7 @@ import type {
 } from "@workspace/shared/api/calls/types"
 import type { ExtractCallPayload } from "@workspace/shared/jobs/call-extraction/types"
 import type { SendDownloadCallsPayload } from "@workspace/shared/jobs/emails/types"
+import { requireApiKey } from "@/lib/auth/api-key"
 import { auth } from "@/lib/auth/config"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
@@ -1072,6 +1073,100 @@ callRoutes.post(
   "/outbound",
   requireOrganization,
   requirePermission({ calls: ["create"] }),
+  validator("json", triggerOutboundCallRequestSchema),
+  async (c) => {
+    const locale = c.get("locale")
+    const organizationId = c.get("organizationId")
+    const payload = c.req.valid("json")
+
+    try {
+      const phoneNumber = await db.query.phoneNumbersTable.findFirst({
+        where: {
+          id: payload.phoneNumberId,
+          organizationId,
+        },
+        columns: {
+          number: true,
+          sipAddress: true,
+          sipUsername: true,
+          sipPassword: true,
+        },
+      })
+
+      if (!phoneNumber) {
+        return c.json({ error: t(locale, "calls.phone_number_not_found") }, 404)
+      }
+
+      if (
+        !phoneNumber.sipAddress ||
+        !phoneNumber.sipUsername ||
+        !phoneNumber.sipPassword
+      ) {
+        return c.json(
+          { error: t(locale, "calls.phone_number_without_sip") },
+          400
+        )
+      }
+
+      const agent = await db.query.agentsTable.findFirst({
+        where: {
+          id: payload.agentId,
+          organizationId,
+        },
+        columns: {
+          id: true,
+        },
+      })
+
+      if (!agent) {
+        return c.json({ error: t(locale, "calls.agent_not_found") }, 404)
+      }
+
+      if (env.IS_CLOUD && !(await organizationHasCredits(organizationId))) {
+        return c.json({ error: t(locale, "calls.insufficient_credits") }, 402)
+      }
+
+      if (payload.agentVersionId) {
+        const version = await db.query.agentVersionsTable.findFirst({
+          where: {
+            id: payload.agentVersionId,
+            agentId: payload.agentId,
+          },
+          columns: {
+            id: true,
+          },
+        })
+
+        if (!version) {
+          return c.json(
+            { error: t(locale, "calls.agent_version_not_found") },
+            404
+          )
+        }
+      }
+
+      await placeOutboundCall({
+        agentId: payload.agentId,
+        agentVersionId: payload.agentVersionId ?? null,
+        toNumber: payload.toNumber,
+        fromNumber: phoneNumber.number,
+        sipAddress: phoneNumber.sipAddress,
+        sipUsername: phoneNumber.sipUsername,
+        sipPassword: phoneNumber.sipPassword,
+        variables: payload.variables ?? {},
+        batchCallId: null,
+      })
+
+      return c.json({ ok: true } satisfies TriggerOutboundCallResponse)
+    } catch {
+      return c.json({ error: t(locale, "calls.start_outbound_failed") }, 500)
+    }
+  }
+)
+
+callRoutes.post(
+  "/trigger",
+  requireApiKey({ calls: ["create"] }),
   validator("json", triggerOutboundCallRequestSchema),
   async (c) => {
     const locale = c.get("locale")

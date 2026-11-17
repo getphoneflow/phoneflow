@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1118.0",
+    "@better-auth/api-key": "catalog:",
     "@better-auth/i18n": "catalog:",
     "@better-auth/sso": "catalog:",
     "@better-auth/stripe": "catalog:",

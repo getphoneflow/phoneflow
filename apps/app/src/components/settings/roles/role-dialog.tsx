@@ -3,7 +3,6 @@ import { useState } from "react"
 
 import { ac } from "@workspace/shared/auth/roles"
 import { Button } from "@workspace/ui/components/button"
-import { Checkbox } from "@workspace/ui/components/checkbox"
 import {
   Dialog,
   DialogClose,
@@ -22,54 +21,13 @@ import {
 import { Input } from "@workspace/ui/components/input"
 import { toast } from "@workspace/ui/components/sonner"
 import { Spinner } from "@workspace/ui/components/spinner"
+import { PermissionFields } from "@/components/settings/permission-fields"
 import { organization } from "@/lib/auth/client"
 import { useTranslation } from "@/lib/i18n"
 
 type OrganizationRole = NonNullable<
   Awaited<ReturnType<typeof organization.listRoles>>["data"]
 >[number]
-
-const resourceLabels = {
-  organization: "components.settings.roles.role_dialog.resources.organization",
-  member: "components.settings.roles.role_dialog.resources.member",
-  invitation: "components.settings.roles.role_dialog.resources.invitation",
-  team: "components.settings.roles.role_dialog.resources.team",
-  ac: "components.settings.roles.role_dialog.resources.ac",
-  agent: "components.settings.roles.role_dialog.resources.agent",
-  phoneNumber: "components.settings.roles.role_dialog.resources.phone_number",
-  calls: "components.settings.roles.role_dialog.resources.calls",
-  billing: "components.settings.roles.role_dialog.resources.billing",
-  knowledgeBase:
-    "components.settings.roles.role_dialog.resources.knowledge_base",
-  callExtraction:
-    "components.settings.roles.role_dialog.resources.call_extraction",
-} satisfies Record<string, string>
-
-const actionLabels = {
-  create: "components.settings.roles.role_dialog.actions.create",
-  read: "components.settings.roles.role_dialog.actions.read",
-  update: "components.settings.roles.role_dialog.actions.update",
-  delete: "components.settings.roles.role_dialog.actions.delete",
-  cancel: "components.settings.roles.role_dialog.actions.cancel",
-  purchase: "components.settings.roles.role_dialog.actions.purchase",
-} satisfies Record<string, string>
-
-export function usePermissionLabels() {
-  const { t } = useTranslation()
-
-  return {
-    resourceLabel(resource: string): string {
-      const key: string | undefined =
-        resourceLabels[resource as keyof typeof resourceLabels]
-      return key ? t(key) : resource
-    },
-    actionLabel(action: string): string {
-      const key: string | undefined =
-        actionLabels[action as keyof typeof actionLabels]
-      return key ? t(key) : action
-    },
-  }
-}
 
 type RoleDialogProps = {
   open: boolean
@@ -79,7 +37,6 @@ type RoleDialogProps = {
 
 export function RoleDialog({ open, onOpenChange, role }: RoleDialogProps) {
   const { t } = useTranslation()
-  const { resourceLabel, actionLabel } = usePermissionLabels()
   const queryClient = useQueryClient()
   const [name, setName] = useState("")
   const [nameError, setNameError] = useState<string | null>(null)
@@ -215,39 +172,13 @@ export function RoleDialog({ open, onOpenChange, role }: RoleDialogProps) {
               {nameError ? <FieldError>{t(nameError)}</FieldError> : null}
             </Field>
 
-            <div className="-mr-6 max-h-80 space-y-4 overflow-y-auto pl-1">
-              {Object.entries(ac.statements).map(([resource, actions]) => (
-                <div key={resource} className="space-y-2">
-                  <div className="font-medium">{resourceLabel(resource)}</div>
-                  <div className="flex flex-wrap gap-x-4 gap-y-2">
-                    {actions.map((action) => {
-                      const id = `${resource}-${action}`
-                      return (
-                        <Field
-                          key={action}
-                          orientation="horizontal"
-                          className="w-auto"
-                        >
-                          <Checkbox
-                            id={id}
-                            checked={
-                              permission[resource]?.includes(action) ?? false
-                            }
-                            disabled={saveRoleMutation.isPending}
-                            onCheckedChange={(checked) =>
-                              toggle(resource, action, checked === true)
-                            }
-                          />
-                          <FieldLabel htmlFor={id} className="capitalize">
-                            {actionLabel(action)}
-                          </FieldLabel>
-                        </Field>
-                      )
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <PermissionFields
+              statements={ac.statements}
+              idPrefix="role"
+              permission={permission}
+              disabled={saveRoleMutation.isPending}
+              onToggle={toggle}
+            />
           </FieldGroup>
 
           <DialogFooter className="mt-6">

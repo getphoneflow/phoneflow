@@ -88,6 +88,7 @@
           "billing": "Billing",
           "members": "Members",
           "roles": "Roles",
+          "api_keys": "API keys",
           "sso": "Single sign-on"
         },
         "breadcrumb": "Settings"
@@ -115,6 +116,9 @@
       },
       "roles": {
         "page_title": "Roles settings - Phoneflow"
+      },
+      "api_keys": {
+        "page_title": "API keys - Phoneflow"
       }
     },
     "signin": {
@@ -1983,7 +1987,8 @@
             "calls": "Calls",
             "billing": "Billing",
             "knowledge_base": "Knowledge base",
-            "call_extraction": "Call extraction"
+            "call_extraction": "Call extraction",
+            "api_key": "API keys"
           },
           "actions": {
             "create": "create",
@@ -2036,6 +2041,58 @@
             "placeholder": "Search roles..."
           },
           "create": "Create role"
+        }
+      },
+      "api_keys": {
+        "api_key_dialog": {
+          "toasts": {
+            "created": "{{name}} created",
+            "updated": "{{name}} updated"
+          },
+          "create_title": "Create API key",
+          "edit_title": "Edit API key",
+          "create_description": "Choose a name, expiration and permissions",
+          "edit_description": "Update \"{{name}}\" name, expiration and permissions",
+          "secret_title": "API key created",
+          "secret_description": "Copy your API key now",
+          "name": {
+            "label": "Name",
+            "placeholder": "Production"
+          },
+          "expiration": {
+            "label": "Expiration",
+            "never": "Never",
+            "keep": "Keep current expiration",
+            "days": "{{count}} days"
+          },
+          "create_submit": "Create API key",
+          "done": "Done"
+        },
+        "api_key_row_actions": {
+          "toasts": {
+            "revoked": "{{name}} revoked"
+          },
+          "revoke_dialog": {
+            "title": "Revoke API key",
+            "description": "This will permanently revoke \"{{name}}\""
+          },
+          "open_actions": "Open actions for {{name}}",
+          "edit": "Edit API key",
+          "revoke": "Revoke API key"
+        },
+        "api_keys_table": {
+          "never": "Never",
+          "columns": {
+            "name": "Name",
+            "key": "Key",
+            "permissions": "Permissions",
+            "created": "Created",
+            "expires": "Expires"
+          },
+          "search": {
+            "placeholder": "Search API keys..."
+          },
+          "create": "Create API key"
         }
       }
     },

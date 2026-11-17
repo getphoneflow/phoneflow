@@ -45,6 +45,10 @@ const protectedEndpoints: Endpoint[] = [
   { method: "patch", path: `/api/call-extractions/${someId}` },
   { method: "delete", path: `/api/call-extractions/${someId}` },
   { method: "post", path: `/api/calls/${someId}/extraction/rerun` },
+  { method: "get", path: "/api/api-keys" },
+  { method: "post", path: "/api/api-keys" },
+  { method: "patch", path: `/api/api-keys/${someId}` },
+  { method: "delete", path: `/api/api-keys/${someId}` },
 ]
 
 // Reads every member of the organization can do

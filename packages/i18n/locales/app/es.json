@@ -88,6 +88,7 @@
           "billing": "Facturación",
           "members": "Miembros",
           "roles": "Roles",
+          "api_keys": "Claves de API",
           "sso": "Inicio de sesión único"
         },
         "breadcrumb": "Configuración"
@@ -115,6 +116,9 @@
       },
       "roles": {
         "page_title": "Configuración de roles - Phoneflow"
+      },
+      "api_keys": {
+        "page_title": "Claves de API - Phoneflow"
       }
     },
     "signin": {
@@ -1983,7 +1987,8 @@
             "calls": "Llamadas",
             "billing": "Facturación",
             "knowledge_base": "Base de conocimiento",
-            "call_extraction": "Extracción de llamadas"
+            "call_extraction": "Extracción de llamadas",
+            "api_key": "Claves de API"
           },
           "actions": {
             "create": "crear",
@@ -2036,6 +2041,58 @@
             "placeholder": "Buscar roles..."
           },
           "create": "Crear rol"
+        }
+      },
+      "api_keys": {
+        "api_key_dialog": {
+          "toasts": {
+            "created": "{{name}} creada",
+            "updated": "{{name}} actualizada"
+          },
+          "create_title": "Crear clave de API",
+          "edit_title": "Editar clave de API",
+          "create_description": "Elige un nombre, la caducidad y los permisos",
+          "edit_description": "Actualiza el nombre, la caducidad y los permisos de \"{{name}}\"",
+          "secret_title": "Clave de API creada",
+          "secret_description": "Copia tu clave de API ahora",
+          "name": {
+            "label": "Nombre",
+            "placeholder": "Producción"
+          },
+          "expiration": {
+            "label": "Caducidad",
+            "never": "Nunca",
+            "keep": "Mantener la caducidad actual",
+            "days": "{{count}} días"
+          },
+          "create_submit": "Crear clave de API",
+          "done": "Listo"
+        },
+        "api_key_row_actions": {
+          "toasts": {
+            "revoked": "{{name}} revocada"
+          },
+          "revoke_dialog": {
+            "title": "Revocar clave de API",
+            "description": "Se revocará \"{{name}}\" de forma permanente"
+          },
+          "open_actions": "Abrir acciones de {{name}}",
+          "edit": "Editar clave de API",
+          "revoke": "Revocar clave de API"
+        },
+        "api_keys_table": {
+          "never": "Nunca",
+          "columns": {
+            "name": "Nombre",
+            "key": "Clave",
+            "permissions": "Permisos",
+            "created": "Creada",
+            "expires": "Caduca"
+          },
+          "search": {
+            "placeholder": "Buscar claves de API..."
+          },
+          "create": "Crear clave de API"
         }
       }
     },

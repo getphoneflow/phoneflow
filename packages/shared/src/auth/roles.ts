@@ -6,22 +6,24 @@ import {
 
 const statement = {
   ...defaultStatements,
-  agent: ["create", "update", "delete"],
-  phoneNumber: ["create", "update", "delete"],
-  calls: ["create"],
+  agent: ["create", "read", "update", "delete"],
+  phoneNumber: ["create", "read", "update", "delete"],
+  calls: ["create", "read"],
   billing: ["purchase"],
-  knowledgeBase: ["create", "delete"],
-  callExtraction: ["create", "update", "delete"],
+  knowledgeBase: ["create", "read", "delete"],
+  callExtraction: ["create", "read", "update", "delete"],
+  apiKey: ["create", "read", "update", "delete"],
 }
 
 export const ac = createAccessControl(statement)
 
 export const owner = ac.newRole({
   ...ownerAc.statements,
-  agent: ["create", "update", "delete"],
-  phoneNumber: ["create", "update", "delete"],
-  calls: ["create"],
+  agent: ["create", "read", "update", "delete"],
+  phoneNumber: ["create", "read", "update", "delete"],
+  calls: ["create", "read"],
   billing: ["purchase"],
-  knowledgeBase: ["create", "delete"],
-  callExtraction: ["create", "update", "delete"],
+  knowledgeBase: ["create", "read", "delete"],
+  callExtraction: ["create", "read", "update", "delete"],
+  apiKey: ["create", "read", "update", "delete"],
 })

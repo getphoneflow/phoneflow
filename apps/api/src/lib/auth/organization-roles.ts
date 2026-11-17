@@ -8,12 +8,13 @@ const defaultRoles = {
     displayName: "Admin",
     permission: {
       ...adminAc.statements,
-      agent: ["create", "update", "delete"],
-      phoneNumber: ["create", "update", "delete"],
-      calls: ["create"],
+      agent: ["create", "read", "update", "delete"],
+      phoneNumber: ["create", "read", "update", "delete"],
+      calls: ["create", "read"],
       billing: ["purchase"],
-      knowledgeBase: ["create", "delete"],
-      callExtraction: ["create", "update", "delete"],
+      knowledgeBase: ["create", "read", "delete"],
+      callExtraction: ["create", "read", "update", "delete"],
+      apiKey: ["create", "read", "update", "delete"],
     },
   },
   member: {

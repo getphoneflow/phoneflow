@@ -40,10 +40,8 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table"
-import {
-  RoleDialog,
-  usePermissionLabels,
-} from "@/components/settings/roles/role-dialog"
+import { usePermissionLabels } from "@/components/settings/permission-fields"
+import { RoleDialog } from "@/components/settings/roles/role-dialog"
 import { RoleRowActions } from "@/components/settings/roles/role-row-actions"
 import type { organization } from "@/lib/auth/client"
 import { organizationRolesQueryOptions } from "@/lib/auth/organization"

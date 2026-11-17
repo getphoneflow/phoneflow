@@ -210,6 +210,16 @@
         "range": "El máximo debe ser mayor o igual que el mínimo"
       }
     },
+    "api_keys": {
+      "name": {
+        "required": "El nombre es obligatorio",
+        "max": "El nombre debe tener como máximo 64 caracteres"
+      },
+      "permissions": {
+        "unknown_resource": "Recurso desconocido",
+        "unknown_action": "Acción desconocida"
+      }
+    },
     "phone_numbers": {
       "phone_number_request": {
         "agent_id": {

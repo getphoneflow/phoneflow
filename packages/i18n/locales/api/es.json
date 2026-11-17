@@ -2,6 +2,7 @@
   "auth": {
     "unauthorized": "No autorizado",
     "forbidden": "Acceso denegado",
+    "rate_limited": "Demasiadas solicitudes",
     "no_active_organization": "No hay ninguna organización activa"
   },
   "validator": {
@@ -117,6 +118,15 @@
     "not_found": "Número de teléfono no encontrado",
     "update_failed": "No se pudo actualizar el número de teléfono",
     "delete_failed": "No se pudo eliminar el número de teléfono"
+  },
+  "api_keys": {
+    "list_failed": "No se pudieron cargar las claves de API",
+    "create_failed": "No se pudo crear la clave de API",
+    "update_failed": "No se pudo actualizar la clave de API",
+    "delete_failed": "No se pudo revocar la clave de API",
+    "not_found": "Clave de API no encontrada",
+    "permissions_invalid": "Esos permisos no son válidos",
+    "request_failed": "La solicitud de la clave de API falló"
   },
   "user": {
     "storage_not_configured": "El almacenamiento de archivos no está configurado",

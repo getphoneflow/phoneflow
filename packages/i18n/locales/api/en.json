@@ -2,6 +2,7 @@
   "auth": {
     "unauthorized": "Unauthorized",
     "forbidden": "Forbidden",
+    "rate_limited": "Too many requests",
     "no_active_organization": "No active organization"
   },
   "validator": {
@@ -117,6 +118,15 @@
     "not_found": "Phone number not found",
     "update_failed": "Failed to update phone number",
     "delete_failed": "Failed to delete phone number"
+  },
+  "api_keys": {
+    "list_failed": "Failed to load API keys",
+    "create_failed": "Failed to create API key",
+    "update_failed": "Failed to update API key",
+    "delete_failed": "Failed to revoke API key",
+    "not_found": "API key not found",
+    "permissions_invalid": "Those permissions are not valid",
+    "request_failed": "API key request failed"
   },
   "user": {
     "storage_not_configured": "File storage is not configured",

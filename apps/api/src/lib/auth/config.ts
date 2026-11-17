@@ -1,3 +1,4 @@
+import { apiKey } from "@better-auth/api-key"
 import { i18n, locales } from "@better-auth/i18n"
 import { sso } from "@better-auth/sso"
 import { stripe } from "@better-auth/stripe"
@@ -148,6 +149,26 @@ export const auth = betterAuth({
         async afterCreateOrganization({ organization: org }) {
           await seedOrganizationRoles(org.id)
         },
+      },
+    }),
+    apiKey({
+      references: "organization",
+      defaultPrefix: "pf_",
+      requireName: true,
+      maximumNameLength: 64,
+      startingCharactersConfig: {
+        charactersLength: 12,
+      },
+      keyExpiration: {
+        defaultExpiresIn: null,
+      },
+      rateLimit: {
+        enabled: true,
+        timeWindow: 60_000,
+        maxRequests: 600,
+      },
+      permissions: {
+        defaultPermissions: {},
       },
     }),
     ...(env.IS_CLOUD

@@ -210,6 +210,16 @@
         "range": "Maximum must be greater than or equal to minimum"
       }
     },
+    "api_keys": {
+      "name": {
+        "required": "Name is required",
+        "max": "Name must be at most 64 characters"
+      },
+      "permissions": {
+        "unknown_resource": "Unknown resource",
+        "unknown_action": "Unknown action"
+      }
+    },
     "phone_numbers": {
       "phone_number_request": {
         "agent_id": {

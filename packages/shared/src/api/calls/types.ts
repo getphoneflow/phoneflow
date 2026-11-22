@@ -6,6 +6,7 @@ import type {
   callListQuerySchema,
   callListSortBySchema,
   callNumericFilterOperatorSchema,
+  callTranscriptItemSchema,
   callTranscriptSchema,
   completeCallRequestSchema,
   startInboundCallRequestSchema,
@@ -34,6 +35,7 @@ export type CallDispatchMetadata = {
   ringDurationMs?: number
 }
 
+export type CallTranscriptItem = z.infer<typeof callTranscriptItemSchema>
 export type CallTranscript = z.infer<typeof callTranscriptSchema>
 
 export type StartWebCallRequest = z.infer<typeof startWebCallRequestSchema>

@@ -1,4 +1,3 @@
-import type { ReceivedMessage } from "@livekit/components-react"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { Suspense, useState } from "react"
 
@@ -45,20 +44,9 @@ function CallDetailBody({ callId }: { callId: string }) {
   const recordingStartedAt = new Date(call.recordingStartedAt!).getTime()
   const recordingOffset = (recordingStartedAt - startedAt) / 1000
 
-  function onMessageClick(timestamp: number) {
+  function onItemClick(timestamp: number) {
     setPosition({ time: Math.max(0, (timestamp - startedAt) / 1000) })
   }
-
-  const messages = (call.transcript ?? []).map(
-    (item) =>
-      ({
-        id: item.id,
-        timestamp: item.createdAt,
-        type: item.role === "user" ? "userTranscript" : "agentTranscript",
-        message: item.content,
-        from: { isLocal: item.role === "user" },
-      }) as ReceivedMessage
-  )
 
   const variables = Object.entries(call.variables ?? {})
   const channelLabel =
@@ -146,7 +134,7 @@ function CallDetailBody({ callId }: { callId: string }) {
           value="transcript"
           className="flex min-h-0 flex-col overflow-hidden"
         >
-          {messages.length === 0 ? (
+          {!call.transcript?.length ? (
             <div className="flex flex-1 items-center justify-center">
               <p className="text-sm text-muted-foreground">
                 {t("components.calls.call_detail_sheet.no_transcript")}
@@ -154,10 +142,10 @@ function CallDetailBody({ callId }: { callId: string }) {
             </div>
           ) : (
             <AgentChatTranscript
-              messages={messages}
+              transcript={call.transcript}
               initial={false}
               startedAt={startedAt}
-              onMessageClick={onMessageClick}
+              onItemClick={onItemClick}
             />
           )}
         </TabsContent>

@@ -25,6 +25,7 @@ import { createWebhookTool } from "@/flow/tools/webhook"
 import type { FlowConversationNode, FlowGraph, FlowNode } from "@/flow/types"
 import type { Variables } from "@/flow/variables"
 import { endCall } from "@/lib/end-call"
+import type { Transcript } from "@/lib/transcript"
 
 function buildNodeInstructions(
   graph: FlowGraph,
@@ -63,6 +64,7 @@ export class FlowAgent extends Agent {
   private readonly callId: string
   private readonly room: JobContext["room"]
   private readonly organizationId: string
+  private readonly transcript: Transcript
 
   constructor(
     graph: FlowGraph,
@@ -70,7 +72,8 @@ export class FlowAgent extends Agent {
     sip: CallSipConnection | null,
     callId: string,
     room: JobContext["room"],
-    organizationId: string
+    organizationId: string,
+    transcript: Transcript
   ) {
     super({
       instructions: buildNodeInstructions(graph, graph.startNode, variables),
@@ -82,6 +85,7 @@ export class FlowAgent extends Agent {
     this.callId = callId
     this.room = room
     this.organizationId = organizationId
+    this.transcript = transcript
   }
 
   private async publishActiveNode(node: FlowNode) {
@@ -146,7 +150,8 @@ export class FlowAgent extends Agent {
           node.transferCall,
           this.variables,
           this.sip,
-          this.callId
+          this.callId,
+          this.transcript
         )
       )
     }
@@ -220,6 +225,7 @@ export class FlowAgent extends Agent {
   }
 
   private async transitionTo(node: FlowNode) {
+    this.transcript.transition(node)
     await this.publishActiveNode(node)
 
     if (node.type === "end") {

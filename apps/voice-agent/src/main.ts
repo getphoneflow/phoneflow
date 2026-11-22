@@ -23,7 +23,7 @@ import {
 import { endCall } from "@/lib/end-call"
 import { env } from "@/lib/env"
 import { setupTracing } from "@/lib/tracing"
-import { buildCallTranscript } from "@/lib/transcript"
+import { Transcript } from "@/lib/transcript"
 import { LLM } from "@/providers/llm"
 import { STT } from "@/providers/stt"
 import { TTS } from "@/providers/tts"
@@ -109,24 +109,28 @@ export default defineAgent({
 
     let idleCount = 0
     let silenceTimer = setTimeout(endCall, config.call.endOnSilenceSec * 1000)
+    const transcript = new Transcript(ctx.room, {
+      live: variables.get("direction") === "web",
+    })
 
-    session.on(
-      voice.AgentSessionEventTypes.UserStateChanged,
-      async function (event) {
-        if (event.newState === "speaking") {
-          idleCount = 0
-          clearTimeout(silenceTimer)
-          silenceTimer = setTimeout(endCall, config.call.endOnSilenceSec * 1000)
-          return
-        }
-
-        if (event.newState !== "away") return
-        if (idleCount >= config.call.maxIdleMessages) return
-
-        idleCount += 1
-        await session.generateReply({ userInput: "..." }).waitForPlayout()
-        session._updateUserState("listening")
+    session.on(voice.AgentSessionEventTypes.UserStateChanged, async (event) => {
+      if (event.newState === "speaking") {
+        idleCount = 0
+        clearTimeout(silenceTimer)
+        silenceTimer = setTimeout(endCall, config.call.endOnSilenceSec * 1000)
+        return
       }
+
+      if (event.newState !== "away") return
+      if (idleCount >= config.call.maxIdleMessages) return
+
+      idleCount += 1
+      await session.generateReply({ userInput: "..." }).waitForPlayout()
+      session._updateUserState("listening")
+    })
+
+    session.on(voice.AgentSessionEventTypes.FunctionToolsExecuted, (event) =>
+      transcript.onToolsExecuted(event)
     )
 
     ctx.room.on("participantDisconnected", (remoteParticipant) => {
@@ -134,7 +138,7 @@ export default defineAgent({
         completeCall(
           callId,
           "completed",
-          buildCallTranscript(session.history),
+          transcript.build(session.history),
           variables.snapshot()
         )
       }
@@ -147,7 +151,8 @@ export default defineAgent({
         sip,
         callId,
         ctx.room,
-        organizationId
+        organizationId,
+        transcript
       ),
       room: ctx.room,
       record: false,

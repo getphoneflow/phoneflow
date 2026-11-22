@@ -64,7 +64,15 @@ describe("calls (dashboard)", () => {
         await createCall(org.id, sales.id, {
           startedAt: new Date(now - 1 * minute),
           status: "in_progress",
-          transcript: [{ id: "1", role: "user", content: "Hi", createdAt: 0 }],
+          transcript: [
+            {
+              type: "message",
+              id: "1",
+              role: "user",
+              content: "Hi",
+              createdAt: 0,
+            },
+          ],
         }),
       ]
       return { support, sales, calls }
@@ -151,7 +159,13 @@ describe("calls (dashboard)", () => {
     const agent = await createAgent(org.id, { name: "Support" })
     const version = await createAgentVersion(agent.id, { number: 3 })
     const transcript = [
-      { id: "1", role: "user" as const, content: "Hello", createdAt: 0 },
+      {
+        type: "message" as const,
+        id: "1",
+        role: "user" as const,
+        content: "Hello",
+        createdAt: 0,
+      },
     ]
     const call = await createCall(org.id, agent.id, {
       agentVersionId: version.id,
@@ -307,8 +321,20 @@ function minutesAgo(minutes: number) {
 }
 
 const transcript = [
-  { id: "1", role: "assistant", content: "Hello!", createdAt: 0 },
-  { id: "2", role: "user", content: "Hi", createdAt: 1000 },
+  {
+    type: "message" as const,
+    id: "1",
+    role: "assistant" as const,
+    content: "Hello!",
+    createdAt: 0,
+  },
+  {
+    type: "message" as const,
+    id: "2",
+    role: "user" as const,
+    content: "Hi",
+    createdAt: 1000,
+  },
 ]
 
 // The requests the voice agent sends, with defaults for the fields a test doesn't care about

@@ -8,13 +8,14 @@ import type { CallSipConnection } from "@workspace/shared/api/calls/types"
 import type { Variables } from "@/flow/variables"
 import { completeCall } from "@/lib/calls"
 import { env } from "@/lib/env"
-import { buildCallTranscript } from "@/lib/transcript"
+import type { Transcript } from "@/lib/transcript"
 
 export function createTransferCallTool(
   config: TransferCallTool,
   variables: Variables,
   sip: CallSipConnection,
-  callId: string
+  callId: string,
+  transcript: Transcript
 ) {
   const destinations = config.destinations
     .map(
@@ -70,7 +71,7 @@ ${destinations}`,
       await completeCall(
         callId,
         "completed",
-        buildCallTranscript(ctx.session.history),
+        transcript.build(ctx.session.history),
         variables.snapshot()
       )
 

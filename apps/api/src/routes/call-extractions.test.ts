@@ -17,8 +17,15 @@ const serviceApi = createApi({
 })
 
 const transcript = [
-  { id: "1", role: "assistant" as const, content: "Hello!", createdAt: 0 },
   {
+    type: "message" as const,
+    id: "1",
+    role: "assistant" as const,
+    content: "Hello!",
+    createdAt: 0,
+  },
+  {
+    type: "message" as const,
     id: "2",
     role: "user" as const,
     content: "I need a refund",

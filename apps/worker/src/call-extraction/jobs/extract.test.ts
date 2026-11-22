@@ -33,6 +33,7 @@ const input = {
   callId: "call-1",
   transcript: [
     {
+      type: "message" as const,
       id: "1",
       role: "user" as const,
       content: "I need a refund",

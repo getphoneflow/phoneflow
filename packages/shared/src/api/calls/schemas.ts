@@ -43,14 +43,41 @@ export const unansweredCallRequestSchema = z
   })
   .strict()
 
-export const callTranscriptItemSchema = z
+export const callTranscriptMessageSchema = z
   .object({
+    type: z.literal("message"),
     id: z.string().min(1),
     role: z.enum(["user", "assistant"]),
     content: z.string().min(1),
     createdAt: z.number().int().nonnegative(),
   })
   .strict()
+
+export const callTranscriptToolCallSchema = z
+  .object({
+    type: z.literal("tool_call"),
+    id: z.string().min(1),
+    name: z.string().min(1),
+    args: z.record(z.string(), z.unknown()),
+    createdAt: z.number().int().nonnegative(),
+  })
+  .strict()
+
+export const callTranscriptTransitionSchema = z
+  .object({
+    type: z.literal("transition"),
+    id: z.string().min(1),
+    nodeId: z.string().min(1),
+    nodeName: z.string().min(1),
+    createdAt: z.number().int().nonnegative(),
+  })
+  .strict()
+
+export const callTranscriptItemSchema = z.discriminatedUnion("type", [
+  callTranscriptMessageSchema,
+  callTranscriptToolCallSchema,
+  callTranscriptTransitionSchema,
+])
 
 export const callTranscriptSchema = z.array(callTranscriptItemSchema)
 

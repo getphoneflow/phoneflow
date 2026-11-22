@@ -13,14 +13,16 @@ import { AgentChatTranscript } from "@workspace/ui/components/agents-ui/agent-ch
 import { useAgentStore } from "@/stores/agent"
 
 export function VoiceAgentTranscript() {
-  const { state, attributes } = useAgent()
+  const agent = useAgent()
   const session = useSessionContext()
   const { messages } = useSessionMessages(session)
   const { textStreams } = useTextStream("lk.transcript_event", {
     room: session.room,
   })
   const setActiveNodeId = useAgentStore((store) => store.setActiveNodeId)
-  const activeNodeId = attributes.active_node_id
+  const activeNodeId = agent.attributes.active_node_id
+  const agentIdentity = agent.internal.agentParticipant?.identity
+  const workerIdentity = agent.internal.workerParticipant?.identity
 
   useEffect(() => {
     setActiveNodeId(activeNodeId)
@@ -33,9 +35,11 @@ export function VoiceAgentTranscript() {
       if (!content) return []
 
       const role =
-        message.type === "userTranscript" || message.from?.isLocal
-          ? "user"
-          : "assistant"
+        message.from?.isAgent ||
+        (agentIdentity != null && message.from?.identity === agentIdentity) ||
+        (workerIdentity != null && message.from?.identity === workerIdentity)
+          ? "assistant"
+          : "user"
 
       return [
         {
@@ -61,7 +65,7 @@ export function VoiceAgentTranscript() {
     })
 
     return [...speech, ...events].sort(compareCallTranscriptItems)
-  }, [messages, textStreams])
+  }, [messages, textStreams, agentIdentity, workerIdentity])
 
   const startedAt =
     transcript.length === 0
@@ -70,7 +74,7 @@ export function VoiceAgentTranscript() {
 
   return (
     <AgentChatTranscript
-      agentState={state}
+      agentState={agent.state}
       transcript={transcript}
       startedAt={startedAt}
     />

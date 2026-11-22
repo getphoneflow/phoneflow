@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { Suspense } from "react"
 
 import type { CallDetailResponse } from "@workspace/shared/api/calls/types"
@@ -79,11 +79,16 @@ export function LiveCallSheet({
   open: boolean
   onClose: () => void
 }) {
+  const queryClient = useQueryClient()
+
   return (
     <Sheet
       open={open}
       onOpenChange={(nextOpen) => {
-        if (!nextOpen) onClose()
+        if (!nextOpen) {
+          queryClient.invalidateQueries({ queryKey: ["calls"] })
+          onClose()
+        }
       }}
     >
       <SheetContent className="gap-0">

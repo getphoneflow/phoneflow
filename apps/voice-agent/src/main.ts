@@ -109,9 +109,7 @@ export default defineAgent({
 
     let idleCount = 0
     let silenceTimer = setTimeout(endCall, config.call.endOnSilenceSec * 1000)
-    const transcript = new Transcript(ctx.room, {
-      live: variables.get("direction") === "web",
-    })
+    const transcript = new Transcript(ctx.room)
 
     session.on(voice.AgentSessionEventTypes.UserStateChanged, async (event) => {
       if (event.newState === "speaking") {

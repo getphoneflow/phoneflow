@@ -11,11 +11,9 @@ import { parseJsonObject } from "@/lib/json"
 export class Transcript {
   private readonly transitions: CallTranscriptItem[] = []
   private readonly room: JobContext["room"]
-  private readonly live: boolean
 
-  constructor(room: JobContext["room"], { live }: { live: boolean }) {
+  constructor(room: JobContext["room"]) {
     this.room = room
-    this.live = live
   }
 
   onToolsExecuted(event: {
@@ -88,8 +86,6 @@ export class Transcript {
   }
 
   private publish(item: CallTranscriptItem) {
-    if (!this.live) return
-
     this.room.localParticipant
       ?.sendText(JSON.stringify(callTranscriptItemSchema.parse(item)), {
         topic: "lk.transcript_event",

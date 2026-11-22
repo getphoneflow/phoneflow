@@ -89,8 +89,6 @@ export class FlowAgent extends Agent {
   }
 
   private async publishActiveNode(node: FlowNode) {
-    if (this.variables.get("direction") !== "web") return
-
     await this.room.localParticipant?.setAttributes({
       active_node_id: node.id,
     })

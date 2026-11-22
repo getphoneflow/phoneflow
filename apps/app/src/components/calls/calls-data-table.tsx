@@ -88,13 +88,14 @@ function CostCell({ call }: { call: CallListItem }) {
         {formatCallCost(totalCost)}
         <CircleHelpIcon className="size-3.5 text-muted-foreground" />
       </HoverCardTrigger>
-      <HoverCardContent className="flex flex-col gap-2">
+      <HoverCardContent className="flex flex-col gap-2 pl-3">
         {getCallCostBreakdown(call).map((item) => (
-          <div
-            key={item.key}
-            className="flex items-center justify-between gap-3"
-          >
-            <div>
+          <div key={item.key} className="flex items-center gap-2">
+            <div
+              className="w-1 self-stretch rounded-full"
+              style={{ backgroundColor: item.color }}
+            />
+            <div className="min-w-0 flex-1">
               <span className="text-xs">{t(item.label)}</span>
               {item.model ? (
                 <div className="truncate text-xs text-muted-foreground">

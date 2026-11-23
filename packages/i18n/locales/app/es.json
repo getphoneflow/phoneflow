@@ -640,7 +640,9 @@
                 "minimal": "Mínimo",
                 "low": "Bajo",
                 "medium": "Medio",
-                "high": "Alto"
+                "high": "Alto",
+                "xhigh": "Muy alto",
+                "max": "Máximo"
               }
             },
             "max_tokens": {

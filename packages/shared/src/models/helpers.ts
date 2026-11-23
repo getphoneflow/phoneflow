@@ -32,7 +32,7 @@ export function splitModelId(modelId: string) {
 }
 
 function getKindCatalog(kind: ModelKind) {
-  return MODELS[kind] as Record<string, CatalogProvider<string>>
+  return MODELS[kind] as Record<string, CatalogProvider>
 }
 
 export function getModel(

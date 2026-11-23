@@ -1,6 +1,8 @@
 import { ChevronDownIcon } from "lucide-react"
 import { Children, type ReactNode, useEffect, useState } from "react"
 
+import { isValidParameter } from "@workspace/shared/models/parameters"
+import type { Parameter } from "@workspace/shared/models/types"
 import {
   Collapsible,
   CollapsibleContent,
@@ -172,44 +174,6 @@ export function EnumField<T extends string>({
   )
 }
 
-export function LanguageField({
-  label,
-  description,
-  value,
-  languages,
-  onChange,
-  readOnly,
-}: {
-  label?: string
-  description?: string
-  value: string
-  languages: string[]
-  onChange: (value: string) => void
-  readOnly?: boolean
-}) {
-  const { t } = useTranslation()
-  if (languages.length === 0) return null
-
-  const options = languages.map((language) => ({
-    value: language,
-    label: language,
-  }))
-  const current = languages.includes(value) ? value : languages[0]
-
-  return (
-    <EnumField
-      label={
-        label ?? t("components.flow.sidepanel.config.fields.language.label")
-      }
-      description={description}
-      value={current}
-      options={options}
-      readOnly={readOnly}
-      onChange={onChange}
-    />
-  )
-}
-
 export function StringListField({
   label,
   description,
@@ -304,5 +268,104 @@ export function MultilineListField({
         }}
       />
     </Field>
+  )
+}
+
+export function ModelParameterField<
+  Value extends string | number | boolean | string[],
+>({
+  parameter,
+  value,
+  onChange,
+  label,
+  description,
+  readOnly,
+  optionLabel,
+  multiline,
+  placeholder,
+}: {
+  parameter: Parameter | undefined
+  value: Value | undefined
+  onChange: (value: Value) => void
+  label: string
+  description?: string
+  readOnly?: boolean
+  optionLabel?: (value: string) => string
+  multiline?: boolean
+  placeholder?: string
+}) {
+  if (!parameter) return null
+
+  if (parameter.type === "enum") {
+    const options = parameter.options ?? []
+    if (options.length === 0) return null
+    return (
+      <EnumField
+        label={label}
+        description={description}
+        value={(value as string | undefined) ?? parameter.default}
+        readOnly={readOnly}
+        options={options.map((option) => ({
+          value: option,
+          label: optionLabel ? optionLabel(option) : option,
+        }))}
+        onChange={(next) => onChange(next as Value)}
+      />
+    )
+  }
+
+  if (parameter.type === "boolean") {
+    return (
+      <SwitchField
+        label={label}
+        description={description}
+        checked={(value as boolean | undefined) ?? parameter.default}
+        readOnly={readOnly}
+        onCheckedChange={(next) => onChange(next as Value)}
+      />
+    )
+  }
+
+  if (parameter.type === "strings") {
+    const list = (value as string[] | undefined) ?? [...parameter.default]
+    if (multiline) {
+      return (
+        <MultilineListField
+          label={label}
+          description={description}
+          value={list}
+          readOnly={readOnly}
+          placeholder={placeholder}
+          onChange={(next) => onChange(next as Value)}
+        />
+      )
+    }
+    return (
+      <StringListField
+        label={label}
+        description={description}
+        value={list}
+        readOnly={readOnly}
+        placeholder={placeholder}
+        onChange={(next) => onChange(next as Value)}
+      />
+    )
+  }
+
+  return (
+    <NumberField
+      label={label}
+      description={description}
+      value={(value as number | undefined) ?? parameter.default}
+      min={parameter.min}
+      max={parameter.max}
+      step={parameter.step}
+      readOnly={readOnly}
+      onChange={(next) => {
+        if (isValidParameter(parameter, next)) {
+          onChange(next as Value)
+        }
+      }}
+    />
   )
 }

@@ -5,19 +5,55 @@ export const MODELS: ModelsCatalog = {
     assemblyai: {
       name: "AssemblyAI",
       turnTaking: true,
-      fields: [
-        "language",
-        "keyterms",
-        "mode",
-        "vadThreshold",
-        "minTurnSilence",
-        "maxTurnSilence",
-        "endOfTurnConfidenceThreshold",
-        "voiceFocus",
-        "voiceFocusThreshold",
-        "agentContextCarryover",
-        "diarize",
-      ],
+      parameters: {
+        language: { type: "enum", default: "en" },
+        keyterms: { type: "strings", default: [] },
+        mode: {
+          type: "enum",
+          default: "balanced",
+          options: ["min_latency", "balanced", "max_accuracy"],
+        },
+        vadThreshold: {
+          type: "number",
+          default: 0.5,
+          min: 0,
+          max: 1,
+          step: 0.05,
+        },
+        minTurnSilence: {
+          type: "integer",
+          default: 0,
+          min: 0,
+          step: 50,
+        },
+        maxTurnSilence: {
+          type: "integer",
+          default: 3000,
+          min: 0,
+          step: 50,
+        },
+        endOfTurnConfidenceThreshold: {
+          type: "number",
+          default: 0.5,
+          min: 0,
+          max: 1,
+          step: 0.05,
+        },
+        voiceFocus: {
+          type: "enum",
+          default: "near-field",
+          options: ["near-field", "far-field"],
+        },
+        voiceFocusThreshold: {
+          type: "number",
+          default: 0.5,
+          min: 0,
+          max: 1,
+          step: 0.05,
+        },
+        agentContextCarryover: { type: "boolean", default: false },
+        diarize: { type: "boolean", default: false },
+      },
       models: {
         "universal-3-6-pro": {
           name: "Universal 3.6 Pro Streaming",
@@ -195,7 +231,9 @@ export const MODELS: ModelsCatalog = {
     },
     cartesia: {
       name: "Cartesia",
-      fields: ["language"],
+      parameters: {
+        language: { type: "enum", default: "en" },
+      },
       models: {
         "ink-2": {
           name: "Ink 2",
@@ -247,19 +285,46 @@ export const MODELS: ModelsCatalog = {
     },
     deepgram: {
       name: "Deepgram",
-      fields: ["language", "keyterms", "endpointingMs", "diarize"],
+      parameters: {
+        language: { type: "enum", default: "en" },
+        keyterms: { type: "strings", default: [] },
+        endpointingMs: {
+          type: "integer",
+          default: 100,
+          min: 0,
+          step: 50,
+        },
+        diarize: { type: "boolean", default: false },
+      },
       models: {
         "flux-general-en": {
           name: "Flux",
           turnTaking: true,
-          fields: [
-            "language",
-            "keyterms",
-            "eagerEotThreshold",
-            "eotThreshold",
-            "eotTimeoutMs",
-            "mipOptOut",
-          ],
+          parameters: {
+            endpointingMs: null,
+            diarize: null,
+            eagerEotThreshold: {
+              type: "number",
+              default: 0.5,
+              min: 0.3,
+              max: 0.9,
+              step: 0.05,
+            },
+            eotThreshold: {
+              type: "number",
+              default: 0.7,
+              min: 0.5,
+              max: 0.9,
+              step: 0.05,
+            },
+            eotTimeoutMs: {
+              type: "integer",
+              default: 3000,
+              min: 1,
+              step: 50,
+            },
+            mipOptOut: { type: "boolean", default: false },
+          },
           usdPerMinute: 0.0065,
           latencyMs: 270,
           score: 0,
@@ -268,14 +333,31 @@ export const MODELS: ModelsCatalog = {
         "flux-general-multi": {
           name: "Flux (Multilingual)",
           turnTaking: true,
-          fields: [
-            "language",
-            "keyterms",
-            "eagerEotThreshold",
-            "eotThreshold",
-            "eotTimeoutMs",
-            "mipOptOut",
-          ],
+          parameters: {
+            endpointingMs: null,
+            diarize: null,
+            eagerEotThreshold: {
+              type: "number",
+              default: 0.5,
+              min: 0.3,
+              max: 0.9,
+              step: 0.05,
+            },
+            eotThreshold: {
+              type: "number",
+              default: 0.7,
+              min: 0.5,
+              max: 0.9,
+              step: 0.05,
+            },
+            eotTimeoutMs: {
+              type: "integer",
+              default: 3000,
+              min: 1,
+              step: 50,
+            },
+            mipOptOut: { type: "boolean", default: false },
+          },
           usdPerMinute: 0.0078,
           latencyMs: 250,
           score: 0,
@@ -481,7 +563,10 @@ export const MODELS: ModelsCatalog = {
     },
     elevenlabs: {
       name: "ElevenLabs",
-      fields: ["language", "keyterms"],
+      parameters: {
+        language: { type: "enum", default: "en" },
+        keyterms: { type: "strings", default: [] },
+      },
       models: {
         scribe_v2_realtime: {
           name: "Scribe v2 Realtime",
@@ -547,14 +632,31 @@ export const MODELS: ModelsCatalog = {
     inworld: {
       name: "Inworld",
       turnTaking: true,
-      fields: [
-        "language",
-        "vadThreshold",
-        "minEndOfTurnSilenceWhenConfident",
-        "endOfTurnConfidenceThreshold",
-        "enableVoiceProfile",
-        "voiceProfileTopN",
-      ],
+      parameters: {
+        language: { type: "enum", default: "en" },
+        vadThreshold: {
+          type: "number",
+          default: 0.5,
+          min: 0,
+          max: 1,
+          step: 0.05,
+        },
+        minEndOfTurnSilenceWhenConfident: {
+          type: "integer",
+          default: 200,
+          min: 0,
+          step: 50,
+        },
+        endOfTurnConfidenceThreshold: {
+          type: "number",
+          default: 0.5,
+          min: 0,
+          max: 1,
+          step: 0.05,
+        },
+        enableVoiceProfile: { type: "boolean", default: true },
+        voiceProfileTopN: { type: "integer", default: 1, min: 1 },
+      },
       models: {
         "inworld-stt-1": {
           name: "Inworld STT 1",
@@ -568,7 +670,9 @@ export const MODELS: ModelsCatalog = {
     meta: {
       name: "Meta",
       turnTaking: true,
-      fields: ["keyterms"],
+      parameters: {
+        keyterms: { type: "strings", default: [] },
+      },
       models: {
         "muse-voice-transcribe-1.0": {
           name: "Muse Voice Transcribe",
@@ -580,7 +684,9 @@ export const MODELS: ModelsCatalog = {
     },
     mistral: {
       name: "Mistral",
-      fields: ["language"],
+      parameters: {
+        language: { type: "enum", default: "en" },
+      },
       models: {
         "voxtral-mini-latest": {
           name: "Voxtral Mini",
@@ -600,7 +706,10 @@ export const MODELS: ModelsCatalog = {
     },
     openai: {
       name: "OpenAI",
-      fields: ["language", "keyterms"],
+      parameters: {
+        language: { type: "enum", default: "en" },
+        keyterms: { type: "strings", default: [] },
+      },
       models: {
         "gpt-realtime-whisper": {
           name: "GPT Realtime Whisper",
@@ -634,7 +743,9 @@ export const MODELS: ModelsCatalog = {
     },
     ovhcloud: {
       name: "OVHcloud",
-      fields: ["language"],
+      parameters: {
+        language: { type: "enum", default: "en" },
+      },
       models: {
         "whisper-large-v3-turbo": {
           name: "Whisper Large v3 Turbo",
@@ -648,13 +759,18 @@ export const MODELS: ModelsCatalog = {
     soniox: {
       name: "Soniox",
       turnTaking: true,
-      fields: [
-        "language",
-        "keyterms",
-        "languageHintsStrict",
-        "endpointLatencyAdjustmentLevel",
-        "diarize",
-      ],
+      parameters: {
+        language: { type: "enum", default: "en" },
+        keyterms: { type: "strings", default: [] },
+        languageHintsStrict: { type: "boolean", default: false },
+        endpointLatencyAdjustmentLevel: {
+          type: "integer",
+          default: 0,
+          min: 0,
+          max: 3,
+        },
+        diarize: { type: "boolean", default: false },
+      },
       models: {
         "stt-rt-v5": {
           name: "STT Realtime v5",
@@ -675,15 +791,32 @@ export const MODELS: ModelsCatalog = {
     xai: {
       name: "xAI",
       turnTaking: true,
-      fields: [
-        "language",
-        "keyterms",
-        "endpointingMs",
-        "vadThreshold",
-        "diarize",
-        "smartTurn",
-        "smartTurnTimeout",
-      ],
+      parameters: {
+        language: { type: "enum", default: "en" },
+        keyterms: { type: "strings", default: [] },
+        endpointingMs: {
+          type: "integer",
+          default: 100,
+          min: 0,
+          step: 50,
+        },
+        vadThreshold: {
+          type: "number",
+          default: 0.5,
+          min: 0,
+          max: 1,
+          step: 0.05,
+        },
+        diarize: { type: "boolean", default: false },
+        smartTurn: { type: "number", default: 0.5, min: 0, max: 1, step: 0.05 },
+        smartTurnTimeout: {
+          type: "integer",
+          default: 3000,
+          min: 1,
+          max: 5000,
+          step: 50,
+        },
+      },
       models: {
         "stt-1": {
           name: "Speech to Text",
@@ -720,7 +853,15 @@ export const MODELS: ModelsCatalog = {
   llm: {
     anthropic: {
       name: "Anthropic",
-      fields: ["temperature", "maxTokens", "toolChoice"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+        maxTokens: { type: "integer", default: 4096, min: 1 },
+        toolChoice: {
+          type: "enum",
+          default: "auto",
+          options: ["auto", "none", "required"],
+        },
+      },
       models: {
         "claude-sonnet-5": {
           name: "Claude Sonnet 5",
@@ -762,7 +903,20 @@ export const MODELS: ModelsCatalog = {
     },
     baseten: {
       name: "Baseten",
-      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+        maxTokens: { type: "integer", default: 4096, min: 1 },
+        toolChoice: {
+          type: "enum",
+          default: "auto",
+          options: ["auto", "none", "required"],
+        },
+        reasoningEffort: {
+          type: "enum",
+          default: "none",
+          options: ["none", "minimal", "low", "medium", "high"],
+        },
+      },
       models: {
         "deepseek-ai/DeepSeek-V4-Pro-0813": {
           name: "DeepSeek V4 Pro 0813",
@@ -858,7 +1012,14 @@ export const MODELS: ModelsCatalog = {
     },
     cerebras: {
       name: "Cerebras",
-      fields: ["temperature", "toolChoice"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+        toolChoice: {
+          type: "enum",
+          default: "auto",
+          options: ["auto", "none", "required"],
+        },
+      },
       models: {
         "gemma-4-31b": {
           name: "Gemma 4 31B",
@@ -882,7 +1043,20 @@ export const MODELS: ModelsCatalog = {
     },
     cloudflare: {
       name: "Cloudflare",
-      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+        maxTokens: { type: "integer", default: 4096, min: 1 },
+        toolChoice: {
+          type: "enum",
+          default: "auto",
+          options: ["auto", "none", "required"],
+        },
+        reasoningEffort: {
+          type: "enum",
+          default: "none",
+          options: ["none", "minimal", "low", "medium", "high"],
+        },
+      },
       models: {
         "@cf/zai-org/glm-5.3": {
           name: "GLM 5.3",
@@ -904,18 +1078,21 @@ export const MODELS: ModelsCatalog = {
         },
         "@cf/zai-org/glm-4.7-flash": {
           name: "GLM 4.7 Flash",
+          parameters: { reasoningEffort: null },
           usdPerMinute: 0.0008,
           latencyMs: 360,
           score: 0,
         },
         "@cf/google/gemma-4-26b-a4b-it": {
           name: "Gemma 4 26B A4B Instruct",
+          parameters: { reasoningEffort: null },
           usdPerMinute: 0.001,
           latencyMs: 450,
           score: 0,
         },
         "@cf/meta/llama-4-scout-17b-16e-instruct": {
           name: "Llama 4 Scout 17B",
+          parameters: { reasoningEffort: null },
           usdPerMinute: 0.0012,
           latencyMs: 480,
           score: 0,
@@ -928,24 +1105,40 @@ export const MODELS: ModelsCatalog = {
         },
         "@cf/openai/gpt-oss-120b": {
           name: "GPT OSS 120B",
+          parameters: {
+            reasoningEffort: {
+              type: "enum",
+              default: "low",
+              options: ["minimal", "low", "medium", "high"],
+            },
+          },
           usdPerMinute: 0.0008,
           latencyMs: 650,
           score: 0,
         },
         "@cf/openai/gpt-oss-20b": {
           name: "GPT OSS 20B",
+          parameters: { reasoningEffort: null },
           usdPerMinute: 0.0004,
           latencyMs: 420,
           score: 0,
         },
         "@cf/qwen/qwen3.8-27b": {
           name: "Qwen 3.8 27B",
+          parameters: {
+            reasoningEffort: {
+              type: "enum",
+              default: "low",
+              options: ["xhigh", "medium", "low"],
+            },
+          },
           usdPerMinute: 0.001,
           latencyMs: 500,
           score: 0,
         },
         "@cf/qwen/qwen3-30b-a3b-fp8": {
           name: "Qwen 3 30B A3B",
+          parameters: { reasoningEffort: null },
           usdPerMinute: 0.001,
           latencyMs: 480,
           score: 0,
@@ -970,18 +1163,27 @@ export const MODELS: ModelsCatalog = {
         },
         "@cf/mistralai/mistral-small-3.1-24b-instruct": {
           name: "Mistral Small 3.1 24B",
+          parameters: {
+            reasoningEffort: {
+              type: "enum",
+              default: "low",
+              options: ["low", "medium", "high"],
+            },
+          },
           usdPerMinute: 0.001,
           latencyMs: 430,
           score: 0,
         },
         "@cf/nvidia/nemotron-3-120b-a12b": {
           name: "Nemotron 3 Super 120B",
+          parameters: { reasoningEffort: null },
           usdPerMinute: 0.002,
           latencyMs: 580,
           score: 0,
         },
         "@cf/ibm-granite/granite-4.0-h-micro": {
           name: "Granite 4.0 H Micro",
+          parameters: { reasoningEffort: null },
           usdPerMinute: 0.0004,
           latencyMs: 320,
           score: 0,
@@ -990,7 +1192,20 @@ export const MODELS: ModelsCatalog = {
     },
     deepinfra: {
       name: "DeepInfra",
-      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+        maxTokens: { type: "integer", default: 4096, min: 1 },
+        toolChoice: {
+          type: "enum",
+          default: "auto",
+          options: ["auto", "none", "required"],
+        },
+        reasoningEffort: {
+          type: "enum",
+          default: "none",
+          options: ["none", "minimal", "low", "medium", "high"],
+        },
+      },
       models: {
         "zai-org/GLM-5.3": {
           name: "GLM 5.3",
@@ -1128,7 +1343,9 @@ export const MODELS: ModelsCatalog = {
     },
     deepseek: {
       name: "DeepSeek",
-      fields: ["temperature"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+      },
       models: {
         "deepseek-v4-flash": {
           name: "DeepSeek V4 Flash",
@@ -1158,7 +1375,20 @@ export const MODELS: ModelsCatalog = {
     },
     fireworks: {
       name: "Fireworks",
-      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+        maxTokens: { type: "integer", default: 4096, min: 1 },
+        toolChoice: {
+          type: "enum",
+          default: "auto",
+          options: ["auto", "none", "required"],
+        },
+        reasoningEffort: {
+          type: "enum",
+          default: "none",
+          options: ["none", "minimal", "low", "medium", "high"],
+        },
+      },
       models: {
         "accounts/fireworks/models/glm-5p3": {
           name: "GLM 5.3",
@@ -1266,7 +1496,15 @@ export const MODELS: ModelsCatalog = {
     },
     google: {
       name: "Google",
-      fields: ["temperature", "maxTokens", "toolChoice"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+        maxTokens: { type: "integer", default: 4096, min: 1 },
+        toolChoice: {
+          type: "enum",
+          default: "auto",
+          options: ["auto", "none", "required"],
+        },
+      },
       models: {
         "gemini-3-flash-preview": {
           name: "Gemini 3 Flash",
@@ -1320,7 +1558,9 @@ export const MODELS: ModelsCatalog = {
     },
     groq: {
       name: "Groq",
-      fields: ["temperature"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+      },
       models: {
         "openai/gpt-oss-120b": {
           name: "OpenAI GPT OSS 120B",
@@ -1350,7 +1590,20 @@ export const MODELS: ModelsCatalog = {
     },
     meta: {
       name: "Meta",
-      fields: ["temperature", "maxTokens", "toolChoice"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+        maxTokens: { type: "integer", default: 4096, min: 1 },
+        toolChoice: {
+          type: "enum",
+          default: "auto",
+          options: ["auto", "none", "required"],
+        },
+        reasoningEffort: {
+          type: "enum",
+          default: "low",
+          options: ["minimal", "low", "medium", "high", "xhigh", "max"],
+        },
+      },
       models: {
         "muse-spark-1.3": {
           name: "Muse Spark 1.3",
@@ -1362,7 +1615,9 @@ export const MODELS: ModelsCatalog = {
     },
     mistral: {
       name: "Mistral",
-      fields: ["temperature"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+      },
       models: {
         "mistral-medium-latest": {
           name: "Mistral Medium 3.5",
@@ -1404,7 +1659,20 @@ export const MODELS: ModelsCatalog = {
     },
     openai: {
       name: "OpenAI",
-      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+        maxTokens: { type: "integer", default: 4096, min: 1 },
+        toolChoice: {
+          type: "enum",
+          default: "auto",
+          options: ["auto", "none", "required"],
+        },
+        reasoningEffort: {
+          type: "enum",
+          default: "none",
+          options: ["none", "minimal", "low", "medium", "high"],
+        },
+      },
       models: {
         "gpt-6-astra": {
           name: "GPT-6 Astra",
@@ -1585,7 +1853,20 @@ export const MODELS: ModelsCatalog = {
     },
     ovhcloud: {
       name: "OVHcloud",
-      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+        maxTokens: { type: "integer", default: 4096, min: 1 },
+        toolChoice: {
+          type: "enum",
+          default: "auto",
+          options: ["auto", "none", "required"],
+        },
+        reasoningEffort: {
+          type: "enum",
+          default: "none",
+          options: ["none", "minimal", "low", "medium", "high"],
+        },
+      },
       models: {
         "Meta-Llama-3_3-70B-Instruct": {
           name: "Llama 3.3 70B Instruct",
@@ -1609,7 +1890,9 @@ export const MODELS: ModelsCatalog = {
     },
     perplexity: {
       name: "Perplexity",
-      fields: ["temperature"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+      },
       models: {
         sonar: {
           name: "Sonar",
@@ -1627,7 +1910,9 @@ export const MODELS: ModelsCatalog = {
     },
     together: {
       name: "Together",
-      fields: ["temperature"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+      },
       models: {
         "zai-org/GLM-5.3": {
           name: "GLM 5.3",
@@ -1753,7 +2038,20 @@ export const MODELS: ModelsCatalog = {
     },
     wafer: {
       name: "Wafer",
-      fields: ["temperature", "maxTokens", "toolChoice", "reasoningEffort"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+        maxTokens: { type: "integer", default: 4096, min: 1 },
+        toolChoice: {
+          type: "enum",
+          default: "auto",
+          options: ["auto", "none", "required"],
+        },
+        reasoningEffort: {
+          type: "enum",
+          default: "none",
+          options: ["none", "minimal", "low", "medium", "high"],
+        },
+      },
       models: {
         "GLM-5.3": {
           name: "GLM 5.3",
@@ -1807,7 +2105,9 @@ export const MODELS: ModelsCatalog = {
     },
     xai: {
       name: "xAI",
-      fields: ["temperature"],
+      parameters: {
+        temperature: { type: "number", default: 0, min: 0, max: 2, step: 0.1 },
+      },
       models: {
         "grok-4.20-0309-non-reasoning": {
           name: "Grok 4.20",
@@ -1857,7 +2157,11 @@ export const MODELS: ModelsCatalog = {
   tts: {
     cartesia: {
       name: "Cartesia",
-      fields: ["language", "speed", "emotion"],
+      parameters: {
+        language: { type: "enum", default: "en" },
+        speed: { type: "number", default: 1, min: 0.1, max: 3, step: 0.05 },
+        emotion: { type: "strings", default: [] },
+      },
       models: {
         "sonic-3": {
           name: "Sonic 3",
@@ -2120,7 +2424,9 @@ export const MODELS: ModelsCatalog = {
     },
     deepgram: {
       name: "Deepgram",
-      fields: ["mipOptOut"],
+      parameters: {
+        mipOptOut: { type: "boolean", default: false },
+      },
       models: {
         aura: {
           name: "Aura",
@@ -2162,7 +2468,9 @@ export const MODELS: ModelsCatalog = {
     },
     elevenlabs: {
       name: "ElevenLabs",
-      fields: ["language"],
+      parameters: {
+        language: { type: "enum", default: "en" },
+      },
       models: {
         eleven_v4: {
           name: "Eleven v4",
@@ -2661,7 +2969,15 @@ export const MODELS: ModelsCatalog = {
     },
     fishaudio: {
       name: "Fish Audio",
-      fields: ["latencyMode", "speed", "volume"],
+      parameters: {
+        latencyMode: {
+          type: "enum",
+          default: "balanced",
+          options: ["normal", "balanced", "low"],
+        },
+        speed: { type: "number", default: 1, min: 0.1, max: 3, step: 0.05 },
+        volume: { type: "number", default: 0, step: 0.1 },
+      },
       models: {
         "s2-pro": {
           name: "S2 Pro",
@@ -2730,7 +3046,9 @@ export const MODELS: ModelsCatalog = {
     },
     inworld: {
       name: "Inworld",
-      fields: ["language"],
+      parameters: {
+        language: { type: "enum", default: "en" },
+      },
       models: {
         "inworld-tts-1.5-max": {
           name: "Realtime TTS 1.5 Max",
@@ -2828,7 +3146,7 @@ export const MODELS: ModelsCatalog = {
     },
     mistral: {
       name: "Mistral",
-      fields: [],
+      parameters: {},
       models: {
         "voxtral-mini-tts-latest": {
           name: "Voxtral Mini TTS",
@@ -2841,7 +3159,9 @@ export const MODELS: ModelsCatalog = {
     },
     openai: {
       name: "OpenAI",
-      fields: ["speed"],
+      parameters: {
+        speed: { type: "number", default: 1, min: 0.1, max: 3, step: 0.05 },
+      },
       models: {
         "tts-1": {
           name: "TTS 1",
@@ -2868,7 +3188,9 @@ export const MODELS: ModelsCatalog = {
     },
     soniox: {
       name: "Soniox",
-      fields: ["language"],
+      parameters: {
+        language: { type: "enum", default: "en" },
+      },
       models: {
         "tts-rt-v2": {
           name: "Realtime TTS v2",
@@ -2888,7 +3210,9 @@ export const MODELS: ModelsCatalog = {
     },
     xai: {
       name: "xAI",
-      fields: ["language"],
+      parameters: {
+        language: { type: "enum", default: "en" },
+      },
       models: {
         "tts-1": {
           name: "Text to Speech",

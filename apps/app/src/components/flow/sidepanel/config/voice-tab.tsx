@@ -1,11 +1,9 @@
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 import {
-  getTtsCapabilities,
+  getModelParameters,
   withTtsModel,
   withTtsVoice,
-} from "@workspace/shared/models/config"
-import { TTS_DEFAULTS } from "@workspace/shared/models/defaults"
-import { getModelLanguages, getVoices } from "@workspace/shared/models/helpers"
+} from "@workspace/shared/models/parameters"
 import { withInterruptionEnabled } from "@workspace/shared/models/turn-handling"
 import { Field, FieldLabel } from "@workspace/ui/components/field"
 import { Input } from "@workspace/ui/components/input"
@@ -13,9 +11,7 @@ import { BackgroundAudioSelect } from "@/components/flow/sidepanel/background-au
 import {
   AdvancedFields,
   ConfigSection,
-  EnumField,
-  LanguageField,
-  MultilineListField,
+  ModelParameterField,
   NumberField,
   SwitchField,
 } from "@/components/flow/sidepanel/config/fields"
@@ -27,14 +23,6 @@ import { useAgentStore } from "@/stores/agent"
 type TurnHandling = AgentConfig["turnHandling"]
 type Interruption = TurnHandling["interruption"]
 
-function ttsValue<K extends keyof typeof TTS_DEFAULTS>(
-  tts: AgentConfig["tts"],
-  key: K
-) {
-  const value = tts[key]
-  return value === undefined ? TTS_DEFAULTS[key] : value
-}
-
 export function VoiceTab() {
   const { t } = useTranslation()
   const readOnly = useAgentStore((state) => state.readOnly)
@@ -42,11 +30,7 @@ export function VoiceTab() {
   const setConfig = useAgentStore((state) => state.setConfig)
 
   const tts = config.tts
-  const fields = getTtsCapabilities(tts.model)?.fields
-  const voice = getVoices(tts.model).find((entry) => entry.id === tts.voice)
-  const languages = voice?.languages.length
-    ? voice.languages
-    : getModelLanguages("tts", tts.model)
+  const parameters = getModelParameters("tts", tts.model, tts.voice)?.parameters
   const backgroundAudio = config.backgroundAudio
   const turn = config.turnHandling
   const interruption = turn.interruption
@@ -79,63 +63,42 @@ export function VoiceTab() {
         onVoiceChange={(voiceId) => setConfig(withTtsVoice(config, voiceId))}
       />
 
-      {fields?.has("language") ? (
-        <LanguageField
-          languages={languages}
-          value={ttsValue(tts, "language")}
-          readOnly={readOnly}
-          onChange={(language) => patchTts({ language })}
-        />
-      ) : null}
+      <ModelParameterField
+        parameter={parameters?.language}
+        value={tts.language}
+        label={t("components.flow.sidepanel.config.fields.language.label")}
+        readOnly={readOnly}
+        onChange={(language) => patchTts({ language })}
+      />
 
-      {fields?.has("speed") ? (
-        <NumberField
-          label={t("components.flow.sidepanel.config.voice_tab.speed.label")}
-          description={t(
-            "components.flow.sidepanel.config.voice_tab.speed.description"
-          )}
-          value={ttsValue(tts, "speed")}
-          min={0.1}
-          max={3}
-          step={0.05}
-          readOnly={readOnly}
-          onChange={(speed) => patchTts({ speed })}
-        />
-      ) : null}
+      <ModelParameterField
+        parameter={parameters?.speed}
+        value={tts.speed}
+        label={t("components.flow.sidepanel.config.voice_tab.speed.label")}
+        description={t(
+          "components.flow.sidepanel.config.voice_tab.speed.description"
+        )}
+        readOnly={readOnly}
+        onChange={(speed) => patchTts({ speed })}
+      />
 
-      {fields?.has("latencyMode") ? (
-        <EnumField
-          label={t(
-            "components.flow.sidepanel.config.voice_tab.latency_mode.label"
-          )}
-          description={t(
-            "components.flow.sidepanel.config.voice_tab.latency_mode.description"
-          )}
-          value={ttsValue(tts, "latencyMode")}
-          readOnly={readOnly}
-          options={[
-            {
-              value: "normal",
-              label: t(
-                "components.flow.sidepanel.config.voice_tab.latency_mode.options.normal"
-              ),
-            },
-            {
-              value: "balanced",
-              label: t(
-                "components.flow.sidepanel.config.voice_tab.latency_mode.options.balanced"
-              ),
-            },
-            {
-              value: "low",
-              label: t(
-                "components.flow.sidepanel.config.voice_tab.latency_mode.options.low"
-              ),
-            },
-          ]}
-          onChange={(latencyMode) => patchTts({ latencyMode })}
-        />
-      ) : null}
+      <ModelParameterField
+        parameter={parameters?.latencyMode}
+        value={tts.latencyMode}
+        label={t(
+          "components.flow.sidepanel.config.voice_tab.latency_mode.label"
+        )}
+        description={t(
+          "components.flow.sidepanel.config.voice_tab.latency_mode.description"
+        )}
+        readOnly={readOnly}
+        optionLabel={(value) =>
+          t(
+            `components.flow.sidepanel.config.voice_tab.latency_mode.options.${value}`
+          )
+        }
+        onChange={(latencyMode) => patchTts({ latencyMode })}
+      />
 
       <div className="grid grid-cols-5 items-end gap-4">
         <div className="col-span-3">
@@ -218,6 +181,7 @@ export function VoiceTab() {
                 })
               }
             />
+
             <NumberField
               label={t(
                 "components.flow.sidepanel.config.voice_tab.min_interruption_duration.label"
@@ -233,6 +197,7 @@ export function VoiceTab() {
                 setInterruption({ ...interruption, minDuration })
               }
             />
+
             <NumberField
               label={t(
                 "components.flow.sidepanel.config.voice_tab.min_interruption_words.label"
@@ -248,6 +213,7 @@ export function VoiceTab() {
                 setInterruption({ ...interruption, minWords })
               }
             />
+
             <NumberField
               label={t(
                 "components.flow.sidepanel.config.voice_tab.false_interruption_timeout.label"
@@ -263,6 +229,7 @@ export function VoiceTab() {
                 setInterruption({ ...interruption, falseInterruptionTimeout })
               }
             />
+
             <SwitchField
               label={t(
                 "components.flow.sidepanel.config.voice_tab.resume_after_false_interruption.label"
@@ -279,49 +246,44 @@ export function VoiceTab() {
           </>
         ) : null}
 
-        {fields?.has("volume") ? (
-          <NumberField
-            label={t(
-              "components.flow.sidepanel.config.voice_tab.tts_volume.label"
-            )}
-            description={t(
-              "components.flow.sidepanel.config.voice_tab.tts_volume.description"
-            )}
-            value={ttsValue(tts, "volume")}
-            step={0.1}
-            readOnly={readOnly}
-            onChange={(volume) => patchTts({ volume })}
-          />
-        ) : null}
+        <ModelParameterField
+          parameter={parameters?.volume}
+          value={tts.volume}
+          label={t(
+            "components.flow.sidepanel.config.voice_tab.tts_volume.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.voice_tab.tts_volume.description"
+          )}
+          readOnly={readOnly}
+          onChange={(volume) => patchTts({ volume })}
+        />
 
-        {fields?.has("emotion") ? (
-          <MultilineListField
-            label={t(
-              "components.flow.sidepanel.config.voice_tab.emotion.label"
-            )}
-            description={t(
-              "components.flow.sidepanel.config.voice_tab.emotion.description"
-            )}
-            value={ttsValue(tts, "emotion")}
-            readOnly={readOnly}
-            placeholder="happiness:0.5"
-            onChange={(emotion) => patchTts({ emotion })}
-          />
-        ) : null}
+        <ModelParameterField
+          parameter={parameters?.emotion}
+          value={tts.emotion}
+          multiline
+          placeholder="happiness:0.5"
+          label={t("components.flow.sidepanel.config.voice_tab.emotion.label")}
+          description={t(
+            "components.flow.sidepanel.config.voice_tab.emotion.description"
+          )}
+          readOnly={readOnly}
+          onChange={(emotion) => patchTts({ emotion })}
+        />
 
-        {fields?.has("mipOptOut") ? (
-          <SwitchField
-            label={t(
-              "components.flow.sidepanel.config.voice_tab.mip_opt_out.label"
-            )}
-            description={t(
-              "components.flow.sidepanel.config.voice_tab.mip_opt_out.description"
-            )}
-            checked={ttsValue(tts, "mipOptOut")}
-            readOnly={readOnly}
-            onCheckedChange={(mipOptOut) => patchTts({ mipOptOut })}
-          />
-        ) : null}
+        <ModelParameterField
+          parameter={parameters?.mipOptOut}
+          value={tts.mipOptOut}
+          label={t(
+            "components.flow.sidepanel.config.voice_tab.mip_opt_out.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.voice_tab.mip_opt_out.description"
+          )}
+          readOnly={readOnly}
+          onChange={(mipOptOut) => patchTts({ mipOptOut })}
+        />
       </AdvancedFields>
     </ConfigSection>
   )

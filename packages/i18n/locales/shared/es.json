@@ -10,12 +10,6 @@
       "stt_config": {
         "model": {
           "required": "El modelo de voz a texto es obligatorio"
-        },
-        "language": {
-          "required": "El idioma es obligatorio"
-        },
-        "keyterms": {
-          "empty": "El término clave no puede estar vacío"
         }
       },
       "llm_config": {
@@ -29,12 +23,6 @@
         },
         "voice": {
           "required": "La voz es obligatoria"
-        },
-        "language": {
-          "required": "El idioma es obligatorio"
-        },
-        "emotion": {
-          "empty": "La emoción no puede estar vacía"
         }
       },
       "flow_node_instructions": {

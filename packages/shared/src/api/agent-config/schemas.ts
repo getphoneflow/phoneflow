@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 import { BACKGROUND_AUDIO_IDS } from "@workspace/shared/constants/background-audio"
+import { modelConfigSchema } from "@workspace/shared/models/parameters"
 
 const reservedVariableKeys = new Set([
   "date",
@@ -14,80 +15,6 @@ const reservedVariableKeys = new Set([
 function requiredString(message: string) {
   return z.string().trim().min(1, message)
 }
-
-export const sttConfigSchema = z
-  .object({
-    model: requiredString("schemas.agent_config.stt_config.model.required"),
-    language: requiredString(
-      "schemas.agent_config.stt_config.language.required"
-    ).exactOptional(),
-    keyterms: z
-      .array(requiredString("schemas.agent_config.stt_config.keyterms.empty"))
-      .exactOptional(),
-    // Deepgram, xAI
-    endpointingMs: z.number().int().nonnegative().exactOptional(),
-    vadThreshold: z.number().min(0).max(1).exactOptional(),
-    diarize: z.boolean().exactOptional(),
-    // Deepgram Flux (STTv2)
-    eagerEotThreshold: z.number().min(0.3).max(0.9).exactOptional(),
-    eotThreshold: z.number().min(0.5).max(0.9).exactOptional(),
-    eotTimeoutMs: z.number().int().positive().exactOptional(),
-    mipOptOut: z.boolean().exactOptional(),
-    // AssemblyAI
-    mode: z.enum(["min_latency", "balanced", "max_accuracy"]).exactOptional(),
-    minTurnSilence: z.number().int().nonnegative().exactOptional(),
-    maxTurnSilence: z.number().int().nonnegative().exactOptional(),
-    endOfTurnConfidenceThreshold: z.number().min(0).max(1).exactOptional(),
-    voiceFocus: z.enum(["near-field", "far-field"]).exactOptional(),
-    voiceFocusThreshold: z.number().min(0).max(1).exactOptional(),
-    agentContextCarryover: z.boolean().exactOptional(),
-    // Soniox
-    endpointLatencyAdjustmentLevel: z.number().min(0).max(3).exactOptional(),
-    languageHintsStrict: z.boolean().exactOptional(),
-    // Inworld
-    minEndOfTurnSilenceWhenConfident: z
-      .number()
-      .int()
-      .nonnegative()
-      .exactOptional(),
-    enableVoiceProfile: z.boolean().exactOptional(),
-    voiceProfileTopN: z.number().int().positive().exactOptional(),
-    // xAI
-    smartTurn: z.number().min(0).max(1).exactOptional(),
-    smartTurnTimeout: z.number().int().positive().max(5000).exactOptional(),
-  })
-  .strict()
-
-export const llmConfigSchema = z
-  .object({
-    model: requiredString("schemas.agent_config.llm_config.model.required"),
-    temperature: z.number().min(0).max(2).exactOptional(),
-    maxTokens: z.number().int().positive().exactOptional(),
-    toolChoice: z.enum(["auto", "none", "required"]).exactOptional(),
-    reasoningEffort: z
-      .enum(["none", "minimal", "low", "medium", "high"])
-      .exactOptional(),
-  })
-  .strict()
-
-export const ttsConfigSchema = z
-  .object({
-    model: requiredString("schemas.agent_config.tts_config.model.required"),
-    voice: requiredString("schemas.agent_config.tts_config.voice.required"),
-    language: requiredString(
-      "schemas.agent_config.tts_config.language.required"
-    ).exactOptional(),
-    // Deepgram
-    mipOptOut: z.boolean().exactOptional(),
-    // Fish Audio
-    latencyMode: z.enum(["normal", "balanced", "low"]).exactOptional(),
-    speed: z.number().positive().exactOptional(),
-    volume: z.number().exactOptional(),
-    emotion: z
-      .array(requiredString("schemas.agent_config.tts_config.emotion.empty"))
-      .exactOptional(),
-  })
-  .strict()
 
 export const turnHandlingConfigSchema = z
   .object({
@@ -444,9 +371,9 @@ export const flowEdgeConfigSchema = z.object({
 
 export const agentConfigSchema = z
   .object({
-    stt: sttConfigSchema,
-    llm: llmConfigSchema,
-    tts: ttsConfigSchema,
+    stt: modelConfigSchema("stt"),
+    llm: modelConfigSchema("llm"),
+    tts: modelConfigSchema("tts"),
     turnHandling: turnHandlingConfigSchema,
     backgroundAudio: backgroundAudioSchema.exactOptional(),
     call: callSettingsSchema,

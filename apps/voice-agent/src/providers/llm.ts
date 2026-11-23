@@ -34,6 +34,7 @@ export function LLM(config: AgentConfig["llm"]): llm.LLM {
         temperature: config.temperature,
         maxCompletionTokens: config.maxTokens,
         toolChoice: config.toolChoice,
+        // @ts-expect-error
         reasoningEffort: config.reasoningEffort,
       })
     case "cerebras":
@@ -51,6 +52,7 @@ export function LLM(config: AgentConfig["llm"]): llm.LLM {
         temperature: config.temperature,
         maxCompletionTokens: config.maxTokens,
         toolChoice: config.toolChoice,
+        // @ts-expect-error
         reasoningEffort: config.reasoningEffort,
       })
     case "deepinfra":
@@ -61,6 +63,7 @@ export function LLM(config: AgentConfig["llm"]): llm.LLM {
         temperature: config.temperature,
         maxCompletionTokens: config.maxTokens,
         toolChoice: config.toolChoice,
+        // @ts-expect-error
         reasoningEffort: config.reasoningEffort,
       })
     case "deepseek":
@@ -76,6 +79,7 @@ export function LLM(config: AgentConfig["llm"]): llm.LLM {
         temperature: config.temperature,
         maxCompletionTokens: config.maxTokens,
         toolChoice: config.toolChoice,
+        // @ts-expect-error
         reasoningEffort: config.reasoningEffort,
       })
     case "google":
@@ -100,7 +104,8 @@ export function LLM(config: AgentConfig["llm"]): llm.LLM {
         temperature: config.temperature,
         maxCompletionTokens: config.maxTokens,
         toolChoice: config.toolChoice,
-        reasoningEffort: "low",
+        // @ts-expect-error
+        reasoningEffort: config.reasoningEffort,
       })
     case "mistral":
       return new mistralai.LLM({
@@ -115,6 +120,7 @@ export function LLM(config: AgentConfig["llm"]): llm.LLM {
         temperature: config.temperature,
         maxOutputTokens: config.maxTokens,
         toolChoice: config.toolChoice,
+        // @ts-expect-error
         reasoning: config.reasoningEffort
           ? { effort: config.reasoningEffort }
           : undefined,
@@ -126,6 +132,7 @@ export function LLM(config: AgentConfig["llm"]): llm.LLM {
         temperature: config.temperature,
         maxCompletionTokens: config.maxTokens,
         toolChoice: config.toolChoice,
+        // @ts-expect-error
         reasoningEffort: config.reasoningEffort,
       })
     case "perplexity":
@@ -148,6 +155,7 @@ export function LLM(config: AgentConfig["llm"]): llm.LLM {
         temperature: config.temperature,
         maxCompletionTokens: config.maxTokens,
         toolChoice: config.toolChoice,
+        // @ts-expect-error
         reasoningEffort: config.reasoningEffort,
       })
     case "xai":

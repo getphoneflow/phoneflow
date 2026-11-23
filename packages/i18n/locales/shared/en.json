@@ -10,12 +10,6 @@
       "stt_config": {
         "model": {
           "required": "Speech-to-text model is required"
-        },
-        "language": {
-          "required": "Language is required"
-        },
-        "keyterms": {
-          "empty": "Keyterm cannot be empty"
         }
       },
       "llm_config": {
@@ -29,12 +23,6 @@
         },
         "voice": {
           "required": "Voice is required"
-        },
-        "language": {
-          "required": "Language is required"
-        },
-        "emotion": {
-          "empty": "Emotion cannot be empty"
         }
       },
       "flow_node_instructions": {

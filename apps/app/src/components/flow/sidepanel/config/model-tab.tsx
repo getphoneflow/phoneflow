@@ -1,14 +1,13 @@
 import type { AgentConfig } from "@workspace/shared/api/agent-config/types"
 import {
-  getLlmCapabilities,
+  getModelParameters,
   withLlmModel,
-} from "@workspace/shared/models/config"
-import { LLM_DEFAULTS } from "@workspace/shared/models/defaults"
+} from "@workspace/shared/models/parameters"
 import { withPreemptiveEnabled } from "@workspace/shared/models/turn-handling"
 import {
   AdvancedFields,
   ConfigSection,
-  EnumField,
+  ModelParameterField,
   NumberField,
   SwitchField,
 } from "@/components/flow/sidepanel/config/fields"
@@ -19,14 +18,6 @@ import { useAgentStore } from "@/stores/agent"
 type TurnHandling = AgentConfig["turnHandling"]
 type Preemptive = TurnHandling["preemptiveGeneration"]
 
-function llmValue<K extends keyof typeof LLM_DEFAULTS>(
-  llm: AgentConfig["llm"],
-  key: K
-) {
-  const value = llm[key]
-  return value === undefined ? LLM_DEFAULTS[key] : value
-}
-
 export function ModelTab() {
   const { t } = useTranslation()
   const readOnly = useAgentStore((state) => state.readOnly)
@@ -34,7 +25,7 @@ export function ModelTab() {
   const setConfig = useAgentStore((state) => state.setConfig)
 
   const llm = config.llm
-  const fields = getLlmCapabilities(llm.model)?.fields
+  const parameters = getModelParameters("llm", llm.model)?.parameters
   const turn = config.turnHandling
   const preemptive = turn.preemptiveGeneration
 
@@ -59,119 +50,68 @@ export function ModelTab() {
         onModelChange={(model) => setConfig(withLlmModel(config, model))}
       />
 
-      {fields?.has("temperature") ? (
-        <NumberField
-          label={t(
-            "components.flow.sidepanel.config.model_tab.temperature.label"
-          )}
-          description={t(
-            "components.flow.sidepanel.config.model_tab.temperature.description"
-          )}
-          value={llmValue(llm, "temperature")}
-          min={0}
-          max={2}
-          step={0.1}
-          readOnly={readOnly}
-          onChange={(temperature) => patchLlm({ temperature })}
-        />
-      ) : null}
+      <ModelParameterField
+        parameter={parameters?.temperature}
+        value={llm.temperature}
+        label={t(
+          "components.flow.sidepanel.config.model_tab.temperature.label"
+        )}
+        description={t(
+          "components.flow.sidepanel.config.model_tab.temperature.description"
+        )}
+        readOnly={readOnly}
+        onChange={(temperature) => patchLlm({ temperature })}
+      />
 
-      {fields?.has("reasoningEffort") ? (
-        <EnumField
-          label={t(
-            "components.flow.sidepanel.config.model_tab.reasoning_effort.label"
-          )}
-          description={t(
-            "components.flow.sidepanel.config.model_tab.reasoning_effort.description"
-          )}
-          value={llmValue(llm, "reasoningEffort")}
-          readOnly={readOnly}
-          options={[
-            {
-              value: "none",
-              label: t(
-                "components.flow.sidepanel.config.model_tab.reasoning_effort.options.none"
-              ),
-            },
-            {
-              value: "minimal",
-              label: t(
-                "components.flow.sidepanel.config.model_tab.reasoning_effort.options.minimal"
-              ),
-            },
-            {
-              value: "low",
-              label: t(
-                "components.flow.sidepanel.config.model_tab.reasoning_effort.options.low"
-              ),
-            },
-            {
-              value: "medium",
-              label: t(
-                "components.flow.sidepanel.config.model_tab.reasoning_effort.options.medium"
-              ),
-            },
-            {
-              value: "high",
-              label: t(
-                "components.flow.sidepanel.config.model_tab.reasoning_effort.options.high"
-              ),
-            },
-          ]}
-          onChange={(reasoningEffort) => patchLlm({ reasoningEffort })}
-        />
-      ) : null}
+      <ModelParameterField
+        parameter={parameters?.reasoningEffort}
+        value={llm.reasoningEffort}
+        label={t(
+          "components.flow.sidepanel.config.model_tab.reasoning_effort.label"
+        )}
+        description={t(
+          "components.flow.sidepanel.config.model_tab.reasoning_effort.description"
+        )}
+        readOnly={readOnly}
+        optionLabel={(value) =>
+          t(
+            `components.flow.sidepanel.config.model_tab.reasoning_effort.options.${value}`
+          )
+        }
+        onChange={(reasoningEffort) => patchLlm({ reasoningEffort })}
+      />
 
       <AdvancedFields>
-        {fields?.has("maxTokens") ? (
-          <NumberField
-            label={t(
-              "components.flow.sidepanel.config.model_tab.max_tokens.label"
-            )}
-            description={t(
-              "components.flow.sidepanel.config.model_tab.max_tokens.description"
-            )}
-            value={llmValue(llm, "maxTokens")}
-            min={1}
-            step={1}
-            readOnly={readOnly}
-            onChange={(maxTokens) => patchLlm({ maxTokens })}
-          />
-        ) : null}
+        <ModelParameterField
+          parameter={parameters?.maxTokens}
+          value={llm.maxTokens}
+          label={t(
+            "components.flow.sidepanel.config.model_tab.max_tokens.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.model_tab.max_tokens.description"
+          )}
+          readOnly={readOnly}
+          onChange={(maxTokens) => patchLlm({ maxTokens })}
+        />
 
-        {fields?.has("toolChoice") ? (
-          <EnumField
-            label={t(
-              "components.flow.sidepanel.config.model_tab.tool_choice.label"
-            )}
-            description={t(
-              "components.flow.sidepanel.config.model_tab.tool_choice.description"
-            )}
-            value={llmValue(llm, "toolChoice")}
-            readOnly={readOnly}
-            options={[
-              {
-                value: "auto",
-                label: t(
-                  "components.flow.sidepanel.config.model_tab.tool_choice.options.auto"
-                ),
-              },
-              {
-                value: "none",
-                label: t(
-                  "components.flow.sidepanel.config.model_tab.tool_choice.options.none"
-                ),
-              },
-              {
-                value: "required",
-                label: t(
-                  "components.flow.sidepanel.config.model_tab.tool_choice.options.required"
-                ),
-              },
-            ]}
-            onChange={(toolChoice) => patchLlm({ toolChoice })}
-          />
-        ) : null}
+        <ModelParameterField
+          parameter={parameters?.toolChoice}
+          value={llm.toolChoice}
+          label={t(
+            "components.flow.sidepanel.config.model_tab.tool_choice.label"
+          )}
+          description={t(
+            "components.flow.sidepanel.config.model_tab.tool_choice.description"
+          )}
+          readOnly={readOnly}
+          optionLabel={(value) =>
+            t(
+              `components.flow.sidepanel.config.model_tab.tool_choice.options.${value}`
+            )
+          }
+          onChange={(toolChoice) => patchLlm({ toolChoice })}
+        />
 
         <SwitchField
           label={t(
@@ -202,6 +142,7 @@ export function ModelTab() {
                 setPreemptive({ ...preemptive, preemptiveTts })
               }
             />
+
             <NumberField
               label={t(
                 "components.flow.sidepanel.config.model_tab.max_speech_duration.label"
@@ -217,6 +158,7 @@ export function ModelTab() {
                 setPreemptive({ ...preemptive, maxSpeechDuration })
               }
             />
+
             <NumberField
               label={t(
                 "components.flow.sidepanel.config.model_tab.max_retries.label"

@@ -5,6 +5,7 @@ import {
   eq,
   isNull,
   relationsFilterToSQL,
+  sql,
 } from "drizzle-orm"
 import { Hono } from "hono"
 
@@ -950,18 +951,15 @@ callRoutes.get(
         where.status = query.status
       }
 
+      const startedAt: { gte?: Date; lte?: Date } = {}
       if (query.startedAtFrom) {
-        where.startedAt = {
-          ...where.startedAt,
-          gte: new Date(query.startedAtFrom),
-        }
+        startedAt.gte = new Date(query.startedAtFrom)
       }
-
       if (query.startedAtTo) {
-        where.startedAt = {
-          ...where.startedAt,
-          lte: new Date(query.startedAtTo),
-        }
+        startedAt.lte = new Date(query.startedAtTo)
+      }
+      if (startedAt.gte || startedAt.lte) {
+        where.startedAt = startedAt
       }
 
       if (query.agentIds) {
@@ -1024,10 +1022,14 @@ callRoutes.get(
         }
       }
 
+      const filter = relationsFilterToSQL(
+        callsTable,
+        where as AnyRelationsFilter
+      )
       const [{ total }] = await db
         .select({ total: count() })
         .from(callsTable)
-        .where(relationsFilterToSQL(callsTable, where as AnyRelationsFilter))
+        .where(filter.sql ? sql.fromList(filter.sql) : undefined)
 
       const items = await db.query.callsTable.findMany({
         where,

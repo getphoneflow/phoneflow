@@ -2,6 +2,7 @@ import {
   type AnyRelationsFilter,
   count,
   relationsFilterToSQL,
+  sql,
 } from "drizzle-orm"
 import { Hono } from "hono"
 
@@ -151,32 +152,26 @@ contactRoutes.get(
         organizationId,
       }
 
+      const firstCallAt: { gte?: Date; lte?: Date } = {}
       if (query.firstCallFrom) {
-        where.firstCallAt = {
-          ...where.firstCallAt,
-          gte: new Date(query.firstCallFrom),
-        }
+        firstCallAt.gte = new Date(query.firstCallFrom)
       }
-
       if (query.firstCallTo) {
-        where.firstCallAt = {
-          ...where.firstCallAt,
-          lte: new Date(query.firstCallTo),
-        }
+        firstCallAt.lte = new Date(query.firstCallTo)
+      }
+      if (firstCallAt.gte || firstCallAt.lte) {
+        where.firstCallAt = firstCallAt
       }
 
+      const latestCallAt: { gte?: Date; lte?: Date } = {}
       if (query.latestCallFrom) {
-        where.latestCallAt = {
-          ...where.latestCallAt,
-          gte: new Date(query.latestCallFrom),
-        }
+        latestCallAt.gte = new Date(query.latestCallFrom)
       }
-
       if (query.latestCallTo) {
-        where.latestCallAt = {
-          ...where.latestCallAt,
-          lte: new Date(query.latestCallTo),
-        }
+        latestCallAt.lte = new Date(query.latestCallTo)
+      }
+      if (latestCallAt.gte || latestCallAt.lte) {
+        where.latestCallAt = latestCallAt
       }
 
       if (query.callCount !== undefined) {
@@ -225,10 +220,14 @@ contactRoutes.get(
         ]
       }
 
+      const filter = relationsFilterToSQL(
+        contactsTable,
+        where as AnyRelationsFilter
+      )
       const [{ total }] = await db
         .select({ total: count() })
         .from(contactsTable)
-        .where(relationsFilterToSQL(contactsTable, where as AnyRelationsFilter))
+        .where(filter.sql ? sql.fromList(filter.sql) : undefined)
 
       const items = await db.query.contactsTable.findMany({
         where,

@@ -1,4 +1,4 @@
-@import "@xyflow/react/dist/style.css";
+@import "@xyflow/react/style.css";
 
 .react-flow {
   --xy-edge-stroke-width-default: 1.4;
@@ -7,6 +7,10 @@
 
 .react-flow.dark {
   --xy-background-color: #191919;
+}
+
+.react-flow__edgelabel-renderer {
+  z-index: 1001;
 }
 
 .active-node {

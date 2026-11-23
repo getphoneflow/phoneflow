@@ -17,14 +17,14 @@
     "@workspace/i18n": "workspace:*",
     "dotenv": "catalog:",
     "i18next": "catalog:",
-    "nodemailer": "^9.0.5",
+    "nodemailer": "^10.6.1",
     "react": "catalog:",
-    "react-email": "^6.9.2"
+    "react-email": "^6.11.16"
   },
   "devDependencies": {
-    "@react-email/ui": "^6.9.2",
+    "@react-email/ui": "^6.11.16",
     "@types/node": "catalog:",
-    "@types/nodemailer": "^8.0.1",
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "catalog:",
     "typescript": "catalog:"
   }

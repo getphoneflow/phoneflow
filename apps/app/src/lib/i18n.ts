@@ -27,7 +27,7 @@ i18n
   })
 
 export function t(key: string, options?: Record<string, unknown>) {
-  return i18n.t(key, options)
+  return i18n.t(key, options ?? {})
 }
 
 export type { TFunction }

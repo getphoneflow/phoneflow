@@ -249,6 +249,7 @@ const authorizedorganizationsidebarSettingsSsoPageRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof authorizedorganizationsidebarPageRoute
   '/create-organization/': typeof authorizedCreateOrganizationPageRoute
   '/join-organization/': typeof authorizedJoinOrganizationPageRoute
   '/select-organization/': typeof authorizedSelectOrganizationPageRoute
@@ -259,7 +260,6 @@ export interface FileRoutesByFullPath {
   '/signup/': typeof unauthorizedSignupPageRoute
   '/two-factor/': typeof unauthorizedTwoFactorPageRoute
   '/settings': typeof authorizedorganizationsidebarSettingsLayoutRouteWithChildren
-  '/': typeof authorizedorganizationsidebarPageRoute
   '/invite-members/': typeof authorizedorganizationInviteMembersPageRoute
   '/signin/sso/': typeof unauthorizedSigninSsoPageRoute
   '/$/': typeof authorizedorganizationsidebarSplatPageRoute
@@ -282,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/settings/sso/': typeof authorizedorganizationsidebarSettingsSsoPageRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof authorizedorganizationsidebarPageRoute
   '/create-organization': typeof authorizedCreateOrganizationPageRoute
   '/join-organization': typeof authorizedJoinOrganizationPageRoute
   '/select-organization': typeof authorizedSelectOrganizationPageRoute
@@ -291,7 +292,6 @@ export interface FileRoutesByTo {
   '/signin': typeof unauthorizedSigninPageRoute
   '/signup': typeof unauthorizedSignupPageRoute
   '/two-factor': typeof unauthorizedTwoFactorPageRoute
-  '/': typeof authorizedorganizationsidebarPageRoute
   '/invite-members': typeof authorizedorganizationInviteMembersPageRoute
   '/signin/sso': typeof unauthorizedSigninSsoPageRoute
   '/$': typeof authorizedorganizationsidebarSplatPageRoute
@@ -354,6 +354,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/create-organization/'
     | '/join-organization/'
     | '/select-organization/'
@@ -364,7 +365,6 @@ export interface FileRouteTypes {
     | '/signup/'
     | '/two-factor/'
     | '/settings'
-    | '/'
     | '/invite-members/'
     | '/signin/sso/'
     | '/$/'
@@ -387,6 +387,7 @@ export interface FileRouteTypes {
     | '/settings/sso/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/create-organization'
     | '/join-organization'
     | '/select-organization'
@@ -396,7 +397,6 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signup'
     | '/two-factor'
-    | '/'
     | '/invite-members'
     | '/signin/sso'
     | '/$'
@@ -466,28 +466,28 @@ declare module '@tanstack/react-router' {
     '/(authorized)': {
       id: '/(authorized)'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof authorizedLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(unauthorized)': {
       id: '/(unauthorized)'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof unauthorizedLayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(authorized)/(organization)': {
       id: '/(authorized)/(organization)'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof authorizedorganizationLayoutRouteImport
       parentRoute: typeof authorizedLayoutRoute
     }
     '/(authorized)/(organization)/(sidebar)': {
       id: '/(authorized)/(organization)/(sidebar)'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof authorizedorganizationsidebarLayoutRouteImport
       parentRoute: typeof authorizedorganizationLayoutRoute
     }

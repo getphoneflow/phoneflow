@@ -22,7 +22,7 @@ export function t(
   key: string,
   options?: Record<string, string>
 ) {
-  return i18n.getFixedT(locale)(key, options)
+  return i18n.getFixedT(locale)(key, options ?? {})
 }
 
 export function useTranslation(locale: string) {

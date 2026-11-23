@@ -29,7 +29,7 @@ export function t(
   key: string,
   options?: Record<string, unknown>
 ) {
-  return i18n.getFixedT(locale)(key, options)
+  return i18n.getFixedT(locale)(key, options ?? {})
 }
 
 export const localeMiddleware = createMiddleware(async (c, next) => {

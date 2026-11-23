@@ -19,6 +19,7 @@ import { auth } from "@/lib/auth/config"
 import { requireOrganization } from "@/lib/auth/organization"
 import { requireAuthToken } from "@/lib/auth/token"
 import { t } from "@/lib/i18n"
+import { logger } from "@/lib/logger"
 import { emailsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
 
@@ -59,7 +60,8 @@ contactRoutes.post("/download", requireOrganization, async (c) => {
     } satisfies SendDownloadContactsPayload)
 
     return c.json({ ok: true } satisfies RequestContactDownloadResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to request contacts download")
     return c.json({ error: t(locale, "contacts.request_download_failed") }, 500)
   }
 })
@@ -78,7 +80,8 @@ contactRoutes.get("/export/:organizationId", requireAuthToken, async (c) => {
     })
 
     return c.json(contacts satisfies ContactDownloadResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to export contacts")
     return c.json({ error: t(c.get("locale"), "contacts.export_failed") }, 500)
   }
 })
@@ -130,7 +133,8 @@ contactRoutes.get("/:contactId", requireOrganization, async (c) => {
       ...contact,
       calls,
     } satisfies ContactDetailResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to fetch contact")
     return c.json({ error: t(locale, "contacts.load_failed") }, 500)
   }
 })
@@ -151,32 +155,26 @@ contactRoutes.get(
         organizationId,
       }
 
+      const firstCallAt: { gte?: Date; lte?: Date } = {}
       if (query.firstCallFrom) {
-        where.firstCallAt = {
-          ...where.firstCallAt,
-          gte: new Date(query.firstCallFrom),
-        }
+        firstCallAt.gte = new Date(query.firstCallFrom)
       }
-
       if (query.firstCallTo) {
-        where.firstCallAt = {
-          ...where.firstCallAt,
-          lte: new Date(query.firstCallTo),
-        }
+        firstCallAt.lte = new Date(query.firstCallTo)
+      }
+      if (firstCallAt.gte || firstCallAt.lte) {
+        where.firstCallAt = firstCallAt
       }
 
+      const latestCallAt: { gte?: Date; lte?: Date } = {}
       if (query.latestCallFrom) {
-        where.latestCallAt = {
-          ...where.latestCallAt,
-          gte: new Date(query.latestCallFrom),
-        }
+        latestCallAt.gte = new Date(query.latestCallFrom)
       }
-
       if (query.latestCallTo) {
-        where.latestCallAt = {
-          ...where.latestCallAt,
-          lte: new Date(query.latestCallTo),
-        }
+        latestCallAt.lte = new Date(query.latestCallTo)
+      }
+      if (latestCallAt.gte || latestCallAt.lte) {
+        where.latestCallAt = latestCallAt
       }
 
       if (query.callCount !== undefined) {
@@ -250,7 +248,8 @@ contactRoutes.get(
         page: query.page,
         pageSize: query.pageSize,
       } satisfies ContactListResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to load contacts")
       return c.json({ error: t(locale, "contacts.list_failed") }, 500)
     }
   }

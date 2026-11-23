@@ -64,6 +64,7 @@ import {
   startCallRecording,
   stopCallRecording,
 } from "@/lib/livekit"
+import { logger } from "@/lib/logger"
 import { callExtractionQueue, emailsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
 
@@ -203,7 +204,8 @@ callRoutes.post(
         } satisfies StartCallResponse,
         201
       )
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to start call")
       return c.json({ error: t(c.get("locale"), "calls.start_failed") }, 500)
     }
   }
@@ -300,7 +302,8 @@ callRoutes.post(
         } satisfies StartCallResponse,
         201
       )
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to start call")
       return c.json({ error: t(c.get("locale"), "calls.start_failed") }, 500)
     }
   }
@@ -389,7 +392,8 @@ callRoutes.post(
         } satisfies StartCallResponse,
         201
       )
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to start call")
       return c.json({ error: t(c.get("locale"), "calls.start_failed") }, 500)
     }
   }
@@ -462,7 +466,8 @@ callRoutes.post(
       }
 
       return c.json({ callId: call.id } satisfies UnansweredCallResponse, 201)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to record unanswered call")
       return c.json(
         { error: t(c.get("locale"), "calls.record_unanswered_failed") },
         500
@@ -584,7 +589,8 @@ callRoutes.post(
         id: updated.id,
         durationMs,
       } satisfies CompleteCallResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to complete call")
       return c.json({ error: t(c.get("locale"), "calls.complete_failed") }, 500)
     }
   }
@@ -632,7 +638,8 @@ callRoutes.get(
         transcript: call.transcript,
         extractions,
       } satisfies CallExtractionJobResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to load call extraction")
       return c.json({ error: t(locale, "calls.extraction_load_failed") }, 500)
     }
   }
@@ -659,7 +666,8 @@ callRoutes.patch(
       }
 
       return c.json({ id: updated.id })
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to save call extraction")
       return c.json({ error: t(locale, "calls.extraction_update_failed") }, 500)
     }
   }
@@ -704,7 +712,8 @@ callRoutes.post(
       } satisfies ExtractCallPayload)
 
       return c.json({ ok: true } satisfies RerunCallExtractionResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to rerun call extraction")
       return c.json({ error: t(locale, "calls.extraction_rerun_failed") }, 500)
     }
   }
@@ -742,7 +751,8 @@ callRoutes.post("/download", requireOrganization, async (c) => {
     } satisfies SendDownloadCallsPayload)
 
     return c.json({ ok: true } satisfies RequestCallDownloadResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to request calls download")
     return c.json({ error: t(locale, "calls.request_download_failed") }, 500)
   }
 })
@@ -773,7 +783,8 @@ callRoutes.get("/export/:organizationId", requireAuthToken, async (c) => {
     })
 
     return c.json(calls satisfies CallDownloadResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to export calls")
     return c.json({ error: t(c.get("locale"), "calls.export_failed") }, 500)
   }
 })
@@ -806,7 +817,8 @@ callRoutes.get("/:callId/recording", requireOrganization, async (c) => {
       c.header("Content-Length", String(recording.ContentLength))
     }
     return c.body(recording.Body.transformToWebStream())
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to fetch recording")
     return c.json({ error: t(locale, "calls.load_recording_failed") }, 500)
   }
 })
@@ -849,7 +861,8 @@ callRoutes.post("/:callId/join", requireOrganization, async (c) => {
     })
 
     return c.json(token satisfies JoinCallResponse, 201)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to join call")
     return c.json({ error: t(locale, "calls.join_failed") }, 500)
   }
 })
@@ -882,7 +895,8 @@ callRoutes.post("/:callId/end", requireOrganization, async (c) => {
     await removeCallParticipants(call.livekitRoomName)
 
     return c.json({ ok: true } satisfies EndCallResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to end call")
     return c.json({ error: t(locale, "calls.end_failed") }, 500)
   }
 })
@@ -917,7 +931,8 @@ callRoutes.get("/:callId", requireOrganization, async (c) => {
     }
 
     return c.json(call satisfies CallDetailResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to fetch call")
     return c.json({ error: t(locale, "calls.load_failed") }, 500)
   }
 })
@@ -950,18 +965,15 @@ callRoutes.get(
         where.status = query.status
       }
 
+      const startedAt: { gte?: Date; lte?: Date } = {}
       if (query.startedAtFrom) {
-        where.startedAt = {
-          ...where.startedAt,
-          gte: new Date(query.startedAtFrom),
-        }
+        startedAt.gte = new Date(query.startedAtFrom)
       }
-
       if (query.startedAtTo) {
-        where.startedAt = {
-          ...where.startedAt,
-          lte: new Date(query.startedAtTo),
-        }
+        startedAt.lte = new Date(query.startedAtTo)
+      }
+      if (startedAt.gte || startedAt.lte) {
+        where.startedAt = startedAt
       }
 
       if (query.agentIds) {
@@ -1063,7 +1075,8 @@ callRoutes.get(
         page: query.page,
         pageSize: query.pageSize,
       } satisfies CallListResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to load calls")
       return c.json({ error: t(locale, "calls.list_failed") }, 500)
     }
   }
@@ -1158,7 +1171,8 @@ callRoutes.post(
       })
 
       return c.json({ ok: true } satisfies TriggerOutboundCallResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to start outbound call")
       return c.json({ error: t(locale, "calls.start_outbound_failed") }, 500)
     }
   }
@@ -1252,7 +1266,8 @@ callRoutes.post(
       })
 
       return c.json({ ok: true } satisfies TriggerOutboundCallResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to start outbound call")
       return c.json({ error: t(locale, "calls.start_outbound_failed") }, 500)
     }
   }

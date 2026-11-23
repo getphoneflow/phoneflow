@@ -59,7 +59,7 @@ export default function Canvas() {
         animated: true,
       }}
       fitView
-      colorMode={theme}
+      forceColorMode={theme === "system" ? undefined : theme}
       selectNodesOnDrag={false}
       proOptions={{ hideAttribution: true }}
     >

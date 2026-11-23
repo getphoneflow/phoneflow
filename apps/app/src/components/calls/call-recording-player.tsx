@@ -111,7 +111,7 @@ export function CallRecordingPlayer({
   }
 
   function onDownload() {
-    const src = wavesurfer?.getMediaElement().src
+    const src = wavesurfer?.getMediaElement()?.src
     if (!src) return
     const link = document.createElement("a")
     link.href = src

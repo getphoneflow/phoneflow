@@ -1,10 +1,10 @@
 import {
   addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
   type Connection,
   type EdgeChange,
+  EdgeChangeset,
   type NodeChange,
+  NodeChangeset,
 } from "@xyflow/react"
 import { create } from "zustand"
 
@@ -67,8 +67,8 @@ type AgentEditorStore = AgentEditorState & {
   editTool: (tool: AgentTool) => void
   removeTool: (nodeId: string, toolId: string) => void
   addNode: (node: FlowNodeConfig) => void
-  onNodesChange: (changes: NodeChange<EditorFlowNode>[]) => void
-  onEdgesChange: (changes: EdgeChange<EditorFlowEdge>[]) => void
+  onNodesChange: (changes: Iterable<NodeChange<EditorFlowNode>>) => void
+  onEdgesChange: (changes: Iterable<EdgeChange<EditorFlowEdge>>) => void
   onConnect: (connection: Connection) => void
   selectNode: (node: EditorFlowNode) => void
   selectEdge: (edge: EditorFlowEdge) => void
@@ -377,7 +377,7 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
       )
     ),
   onNodesChange: (changes) => {
-    const filtered = changes.filter((change) => change.type !== "select")
+    const filtered = [...changes].filter((change) => change.type !== "select")
     if (filtered.length === 0) {
       return
     }
@@ -394,12 +394,16 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
         return {
           config: {
             ...state.config,
-            nodes: applyNodeChanges(dimensions, state.config.nodes),
+            nodes: new NodeChangeset<EditorFlowNode>(dimensions).applyTo(
+              state.config.nodes
+            ),
           },
         }
       }
 
-      const nodes = applyNodeChanges(filtered, state.config.nodes)
+      const nodes = new NodeChangeset<EditorFlowNode>(filtered).applyTo(
+        state.config.nodes
+      )
       const panel = state.sidePanel
       const sidePanel =
         panel.kind === "node" &&
@@ -418,7 +422,7 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
     })
   },
   onEdgesChange: (changes) => {
-    const filtered = changes.filter(
+    const filtered = [...changes].filter(
       (change) => change.type !== "select" && change.type !== "add"
     )
     if (filtered.length === 0) {
@@ -430,7 +434,9 @@ export const useAgentStore = create<AgentEditorStore>((set) => ({
         return state
       }
 
-      const edges = applyEdgeChanges(filtered, state.config.edges)
+      const edges = new EdgeChangeset<EditorFlowEdge>(filtered).applyTo(
+        state.config.edges
+      )
       const panel = state.sidePanel
       const sidePanel =
         panel.kind === "edge" &&

@@ -9,6 +9,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@workspace/ui/components/sheet"
+import { Skeleton } from "@workspace/ui/components/skeleton"
 import {
   Tabs,
   TabsContent,
@@ -177,7 +178,9 @@ function CallDetailBody({ callId }: { callId: string }) {
           value="extraction"
           className="flex min-h-0 flex-col overflow-y-auto"
         >
-          <CallExtractionPanel call={call} />
+          <Suspense fallback={<Skeleton className="m-4 min-h-0 flex-1" />}>
+            <CallExtractionPanel call={call} />
+          </Suspense>
         </TabsContent>
         {env.IS_CLOUD ? (
           <TabsContent

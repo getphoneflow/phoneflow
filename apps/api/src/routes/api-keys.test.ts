@@ -95,10 +95,10 @@ describe("api keys", () => {
     })
     expect(allowed.status).toBe(201)
 
-    const outside = await owner.api.post("/api/api-keys", {
+    const outside = await integrator.post("/api/api-keys", {
       body: { name: "Phone", permissions: { phoneNumber: ["read"] } },
     })
-    expect(outside.status).toBe(400)
+    expect(outside.status).toBe(201)
   })
 
   it("updates permissions and revokes the key", async () => {

@@ -1,10 +1,10 @@
-// biome-ignore-all assist/source/organizeImports: The SDK import must stay first so instrumentation is installed before Hono, BullMQ, and database clients load.
-import { sdk } from "./instrumentation"
-
 import { serve } from "@hono/node-server"
 
+import { db } from "@workspace/db/client"
 import api from "@/api"
 import { env } from "@/lib/env"
+import { logger } from "@/lib/logger"
+import { sdk } from "./instrumentation"
 
 const server = serve(
   {
@@ -12,9 +12,13 @@ const server = serve(
     port: env.PORT,
   },
   (info) => {
-    console.log(`Server is running on http://localhost:${info.port}`)
+    logger.info(`Server is running on http://localhost:${info.port}`)
   }
 )
+
+db.$client.on("error", (err) => {
+  logger.warn({ err }, "Database connection error")
+})
 
 async function handleShutdown() {
   server.close()
@@ -22,5 +26,13 @@ async function handleShutdown() {
   process.exit(0)
 }
 
+async function handleFatalError(err: unknown) {
+  logger.fatal({ err }, "Fatal error")
+  await sdk.shutdown()
+  process.exit(1)
+}
+
 process.on("SIGTERM", () => handleShutdown())
 process.on("SIGINT", () => handleShutdown())
+process.on("uncaughtException", handleFatalError)
+process.on("unhandledRejection", handleFatalError)

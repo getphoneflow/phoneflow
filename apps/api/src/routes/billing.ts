@@ -25,6 +25,7 @@ import {
 } from "@/lib/credits"
 import { env } from "@/lib/env"
 import { t } from "@/lib/i18n"
+import { logger } from "@/lib/logger"
 import { stripe } from "@/lib/stripe"
 import { validator } from "@/lib/validator"
 
@@ -51,7 +52,8 @@ billingRoutes.get("/", requireOrganization, async (c) => {
     return c.json({
       balance: Number(org?.creditBalance ?? 0),
     } satisfies BillingCreditsResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to load billing")
     return c.json({ error: t(locale, "billing.load_failed") }, 500)
   }
 })
@@ -87,7 +89,8 @@ billingRoutes.get("/invoices", requireOrganization, async (c) => {
         url: invoice.hosted_invoice_url ?? invoice.invoice_pdf ?? null,
       })) satisfies BillingInvoicesResponse
     )
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to load invoices")
     return c.json({ error: t(locale, "billing.list_invoices_failed") }, 500)
   }
 })
@@ -174,7 +177,8 @@ billingRoutes.post(
       }
 
       return c.json({ url: checkout.url } satisfies CheckoutResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to start checkout")
       return c.json({ error: t(locale, "billing.start_checkout_failed") }, 500)
     }
   }
@@ -207,7 +211,8 @@ billingRoutes.post(
       await applyPaidCheckoutSession(checkout)
 
       return c.json({ ok: true } satisfies ConfirmCheckoutResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to confirm checkout")
       return c.json(
         { error: t(locale, "billing.confirm_checkout_failed") },
         500
@@ -248,7 +253,8 @@ billingRoutes.get(
         amount: Number(org.autoReloadAmount),
         threshold: Number(org.autoReloadThreshold),
       } satisfies AutoReloadResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to load auto reload settings")
       return c.json(
         { error: t(locale, "billing.load_auto_reload_failed") },
         500
@@ -314,7 +320,8 @@ billingRoutes.put(
         amount,
         threshold,
       } satisfies AutoReloadResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to update auto reload settings")
       return c.json(
         { error: t(locale, "billing.update_auto_reload_failed") },
         500
@@ -358,7 +365,8 @@ billingRoutes.post(
       })
 
       return c.json({ url: portal.url } satisfies BillingPortalResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to open billing portal")
       return c.json({ error: t(locale, "billing.open_portal_failed") }, 500)
     }
   }

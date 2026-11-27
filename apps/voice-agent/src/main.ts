@@ -67,6 +67,10 @@ export default defineAgent({
 
     const traceProvider = setupTracing({
       "gen_ai.conversation.id": callId,
+      "app.call_id": callId,
+      "app.call_direction": metadata.direction ?? "web",
+      "app.organization_id": organizationId,
+      "app.agent_id": metadata.agentId ?? participant.attributes.agent_id,
     })
 
     if (traceProvider) {

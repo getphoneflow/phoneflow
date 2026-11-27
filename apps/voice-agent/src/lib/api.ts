@@ -1,3 +1,5 @@
+import { context, propagation } from "@opentelemetry/api"
+
 import { env } from "@/lib/env"
 
 type RequestOptions<TBody = never> = {
@@ -12,6 +14,9 @@ async function request<TResponse, TBody = never>(
 ): Promise<TResponse> {
   const headers = new Headers(options?.headers)
   headers.set("Authorization", `Bearer ${env.API_TOKEN}`)
+  propagation.inject(context.active(), headers, {
+    set: (carrier, key, value) => carrier.set(key, value),
+  })
   if (options?.body !== undefined) {
     headers.set("Content-Type", "application/json")
   }
@@ -26,7 +31,9 @@ async function request<TResponse, TBody = never>(
   const body = await response.json()
 
   if (!response.ok) {
-    throw new Error(body.error || response.status)
+    throw new Error(
+      `${method} ${path} failed with ${response.status}: ${body.error ?? ""}`
+    )
   }
 
   return body as TResponse

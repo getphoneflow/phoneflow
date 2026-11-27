@@ -23,6 +23,7 @@ import { organizationHasCredits } from "@/lib/credits"
 import { env } from "@/lib/env"
 import { t } from "@/lib/i18n"
 import { placeOutboundCall } from "@/lib/livekit"
+import { logger } from "@/lib/logger"
 import { batchCallsQueue } from "@/lib/queues"
 import { validator } from "@/lib/validator"
 
@@ -60,7 +61,8 @@ batchCallRoutes.get("/", requireOrganization, async (c) => {
     })
 
     return c.json(batchCalls satisfies BatchCallListResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to load batch calls")
     return c.json({ error: t(locale, "batch_calls.list_failed") }, 500)
   }
 })
@@ -192,7 +194,8 @@ batchCallRoutes.post(
       )
 
       return c.json({ id: batchCallId } satisfies CreateBatchCallResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to create batch call")
       return c.json({ error: t(locale, "batch_calls.create_failed") }, 500)
     }
   }
@@ -281,8 +284,12 @@ batchCallRoutes.post(
             variables: recipient.variables ?? {},
             batchCallId: id,
           })
-        } catch {
+        } catch (error) {
           // Continue if one recipient fails
+          logger.warn(
+            { err: error, batchCallId: id },
+            "Batch call recipient failed"
+          )
         }
       }
 
@@ -295,7 +302,8 @@ batchCallRoutes.post(
         .where(eq(batchCallsTable.id, id))
 
       return c.json({ ok: true } satisfies TriggerBatchCallResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to trigger batch call")
       return c.json(
         { error: t(c.get("locale"), "batch_calls.trigger_failed") },
         500

@@ -1,17 +1,8 @@
-import { Worker } from "bullmq"
-import { BullMQOtel } from "bullmq-otel"
-
-import { connection } from "@/lib/redis"
+import { createWorker } from "@/lib/workers"
 import { deleteKnowledgeBaseDocument } from "./jobs/delete"
 import { indexKnowledgeBaseDocument } from "./jobs/index"
 
-const telemetry = new BullMQOtel({
-  tracerName: "worker",
-  meterName: "worker",
-  enableMetrics: true,
-})
-
-export const knowledgeBaseWorker = new Worker(
+export const knowledgeBaseWorker = createWorker(
   "knowledge-base",
   async (job) => {
     switch (job.name) {
@@ -22,6 +13,5 @@ export const knowledgeBaseWorker = new Worker(
       default:
         throw new Error(`Unknown job: ${job.name}`)
     }
-  },
-  { connection, telemetry }
+  }
 )

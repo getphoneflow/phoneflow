@@ -26,7 +26,9 @@ async function request<TResponse, TBody = never>(
   const body = await response.json()
 
   if (!response.ok) {
-    throw new Error(body.error || response.status)
+    throw new Error(
+      `${method} ${path} failed with ${response.status}: ${body.error ?? ""}`
+    )
   }
 
   return body as TResponse

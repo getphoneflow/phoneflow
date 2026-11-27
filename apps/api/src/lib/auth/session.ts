@@ -1,3 +1,4 @@
+import { trace } from "@opentelemetry/api"
 import { createMiddleware } from "hono/factory"
 
 import { auth } from "@/lib/auth/config"
@@ -14,6 +15,7 @@ export const requireSession = createMiddleware<{
   }
 
   c.set("userId", result.user.id)
+  trace.getActiveSpan()?.setAttribute("app.user_id", result.user.id)
 
   await next()
 })

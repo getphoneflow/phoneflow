@@ -4,6 +4,7 @@ import type { UploadUserImageResponse } from "@workspace/shared/api/user/types"
 import { requireSession } from "@/lib/auth/session"
 import { env } from "@/lib/env"
 import { t } from "@/lib/i18n"
+import { logger } from "@/lib/logger"
 import { publicS3Configured, putPublicObject } from "@/lib/s3"
 
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024
@@ -46,7 +47,8 @@ userRoutes.post("/image", requireSession, async (c) => {
     return c.json({
       url: `${env.PUBLIC_S3_URL}/${key}?v=${Date.now()}`,
     } satisfies UploadUserImageResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to upload image")
     return c.json({ error: t(locale, "user.upload_image_failed") }, 500)
   }
 })

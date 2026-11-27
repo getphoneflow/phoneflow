@@ -26,6 +26,7 @@ import type {
 import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { t } from "@/lib/i18n"
+import { logger } from "@/lib/logger"
 import { validator } from "@/lib/validator"
 
 export const agentRoutes = new Hono()
@@ -55,7 +56,8 @@ agentRoutes.get("/", requireOrganization, async (c) => {
     })
 
     return c.json(agents satisfies AgentsListResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to load agents")
     return c.json({ error: t(locale, "agents.list_failed") }, 500)
   }
 })
@@ -88,7 +90,8 @@ agentRoutes.post(
         })
 
       return c.json(agent satisfies CreateAgentResponse, 201)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to create agent")
       return c.json({ error: t(locale, "agents.create_failed") }, 500)
     }
   }
@@ -132,7 +135,8 @@ agentRoutes.post(
         })
 
       return c.json(duplicatedAgent satisfies DuplicateAgentResponse, 201)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to duplicate agent")
       return c.json({ error: t(locale, "agents.duplicate_failed") }, 500)
     }
   }
@@ -174,7 +178,8 @@ agentRoutes.get(
       }
 
       return c.json(agent satisfies AgentDetailResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to load agent")
       return c.json({ error: t(locale, "agents.load_failed") }, 500)
     }
   }
@@ -205,7 +210,8 @@ agentRoutes.get(
       }
 
       return c.json(agent.config satisfies AgentConfigResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to load agent config")
       return c.json({ error: t(locale, "agents.load_config_failed") }, 500)
     }
   }
@@ -249,7 +255,8 @@ agentRoutes.patch(
       }
 
       return c.json(agent satisfies UpdateAgentNameResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to update agent name")
       return c.json({ error: t(locale, "agents.update_name_failed") }, 500)
     }
   }
@@ -290,7 +297,8 @@ agentRoutes.patch(
       }
 
       return c.json(agent.config satisfies AgentConfigResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to update agent config")
       return c.json({ error: t(locale, "agents.update_config_failed") }, 500)
     }
   }
@@ -324,7 +332,8 @@ agentRoutes.delete(
       }
 
       return c.json(deletedAgent satisfies DeleteAgentResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to delete agent")
       return c.json({ error: t(locale, "agents.delete_failed") }, 500)
     }
   }
@@ -366,7 +375,8 @@ agentRoutes.get(
       }
 
       return c.json(agent.versions satisfies AgentVersionsListResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to load agent versions")
       return c.json({ error: t(locale, "agents.list_versions_failed") }, 404)
     }
   }
@@ -400,7 +410,8 @@ agentRoutes.get(
       }
 
       return c.json(version.config satisfies AgentVersionConfigResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to load agent version config")
       return c.json(
         { error: t(locale, "agents.load_version_config_failed") },
         500
@@ -476,7 +487,8 @@ agentRoutes.post(
       }
 
       return c.json(publishedVersion satisfies AgentVersionResponse, 201)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to publish agent version")
       return c.json({ error: t(locale, "agents.publish_failed") }, 500)
     }
   }

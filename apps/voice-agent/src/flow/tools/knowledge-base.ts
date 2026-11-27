@@ -1,5 +1,6 @@
 import { createOpenAI } from "@ai-sdk/openai"
-import { tool } from "@livekit/agents"
+import { log, tool } from "@livekit/agents"
+import { SpanStatusCode, trace } from "@opentelemetry/api"
 import { embedMany } from "ai"
 import { z } from "zod"
 
@@ -76,7 +77,11 @@ async function searchKnowledge({
     const chunks = result.points.map((point) => point.payload?.text)
 
     return chunks.join("\n\n") || "No relevant information found"
-  } catch {
+  } catch (error) {
+    const span = trace.getActiveSpan()
+    span?.recordException(error as Error)
+    span?.setStatus({ code: SpanStatusCode.ERROR })
+    log().warn({ error }, "Knowledge base search failed")
     return "Knowledge base search failed"
   }
 }

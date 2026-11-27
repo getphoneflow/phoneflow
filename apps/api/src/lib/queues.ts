@@ -1,6 +1,7 @@
 import { Queue } from "bullmq"
 import { BullMQOtel } from "bullmq-otel"
 
+import { logger } from "@/lib/logger"
 import { connection } from "@/lib/redis"
 
 const telemetry = new BullMQOtel({
@@ -9,19 +10,15 @@ const telemetry = new BullMQOtel({
   enableMetrics: true,
 })
 
-export const emailsQueue = new Queue("emails", { connection, telemetry })
+function createQueue(name: string) {
+  const queue = new Queue(name, { connection, telemetry })
+  queue.on("error", (error) => {
+    logger.warn({ err: error, queue: name }, "Queue error")
+  })
+  return queue
+}
 
-export const batchCallsQueue = new Queue("batch-calls", {
-  connection,
-  telemetry,
-})
-
-export const knowledgeBaseQueue = new Queue("knowledge-base", {
-  connection,
-  telemetry,
-})
-
-export const callExtractionQueue = new Queue("call-extraction", {
-  connection,
-  telemetry,
-})
+export const emailsQueue = createQueue("emails")
+export const batchCallsQueue = createQueue("batch-calls")
+export const knowledgeBaseQueue = createQueue("knowledge-base")
+export const callExtractionQueue = createQueue("call-extraction")

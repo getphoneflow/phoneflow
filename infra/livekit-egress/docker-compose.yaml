@@ -15,3 +15,4 @@ services:
           address: '${REDIS_ADDRESS}'
         enable_room_composite_sdk_source: true
         log_level: info
+        prometheus_port: 9091

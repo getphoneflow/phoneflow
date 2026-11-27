@@ -16,6 +16,7 @@ import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireSession } from "@/lib/auth/session"
 import { t } from "@/lib/i18n"
+import { logger } from "@/lib/logger"
 import { validator } from "@/lib/validator"
 
 export const apiKeyRoutes = new Hono()
@@ -39,7 +40,8 @@ apiKeyRoutes.get(
       })
 
       return c.json(apiKeys satisfies ApiKeyListResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to load API keys")
       return c.json({ error: t(locale, "api_keys.list_failed") }, 500)
     }
   }
@@ -69,7 +71,8 @@ apiKeyRoutes.post(
       })
 
       return c.json(apiKey satisfies CreateApiKeyResponse, 201)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to create API key")
       return c.json({ error: t(locale, "api_keys.create_failed") }, 500)
     }
   }
@@ -100,7 +103,8 @@ apiKeyRoutes.patch(
       })
 
       return c.json(apiKey satisfies UpdateApiKeyResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to update API key")
       return c.json({ error: t(locale, "api_keys.update_failed") }, 500)
     }
   }
@@ -122,7 +126,8 @@ apiKeyRoutes.delete(
       })
 
       return c.json(result satisfies DeleteApiKeyResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to revoke API key")
       return c.json({ error: t(locale, "api_keys.delete_failed") }, 500)
     }
   }

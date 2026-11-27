@@ -5,6 +5,7 @@ import { embedChunks } from "@/knowledge-base/utils/embed"
 import { documentToMarkdown } from "@/knowledge-base/utils/markdown"
 import { storeDocument } from "@/knowledge-base/utils/store"
 import { api } from "@/lib/api"
+import { logger } from "@/lib/logger"
 
 export async function indexKnowledgeBaseDocument({
   documentId,
@@ -36,7 +37,8 @@ export async function indexKnowledgeBaseDocument({
     await api.patch(`/knowledge-base/${documentId}/index`, {
       body: { status: "ready" },
     })
-  } catch {
+  } catch (error) {
+    logger.warn({ err: error, documentId }, "Knowledge base indexing failed")
     await api.patch(`/knowledge-base/${documentId}/index`, {
       body: { status: "failed" },
     })

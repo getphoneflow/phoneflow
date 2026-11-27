@@ -32,6 +32,8 @@ WORKDIR /app
 COPY --from=prod-deps /app ./
 COPY --from=build /app/apps/worker/dist ./
 
+ARG GIT_SHA
+ENV GIT_SHA=$GIT_SHA
 ENV NODE_ENV=production
 
-CMD ["node", "./apps/worker/src/index.js"]
+CMD ["node", "--import", "./apps/worker/src/instrumentation.js", "./apps/worker/src/index.js"]

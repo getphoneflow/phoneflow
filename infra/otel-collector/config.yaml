@@ -1,0 +1,41 @@
+receivers:
+  hostmetrics:
+    root_path: /hostfs
+    collection_interval: 60s
+    scrapers:
+      cpu:
+      memory:
+      disk:
+      filesystem:
+      network:
+
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: livekit-server
+          static_configs:
+            - targets: ["localhost:6789"]
+        - job_name: livekit-egress
+          static_configs:
+            - targets: ["localhost:9091"]
+        - job_name: livekit-sip
+          static_configs:
+            - targets: ["localhost:9092"]
+
+processors:
+  resourcedetection:
+    detectors: [env, system]
+  batch:
+
+exporters:
+  otlphttp:
+    endpoint: ${env:OTEL_EXPORTER_OTLP_ENDPOINT}
+    headers:
+      Authorization: ${env:OTEL_EXPORTER_OTLP_AUTHORIZATION}
+
+service:
+  pipelines:
+    metrics:
+      receivers: [hostmetrics, prometheus]
+      processors: [resourcedetection, batch]
+      exporters: [otlphttp]

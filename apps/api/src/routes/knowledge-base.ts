@@ -25,6 +25,7 @@ import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { requireAuthToken } from "@/lib/auth/token"
 import { t } from "@/lib/i18n"
+import { logger } from "@/lib/logger"
 import { knowledgeBaseQueue } from "@/lib/queues"
 import {
   deletePrivateObject,
@@ -65,7 +66,8 @@ knowledgeBaseRoutes.get("/", requireOrganization, async (c) => {
     })
 
     return c.json(documents satisfies KnowledgeBaseDocumentListResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to load documents")
     return c.json({ error: t(locale, "knowledge_base.list_failed") }, 500)
   }
 })
@@ -146,7 +148,8 @@ knowledgeBaseRoutes.post(
       } satisfies IndexKnowledgeBaseDocumentPayload)
 
       return c.json(document satisfies KnowledgeBaseDocumentResponse, 201)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to add document")
       return c.json({ error: t(locale, "knowledge_base.create_failed") }, 500)
     }
   }
@@ -190,7 +193,8 @@ knowledgeBaseRoutes.get(
         "Content-Type": document.contentType,
         "Content-Disposition": attachmentName(document.name),
       })
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to download document")
       return c.json({ error: t(locale, "knowledge_base.download_failed") }, 500)
     }
   }
@@ -236,7 +240,8 @@ knowledgeBaseRoutes.delete(
       return c.json({
         id: document.id,
       } satisfies DeleteKnowledgeBaseDocumentResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to delete document")
       return c.json({ error: t(locale, "knowledge_base.delete_failed") }, 500)
     }
   }
@@ -282,7 +287,8 @@ knowledgeBaseRoutes.get(
         contentType: document.contentType,
         fileBase64: Buffer.from(bytes).toString("base64"),
       } satisfies KnowledgeBaseDocumentFileResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to download document")
       return c.json({ error: t(locale, "knowledge_base.download_failed") }, 500)
     }
   }
@@ -310,7 +316,8 @@ knowledgeBaseRoutes.patch(
       }
 
       return c.json({ id: document.id })
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to update document")
       return c.json({ error: t(locale, "knowledge_base.update_failed") }, 500)
     }
   }

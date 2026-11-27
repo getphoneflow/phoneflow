@@ -13,5 +13,6 @@ services:
         sip_port: 5060
         rtp_port: 10000-20000
         use_external_ip: true
+        prometheus_port: 9092
         logging:
           level: info

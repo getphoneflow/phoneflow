@@ -1,16 +1,7 @@
-import { Worker } from "bullmq"
-import { BullMQOtel } from "bullmq-otel"
-
 import { extract } from "@/call-extraction/jobs/extract"
-import { connection } from "@/lib/redis"
+import { createWorker } from "@/lib/workers"
 
-const telemetry = new BullMQOtel({
-  tracerName: "worker",
-  meterName: "worker",
-  enableMetrics: true,
-})
-
-export const callExtractionWorker = new Worker(
+export const callExtractionWorker = createWorker(
   "call-extraction",
   async (job) => {
     switch (job.name) {
@@ -19,6 +10,5 @@ export const callExtractionWorker = new Worker(
       default:
         throw new Error(`Unknown job: ${job.name}`)
     }
-  },
-  { connection, telemetry }
+  }
 )

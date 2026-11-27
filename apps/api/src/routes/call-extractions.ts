@@ -18,6 +18,7 @@ import type {
 import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { t } from "@/lib/i18n"
+import { logger } from "@/lib/logger"
 import { validator } from "@/lib/validator"
 
 export const callExtractionRoutes = new Hono()
@@ -43,7 +44,8 @@ callExtractionRoutes.get("/", requireOrganization, async (c) => {
     })
 
     return c.json(extractions satisfies CallExtractionListResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to load call extractions")
     return c.json({ error: t(locale, "call_extractions.list_failed") }, 500)
   }
 })
@@ -102,7 +104,8 @@ callExtractionRoutes.post(
       }
 
       return c.json(created satisfies CallExtractionResponse, 201)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to create call extraction")
       return c.json({ error: t(locale, "call_extractions.create_failed") }, 500)
     }
   }
@@ -170,7 +173,8 @@ callExtractionRoutes.patch(
       }
 
       return c.json(updated satisfies CallExtractionResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to update call extraction")
       return c.json({ error: t(locale, "call_extractions.update_failed") }, 500)
     }
   }
@@ -204,7 +208,8 @@ callExtractionRoutes.delete(
       return c.json({
         id: extraction.id,
       } satisfies DeleteCallExtractionResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to delete call extraction")
       return c.json({ error: t(locale, "call_extractions.delete_failed") }, 500)
     }
   }

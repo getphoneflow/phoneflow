@@ -4,6 +4,7 @@ import type Stripe from "stripe"
 import { db } from "@workspace/db/client"
 import { organization } from "@workspace/db/schema/auth"
 import { creditPurchasesTable } from "@workspace/db/schema/credits"
+import { logger } from "@/lib/logger"
 import { stripe } from "@/lib/stripe"
 
 function toAmount(value: string | number | null | undefined) {
@@ -185,7 +186,7 @@ async function maybeTriggerAutoReload(organizationId: string) {
       await applyPaidAutoReloadInvoice(paidInvoice)
     }
   } catch (error) {
-    console.error("Auto reload failed", error)
+    logger.error({ err: error, organizationId }, "Auto reload failed")
   } finally {
     await db
       .update(organization)
@@ -254,7 +255,10 @@ export async function applyPaidCheckoutSession(
         })
       }
     } catch (error) {
-      console.error("Failed to set default payment method", error)
+      logger.error(
+        { err: error, organizationId },
+        "Failed to set default payment method"
+      )
     }
   }
 }

@@ -1,5 +1,6 @@
 import { isIP } from "node:net"
-import { tool } from "@livekit/agents"
+import { log, tool } from "@livekit/agents"
+import { SpanStatusCode, trace } from "@opentelemetry/api"
 import { z } from "zod"
 
 import type { WebhookTool } from "@workspace/shared/api/agent-config/types"
@@ -146,6 +147,10 @@ export function createWebhookTool(
             error instanceof WebhookRequestError ? error.retryable : true
           lastError = error instanceof Error ? error.message : "Webhook failed"
           if (!retryable || attempt === definition.maxRetries) {
+            const span = trace.getActiveSpan()
+            span?.recordException(error as Error)
+            span?.setStatus({ code: SpanStatusCode.ERROR })
+            log().warn({ error }, `Webhook tool ${definition.name} failed`)
             break
           }
           await new Promise((resolve) =>

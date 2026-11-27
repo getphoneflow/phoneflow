@@ -1,40 +1,43 @@
 import "dotenv/config"
 
-import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node"
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http"
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http"
+import { HttpInstrumentation } from "@opentelemetry/instrumentation-http"
+import { PinoInstrumentation } from "@opentelemetry/instrumentation-pino"
+import { RuntimeNodeInstrumentation } from "@opentelemetry/instrumentation-runtime-node"
+import { UndiciInstrumentation } from "@opentelemetry/instrumentation-undici"
 import {
-  ConsoleMetricExporter,
-  PeriodicExportingMetricReader,
-} from "@opentelemetry/sdk-metrics"
+  hostDetector,
+  resourceAttributesEnvDetector,
+  resourceFromAttributes,
+} from "@opentelemetry/resources"
 import { NodeSDK } from "@opentelemetry/sdk-node"
-import { ConsoleSpanExporter } from "@opentelemetry/sdk-trace"
-
-const isProduction = process.env.NODE_ENV === "production"
+import { ParentBasedSampler, SamplingDecision } from "@opentelemetry/sdk-trace"
 
 export const sdk = new NodeSDK({
   serviceName: "worker",
-  traceExporter: isProduction
-    ? new OTLPTraceExporter()
-    : new ConsoleSpanExporter(),
-  metricReaders: [
-    new PeriodicExportingMetricReader({
-      exporter: isProduction
-        ? new OTLPMetricExporter()
-        : new ConsoleMetricExporter(),
-    }),
-  ],
+  resource: resourceFromAttributes({
+    "service.version": process.env.GIT_SHA,
+  }),
+  resourceDetectors: [resourceAttributesEnvDetector, hostDetector],
+  sampler: new ParentBasedSampler({
+    root: {
+      shouldSample: (_context, _traceId, spanName) => ({
+        decision:
+          /^(getNextJob|moveStalledJobsToWait|startStalledCheckTimer) /.test(
+            spanName
+          )
+            ? SamplingDecision.NOT_RECORD
+            : SamplingDecision.RECORD_AND_SAMPLED,
+      }),
+    },
+  }),
   instrumentations: [
-    getNodeAutoInstrumentations({
-      "@opentelemetry/instrumentation-http": {
-        disableIncomingRequestInstrumentation: true,
-      },
-      "@opentelemetry/instrumentation-ioredis": { enabled: false },
-      "@opentelemetry/instrumentation-fs": { enabled: false },
-      "@opentelemetry/instrumentation-dns": { enabled: false },
-      "@opentelemetry/instrumentation-net": { enabled: false },
-    }),
+    new HttpInstrumentation({ requireParentforOutgoingSpans: true }),
+    new UndiciInstrumentation({ requireParentforSpans: true }),
+    new RuntimeNodeInstrumentation(),
+    new PinoInstrumentation(),
   ],
 })
 
-sdk.start()
+if (process.env.OTEL_EXPORTER_OTLP_ENDPOINT) {
+  sdk.start()
+}

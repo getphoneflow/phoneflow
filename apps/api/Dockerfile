@@ -32,8 +32,10 @@ WORKDIR /app
 COPY --from=prod-deps /app ./
 COPY --from=build /app/apps/api/dist ./
 
+ARG GIT_SHA
+ENV GIT_SHA=$GIT_SHA
 ENV NODE_ENV=production
 ENV PORT=3000
 
 EXPOSE $PORT
-CMD ["node", "./apps/api/src/index.js"]
+CMD ["node", "--import", "./apps/api/src/instrumentation.js", "./apps/api/src/index.js"]

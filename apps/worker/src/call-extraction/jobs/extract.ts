@@ -7,6 +7,7 @@ import type { ExtractCallPayload } from "@workspace/shared/jobs/call-extraction/
 import { extractionValueSchema } from "@/call-extraction/utils/schema"
 import { api } from "@/lib/api"
 import { env } from "@/lib/env"
+import { logger } from "@/lib/logger"
 
 function openAiModelId(model: string) {
   const slash = model.indexOf("/")
@@ -42,7 +43,11 @@ export async function extract(payload: ExtractCallPayload) {
         schema: extraction.schema,
         value: result.output.value,
       })
-    } catch {
+    } catch (error) {
+      logger.warn(
+        { err: error, callId: payload.callId, extractionId: extraction.id },
+        "Call extraction failed"
+      )
       results.push({
         id: extraction.id,
         name: extraction.name,

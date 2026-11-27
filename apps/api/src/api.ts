@@ -5,6 +5,7 @@ import { cors } from "hono/cors"
 import { auth } from "@/lib/auth/config"
 import { env } from "@/lib/env"
 import { localeMiddleware } from "@/lib/i18n"
+import { logger } from "@/lib/logger"
 import { agentRoutes } from "@/routes/agents"
 import { apiKeyRoutes } from "@/routes/api-keys"
 import { batchCallRoutes } from "@/routes/batch-calls"
@@ -20,16 +21,29 @@ import { userRoutes } from "@/routes/user"
 
 const api = new Hono()
 
+api.get("/health", (c) => c.json({ ok: true }))
+
 api.use(
   "*",
   httpInstrumentationMiddleware({
-    serviceName: "api",
     getUrlFull: (c) => {
       const url = new URL(c.req.url)
       return `${url.origin}${url.pathname}`
     },
   })
 )
+
+api.use("*", async (c, next) => {
+  const start = performance.now()
+  await next()
+  const duration = performance.now() - start
+  logger.info({
+    method: c.req.method,
+    path: c.req.path,
+    status: c.res.status,
+    durationMs: Math.round(duration),
+  })
+})
 
 api.use(
   "*",
@@ -59,5 +73,12 @@ if (env.IS_CLOUD) {
   api.route("/api/billing", billingRoutes)
   api.route("/api/sso", ssoRoutes)
 }
+
+api.onError((error, c) => {
+  if ("getResponse" in error) return error.getResponse()
+
+  logger.error({ err: error }, "Unhandled request error")
+  return c.json({ error: "Internal Server Error" }, 500)
+})
 
 export default api

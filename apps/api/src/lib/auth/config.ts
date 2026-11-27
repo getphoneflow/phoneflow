@@ -26,10 +26,14 @@ import { trustedOrigins } from "@/lib/auth/sso"
 import { handleStripeEvent } from "@/lib/credits"
 import { env } from "@/lib/env"
 import { resolveLocale } from "@/lib/i18n"
+import { logger } from "@/lib/logger"
 import { emailsQueue } from "@/lib/queues"
 import { stripe as stripeClient } from "@/lib/stripe"
 
 export const auth = betterAuth({
+  logger: {
+    log: (level, message, ...args) => logger[level]({ err: args[0] }, message),
+  },
   database: drizzleAdapter(db, {
     provider: "pg",
     schema,

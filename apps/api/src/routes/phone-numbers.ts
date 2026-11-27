@@ -16,6 +16,7 @@ import { requireOrganization } from "@/lib/auth/organization"
 import { requirePermission } from "@/lib/auth/permissions"
 import { t } from "@/lib/i18n"
 import { deprovisionInbound, provisionInbound } from "@/lib/livekit"
+import { logger } from "@/lib/logger"
 import { validator } from "@/lib/validator"
 
 export const phoneNumberRoutes = new Hono()
@@ -47,7 +48,8 @@ phoneNumberRoutes.get("/", requireOrganization, async (c) => {
     })
 
     return c.json(phoneNumbers satisfies PhoneNumberListResponse)
-  } catch {
+  } catch (error) {
+    logger.error({ err: error }, "Failed to load phone numbers")
     return c.json({ error: t(locale, "phone_numbers.list_failed") }, 500)
   }
 })
@@ -100,6 +102,7 @@ phoneNumberRoutes.post(
       try {
         await provisionInbound(phoneNumber)
       } catch (error) {
+        logger.error({ err: error }, "Failed to provision phone number")
         await db
           .delete(phoneNumbersTable)
           .where(eq(phoneNumbersTable.id, phoneNumber.id))
@@ -110,7 +113,8 @@ phoneNumberRoutes.post(
       }
 
       return c.json(phoneNumber satisfies PhoneNumberResponse, 201)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to create phone number")
       return c.json({ error: t(locale, "phone_numbers.create_failed") }, 500)
     }
   }
@@ -187,6 +191,7 @@ phoneNumberRoutes.patch(
         try {
           await provisionInbound(phoneNumber)
         } catch (error) {
+          logger.error({ err: error }, "Failed to provision phone number")
           return c.json(
             { error: t(locale, "phone_numbers.provision_failed") },
             502
@@ -195,7 +200,8 @@ phoneNumberRoutes.patch(
       }
 
       return c.json(phoneNumber satisfies PhoneNumberResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to update phone number")
       return c.json({ error: t(locale, "phone_numbers.update_failed") }, 500)
     }
   }
@@ -229,7 +235,8 @@ phoneNumberRoutes.delete(
       await deprovisionInbound({ number: deletedPhoneNumber.number })
 
       return c.json(deletedPhoneNumber satisfies PhoneNumberResponse)
-    } catch {
+    } catch (error) {
+      logger.error({ err: error }, "Failed to delete phone number")
       return c.json({ error: t(locale, "phone_numbers.delete_failed") }, 500)
     }
   }

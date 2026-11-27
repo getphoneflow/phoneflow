@@ -7,10 +7,13 @@
     "typecheck": "pnpm -r typecheck",
     "lint": "biome lint .",
     "format": "biome check --write --linter-enabled=false .",
-    "test": "vitest run"
+    "check": "biome check . --diagnostic-level=error",
+    "test": "vitest run",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",
+    "husky": "^9.1.7",
     "typescript": "catalog:",
     "vitest": "catalog:",
     "zod": "catalog:"

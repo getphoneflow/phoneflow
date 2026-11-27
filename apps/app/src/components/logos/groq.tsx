@@ -2,7 +2,7 @@ import type { SVGProps } from "react"
 
 export function GroqIcon({ ...props }: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 201 201" {...props}>
+    <svg aria-hidden="true" viewBox="0 0 201 201" {...props}>
       <path fill="#F54F35" d="M0 0h201v201H0V0Z" />
       <path
         fill="#FEFBFB"

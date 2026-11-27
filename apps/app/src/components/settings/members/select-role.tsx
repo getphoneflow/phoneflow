@@ -51,7 +51,7 @@ export function SelectRole({
       disabled={disabled}
     >
       <SelectTrigger id={id} className="w-36" aria-label={ariaLabel}>
-        <SelectValue>{selected!.displayName}</SelectValue>
+        <SelectValue>{selected?.displayName}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         {roles.map((role) => (
@@ -87,9 +87,8 @@ export function MemberRoleSelect({ member }: MemberRoleSelectProps) {
       }
     },
     onSuccess: (_data, nextRole) => {
-      const displayName = roles.find(
-        (role) => role.role === nextRole
-      )!.displayName
+      const displayName =
+        roles.find((role) => role.role === nextRole)?.displayName ?? nextRole
       toast.success(
         t("components.settings.members.select_role.toasts.member_updated", {
           name: member.user.name,
@@ -157,9 +156,8 @@ export function InvitationRoleSelect({
       }
     },
     onSuccess: (_data, nextRole) => {
-      const displayName = roles.find(
-        (role) => role.role === nextRole
-      )!.displayName
+      const displayName =
+        roles.find((role) => role.role === nextRole)?.displayName ?? nextRole
       toast.success(
         t("components.settings.members.select_role.toasts.invitation_updated", {
           role: displayName,

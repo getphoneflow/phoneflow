@@ -2,7 +2,12 @@ import type { SVGProps } from "react"
 
 export function FireworksIcon({ ...props }: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
       <path
         fillRule="evenodd"
         clipRule="evenodd"

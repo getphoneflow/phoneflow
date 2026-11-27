@@ -314,7 +314,9 @@ function Page() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline text-primary"
-                />
+                >
+                  Terms of Service
+                </a>
               ),
               privacy: (
                 <a
@@ -322,7 +324,9 @@ function Page() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline text-primary"
-                />
+                >
+                  Privacy Policy
+                </a>
               ),
             }}
           />

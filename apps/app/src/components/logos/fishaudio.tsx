@@ -2,7 +2,12 @@ import type { SVGProps } from "react"
 
 export function FishAudioIcon({ ...props }: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 32 32"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
       <path
         opacity="0.35"
         fillRule="evenodd"

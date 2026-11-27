@@ -2,7 +2,12 @@ import type { SVGProps } from "react"
 
 export function CerebrasIcon({ ...props }: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 50 50"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
       <path
         fillRule="evenodd"
         clipRule="evenodd"

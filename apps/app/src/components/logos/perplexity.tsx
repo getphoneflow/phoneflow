@@ -2,7 +2,7 @@ import type { SVGProps } from "react"
 
 export function PerplexityIcon({ ...props }: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="0 0 48 48" {...props}>
+    <svg aria-hidden="true" viewBox="0 0 48 48" {...props}>
       <path
         fill="none"
         stroke="#20808d"

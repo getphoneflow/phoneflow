@@ -53,6 +53,7 @@ export function InlineEditableField({
 
   return (
     <button
+      type="button"
       className="inline-flex max-w-xs items-center gap-2 bg-transparent p-0 text-inherit disabled:pointer-events-none disabled:opacity-70"
       onClick={() => setEditing(true)}
       disabled={disabled}

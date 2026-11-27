@@ -12,6 +12,22 @@
       "preset": "recommended"
     }
   },
+  "overrides": [
+    {
+      "includes": ["packages/ui/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useSemanticElements": "off",
+            "useFocusableInteractive": "off",
+            "useKeyWithClickEvents": "off",
+            "noLabelWithoutControl": "off",
+            "noAutofocus": "off"
+          }
+        }
+      }
+    }
+  ],
   "css": {
     "parser": {
       "tailwindDirectives": true
@@ -51,7 +67,7 @@
       "!!**/node_modules",
       "!**/*.gen.ts",
       "!**/index.html",
-      "!**/drizzle/**"
+      "!**/drizzle"
     ]
   }
 }

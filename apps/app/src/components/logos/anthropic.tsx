@@ -3,6 +3,7 @@ import type { SVGProps } from "react"
 export function AnthropicIcon({ ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
+      aria-hidden="true"
       fill="currentColor"
       fillRule="evenodd"
       viewBox="0 0 24 24"

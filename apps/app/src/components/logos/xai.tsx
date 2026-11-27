@@ -3,6 +3,7 @@ import type { SVGProps } from "react"
 export function XaiIcon({ ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
+      aria-hidden="true"
       fill="currentColor"
       fill-rule="evenodd"
       viewBox="0 0 24 24"

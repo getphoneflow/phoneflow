@@ -126,6 +126,7 @@ function Page() {
                 {t("routes.email_verification.no_email")}{" "}
               </span>
               <button
+                type="button"
                 className="underline disabled:opacity-50"
                 disabled={isPending}
                 onClick={() => sendVerificationOtpMutation.mutate()}

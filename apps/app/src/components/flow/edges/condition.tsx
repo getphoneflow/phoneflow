@@ -52,16 +52,20 @@ export function ConditionEdge({
             pointerEvents: "all",
           }}
         >
-          <div
+          <button
+            type="button"
             className={cn(
-              "nopan nodrag max-w-48 min-h-6 min-w-16 cursor-pointer truncate rounded border border-border bg-popover px-2 py-1 text-xs font-medium text-muted-foreground",
+              "nopan nodrag max-w-48 min-h-6 min-w-16 cursor-pointer truncate rounded border border-border bg-popover px-2 py-1 text-left text-xs font-medium text-muted-foreground",
               selected && !hasError && "border-ring ring-2 ring-ring/50",
               hasError && "border-destructive ring-2 ring-destructive/50"
             )}
-            onClick={() => selectEdge({ id, source, target, data: data! })}
+            onClick={() => {
+              if (!data) return
+              selectEdge({ id, source, target, data })
+            }}
           >
             {data ? formatConditionLabel(data.condition, t) : ""}
-          </div>
+          </button>
           {selected && <FlowEdgeActions id={id} />}
           {hasError && (
             <p className="absolute top-full left-1/2 mt-1 w-max max-w-48 -translate-x-1/2 text-center text-xs leading-snug text-destructive">

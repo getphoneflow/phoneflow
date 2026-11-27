@@ -193,6 +193,7 @@ export function CallCostBreakdown({ call }: { call: CallCostFields }) {
       </div>
       <div>
         {breakdown.map((item, index) => (
+          // biome-ignore lint/a11y/noStaticElementInteractions: chart legend hover
           <div
             key={item.key}
             className="flex cursor-pointer gap-2 py-2"

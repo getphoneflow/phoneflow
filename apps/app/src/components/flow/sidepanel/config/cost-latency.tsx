@@ -49,6 +49,7 @@ function ProportionBar({
             <TooltipTrigger
               render={
                 <button
+                  type="button"
                   aria-label={label}
                   className="cursor-pointer"
                   style={{

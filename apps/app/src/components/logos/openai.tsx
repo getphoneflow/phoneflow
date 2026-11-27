@@ -3,6 +3,7 @@ import type { SVGProps } from "react"
 export function OpenAIIcon({ ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
+      aria-hidden="true"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 256 260"
       fill="currentColor"

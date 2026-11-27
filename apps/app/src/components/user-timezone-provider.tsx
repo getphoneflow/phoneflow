@@ -14,7 +14,9 @@ export function UserTimeZoneProvider({
   const { data: session } = useSuspenseQuery(sessionQueryOptions())
 
   return (
-    <UserTimeZoneContext.Provider value={session!.user.timezone}>
+    <UserTimeZoneContext.Provider
+      value={session?.user.timezone ?? "America/New_York"}
+    >
       {children}
     </UserTimeZoneContext.Provider>
   )

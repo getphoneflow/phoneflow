@@ -154,7 +154,7 @@ export function ExtractVariablesDialog({
                             {t(
                               variableTypes.find(
                                 (entry) => entry.value === typeField.value
-                              )!.label
+                              )?.label ?? typeField.value
                             )}
                           </SelectValue>
                         </SelectTrigger>

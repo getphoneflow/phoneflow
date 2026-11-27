@@ -3,6 +3,7 @@ import type { SVGProps } from "react"
 export function CloudflareIcon({ ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
+      aria-hidden="true"
       viewBox="0 0 256 117"
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="xMidYMid"

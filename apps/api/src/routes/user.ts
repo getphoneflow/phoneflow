@@ -26,7 +26,7 @@ userRoutes.post("/image", requireSession, async (c) => {
 
   const userId = c.get("userId")
   const body = await c.req.parseBody()
-  const file = body["file"]
+  const file = body.file
 
   if (!(file instanceof File)) {
     return c.json({ error: t(locale, "user.image_required") }, 400)

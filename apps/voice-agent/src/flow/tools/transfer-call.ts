@@ -81,7 +81,11 @@ ${destinations}`,
         env.LIVEKIT_API_SECRET
       )
 
-      await roomService.removeParticipant(roomName, job.agent!.identity)
+      const agentIdentity = job.agent?.identity
+      if (!agentIdentity) {
+        throw new Error("Agent identity is required to complete call transfer")
+      }
+      await roomService.removeParticipant(roomName, agentIdentity)
     },
   })
 }

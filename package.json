@@ -4,6 +4,8 @@
   "private": true,
   "license": "Apache-2.0",
   "scripts": {
+    "dev:setup": "node scripts/dev/setup.mjs",
+    "dev:teardown": "node scripts/dev/teardown.mjs",
     "typecheck": "pnpm -r typecheck",
     "lint": "biome lint .",
     "format": "biome check --write --linter-enabled=false .",

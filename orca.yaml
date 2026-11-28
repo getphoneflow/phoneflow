@@ -1,0 +1,6 @@
+scripts:
+  setup: |
+    node scripts/dev/setup.mjs
+  archive: |
+    node scripts/dev/teardown.mjs
+setupAgentStartupPolicy: wait-for-setup

@@ -13,6 +13,10 @@ import { ac, owner } from "@workspace/shared/auth/roles"
 import { env } from "@/lib/env"
 import i18n from "@/lib/i18n"
 
+const cookiePrefix = import.meta.env.DEV
+  ? `phoneflow-${new URL(env.API_URL).port}`
+  : "phoneflow"
+
 export const authClient = createAuthClient({
   baseURL: env.API_URL,
   fetchOptions: {
@@ -22,7 +26,9 @@ export const authClient = createAuthClient({
   },
   plugins: [
     emailOTPClient(),
-    lastLoginMethodClient(),
+    lastLoginMethodClient({
+      cookieName: `${cookiePrefix}.last_login_method`,
+    }),
     twoFactorClient(),
     organizationClient({
       ac,

@@ -2,6 +2,8 @@ packages:
   - "apps/*"
   - "packages/*"
 
+minimumReleaseAge: 7200
+
 allowBuilds:
   "@google/genai": true
   "@livekit/local-inference": true
@@ -45,6 +47,7 @@ catalog:
   cn: 0.5.2
   dotenv: 18.0.10
   drizzle-orm: 1.0.0-rc.4
+  drizzle-seed: 1.0.0-rc.4
   i18next: 27.2.3
   i18next-browser-languagedetector: 8.3.1
   ioredis: 6.0.0

@@ -5,7 +5,6 @@ import { embedMany } from "ai"
 import { z } from "zod"
 
 import {
-  KNOWLEDGE_BASE_COLLECTION,
   KNOWLEDGE_BASE_EMBEDDING_DIMENSIONS,
   KNOWLEDGE_BASE_EMBEDDING_MODEL,
   KNOWLEDGE_BASE_TOP_K,
@@ -62,7 +61,7 @@ async function searchKnowledge({
 
     if (!vector) return "No relevant information found"
 
-    const result = await qdrant.query(KNOWLEDGE_BASE_COLLECTION, {
+    const result = await qdrant.query(env.QDRANT_KNOWLEDGE_BASE_COLLECTION, {
       query: vector,
       limit: KNOWLEDGE_BASE_TOP_K,
       filter: {

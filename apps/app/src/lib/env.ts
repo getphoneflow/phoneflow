@@ -6,5 +6,5 @@ export const env = {
   PUBLIC_S3_URL: import.meta.env.VITE_PUBLIC_S3_URL ?? "",
   TURNSTILE_SITE_KEY: import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "",
   POSTHOG_PROJECT_TOKEN: import.meta.env.VITE_POSTHOG_PROJECT_TOKEN ?? "",
-  POSTHOG_HOST: import.meta.env.VITE_POSTHOG_HOST ?? "https://us.i.posthog.com",
+  POSTHOG_HOST: import.meta.env.VITE_POSTHOG_HOST ?? "",
 }

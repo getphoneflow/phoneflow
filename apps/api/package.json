@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome lint .",
     "format": "biome check --write --linter-enabled=false .",
+    "seed-dev": "tsx scripts/seed-dev.ts",
     "sync-inbound-sip": "tsx scripts/sync-inbound-sip.ts",
     "test": "vitest run"
   },
@@ -47,6 +48,7 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "drizzle-seed": "catalog:",
     "pino-pretty": "catalog:",
     "rolldown": "catalog:",
     "tsx": "catalog:",

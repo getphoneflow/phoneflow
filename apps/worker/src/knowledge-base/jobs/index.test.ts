@@ -48,7 +48,7 @@ describe("indexKnowledgeBaseDocument", () => {
     await indexKnowledgeBaseDocument({ documentId: "doc-1" })
 
     expect(qdrant.upsert).toHaveBeenCalledWith(
-      "knowledge_chunks",
+      "knowledge_base_chunks",
       expect.objectContaining({
         points: [
           expect.objectContaining({

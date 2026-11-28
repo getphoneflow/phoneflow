@@ -7,6 +7,10 @@ export const env = {
   LIVEKIT_API_SECRET: process.env.LIVEKIT_API_SECRET ?? "",
   LIVEKIT_URL: process.env.LIVEKIT_URL ?? "",
   LIVEKIT_AGENT_NAME: process.env.LIVEKIT_AGENT_NAME ?? "voice-agent",
+  QDRANT_URL: process.env.QDRANT_URL ?? "",
+  QDRANT_API_KEY: process.env.QDRANT_API_KEY ?? "",
+  QDRANT_KNOWLEDGE_BASE_COLLECTION:
+    process.env.QDRANT_KNOWLEDGE_BASE_COLLECTION ?? "knowledge_base_chunks",
 
   // Model providers
   ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY ?? "",
@@ -29,8 +33,6 @@ export const env = {
   META_API_KEY: process.env.META_API_KEY ?? "",
   MISTRAL_API_KEY: process.env.MISTRAL_API_KEY ?? "",
   OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "",
-  QDRANT_URL: process.env.QDRANT_URL ?? "",
-  QDRANT_API_KEY: process.env.QDRANT_API_KEY ?? "",
   OVHCLOUD_API_KEY: process.env.OVHCLOUD_API_KEY ?? "",
   PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY ?? "",
   SONIOX_API_KEY: process.env.SONIOX_API_KEY ?? "",

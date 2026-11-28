@@ -30,6 +30,9 @@ import { logger } from "@/lib/logger"
 import { emailsQueue } from "@/lib/queues"
 import { stripe as stripeClient } from "@/lib/stripe"
 
+const cookiePrefix =
+  env.NODE_ENV === "development" ? `phoneflow-${env.PORT}` : "phoneflow"
+
 export const auth = betterAuth({
   logger: {
     log: (level, message, ...args) => logger[level]({ err: args[0] }, message),
@@ -103,6 +106,7 @@ export const auth = betterAuth({
     }),
     lastLoginMethod({
       storeInDatabase: true,
+      cookieName: `${cookiePrefix}.last_login_method`,
     }),
     organization({
       ac,
@@ -216,6 +220,9 @@ export const auth = betterAuth({
   },
   telemetry: {
     enabled: false,
+  },
+  advanced: {
+    cookiePrefix,
   },
   baseURL: env.API_URL,
   trustedOrigins,

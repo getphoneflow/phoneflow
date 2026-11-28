@@ -1,0 +1,4 @@
+apps/app/.env
+apps/api/.env
+apps/worker/.env
+apps/voice-agent/.env

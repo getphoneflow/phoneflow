@@ -121,6 +121,12 @@ services:
     volumes:
       - seaweedfs-data:/data
       - ./apps/voice-agent/background:/background:ro
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -sf 127.0.0.1:9333/cluster/status | grep -q true"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   livekit:
     image: livekit/livekit-server:v1.13.11

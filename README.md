@@ -15,7 +15,7 @@ Build voice agents by connecting nodes, deploy them to handle inbound and outbou
 - **Inbound and outbound calls**: Route incoming calls to a chosen agent and version, and trigger outbound calls to any number with any agent and version.
 - **Call monitoring**: Watch every call in real time with visibility into start time, duration, cost (broken down by model), channel (phone or web), direction (inbound or outbound), from/to numbers, and the agent and version that answered.
 
-## Start
+## Self-Hosting
 
 ```bash
 cp .env.example .env    # fill in the required values
@@ -23,3 +23,16 @@ docker compose up -d
 ```
 
 Then open http://localhost
+
+## Local Development
+
+```bash
+pnpm dev:setup
+
+pnpm --filter api dev
+pnpm --filter app dev
+pnpm --filter worker dev
+pnpm --filter voice-agent dev
+
+pnpm dev:teardown
+```

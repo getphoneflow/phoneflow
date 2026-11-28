@@ -31,7 +31,7 @@ exporters:
   otlphttp:
     endpoint: ${env:OTEL_EXPORTER_OTLP_ENDPOINT}
     headers:
-      Authorization: ${env:OTEL_EXPORTER_OTLP_AUTHORIZATION}
+      Authorization: ${env:OTEL_EXPORTER_OTLP_HEADERS}
 
 service:
   pipelines:
